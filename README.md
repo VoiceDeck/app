@@ -1,36 +1,49 @@
-# Welcome to Remix + Vite!
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
+# VoiceDeck
 
-## Development
+VoiceDeck is a platform that allows users to contribute retroactive funding for impactful grassroots journalism in India. Donors receive fractional shares of a [HyperCert](https://hypercerts.org/) representing the impact of the reporting they've supported.
 
-Run the Vite dev server:
 
-```shellscript
-npm run dev
+## Features
+
+#### Within the VoiceDeck app, users can:
+
+- Search reports by category, state, progress
+- Examine report details, impact assessment, funding status
+- Anonymously prove Indian citizenship
+- Contribute funds with embedded crypto wallet
+- Track contribution activity and metrics
+
+
+## Run Locally
+
+#### Clone the repository:
+
+```bash
+  git clone https://github.com/VoiceDeck/app.git
 ```
 
-## Deployment
+#### Install dependencies:
 
-First, build your app for production:
-
-```sh
-npm run build
+```bash
+  cd app && pmpm install
 ```
 
-Then run the app in production mode:
+#### Start the server:
 
-```sh
-npm start
+```bash
+  pnpm run dev
 ```
 
-Now you'll need to pick a host to deploy it to.
 
-### DIY
+## Tech Stack
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+- [Remix](https://remix.run/) + [Vite](https://vitejs.dev/)
+- [Million.js](https://million.dev/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/) components
+- [Victory](https://formidable.com/open-source/victory/) charts
+- [Biome](https://biomejs.dev/) formatter/linter
 
-Make sure to deploy the output of `npm run build`
 
-- `build/server`
-- `build/client`
+
