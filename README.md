@@ -20,7 +20,7 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
 #### Clone the repository:
 
 ```bash
-  git clone https://github.com/VoiceDeck/app.git
+  git clone git@github.com:VoiceDeck/app.git
 ```
 
 #### Install dependencies:
@@ -32,14 +32,14 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
 #### Start the server:
 
 ```bash
-  pnpm run dev
+  pnpm dev
 ```
 
 
 ## Tech Stack
 
 - [Remix](https://remix.run/) + [Vite](https://vitejs.dev/)
-- [Million.js](https://million.dev/)
+- [Million.js](https://million.dev/) 
 - [TailwindCSS](https://tailwindcss.com/)
 - [shadcn/ui](https://ui.shadcn.com/) components
 - [Victory](https://formidable.com/open-source/victory/) charts
