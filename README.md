@@ -26,7 +26,7 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
 #### Install dependencies:
 
 ```bash
-  cd app && pmpm install
+  cd app && pnpm install
 ```
 
 #### Start the server:
