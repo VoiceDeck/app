@@ -7,8 +7,8 @@
     "build": "remix vite:build",
     "dev": "remix vite:dev",
     "start": "remix-serve ./build/server/index.js",
-    "lint": "biome check --apply .app/",
-    "lint:ci": "biome ci",
+    "lint": "biome check --apply ./app",
+    "lint:ci": "biome ci ./app",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prepare": "husky install"
   },
