@@ -1,5 +1,6 @@
 import type { LoaderFunctionArgs, MetaArgs } from "@remix-run/node";
 import { MetaFunction, useLoaderData } from "@remix-run/react";
+import Markdown from "react-markdown";
 
 export interface ReportSchema {
 	id: string;
@@ -22,7 +23,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	}
 	try {
 		const response = await fetch(
-			`${process.env.API_BASE_URL}/items/report?filter[slug][_eq]=${slug}`,
+			`${process.env.API_BASE_URL}/items/reports?filter[slug][_eq]=${slug}`,
 			{
 				headers: {
 					Authorization: `Bearer ${process.env.API_ACCESS_TOKEN}`,
@@ -30,13 +31,17 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 			},
 		);
 		const json = await response.json();
+		console.log(json);
 		if (json.data.length === 0) {
 			throw new Response("We couldn't find that report", { status: 400 });
 		}
 		return json.data[0];
 	} catch (error) {
 		console.error(error);
-		throw new Response("Failed to load report", { status: 500 });
+		throw new Response("Failed to load report", {
+			status: 400,
+			statusText: "We couldn't find that report",
+		});
 	}
 };
 
@@ -46,8 +51,8 @@ export default function RouteComponent() {
 
 	return (
 		<article>
-			<h1>{report.title}</h1>
-			<p className="prose">{report.content}</p>
+			<h1 className="text-3xl font-bold">{report.title}</h1>
+			<Markdown className="prose">{report.content}</Markdown>
 		</article>
 	);
 }
