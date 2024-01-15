@@ -18,10 +18,7 @@ export const meta: MetaFunction = ({ data }: MetaArgs) => {
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	const slug = params.slug;
 	if (!slug) {
-		return {
-			status: 404,
-			error: "Report not found",
-		};
+		throw new Response("We couldn't find that report", { status: 400 });
 	}
 	try {
 		const response = await fetch(
@@ -34,24 +31,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		);
 		const json = await response.json();
 		if (json.data.length === 0) {
-			return {
-				status: 404,
-				error: "Report not found",
-			};
+			throw new Response("We couldn't find that report", { status: 400 });
 		}
 		return json.data[0];
 	} catch (error) {
 		console.error(error);
-		return {
-			status: 500,
-			error: "Failed to load report",
-		};
+		throw new Response("Failed to load report", { status: 500 });
 	}
 };
 
 export default function RouteComponent() {
 	const loaderResponse = useLoaderData<typeof loader>();
 	const report = loaderResponse as ReportSchema;
+
 	return (
 		<article>
 			<h1>{report.title}</h1>
