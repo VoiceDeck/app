@@ -31,7 +31,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 			},
 		);
 		const json = await response.json();
-		console.log(json);
 		if (json.data.length === 0) {
 			throw new Response("We couldn't find that report", { status: 400 });
 		}
