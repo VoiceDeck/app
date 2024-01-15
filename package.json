@@ -6,9 +6,10 @@
   "scripts": {
     "build": "remix vite:build",
     "dev": "remix vite:dev",
-    "lint": "biome check --apply ./app",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc"
+    "lint": "biome check --apply ./app",
+    "lint:ci": "biome ci ./app",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@remix-run/node": "^2.5.0",
