@@ -17,39 +17,36 @@ module.exports = {
       },
     },
     extend: {
-      fontFamily: {
-        sans:["Plus Jakarta Sans",]
-      },
       colors: {
         // main text 'CloudBurst'
-        textBlue: "#252F56",
+        "vd-text-blue": "#252F56",
         // page background 'DawnPink'
-        beige200: "#F7EDE8",
+        "vd-beige-200": "#F7EDE8",
         // container backgrounds
-        beige400: "#E7C9BA",
-        beige300: "#F1E0D7",
-        beige100: "#FBF7F5",        
+        "vd-beige-400": "#E7C9BA",
+        "vd-beige-300": "#F1E0D7",
+        "vd-beige-100": "#FBF7F5",        
         // accent 'Gothic'
-        blue700: "#3A5264",
-        blue600: "#416279",
-        blue500: "#4B778F",
-        blue400: "#6692A9",
-        blue300: "#98B8C8",
-        blue200: "#C2D6DF",
+        "vd-blue-700": "#3A5264",
+        "vd-blue-600": "#416279",
+        "vd-blue-500": "#4B778F",
+        "vd-blue-400": "#6692A9",
+        "vd-blue-300": "#98B8C8",
+        "vd-blue-200": "#C2D6DF",
         // accent 'ElSalva'
-        orange800: "#87362D",
-        orange700: "#9F3D32",
-        orange600: "#C14E41",
-        orange500: "#D6695D",
-        orange400: "#E48F85",
-        orange300: "#EFB8B2",
-        orange200: "#F6D6D2",
+        "vd-orange-800": "#87362D",
+        "vd-orange-700": "#9F3D32",
+        "vd-orange-600": "#C14E41",
+        "vd-orange-500": "#D6695D",
+        "vd-orange-400": "#E48F85",
+        "vd-orange-300": "#EFB8B2",
+        "vd-orange-200": "#F6D6D2",
         // accent 'Woodsmoke'
-        gray600: "#42424A",
-        gray500: "#5F5F6A",
-        gray400: "#92939E",
-        gray300: "#B9BAC0",
-        gray200: "#DADADD",
+        "vd-gray-600": "#42424A",
+        "vd-gray-500": "#5F5F6A",
+        "vd-gray-400": "#92939E",
+        "vd-gray-300": "#B9BAC0",
+        "vd-gray-200": "#DADADD",
 
       },
       keyframes: {
