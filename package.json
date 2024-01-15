@@ -7,9 +7,10 @@
     "build": "remix vite:build",
     "dev": "remix vite:dev",
     "start": "remix-serve ./build/server/index.js",
-    "lint": "biome check --apply ./app",
-    "lint:ci": "biome ci ./app",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "lint": "biome check --apply",
+    "lint:ci": "biome ci",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@remix-run/node": "^2.5.0",
@@ -31,6 +32,8 @@
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "autoprefixer": "^10.4.16",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.0",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.1.6",
