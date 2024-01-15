@@ -7,8 +7,8 @@ import {
 	ScrollRestoration,
 } from "@remix-run/react";
 
+import "@fontsource-variable/plus-jakarta-sans";
 import "./tailwind.css";
-import '@fontsource-variable/plus-jakarta-sans';
 
 export default function App() {
 	return (
