@@ -8,6 +8,7 @@ import {
 } from "@remix-run/react";
 
 import "@fontsource-variable/plus-jakarta-sans";
+import { ReactNode } from "react";
 import "./tailwind.css";
 
 export default function App() {
