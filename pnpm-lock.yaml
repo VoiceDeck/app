@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fontsource-variable/plus-jakarta-sans':
+    specifier: ^5.0.19
+    version: 5.0.19
   '@remix-run/node':
     specifier: ^2.5.0
     version: 2.5.0(typescript@5.3.3)
@@ -1092,6 +1095,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@fontsource-variable/plus-jakarta-sans@5.0.19:
+    resolution: {integrity: sha512-/R9zG7DrKms5ULl0QKvtKWNytEKvVYbtQEJp/oyyXf3092f5Cpn6+qzjRu+yATWl0EsJpNwvfveP8ExQwa/3Jw==}
+    dev: false
 
   /@isaacs/cliui@8.0.2:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
