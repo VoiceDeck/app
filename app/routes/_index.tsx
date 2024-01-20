@@ -1,4 +1,17 @@
 import type { MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+
+import { Report } from "../model/report";
+import { ReportService } from "../server/bootstrap.server";
+
+export interface IReportLoader {
+	reports: Report[];
+}
+
+export const loader = async (): Promise<IReportLoader> => {
+	const reportService = await ReportService.getInstance();
+	return { reports: reportService.getReports() };
+};
 
 export const meta: MetaFunction = () => {
 	return [
@@ -8,34 +21,23 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+	const { reports } = useLoaderData<typeof loader>();
 	return (
 		<div>
-			<h1 className="text-7xl">Welcome to Remix</h1>
-			<ul>
-				<li>
-					<a
-						target="_blank"
-						href="https://remix.run/tutorials/blog"
-						rel="noreferrer"
-					>
-						15m Quickstart Blog Tutorial
-					</a>
-				</li>
-				<li>
-					<a
-						target="_blank"
-						href="https://remix.run/tutorials/jokes"
-						rel="noreferrer"
-					>
-						Deep Dive Jokes App Tutorial
-					</a>
-				</li>
-				<li>
-					<a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-						Remix Docs
-					</a>
-				</li>
-			</ul>
+			<h1 className="text-7xl">Impact Report</h1>
+			<div className="text-xl">
+				{reports.map((report) => {
+					return (
+						<div key={report.name}>
+							-----
+							<br />
+							name: {report.name}
+							<br />
+							description: {report.description}
+						</div>
+					);
+				})}
+			</div>
 		</div>
 	);
 }
