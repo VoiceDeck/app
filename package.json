@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.0.19",
-    "@hypercerts-org/sdk": "^1.4.1",
+    "@hypercerts-org/sdk": "^1.4.2-alpha.0",
     "@remix-run/node": "^2.5.0",
     "@remix-run/react": "^2.5.0",
     "@remix-run/serve": "^2.5.0",

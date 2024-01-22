@@ -9,8 +9,8 @@ dependencies:
     specifier: ^5.0.19
     version: 5.0.19
   '@hypercerts-org/sdk':
-    specifier: ^1.4.1
-    version: 1.4.1(react@18.2.0)(typescript@5.3.3)
+    specifier: ^1.4.2-alpha.0
+    version: 1.4.2-alpha.0(react@18.2.0)(typescript@5.3.3)
   '@remix-run/node':
     specifier: ^2.5.0
     version: 2.5.0(typescript@5.3.3)
@@ -1507,8 +1507,8 @@ packages:
       graphql: 16.8.1
     dev: false
 
-  /@hypercerts-org/contracts@1.1.0(typescript@5.3.3):
-    resolution: {integrity: sha512-iEEJP9LQTfgcFjnJj82AwkAob3kfFcTmxm6AGrCXFzt7CU3Xo2odCFKZ81UPFV9C4PyI8tPTSGd12NmUzjLlqA==}
+  /@hypercerts-org/contracts@1.1.1-alpha.0(typescript@5.3.3):
+    resolution: {integrity: sha512-3bypIOuTMLM/5KXopzOCOxcR+nUImFf/phPtZ/PoHceAx4CZZe1ygnK8l+GHaBxOX7/HcAp/9D7NBbcnJjHYcw==}
     dependencies:
       hardhat: 2.19.4(typescript@5.3.3)
     transitivePeerDependencies:
@@ -1519,13 +1519,13 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@hypercerts-org/sdk@1.4.1(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-lTDnaqJffPuK8iKU9LnxGQjdpPASXUq6U+fumJQHyZwhVb2FQnomLu7GNrh6yuCahw8mbj3AXq01GcuNkerLiA==}
+  /@hypercerts-org/sdk@1.4.2-alpha.0(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-VT8cd0dfbREKbD8YyQrmoyBLUrVerLwdzLqet6f+LO4yh0dtKHwKIuJJNqbhao5vwzn/iSyob08xIFmGu8rivA==}
     dependencies:
       '@ethereum-attestation-service/eas-sdk': 1.3.7(typescript@5.3.3)
       '@ethersproject/abstract-signer': 5.7.0
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.8.1)
-      '@hypercerts-org/contracts': 1.1.0(typescript@5.3.3)
+      '@hypercerts-org/contracts': 1.1.1-alpha.0(typescript@5.3.3)
       '@openzeppelin/merkle-tree': 1.0.5
       '@urql/core': 4.2.3(graphql@16.8.1)
       '@whatwg-node/fetch': 0.9.15
