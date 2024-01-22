@@ -45,5 +45,7 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
 - [Victory](https://formidable.com/open-source/victory/) charts
 - [Biome](https://biomejs.dev/) formatter/linter
 
+We recommend [direnv](https://direnv.net/) for managing your environment variables
+
 
 
