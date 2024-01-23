@@ -2,8 +2,12 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { fetchReports } from "~/server/impactReportHelpers";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+	const ownerAddress = process.env.HC_OWNER_ADDRESS;
 	try {
-		const reports = await fetchReports();
+		if (!ownerAddress) {
+			throw new Error("Owner address environment variable is not set");
+		}
+		const reports = await fetchReports(ownerAddress);
 		return new Response(JSON.stringify(reports), {
 			status: 200,
 			statusText: "OK",

@@ -5,3 +5,7 @@ node_modules
 .env
 .env.local
 .envrc
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

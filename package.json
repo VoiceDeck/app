@@ -7,6 +7,8 @@
     "build": "remix vite:build",
     "dev": "remix vite:dev",
     "start": "remix-serve ./build/server/index.js",
+    "test": "vitest",
+    "test:e2e": "playwright test",
     "lint": "biome check --apply ./app",
     "lint:ci": "biome ci ./app",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -30,7 +32,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.1",
+    "@playwright/test": "^1.41.1",
     "@remix-run/dev": "^2.5.0",
+    "@types/node": "^20.11.5",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "autoprefixer": "^10.4.16",
@@ -40,7 +44,8 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.1.6",
     "vite": "^5.0.0",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "vitest": "^1.2.1"
   },
   "engines": {
     "node": ">=18.0.0"

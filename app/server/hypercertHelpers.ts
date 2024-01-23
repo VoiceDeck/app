@@ -24,19 +24,16 @@ export const getHypercertClient = (): HypercertClient => {
 
 /**
  * Fetches the claims owned by the specified address from the Hypercert indexer.
+ * @param ownerAddress - The address of the owner of the claims.
  * @param indexer - An instance of HypercertIndexer to retrieve claims from the [Graph](https://thegraph.com/docs/en/)
  * @returns A promise that resolves to an array of claims.
  * @throws Will throw an error if the owner address is not set or the claims cannot be fetched.
  */
 export const getHypercertClaims = async (
+	ownerAddress: string,
 	indexer: HypercertIndexerInterface,
 ): Promise<Claim[]> => {
-	const ownerAddress = process.env.HC_OWNER_ADDRESS;
 	let claims: Claim[] | null;
-
-	if (!ownerAddress) {
-		throw new Error("Owner address environment variable is not set");
-	}
 
 	console.log(`Fetching claims owned by ${ownerAddress}`);
 	try {
