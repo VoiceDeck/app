@@ -3,12 +3,17 @@ import {
 	HypercertClient,
 	HypercertIndexerInterface,
 	HypercertMetadata,
-	HypercertStorageInterface,
+	HypercertsStorage,
 } from "@hypercerts-org/sdk";
+import { Claim } from "~/types";
 
 let hypercertClient: HypercertClient | null = null;
 
-export const getHypercertClient = () => {
+/**
+ * Retrieves the singleton instance of the HypercertClient.
+ * @returns The HypercertClient instance.
+ */
+export const getHypercertClient = (): HypercertClient => {
 	if (hypercertClient) {
 		return hypercertClient;
 	}
@@ -17,11 +22,17 @@ export const getHypercertClient = () => {
 	return hypercertClient;
 };
 
+/**
+ * Fetches the claims owned by the specified address from the Hypercert indexer.
+ * @param indexer - An instance of HypercertIndexer to retrieve claims from the [Graph](https://thegraph.com/docs/en/)
+ * @returns A promise that resolves to an array of claims.
+ * @throws Will throw an error if the owner address is not set or the claims cannot be fetched.
+ */
 export const getHypercertClaims = async (
 	indexer: HypercertIndexerInterface,
-) => {
+): Promise<Claim[]> => {
 	const ownerAddress = process.env.HC_OWNER_ADDRESS;
-	let claims: ClaimsByOwnerQuery["claims"] | null;
+	let claims: Claim[] | null;
 
 	if (!ownerAddress) {
 		throw new Error("Owner address environment variable is not set");
@@ -29,8 +40,9 @@ export const getHypercertClaims = async (
 
 	console.log(`Fetching claims owned by ${ownerAddress}`);
 	try {
+		// see graphql query: https://github.com/hypercerts-org/hypercerts/blob/d7f5fee/sdk/src/indexer/queries/claims.graphql#L1-L11
 		const response = await indexer.claimsByOwner(ownerAddress as string);
-		claims = (response as ClaimsByOwnerQuery).claims;
+		claims = (response as ClaimsByOwnerQuery).claims as Claim[];
 		console.log(`Fetched claims: ${claims ? claims.length : 0}`);
 
 		return claims;
@@ -40,10 +52,17 @@ export const getHypercertClaims = async (
 	}
 };
 
+/**
+ * Retrieves the metadata for a given claim URI from IPFS.
+ * @param claimUri - The IPFS URI of the claim for which metadata is to be fetched.
+ * @param storage - An instance of HypercertsStorage to retrieve metadata from IPFS.
+ * @returns A promise that resolves to the metadata of the claim.
+ * @throws Will throw an error if the metadata cannot be fetched.
+ */
 export const getHypercertMetadata = async (
 	claimUri: string,
-	storage: HypercertStorageInterface,
-) => {
+	storage: HypercertsStorage,
+): Promise<HypercertMetadata> => {
 	let metadata: HypercertMetadata | null;
 
 	try {
