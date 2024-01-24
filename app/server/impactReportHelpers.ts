@@ -32,7 +32,15 @@ export const fetchReports = async (ownerAddress: string): Promise<Report[]> => {
 					return {
 						id: claim.id,
 						title: metadata.name,
-						description: metadata.description,
+						summary: metadata.description,
+						image: metadata.image,
+						// TODO: fetch from CMS or define type(or enum or whatever)
+						state: "Madhya Pradesh",
+						category: metadata.hypercert?.work_scope.value?.[0],
+						// tentatively, it represent $1000
+						totalCost: 1000,
+						// TODO: fetch from blockchain
+						fundedSoFar: Math.floor(Math.random() * 1000),
 					} as Report;
 				}),
 			);

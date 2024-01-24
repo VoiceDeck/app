@@ -38,7 +38,12 @@ export const getHypercertClaims = async (
 	console.log(`Fetching claims owned by ${ownerAddress}`);
 	try {
 		// see graphql query: https://github.com/hypercerts-org/hypercerts/blob/d7f5fee/sdk/src/indexer/queries/claims.graphql#L1-L11
-		const response = await indexer.claimsByOwner(ownerAddress as string);
+		const response = await indexer.claimsByOwner(ownerAddress as string, {
+			orderDirections: "asc",
+			first: 100,
+			// skip the first 2 claims (they are dummy of 0x42FbF4d890B4EFA0FB0b56a9Cc2c5EB0e07C1536 in Sepolia testnet)
+			skip: 2,
+		});
 		claims = (response as ClaimsByOwnerQuery).claims as Claim[];
 		console.log(`Fetched claims: ${claims ? claims.length : 0}`);
 

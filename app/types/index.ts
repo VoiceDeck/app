@@ -2,14 +2,24 @@
  * Represents 1 Impact report
  * @property {string} id - The ID of associated hypercert
  * @property {string} title - The title of the report
- * @property {string} description - The description of the report
+ * @property {string} summary - The summary of the report
+ * @property {string} image - The image of the report
+ * @property {string} state - The state where the impact is being made
+ * @property {string} category - The category of the report
+ * @property {number} totalCost - The total cost of the report in USD
+ * @property {number} fundedSoFar - The amount funded so far in USD
  * @property {string} created_at - The date the report was created
  * @property {string} updated_at - The date the report was updated
  */
 export interface Report {
 	id: string;
 	title: string;
-	description: string;
+	summary: string;
+	image: string;
+	state: string;
+	category: string;
+	totalCost: number;
+	fundedSoFar: number;
 	created_at?: string;
 	updated_at?: string;
 }
