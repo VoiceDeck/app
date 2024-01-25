@@ -5,21 +5,21 @@ import * as React from "react";
 import { cn } from "~/lib/utils";
 
 const buttonVariants = cva(
-	"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-stone-950 dark:focus-visible:ring-stone-300",
+	"inline-flex items-center justify-center whitespace-nowrap rounded-3xl text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-stone-950 dark:focus-visible:ring-stone-300",
 	{
 		variants: {
 			variant: {
 				default:
-					"bg-stone-900 text-stone-50 hover:bg-stone-900/90 dark:bg-stone-50 dark:text-stone-900 dark:hover:bg-stone-50/90",
+					"bg-vd-text-blue text-vd-beige-100 hover:bg-vd-text-blue/90 dark:bg-vd-beige-100 dark:text-vd-text-blue dark:hover:bg-vd-beige-100/90",
 				destructive:
-					"bg-red-500 text-stone-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-stone-50 dark:hover:bg-red-900/90",
+					"bg-red-500 text-vd-beige-100 hover:bg-red-500/90 dark:bg-red-900 dark:text-vd-beige-100 dark:hover:bg-red-900/90",
 				outline:
-					"border border-stone-200 bg-white hover:bg-stone-100 hover:text-stone-900 dark:border-stone-800 dark:bg-stone-950 dark:hover:bg-stone-800 dark:hover:text-stone-50",
+					"border border-vd-text-blue bg-transparent hover:bg-vd-beige-300 hover:text-vd-text-blue dark:border-vd-beige-100 dark:bg-transparent dark:hover:bg-vd-beige-100 dark:hover:text-vd-beige-100",
 				secondary:
-					"bg-stone-100 text-stone-900 hover:bg-stone-100/80 dark:bg-stone-800 dark:text-stone-50 dark:hover:bg-stone-800/80",
+					"bg-vd-gray-300 text-vd-text-blue hover:bg-vd-gray-300/80 dark:bg-vd-beige-100 dark:text-vd-beige-100 dark:hover:bg-vd-beige-100/80",
 				ghost:
-					"hover:bg-stone-100 hover:text-stone-900 dark:hover:bg-stone-800 dark:hover:text-stone-50",
-				link: "text-stone-900 underline-offset-4 hover:underline dark:text-stone-50",
+					"hover:bg-vd-beige-300 hover:text-vd-text-blue dark:hover:bg-vd-beige-100 dark:hover:text-vd-beige-100",
+				link: "text-vd-text-blue underline-offset-4 hover:underline dark:text-vd-beige-100",
 			},
 			size: {
 				default: "h-10 px-4 py-2",
