@@ -2,10 +2,10 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -18,15 +18,14 @@ module.exports = {
     },
     extend: {
       colors: {
-        // main text 'CloudBurst'
-        "vd-text-blue": "#252F56",
         // page background 'DawnPink'
         "vd-beige-200": "#F7EDE8",
         // container backgrounds
         "vd-beige-400": "#E7C9BA",
         "vd-beige-300": "#F1E0D7",
-        "vd-beige-100": "#FBF7F5",        
+        "vd-beige-100": "#FBF7F5",
         // accent 'Gothic'
+        "vd-blue-900": "#252F56", // main text 'CloudBurst'
         "vd-blue-700": "#3A5264",
         "vd-blue-600": "#416279",
         "vd-blue-500": "#4B778F",
@@ -47,7 +46,6 @@ module.exports = {
         "vd-gray-400": "#92939E",
         "vd-gray-300": "#B9BAC0",
         "vd-gray-200": "#DADADD",
-
       },
       keyframes: {
         "accordion-down": {
@@ -66,4 +64,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};

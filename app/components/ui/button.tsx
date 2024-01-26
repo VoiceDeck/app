@@ -10,16 +10,16 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"bg-vd-text-blue text-vd-beige-100 hover:bg-vd-text-blue/90 dark:bg-vd-beige-100 dark:text-vd-text-blue dark:hover:bg-vd-beige-100/90",
+					"bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-900/90 dark:bg-vd-beige-100 dark:text-vd-blue-900 dark:hover:bg-vd-beige-100/90",
 				destructive:
 					"bg-red-500 text-vd-beige-100 hover:bg-red-500/90 dark:bg-red-900 dark:text-vd-beige-100 dark:hover:bg-red-900/90",
 				outline:
-					"border border-vd-text-blue bg-transparent hover:bg-vd-beige-300 hover:text-vd-text-blue dark:border-vd-beige-100 dark:bg-transparent dark:hover:bg-vd-beige-100 dark:hover:text-vd-beige-100",
+					"border border-vd-blue-900 bg-transparent hover:bg-vd-beige-300 hover:text-vd-blue-900 dark:border-vd-beige-100 dark:bg-transparent dark:hover:bg-vd-beige-100 dark:hover:text-vd-beige-100",
 				secondary:
-					"bg-vd-gray-300 text-vd-text-blue hover:bg-vd-gray-300/80 dark:bg-vd-beige-100 dark:text-vd-beige-100 dark:hover:bg-vd-beige-100/80",
+					"bg-vd-gray-300 text-vd-blue-900 hover:bg-vd-gray-300/80 dark:bg-vd-beige-100 dark:text-vd-beige-100 dark:hover:bg-vd-beige-100/80",
 				ghost:
-					"hover:bg-vd-beige-300 hover:text-vd-text-blue dark:hover:bg-vd-beige-100 dark:hover:text-vd-beige-100",
-				link: "text-vd-text-blue underline-offset-4 hover:underline dark:text-vd-beige-100",
+					"hover:bg-vd-beige-300 hover:text-vd-blue-900 dark:hover:bg-vd-beige-100 dark:hover:text-vd-beige-100",
+				link: "text-vd-blue-900 underline-offset-4 hover:underline dark:text-vd-beige-100",
 			},
 			size: {
 				default: "h-10 px-4 py-2",
