@@ -5,4 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [million.vite({ auto: true }), remix(), tsconfigPaths()],
+  test: {
+          include: ["./app/**/*.test.ts"],
+  },
 });
