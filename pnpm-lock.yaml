@@ -41,6 +41,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  remix-client-cache:
+    specifier: ^1.0.1
+    version: 1.0.1(@remix-run/react@2.5.0)(react-dom@18.2.0)(react@18.2.0)
   tailwind-merge:
     specifier: ^2.2.0
     version: 2.2.0
@@ -6263,6 +6266,18 @@ packages:
       mdast-util-to-hast: 12.3.0
       unified: 10.1.2
     dev: true
+
+  /remix-client-cache@1.0.1(@remix-run/react@2.5.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-hmCBgf5fWBEmlt2WfTB1GTzkZWTaYYXLBe3BMnr7niMibnww40Nc1Rad3rL+NjR/W/l0176daJG1X5hcaBCbEw==}
+    peerDependencies:
+      '@remix-run/react': ^2.5.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@remix-run/react': 2.5.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
