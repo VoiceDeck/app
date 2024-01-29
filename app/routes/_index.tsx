@@ -1,4 +1,6 @@
-import type { MetaFunction } from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { Report } from "~/types";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -7,35 +9,32 @@ export const meta: MetaFunction = () => {
 	];
 };
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+	const url = new URL(request.url);
+	const response = await fetch(`${url.protocol}//${url.host}/impact-reports`);
+	const data = await response.json();
+	return json(data);
+};
+
 export default function Index() {
+	const reports = useLoaderData<typeof loader>();
 	return (
-		<div>
-			<h1 className="text-7xl">Welcome to Remix</h1>
-			<ul>
-				<li>
-					<a
-						target="_blank"
-						href="https://remix.run/tutorials/blog"
-						rel="noreferrer"
-					>
-						15m Quickstart Blog Tutorial
-					</a>
-				</li>
-				<li>
-					<a
-						target="_blank"
-						href="https://remix.run/tutorials/jokes"
-						rel="noreferrer"
-					>
-						Deep Dive Jokes App Tutorial
-					</a>
-				</li>
-				<li>
-					<a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-						Remix Docs
-					</a>
-				</li>
-			</ul>
+		<div className="flex flex-col space-y-4">
+			<h1 className="text-5xl font-bold">Reports</h1>
+
+			<section>
+				{reports.map((report: Report) => (
+					<article key={report.id}>
+						<img
+							src={report.image}
+							alt={report.title}
+							className="h-36 w-auto"
+						/>
+						<h3 className="font-semibold text-lg">{report.title}</h3>
+						<p>{report.summary}</p>
+					</article>
+				))}
+			</section>
 		</div>
 	);
 }
