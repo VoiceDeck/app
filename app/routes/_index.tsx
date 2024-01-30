@@ -32,7 +32,6 @@ clientLoader.hydrate = true;
 export default function Index() {
 	const cacheData = useCachedLoaderData<typeof loader>();
 	const reports = cacheData?.reports ?? [];
-	// const { reports } = useLoaderData<typeof loader>();
 
 	return (
 		<div className="flex flex-col gap-10">
