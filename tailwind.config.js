@@ -33,6 +33,7 @@ module.exports = {
         "vd-blue-300": "#98B8C8",
         "vd-blue-200": "#C2D6DF",
         // accent 'ElSalva'
+        "vd-orange-900": "#3C1713",
         "vd-orange-800": "#87362D",
         "vd-orange-700": "#9F3D32",
         "vd-orange-600": "#C14E41",

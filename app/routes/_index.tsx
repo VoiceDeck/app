@@ -1,5 +1,23 @@
 import type { MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
+import { Badge } from "~/components/ui/badge";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Progress } from "~/components/ui/progress";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "~/components/ui/select";
 import { fetchReports } from "~/server/impactReportHelpers";
 import { Report } from "~/types";
 
@@ -81,12 +99,12 @@ export default function Index() {
 						Find and fund reports that resonate with you.
 					</p>
 					<div className="flex flex-col md:flex-row gap-3">
-						{/* <Input
+						<Input
 							type="search"
 							placeholder="Search Reports"
 							className="text-base bg-vd-beige-100 border-vd-blue-200 placeholder:text-vd-blue-400"
-						/> */}
-						{/* <Select>
+						/>
+						<Select>
 							<SelectTrigger className="w-[380px] text-base bg-vd-blue-100 text-vd-blue-700">
 								<SelectValue placeholder="Sort by" />
 							</SelectTrigger>
@@ -98,22 +116,35 @@ export default function Index() {
 									Most Contributors
 								</SelectItem>
 							</SelectContent>
-						</Select> */}
+						</Select>
 					</div>
 				</div>
 
-				<div className="flex flex-wrap gap-5 w-full">
+				<div className="flex flex-wrap gap-5 w-full px-4">
 					{reports.map((report: Report) => (
-						<section key={report.id}>
-							<div>ID: {report.id}</div>
-							<div>TTILE: {report.title}</div>
-							<div>SUMMARY: {report.summary}</div>
-							<div>IMAGE: {report.image.slice(0, 50)}</div>
-							<div>STATE: {report.state}</div>
-							<div>CATEGORY: {report.category}</div>
-							<div>TOTAL COST: {report.totalCost}</div>
-							<div>FUNDED SO FAR: {report.fundedSoFar}</div>
-						</section>
+						<Card key={report.id} className="w-full md:w-[350px]">
+							<div className="h-[250px] overflow-hidden">
+								<img
+									src={report.image}
+									alt="gpt-generated report illustration"
+									className="object-none object-top rounded-3xl"
+								/>
+							</div>
+							<CardHeader>
+								<CardTitle className="line-clamp-2">{report.title}</CardTitle>
+								<CardDescription className="line-clamp-2">
+									{report.summary}
+								</CardDescription>
+							</CardHeader>
+							<CardContent className="flex justify-center gap-4">
+								<Badge>{report.category}</Badge>
+								<Badge>{report.state}</Badge>
+							</CardContent>
+							<CardFooter>
+								<Progress value={20} />
+								<p>${report.totalCost - report.fundedSoFar} still needed</p>
+							</CardFooter>
+						</Card>
 					))}
 				</div>
 			</article>
