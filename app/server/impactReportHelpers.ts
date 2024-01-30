@@ -23,8 +23,9 @@ export const fetchReports = async (ownerAddress: string): Promise<Report[]> => {
 	try {
 		// Fetch reports from cache if already fetched
 		if (reports) {
-			console.log("Reports already exist, no need to fetch from remote");
-			console.log(`Existing reports: ${reports.length}`);
+			console.log(
+				`[📃] --REPORTS-- ${reports.length} already cached, no need to fetch from remote`,
+			);
 		} else {
 			// Fetch reports from remote if not already cached
 			console.log("Fetching reports from remote");
