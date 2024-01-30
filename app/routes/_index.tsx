@@ -1,20 +1,27 @@
-import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
-import { ClientLoaderFunctionArgs, useLoaderData } from "@remix-run/react";
+import { LoaderFunction, MetaFunction, json } from "@remix-run/node";
+import { ClientLoaderFunctionArgs } from "@remix-run/react";
 import { cacheClientLoader, useCachedLoaderData } from "remix-client-cache";
 import { Report } from "~/types";
+import { fetchReports } from "../impact-reports.server";
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: "New Remix App" },
-		{ name: "description", content: "Welcome to Remix!" },
+		{ title: "VoiceDeck" },
+		{ name: "description", content: "Welcome to VoiceDeck!" },
 	];
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-	const url = new URL(request.url);
-	const response = await fetch(`${url.protocol}//${url.host}/impact-reports`);
-	const data = await response.json();
-	return json({ reports: data });
+export const loader: LoaderFunction = async () => {
+	const ownerAddress = process.env.HC_OWNER_ADDRESS;
+	if (!ownerAddress)
+		throw new Error("Owner address environment variable is not set");
+	try {
+		const response = await fetchReports(ownerAddress);
+		return json(response);
+	} catch (error) {
+		console.error(`Failed to load impact reports: ${error}`);
+		throw new Response("Failed to load impact reports", { status: 500 });
+	}
 };
 
 export const clientLoader = (args: ClientLoaderFunctionArgs) =>
@@ -28,22 +35,21 @@ export default function Index() {
 	// const { reports } = useLoaderData<typeof loader>();
 
 	return (
-		<div className="flex flex-col space-y-4">
-			<h1 className="text-5xl font-bold">Reports</h1>
-
-			<section>
-				{reports.map((report: Report) => (
-					<article key={report.id}>
-						<img
-							src={report.image}
-							alt={report.title}
-							className="h-36 w-auto"
-						/>
-						<h3 className="font-semibold text-lg">{report.title}</h3>
-						<p>{report.summary}</p>
-					</article>
-				))}
-			</section>
+		<div className="flex flex-col gap-10">
+			<h1 className="text-7xl">VoiceDeck</h1>
+			<h2 className="text-5xl">Reports</h2>
+			{reports.map((report: Report) => (
+				<div key={report.id}>
+					<div>ID: {report.id}</div>
+					<div>TTILE: {report.title}</div>
+					<div>SUMMARY: {report.summary}</div>
+					<div>IMAGE: {report.image.slice(0, 50)}</div>
+					<div>STATE: {report.state}</div>
+					<div>CATEGORY: {report.category}</div>
+					<div>TOTAL COST: {report.totalCost}</div>
+					<div>FUNDED SO FAR: {report.fundedSoFar}</div>
+				</div>
+			))}
 		</div>
 	);
 }

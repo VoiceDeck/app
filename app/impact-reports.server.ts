@@ -7,12 +7,8 @@ import {
 } from "@hypercerts-org/sdk";
 import { Claim, Report } from "~/types";
 
-// ==============================
-// Report Fetching Functionality
-// ==============================
-
-// cached reports to avoid fetching them again
 let reports: Report[] | null = null;
+let hypercertClient: HypercertClient | null = null;
 
 /**
  * Fetches reports either from the cache or by generating them if not already cached.
@@ -21,13 +17,11 @@ let reports: Report[] | null = null;
  */
 export const fetchReports = async (ownerAddress: string): Promise<Report[]> => {
 	try {
-		// Fetch reports from cache if already fetched
 		if (reports) {
 			console.log(
 				`[📃] --REPORTS-- ${reports.length} already cached, no need to fetch from remote`,
 			);
 		} else {
-			// Fetch reports from remote if not already cached
 			console.log("Fetching reports from remote");
 			const claims = await getHypercertClaims(
 				ownerAddress,
@@ -63,13 +57,6 @@ export const fetchReports = async (ownerAddress: string): Promise<Report[]> => {
 		throw new Error("Failed to fetch reports");
 	}
 };
-
-// ==============================
-// Hypercert Client and Metadata Fetching Functionality
-// ==============================
-
-// singleton instance of HypercertClient
-let hypercertClient: HypercertClient | null = null;
 
 /**
  * Retrieves the singleton instance of the HypercertClient.
