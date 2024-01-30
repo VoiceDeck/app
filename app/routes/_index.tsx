@@ -1,7 +1,7 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
-import { fetchReports } from "~/server/impactReportHelpers";
 import { Report } from "~/types";
+import { fetchReports } from "../impact-reports.server";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -10,23 +10,16 @@ export const meta: MetaFunction = () => {
 	];
 };
 
-export const loader = async () => {
+export const loader: LoaderFunction = async () => {
 	const ownerAddress = process.env.HC_OWNER_ADDRESS;
+	if (!ownerAddress)
+		throw new Error("Owner address environment variable is not set");
 	try {
-		if (!ownerAddress) {
-			throw new Error("Owner address environment variable is not set");
-		}
 		const response = await fetchReports(ownerAddress);
 		return json(response);
 	} catch (error) {
 		console.error(`Failed to load impact reports: ${error}`);
-		return new Response(
-			JSON.stringify({ error: "Failed to load impact reports" }),
-			{
-				status: 500,
-				statusText: "Internal Server Error",
-			},
-		);
+		throw new Response("Failed to load impact reports", { status: 500 });
 	}
 };
 
