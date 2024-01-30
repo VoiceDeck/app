@@ -1,7 +1,7 @@
 import { it } from "node:test";
 import { afterAll, expect, expectTypeOf, test, vi } from "vitest";
-import { fetchReports } from "~/server/impactReportHelpers";
 import { Report } from "~/types";
+import { fetchReports } from "./impact-reports.server";
 
 test("fetch reports", async () => {
 	// address used to mint test hypercerts in Sepolia testnet

@@ -8,12 +8,12 @@ dependencies:
   '@fontsource-variable/plus-jakarta-sans':
     specifier: ^5.0.19
     version: 5.0.19
-  '@radix-ui/react-slot':
-    specifier: ^1.0.2
-    version: 1.0.2(@types/react@18.2.47)(react@18.2.0)
   '@hypercerts-org/sdk':
     specifier: ^1.4.2-alpha.0
     version: 1.4.2-alpha.0(react@18.2.0)(typescript@5.3.3)
+  '@radix-ui/react-slot':
+    specifier: ^1.0.2
+    version: 1.0.2(@types/react@18.2.47)(react@18.2.0)
   '@remix-run/node':
     specifier: ^2.5.0
     version: 2.5.0(typescript@5.3.3)
