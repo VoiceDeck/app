@@ -1,6 +1,8 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
+import { Search } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -83,7 +85,7 @@ export default function Index() {
 				</div>
 			</section>
 
-			<article className="max-w-[1372px]">
+			<article className="w-full max-w-[1372px]">
 				<h2 className="text-4xl md:text-5xl font-bold pt-12 md:pt-16 pb-3">
 					Reports
 				</h2>
@@ -95,7 +97,7 @@ export default function Index() {
 						<Input
 							type="search"
 							placeholder="Search Reports"
-							className="text-base bg-vd-beige-100 border-vd-blue-200 placeholder:text-vd-blue-400"
+							className="text-base font-medium bg-vd-beige-100 border-vd-blue-400 placeholder:text-vd-blue-500"
 						/>
 						<Select>
 							<SelectTrigger className="w-[380px] text-base bg-vd-blue-100 text-vd-blue-700">
@@ -113,32 +115,92 @@ export default function Index() {
 					</div>
 				</div>
 
-				<div className="flex flex-wrap gap-5 w-full px-4">
-					{reports.map((report: Report) => (
-						<Card key={report.id} className="w-full md:w-[350px]">
-							<div className="h-[250px] overflow-hidden">
-								<img
-									src={report.image}
-									alt="gpt-generated report illustration"
-									className="object-none object-top rounded-3xl"
-								/>
-							</div>
-							<CardHeader>
-								<CardTitle className="line-clamp-2">{report.title}</CardTitle>
-								<CardDescription className="line-clamp-2">
-									{report.summary}
-								</CardDescription>
-							</CardHeader>
-							<CardContent className="flex justify-center gap-4">
-								<Badge>{report.category}</Badge>
-								<Badge>{report.state}</Badge>
-							</CardContent>
-							<CardFooter>
-								<Progress value={20} />
-								<p>${report.totalCost - report.fundedSoFar} still needed</p>
-							</CardFooter>
-						</Card>
-					))}
+				<div className="flex flex-col md:flex-row gap-10 pb-16">
+					<section>
+						<div className="border border-b-vd-blue-400 py-4">
+							<h2 className="text-xl font-medium pb-8">Categories</h2>
+							{Array.from(
+								new Set(reports.map((report: Report) => report.category)),
+							).map((category) => (
+								<div className="flex pb-3">
+									<img
+										src={`/${category}.svg`}
+										alt="dynamic category illustration"
+									/>
+									<p>{category as string}</p>
+								</div>
+							))}
+						</div>
+						<div className="border border-b-vd-blue-400 pt-8 pb-4">
+							<h2 className="text-xl font-medium pb-8">Amount needed</h2>
+							{Array.from(
+								new Set(reports.map((report: Report) => report.fundedSoFar)),
+							).map((fundedSoFar) => (
+								<div className="flex pb-3">
+									<p>${1000 - (fundedSoFar as number)}</p>
+								</div>
+							))}
+						</div>
+						<div className="border border-b-vd-blue-400 pt-8 pb-4">
+							<h2 className="text-xl font-medium pb-8">Story from</h2>
+							{Array.from(
+								new Set(reports.map((report: Report) => report.id)),
+							).map((id) => (
+								<div className="flex pb-3">
+									<p>{(id as string).slice(0, 15)}</p>
+								</div>
+							))}
+						</div>
+						<div className="border border-b-vd-blue-400 pt-8 pb-4">
+							<h2 className="text-xl font-medium pb-8">State</h2>
+							{Array.from(
+								new Set(reports.map((report: Report) => report.state)),
+							).map((state) => (
+								<div className="flex pb-3">
+									<img src="/map_pin.svg" alt="map pin icon" />
+									<p>{state as string}</p>
+								</div>
+							))}
+						</div>
+						<div className="flex flex-col gap-5 pt-8 pb-4">
+							<Button>Apply</Button>
+							<Button variant={"outline"}>Clear all</Button>
+						</div>
+					</section>
+					<section className="flex flex-wrap gap-5">
+						{reports.map((report: Report) => (
+							<Card key={report.id}>
+								<div className="h-[250px] overflow-hidden">
+									<img
+										src={report.image}
+										alt="gpt-generated report illustration"
+										className="object-none object-top rounded-3xl"
+									/>
+								</div>
+								<CardHeader>
+									<CardTitle>{report.title}</CardTitle>
+									<CardDescription>{report.summary}</CardDescription>
+								</CardHeader>
+								<CardContent>
+									<Badge>
+										<img
+											src={`/${report.category}.svg`}
+											alt="dynamic category illustration"
+										/>
+										<p>{report.category}</p>
+									</Badge>
+									<Badge>
+										<img src="/map_pin.svg" alt="map pin icon" />
+										<p>{report.state}</p>
+									</Badge>
+								</CardContent>
+								<CardFooter>
+									<Progress value={report.fundedSoFar / 10} />
+									<p>${report.totalCost - report.fundedSoFar} still needed</p>
+								</CardFooter>
+							</Card>
+						))}
+					</section>
 				</div>
 			</article>
 		</main>
