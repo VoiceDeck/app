@@ -1,6 +1,14 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
-import { Search } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import {
+	GlassWater,
+	Heart,
+	Lightbulb,
+	MapPin,
+	Salad,
+	Search,
+} from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -22,6 +30,29 @@ import {
 } from "~/components/ui/select";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
+
+const iconComponents: { [key: string]: LucideIcon } = {
+	Hunger: Salad,
+	Thirst: GlassWater,
+	Opportunity: Lightbulb,
+	Dignity: Heart,
+};
+
+function GetIcon(props: {
+	category: string;
+	color: string;
+	strokeWidth: string;
+	size: string;
+}) {
+	const CategoryIcon = iconComponents[props.category];
+	return (
+		<CategoryIcon
+			color={props.color}
+			strokeWidth={props.strokeWidth}
+			size={props.size}
+		/>
+	);
+}
 
 export const meta: MetaFunction = () => {
 	return [
@@ -123,10 +154,12 @@ export default function Index() {
 								new Set(reports.map((report: Report) => report.category)),
 							).map((category) => (
 								<div className="flex pb-3">
-									<img
-										src={`/${category}.svg`}
-										alt="dynamic category illustration"
-									/>
+									{GetIcon({
+										category: category as string,
+										color: "#E48F85",
+										strokeWidth: "1.5",
+										size: "36",
+									})}
 									<p>{category as string}</p>
 								</div>
 							))}
@@ -157,7 +190,7 @@ export default function Index() {
 								new Set(reports.map((report: Report) => report.state)),
 							).map((state) => (
 								<div className="flex pb-3">
-									<img src="/map_pin.svg" alt="map pin icon" />
+									<MapPin color="#E48F85" strokeWidth={1.5} size={36} />
 									<p>{state as string}</p>
 								</div>
 							))}
@@ -183,14 +216,16 @@ export default function Index() {
 								</CardHeader>
 								<CardContent>
 									<Badge>
-										<img
-											src={`/${report.category}.svg`}
-											alt="dynamic category illustration"
-										/>
+										{GetIcon({
+											category: report.category,
+											color: "#C14E41",
+											strokeWidth: "1",
+											size: "24",
+										})}
 										<p>{report.category}</p>
 									</Badge>
 									<Badge>
-										<img src="/map_pin.svg" alt="map pin icon" />
+										<MapPin color="#C14E41" strokeWidth={1} size={24} />
 										<p>{report.state}</p>
 									</Badge>
 								</CardContent>
