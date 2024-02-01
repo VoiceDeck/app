@@ -17,7 +17,7 @@ export const loader: LoaderFunction = async () => {
 		throw new Error("Owner address environment variable is not set");
 	try {
 		const response = await fetchReports(ownerAddress);
-		return json(response);
+		return json({ reports: response });
 	} catch (error) {
 		console.error(`Failed to load impact reports: ${error}`);
 		throw new Response("Failed to load impact reports", { status: 500 });
