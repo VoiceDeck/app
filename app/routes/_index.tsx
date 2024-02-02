@@ -78,7 +78,7 @@ export const loader: LoaderFunction = async () => {
 export default function Index() {
 	const reports = useLoaderData<typeof loader>();
 	return (
-		<main className="flex flex-col gap-8 md:gap-6 justify-center items-center p-4 md:px-[15%]">
+		<main className="flex flex-col gap-8 md:gap-6 justify-center items-center p-4 md:px-[14%]">
 			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-[1372px]">
 				<h1 className="text-6xl font-bold text-left">
 					From individual actions to collective impact
@@ -144,51 +144,51 @@ export default function Index() {
 				<div className="flex flex-col md:flex-row gap-10 pb-16">
 					<section>
 						<div className="border border-b-vd-blue-400 py-4">
-							<h2 className="text-xl font-medium pb-8">Categories</h2>
+							<h2 className="text-base font-medium pb-4">Categories</h2>
 							{Array.from(
 								new Set(reports.map((report: Report) => report.category)),
 							).map((category) => (
-								<div className="flex items-center gap-2 pb-3">
+								<div className="flex items-center gap-2 pb-1">
 									{GetIcon({
 										category: category as string,
 										color: "#E48F85",
 										strokeWidth: "1.5",
-										size: "36",
+										size: "26",
 									})}
-									<p>{category as string}</p>
+									<p className="text-sm">{category as string}</p>
 								</div>
 							))}
 						</div>
-						<div className="border border-b-vd-blue-400 pt-8 pb-4">
-							<h2 className="text-xl font-medium pb-8">Amount needed</h2>
+						<div className="border border-b-vd-blue-400 pt-6 pb-4">
+							<h2 className="text-base font-medium pb-4">Amount needed</h2>
 							{Array.from(
 								new Set(reports.map((report: Report) => report.fundedSoFar)),
 							).map((fundedSoFar) => (
-								<div className="flex items-center gap-2 pb-3">
-									<Circle />
-									<p>${1000 - (fundedSoFar as number)}</p>
+								<div className="flex items-center gap-2 pb-1">
+									<Circle size={18} strokeWidth={1} />
+									<p className="text-sm">${1000 - (fundedSoFar as number)}</p>
 								</div>
 							))}
 						</div>
-						<div className="border border-b-vd-blue-400 pt-8 pb-4">
-							<h2 className="text-xl font-medium pb-8">Story from</h2>
+						<div className="border border-b-vd-blue-400 pt-6 pb-4">
+							<h2 className="text-base font-medium pb-4">Story from</h2>
 							{Array.from(
 								new Set(reports.map((report: Report) => report.id)),
 							).map((id) => (
-								<div className="flex items-center gap-2 pb-3">
-									<Circle />
-									<p>{(id as string).slice(0, 15)}</p>
+								<div className="flex items-center gap-2 pb-1">
+									<Circle size={18} strokeWidth={1} />
+									<p className="text-sm">{(id as string).slice(0, 15)}</p>
 								</div>
 							))}
 						</div>
-						<div className="border border-b-vd-blue-400 pt-8 pb-4">
-							<h2 className="text-xl font-medium pb-8">State</h2>
+						<div className="border border-b-vd-blue-400 pt-6 pb-4">
+							<h2 className="text-base font-medium pb-4">State</h2>
 							{Array.from(
 								new Set(reports.map((report: Report) => report.state)),
 							).map((state) => (
-								<div className="flex items-center gap-2 pb-3">
-									<Circle />
-									<p>{state as string}</p>
+								<div className="flex items-center gap-2 pb-1">
+									<Circle size={18} strokeWidth={1} />
+									<p className="text-sm">{state as string}</p>
 								</div>
 							))}
 						</div>
@@ -197,10 +197,10 @@ export default function Index() {
 							<Button variant={"outline"}>Clear all</Button>
 						</div>
 					</section>
-					<section className="flex flex-wrap gap-5">
+					<section className="flex flex-wrap gap-5 md:gap-3">
 						{reports.map((report: Report) => (
 							<Card key={report.id}>
-								<div className="h-[250px] overflow-hidden">
+								<div className="h-[150px] overflow-hidden">
 									<img
 										src={report.image}
 										alt="gpt-generated report illustration"
@@ -217,18 +217,57 @@ export default function Index() {
 											category: report.category,
 											color: "#C14E41",
 											strokeWidth: "1",
-											size: "24",
+											size: "14",
 										})}
 										<p>{report.category}</p>
 									</Badge>
 									<Badge>
-										<MapPin color="#C14E41" strokeWidth={1} size={24} />
+										<MapPin color="#C14E41" strokeWidth={1} size={14} />
 										<p>{report.state}</p>
 									</Badge>
 								</CardContent>
 								<CardFooter>
 									<Progress value={report.fundedSoFar / 10} />
-									<p>${report.totalCost - report.fundedSoFar} still needed</p>
+									<p className="text-xs">
+										${report.totalCost - report.fundedSoFar} still needed
+									</p>
+								</CardFooter>
+							</Card>
+						))}
+						{/* mapping out our 2 reports again to see how they fit */}
+						{reports.map((report: Report) => (
+							<Card key={report.id}>
+								<div className="h-[150px] overflow-hidden">
+									<img
+										src={report.image}
+										alt="gpt-generated report illustration"
+										className="object-none object-top rounded-3xl"
+									/>
+								</div>
+								<CardHeader>
+									<CardTitle>{report.title}</CardTitle>
+									<CardDescription>{report.summary}</CardDescription>
+								</CardHeader>
+								<CardContent>
+									<Badge>
+										{GetIcon({
+											category: report.category,
+											color: "#C14E41",
+											strokeWidth: "1",
+											size: "14",
+										})}
+										<p>{report.category}</p>
+									</Badge>
+									<Badge>
+										<MapPin color="#C14E41" strokeWidth={1} size={14} />
+										<p>{report.state}</p>
+									</Badge>
+								</CardContent>
+								<CardFooter>
+									<Progress value={report.fundedSoFar / 10} />
+									<p className="text-xs">
+										${report.totalCost - report.fundedSoFar} still needed
+									</p>
 								</CardFooter>
 							</Card>
 						))}
