@@ -33,8 +33,11 @@ module.exports = {
           300: 'rgb(var(--vd-blue-300) / <alpha-value>)',
           200: 'rgb(var(--vd-blue-200) / <alpha-value>)',
           200: 'rgb(var(--vd-blue-200) / <alpha-value>)',
+          100: 'rgb(var(--vd-blue-100) / <alpha-value>)',
+          50: 'rgb(var(--vd-blue-50) / <alpha-value>)',
         },
         'vd-orange': {
+          900: 'rgb(var(--vd-orange-900) / <alpha-value>)',
           800: 'rgb(var(--vd-orange-800) / <alpha-value>)',
           700: 'rgb(var(--vd-orange-700) / <alpha-value>)',
           600: 'rgb(var(--vd-orange-600) / <alpha-value>)',
