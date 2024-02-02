@@ -61,7 +61,7 @@ function Document(props: { children: ReactNode; title?: string }) {
 				<Meta />
 				<Links />
 			</head>
-			<body>
+			<body className="bg-vd-beige-200">
 				{props.children}
 				<ScrollRestoration />
 				<Scripts />
