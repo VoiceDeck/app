@@ -2,6 +2,7 @@ import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
 import type { LucideIcon } from "lucide-react";
 import {
+	Circle,
 	GlassWater,
 	Heart,
 	Lightbulb,
@@ -121,20 +122,16 @@ export default function Index() {
 					Reports
 				</h2>
 				<div className="flex flex-col md:flex-row md:justify-between md:items-end pb-12">
-					<p className="text-xl font-400">
+					<p className="text-xl pb-4 md:pb-0 ">
 						Find and fund reports that resonate with you.
 					</p>
 					<div className="flex flex-col md:flex-row gap-3">
-						<Input
-							type="search"
-							placeholder="Search Reports"
-							className="text-base font-medium bg-vd-beige-100 border-vd-blue-400 placeholder:text-vd-blue-500"
-						/>
+						<Input type="search" placeholder="Search Reports" />
 						<Select>
-							<SelectTrigger className="w-[380px] text-base bg-vd-blue-100 text-vd-blue-700">
+							<SelectTrigger>
 								<SelectValue placeholder="Sort by" />
 							</SelectTrigger>
-							<SelectContent className="bg-vd-blue-100 text-vd-blue-700">
+							<SelectContent>
 								<SelectItem value="amount-needed">Amount Needed</SelectItem>
 								<SelectItem value="newest-oldest">Newest to Oldest</SelectItem>
 								<SelectItem value="oldest-newest">Oldest to Newest</SelectItem>
@@ -153,7 +150,7 @@ export default function Index() {
 							{Array.from(
 								new Set(reports.map((report: Report) => report.category)),
 							).map((category) => (
-								<div className="flex pb-3">
+								<div className="flex items-center gap-2 pb-3">
 									{GetIcon({
 										category: category as string,
 										color: "#E48F85",
@@ -169,7 +166,8 @@ export default function Index() {
 							{Array.from(
 								new Set(reports.map((report: Report) => report.fundedSoFar)),
 							).map((fundedSoFar) => (
-								<div className="flex pb-3">
+								<div className="flex items-center gap-2 pb-3">
+									<Circle />
 									<p>${1000 - (fundedSoFar as number)}</p>
 								</div>
 							))}
@@ -179,7 +177,8 @@ export default function Index() {
 							{Array.from(
 								new Set(reports.map((report: Report) => report.id)),
 							).map((id) => (
-								<div className="flex pb-3">
+								<div className="flex items-center gap-2 pb-3">
+									<Circle />
 									<p>{(id as string).slice(0, 15)}</p>
 								</div>
 							))}
@@ -189,8 +188,8 @@ export default function Index() {
 							{Array.from(
 								new Set(reports.map((report: Report) => report.state)),
 							).map((state) => (
-								<div className="flex pb-3">
-									<MapPin color="#E48F85" strokeWidth={1.5} size={36} />
+								<div className="flex items-center gap-2 pb-3">
+									<Circle />
 									<p>{state as string}</p>
 								</div>
 							))}
