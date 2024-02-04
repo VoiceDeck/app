@@ -39,20 +39,19 @@ const iconComponents: { [key: string]: LucideIcon } = {
 	Dignity: Heart,
 };
 
-function GetIcon(props: {
+function GetIcon({
+	category,
+	color,
+	strokeWidth,
+	size,
+}: {
 	category: string;
 	color: string;
 	strokeWidth: string;
 	size: string;
 }) {
-	const CategoryIcon = iconComponents[props.category];
-	return (
-		<CategoryIcon
-			color={props.color}
-			strokeWidth={props.strokeWidth}
-			size={props.size}
-		/>
-	);
+	const CategoryIcon = iconComponents[category];
+	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
 }
 
 export const meta: MetaFunction = () => {
