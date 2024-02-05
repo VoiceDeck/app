@@ -86,6 +86,7 @@ export default function Index() {
 					self.indexOf(value) === index,
 			);
 	}, [reports]);
+
 	// here using amounts directly from the HC, needs additional logic to group those amounts into displayed ranges ie $0-50, $50-100
 	const uniqueFundedAmounts = useMemo(() => {
 		return reports
@@ -95,6 +96,7 @@ export default function Index() {
 					self.indexOf(value) === index,
 			);
 	}, [reports]);
+
 	// using id as placeholder for media outet name - not currently available on our example hypercerts
 	const uniqueIds = useMemo(() => {
 		return reports
@@ -104,6 +106,7 @@ export default function Index() {
 					self.indexOf(value) === index,
 			);
 	}, [reports]);
+
 	const uniqueStates = useMemo(() => {
 		return reports
 			.map((report: Report, index: number) => report.state)
@@ -112,6 +115,7 @@ export default function Index() {
 					self.indexOf(value) === index,
 			);
 	}, [reports]);
+
 	return (
 		<main className="flex flex-col gap-8 md:gap-6 justify-center items-center p-4 md:px-[14%]">
 			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
