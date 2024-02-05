@@ -147,7 +147,10 @@ export default function Index() {
 							{Array.from(
 								new Set(reports.map((report: Report) => report.category)),
 							).map((category) => (
-								<div className="flex items-center gap-2 pb-1">
+								<div
+									key={category as string}
+									className="flex items-center gap-2 pb-1"
+								>
 									{GetIcon({
 										category: category as string,
 										color: "#E48F85",
@@ -163,7 +166,10 @@ export default function Index() {
 							{Array.from(
 								new Set(reports.map((report: Report) => report.fundedSoFar)),
 							).map((fundedSoFar) => (
-								<div className="flex items-center gap-2 pb-1">
+								<div
+									key={fundedSoFar as number}
+									className="flex items-center gap-2 pb-1"
+								>
 									<Circle size={18} strokeWidth={1} />
 									<p className="text-sm">${1000 - (fundedSoFar as number)}</p>
 								</div>
@@ -174,7 +180,11 @@ export default function Index() {
 							{Array.from(
 								new Set(reports.map((report: Report) => report.id)),
 							).map((id) => (
-								<div className="flex items-center gap-2 pb-1">
+								// using id as placceholder for media outet name - not currently available on our example hypercerts
+								<div
+									key={id as string}
+									className="flex items-center gap-2 pb-1"
+								>
 									<Circle size={18} strokeWidth={1} />
 									<p className="text-sm">{(id as string).slice(0, 15)}</p>
 								</div>
@@ -185,7 +195,10 @@ export default function Index() {
 							{Array.from(
 								new Set(reports.map((report: Report) => report.state)),
 							).map((state) => (
-								<div className="flex items-center gap-2 pb-1">
+								<div
+									key={state as string}
+									className="flex items-center gap-2 pb-1"
+								>
 									<Circle size={18} strokeWidth={1} />
 									<p className="text-sm">{state as string}</p>
 								</div>
