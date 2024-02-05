@@ -12,12 +12,13 @@ import {
 
 import "@fontsource-variable/plus-jakarta-sans";
 import { ReactNode } from "react";
-import { NavMenu } from "./components/nav-menu";
+import { NavMenu } from "./components/global/nav-menu";
 import "./tailwind.css";
 
 export default function App() {
 	return (
 		<Document>
+			<NavMenu />
 			<Outlet />
 		</Document>
 	);
@@ -63,7 +64,6 @@ function Document(props: { children: ReactNode; title?: string }) {
 				<Links />
 			</head>
 			<body>
-				<NavMenu />
 				{props.children}
 				<ScrollRestoration />
 				<Scripts />
