@@ -10,6 +10,7 @@ import {
 	Salad,
 	Search,
 } from "lucide-react";
+import { useMemo } from "react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -29,6 +30,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
+import VoicedeckStats from "~/components/voicedeck-stats";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
 
@@ -76,6 +78,20 @@ export const loader: LoaderFunction = async () => {
 
 export default function Index() {
 	const reports = useLoaderData<typeof loader>();
+	const uniqueCategories = useMemo(() => {
+		return [...new Set(reports.map((report: Report) => report.category))];
+	}, [reports]);
+	// here using amounts directly from the HC, needs additional logic to group those amounts into displayed ranges ie $0-50, $50-100
+	const uniqueFundedAmounts = useMemo(() => {
+		return [...new Set(reports.map((report: Report) => report.fundedSoFar))];
+	}, [reports]);
+	// using id as placeholder for media outet name - not currently available on our example hypercerts
+	const uniqueIds = useMemo(() => {
+		return [...new Set(reports.map((report: Report) => report.id))];
+	}, [reports]);
+	const uniqueStates = useMemo(() => {
+		return [...new Set(reports.map((report: Report) => report.state))];
+	}, [reports]);
 	return (
 		<main className="flex flex-col gap-8 md:gap-6 justify-center items-center p-4 md:px-[14%]">
 			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
@@ -91,29 +107,22 @@ export default function Index() {
 			</header>
 
 			<section className="flex flex-col lg:flex-row w-full gap-3 lg:gap-3 max-w-screen-xl">
-				<div className="flex flex-auto items-center gap-4 lg:w-[33%] rounded-3xl bg-vd-blue-200 p-4">
-					<img src={"/blue_flower.svg"} alt="blue flower drawing" />
-					<div className="flex flex-col gap-2">
-						<p className="text-base font-medium">Total Supporters</p>
-						<p className="text-3xl md:text-3xl font-bold">104</p>
-					</div>
-				</div>
-				<div className="flex flex-auto items-center gap-4 lg:w-[33%] rounded-3xl bg-vd-blue-200 p-4">
-					<img src={"/blue_elephant.svg"} alt="blue elephant drawing" />
-					<div className="flex flex-col gap-2">
-						<p className="text-base font-medium">Total Support Received</p>
-						<p className="text-3xl md:text-3xl font-bold">
-							3.6K <span className="text-lg">USD</span>
-						</p>
-					</div>
-				</div>
-				<div className="flex flex-auto items-center gap-4 lg:w-[33%] rounded-3xl bg-vd-blue-200 p-4">
-					<img src={"/blue_candle.svg"} alt="blue candle drawing" />
-					<div className="flex flex-col gap-2">
-						<p className="text-base font-medium"># of Reports Fully Funded</p>
-						<p className="text-3xl md:text-3xl font-bold">12</p>
-					</div>
-				</div>
+				<VoicedeckStats
+					icon="blue_flower"
+					heading="Total Supporters"
+					data="104"
+				/>
+				<VoicedeckStats
+					icon="blue_elephant"
+					heading="Total Support Received"
+					data="3.6K"
+					currency="USD"
+				/>
+				<VoicedeckStats
+					icon="blue_candle"
+					heading="# of Reports Fully Funded"
+					data="12"
+				/>
 			</section>
 
 			<article className="w-full max-w-screen-xl">
@@ -144,9 +153,7 @@ export default function Index() {
 					<section>
 						<div className="border border-b-vd-blue-400 py-4">
 							<h2 className="text-base font-medium pb-4">Categories</h2>
-							{Array.from(
-								new Set(reports.map((report: Report) => report.category)),
-							).map((category) => (
+							{uniqueCategories.map((category) => (
 								<div
 									key={category as string}
 									className="flex items-center gap-2 pb-1"
@@ -163,9 +170,7 @@ export default function Index() {
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">Amount needed</h2>
-							{Array.from(
-								new Set(reports.map((report: Report) => report.fundedSoFar)),
-							).map((fundedSoFar) => (
+							{uniqueFundedAmounts.map((fundedSoFar) => (
 								<div
 									key={fundedSoFar as number}
 									className="flex items-center gap-2 pb-1"
@@ -177,10 +182,7 @@ export default function Index() {
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">Story from</h2>
-							{Array.from(
-								new Set(reports.map((report: Report) => report.id)),
-							).map((id) => (
-								// using id as placceholder for media outet name - not currently available on our example hypercerts
+							{uniqueIds.map((id) => (
 								<div
 									key={id as string}
 									className="flex items-center gap-2 pb-1"
@@ -192,9 +194,7 @@ export default function Index() {
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">State</h2>
-							{Array.from(
-								new Set(reports.map((report: Report) => report.state)),
-							).map((state) => (
+							{uniqueStates.map((state) => (
 								<div
 									key={state as string}
 									className="flex items-center gap-2 pb-1"
