@@ -29,7 +29,7 @@ const NavLinks = () => {
 					className={cn(buttonVariants({ variant: "link" }), "text-lg")}
 				>
 					About
-					<ArrowUpRight />
+					<ArrowUpRight size={24} />
 				</a>
 				{/* TODO: I believe that About and FAQs are external Links. If they are different Routes use below. Confirm in Design Review */}
 				{/* <NavLink
@@ -61,7 +61,7 @@ const NavLinks = () => {
 					className={cn(buttonVariants({ variant: "link" }), "text-lg")}
 				>
 					FAQs
-					<ArrowUpRight />
+					<ArrowUpRight size={24} />
 				</a>
 			</li>
 		</ul>
