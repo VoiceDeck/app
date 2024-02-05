@@ -79,18 +79,38 @@ export const loader: LoaderFunction = async () => {
 export default function Index() {
 	const reports = useLoaderData<typeof loader>();
 	const uniqueCategories = useMemo(() => {
-		return [...new Set(reports.map((report: Report) => report.category))];
+		return reports
+			.map((report: Report, index: number) => report.category)
+			.filter(
+				(value: string, index: number, self: string[]) =>
+					self.indexOf(value) === index,
+			);
 	}, [reports]);
 	// here using amounts directly from the HC, needs additional logic to group those amounts into displayed ranges ie $0-50, $50-100
 	const uniqueFundedAmounts = useMemo(() => {
-		return [...new Set(reports.map((report: Report) => report.fundedSoFar))];
+		return reports
+			.map((report: Report, index: number) => report.fundedSoFar)
+			.filter(
+				(value: number, index: number, self: number[]) =>
+					self.indexOf(value) === index,
+			);
 	}, [reports]);
 	// using id as placeholder for media outet name - not currently available on our example hypercerts
 	const uniqueIds = useMemo(() => {
-		return [...new Set(reports.map((report: Report) => report.id))];
+		return reports
+			.map((report: Report, index: number) => report.id)
+			.filter(
+				(value: string, index: number, self: string[]) =>
+					self.indexOf(value) === index,
+			);
 	}, [reports]);
 	const uniqueStates = useMemo(() => {
-		return [...new Set(reports.map((report: Report) => report.state))];
+		return reports
+			.map((report: Report, index: number) => report.state)
+			.filter(
+				(value: string, index: number, self: string[]) =>
+					self.indexOf(value) === index,
+			);
 	}, [reports]);
 	return (
 		<main className="flex flex-col gap-8 md:gap-6 justify-center items-center p-4 md:px-[14%]">
@@ -153,54 +173,42 @@ export default function Index() {
 					<section>
 						<div className="border border-b-vd-blue-400 py-4">
 							<h2 className="text-base font-medium pb-4">Categories</h2>
-							{uniqueCategories.map((category) => (
-								<div
-									key={category as string}
-									className="flex items-center gap-2 pb-1"
-								>
+							{uniqueCategories.map((category: string) => (
+								<div key={category} className="flex items-center gap-2 pb-1">
 									{GetIcon({
-										category: category as string,
+										category: category,
 										color: "#E48F85",
 										strokeWidth: "1.5",
 										size: "26",
 									})}
-									<p className="text-sm">{category as string}</p>
+									<p className="text-sm">{category}</p>
 								</div>
 							))}
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">Amount needed</h2>
-							{uniqueFundedAmounts.map((fundedSoFar) => (
-								<div
-									key={fundedSoFar as number}
-									className="flex items-center gap-2 pb-1"
-								>
+							{uniqueFundedAmounts.map((fundedSoFar: number) => (
+								<div key={fundedSoFar} className="flex items-center gap-2 pb-1">
 									<Circle size={18} strokeWidth={1} />
-									<p className="text-sm">${1000 - (fundedSoFar as number)}</p>
+									<p className="text-sm">${1000 - fundedSoFar}</p>
 								</div>
 							))}
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">Story from</h2>
-							{uniqueIds.map((id) => (
-								<div
-									key={id as string}
-									className="flex items-center gap-2 pb-1"
-								>
+							{uniqueIds.map((id: string) => (
+								<div key={id} className="flex items-center gap-2 pb-1">
 									<Circle size={18} strokeWidth={1} />
-									<p className="text-sm">{(id as string).slice(0, 15)}</p>
+									<p className="text-sm">{id.slice(0, 15)}</p>
 								</div>
 							))}
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">State</h2>
-							{uniqueStates.map((state) => (
-								<div
-									key={state as string}
-									className="flex items-center gap-2 pb-1"
-								>
+							{uniqueStates.map((state: string) => (
+								<div key={state} className="flex items-center gap-2 pb-1">
 									<Circle size={18} strokeWidth={1} />
-									<p className="text-sm">{state as string}</p>
+									<p className="text-sm">{state}</p>
 								</div>
 							))}
 						</div>
