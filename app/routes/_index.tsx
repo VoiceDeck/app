@@ -78,7 +78,7 @@ export default function Index() {
 	const reports = useLoaderData<typeof loader>();
 	return (
 		<main className="flex flex-col gap-8 md:gap-6 justify-center items-center p-4 md:px-[14%]">
-			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-[1372px]">
+			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
 				<h1 className="text-6xl font-bold text-left">
 					From individual actions to collective impact
 				</h1>
@@ -90,7 +90,7 @@ export default function Index() {
 				</h2>
 			</header>
 
-			<section className="flex flex-col lg:flex-row w-full gap-3 lg:gap-3 max-w-[1372px]">
+			<section className="flex flex-col lg:flex-row w-full gap-3 lg:gap-3 max-w-screen-xl">
 				<div className="flex flex-auto items-center gap-4 lg:w-[33%] rounded-3xl bg-vd-blue-200 p-4">
 					<img src={"/blue_flower.svg"} alt="blue flower drawing" />
 					<div className="flex flex-col gap-2">
@@ -116,7 +116,7 @@ export default function Index() {
 				</div>
 			</section>
 
-			<article className="w-full max-w-[1372px]">
+			<article className="w-full max-w-screen-xl">
 				<h2 className="text-3xl md:text-4xl font-semibold pt-6">Reports</h2>
 				<div className="flex flex-col md:flex-row md:justify-between md:items-end pb-8">
 					<p className="text-base pb-4 md:pb-0 ">
