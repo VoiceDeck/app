@@ -52,6 +52,10 @@ function GetIcon({
 	strokeWidth: string;
 	size: string;
 }) {
+	// this is a temporary fix for the category name mismatch in CMS configuration
+	// FIXME: remove this temporary fix once the category name mismatch is resolved in CMS configuration and it's minted again
+	category = category === "Oppurtunity" ? "Opportunity" : category;
+
 	const CategoryIcon = iconComponents[category];
 	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
 }
@@ -100,7 +104,7 @@ export default function Index() {
 	// using id as placeholder for media outet name - not currently available on our example hypercerts
 	const uniqueIds = useMemo(() => {
 		return reports
-			.map((report: Report, index: number) => report.id)
+			.map((report: Report, index: number) => report.hypercertId)
 			.filter(
 				(value: string, index: number, self: string[]) =>
 					self.indexOf(value) === index,
@@ -200,10 +204,13 @@ export default function Index() {
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">Story from</h2>
-							{uniqueIds.map((id: string) => (
-								<div key={id} className="flex items-center gap-2 pb-1">
+							{uniqueIds.map((hypercert_id: string) => (
+								<div
+									key={hypercert_id}
+									className="flex items-center gap-2 pb-1"
+								>
 									<Circle size={18} strokeWidth={1} />
-									<p className="text-sm">{id.slice(0, 15)}</p>
+									<p className="text-sm">{hypercert_id.slice(0, 15)}</p>
 								</div>
 							))}
 						</div>
@@ -223,7 +230,7 @@ export default function Index() {
 					</section>
 					<section className="flex flex-wrap gap-5 md:gap-3">
 						{reports.map((report: Report) => (
-							<Card key={report.id}>
+							<Card key={report.hypercertId}>
 								<div className="h-[150px] overflow-hidden">
 									<img
 										src={report.image}
@@ -260,7 +267,7 @@ export default function Index() {
 						))}
 						{/* mapping out our 2 reports again to see how they fit */}
 						{reports.map((report: Report) => (
-							<Card key={report.id}>
+							<Card key={report.hypercertId}>
 								<div className="h-[150px] overflow-hidden">
 									<img
 										src={report.image}
