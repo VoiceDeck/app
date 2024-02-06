@@ -1,7 +1,7 @@
 import { NavLink } from "@remix-run/react";
 import { cn } from "~/lib/utils";
 
-import NavLinks from "~/components/global/nav-links";
+import { NavLinks } from "~/components/global/nav-links";
 import { buttonVariants } from "~/components/ui/button";
 import logo from "/logo.svg";
 

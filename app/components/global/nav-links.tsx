@@ -70,4 +70,4 @@ const NavLinks = () => {
 
 NavLinks.displayName = "NavLinks";
 
-export default NavLinks;
+export { NavLinks };
