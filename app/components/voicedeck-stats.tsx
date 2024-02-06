@@ -5,12 +5,12 @@ interface VoicedeckStatsProps {
 	currency?: string;
 }
 
-const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
+export default function VoicedeckStats({
 	icon,
 	heading,
 	data,
 	currency,
-}) => {
+}: VoicedeckStatsProps) {
 	return (
 		<div className="flex flex-auto items-center gap-4 lg:w-[33%] rounded-3xl bg-vd-blue-200 p-4">
 			<img src={`/${icon}.svg`} alt={`${icon} illustration`} />
@@ -23,6 +23,4 @@ const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 			</div>
 		</div>
 	);
-};
-
-export default VoicedeckStats;
+}
