@@ -1,14 +1,18 @@
-import { LoaderFunction, MetaFunction, json } from "@remix-run/node";
-import { ClientLoaderFunctionArgs } from "@remix-run/react";
-import type { LucideIcon } from "lucide-react";
+import { LoaderFunction, json } from "@remix-run/node";
 import {
+	ClientLoaderFunctionArgs,
+	MetaFunction,
+	useLoaderData,
+} from "@remix-run/react";
+import {
+	AlertCircle,
 	Circle,
 	GlassWater,
 	Heart,
 	Lightbulb,
+	LucideIcon,
 	MapPin,
 	Salad,
-	Search,
 } from "lucide-react";
 import { useMemo } from "react";
 import { cacheClientLoader, useCachedLoaderData } from "remix-client-cache";
@@ -32,30 +36,35 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import VoicedeckStats from "~/components/voicedeck-stats";
+import { fetchReports } from "~/impact-reports.server";
 import { Report } from "~/types";
-import { fetchReports } from "../impact-reports.server";
 
-const iconComponents: { [key: string]: LucideIcon } = {
+const iconComponents: { [key: string]: React.ElementType } = {
 	Hunger: Salad,
 	Thirst: GlassWater,
 	Opportunity: Lightbulb,
 	Dignity: Heart,
 };
 
-function GetIcon({
-	category,
-	color,
-	strokeWidth,
-	size,
-}: {
+interface GetIconProps {
 	category: string;
 	color: string;
 	strokeWidth: string;
 	size: string;
-}) {
-	const CategoryIcon = iconComponents[category];
-	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
 }
+
+const DynamicCategoryIcon: React.FC<GetIconProps> = ({
+	category,
+	color,
+	strokeWidth,
+	size,
+}) => {
+	const CategoryIcon = iconComponents[category];
+	if (!CategoryIcon) {
+		return <AlertCircle size={14} />; // or a placeholder component
+	}
+	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
+};
 
 export const meta: MetaFunction = () => {
 	return [
@@ -78,7 +87,10 @@ export const loader: LoaderFunction = async () => {
 };
 
 export const clientLoader = (args: ClientLoaderFunctionArgs) =>
-	cacheClientLoader(args);
+	cacheClientLoader(args, {
+		type: "swr",
+		key: "impact-reports",
+	});
 
 clientLoader.hydrate = true;
 
@@ -157,7 +169,7 @@ export default function Index() {
 				/>
 			</section>
 
-			<article className="w-full max-w-screen-xl">
+			<section className="w-full max-w-screen-xl">
 				<h2 className="text-3xl md:text-4xl font-semibold pt-6">Reports</h2>
 				<div className="flex flex-col md:flex-row md:justify-between md:items-end pb-8">
 					<p className="text-base pb-4 md:pb-0 ">
@@ -187,12 +199,12 @@ export default function Index() {
 							<h2 className="text-base font-medium pb-4">Categories</h2>
 							{uniqueCategories.map((category: string) => (
 								<div key={category} className="flex items-center gap-2 pb-1">
-									{GetIcon({
-										category: category,
-										color: "#E48F85",
-										strokeWidth: "1.5",
-										size: "26",
-									})}
+									<DynamicCategoryIcon
+										category={category}
+										color="#E48F85"
+										strokeWidth="1.5"
+										size="14"
+									/>
 									<p className="text-sm">{category}</p>
 								</div>
 							))}
@@ -229,6 +241,7 @@ export default function Index() {
 							<Button variant={"outline"}>Clear all</Button>
 						</div>
 					</section>
+
 					<section className="flex flex-wrap gap-5 md:gap-3">
 						{reports.map((report: Report) => (
 							<Card key={report.id}>
@@ -243,14 +256,14 @@ export default function Index() {
 									<CardTitle>{report.title}</CardTitle>
 									<CardDescription>{report.summary}</CardDescription>
 								</CardHeader>
-								<CardContent>
+								<CardContent className="justify-start">
 									<Badge>
-										{GetIcon({
-											category: report.category,
-											color: "#C14E41",
-											strokeWidth: "1",
-											size: "14",
-										})}
+										<DynamicCategoryIcon
+											category={report.category}
+											color="#E48F85"
+											strokeWidth="1.5"
+											size="14"
+										/>
 										<p>{report.category}</p>
 									</Badge>
 									<Badge>
@@ -259,44 +272,7 @@ export default function Index() {
 									</Badge>
 								</CardContent>
 								<CardFooter>
-									<Progress value={report.fundedSoFar / 10} />
-									<p className="text-xs">
-										${report.totalCost - report.fundedSoFar} still needed
-									</p>
-								</CardFooter>
-							</Card>
-						))}
-						{/* mapping out our 2 reports again to see how they fit */}
-						{reports.map((report: Report) => (
-							<Card key={report.id}>
-								<div className="h-[150px] overflow-hidden">
-									<img
-										src={report.image}
-										alt="gpt-generated report illustration"
-										className="object-none object-top rounded-3xl"
-									/>
-								</div>
-								<CardHeader>
-									<CardTitle>{report.title}</CardTitle>
-									<CardDescription>{report.summary}</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<Badge>
-										{GetIcon({
-											category: report.category,
-											color: "#C14E41",
-											strokeWidth: "1",
-											size: "14",
-										})}
-										<p>{report.category}</p>
-									</Badge>
-									<Badge>
-										<MapPin color="#C14E41" strokeWidth={1} size={14} />
-										<p>{report.state}</p>
-									</Badge>
-								</CardContent>
-								<CardFooter>
-									<Progress value={report.fundedSoFar / 10} />
+									<Progress value={report.totalCost / report.fundedSoFar} />
 									<p className="text-xs">
 										${report.totalCost - report.fundedSoFar} still needed
 									</p>
@@ -305,7 +281,7 @@ export default function Index() {
 						))}
 					</section>
 				</div>
-			</article>
+			</section>
 		</main>
 	);
 }
