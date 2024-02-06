@@ -6,13 +6,13 @@ import {
 	Drawer,
 	DrawerClose,
 	DrawerContent,
-	DrawerDescription,
 	DrawerFooter,
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
 } from "~/components/ui/drawer";
 import { cn } from "~/lib/utils";
+import logo from "/logo.svg";
 
 const Footer = () => {
 	return (
@@ -50,11 +50,9 @@ const Footer = () => {
 						</DrawerTrigger>
 						<DrawerContent className=" gap-10">
 							<DrawerHeader>
-								<img
-									className="h-10 w-10"
-									src="/logo.svg"
-									alt="VoiceDeck Logo"
-								/>
+								<div className="flex justify-center">
+									<img className="h-10 w-10" src={logo} alt="VoiceDeck Logo" />
+								</div>
 							</DrawerHeader>
 							<a
 								href="http://about-example.com"
@@ -119,4 +117,4 @@ const Footer = () => {
 	);
 };
 
-export default Footer;
+export { Footer };
