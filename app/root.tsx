@@ -12,12 +12,14 @@ import {
 
 import "@fontsource-variable/plus-jakarta-sans";
 import { ReactNode } from "react";
+import Footer from "~/components/global/footer";
 import "./tailwind.css";
 
 export default function App() {
 	return (
 		<Document>
 			<Outlet />
+			<Footer />
 		</Document>
 	);
 }

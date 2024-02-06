@@ -53,7 +53,7 @@ function GetIcon({
 	size: string;
 }) {
 	const CategoryIcon = iconComponents[category];
-	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
+	//   return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
 }
 
 export const meta: MetaFunction = () => {
@@ -86,6 +86,8 @@ export default function Index() {
 					self.indexOf(value) === index,
 			);
 	}, [reports]);
+
+	console.log("uniqueCategories", uniqueCategories);
 
 	// here using amounts directly from the HC, needs additional logic to group those amounts into displayed ranges ie $0-50, $50-100
 	const uniqueFundedAmounts = useMemo(() => {
@@ -179,12 +181,12 @@ export default function Index() {
 							<h2 className="text-base font-medium pb-4">Categories</h2>
 							{uniqueCategories.map((category: string) => (
 								<div key={category} className="flex items-center gap-2 pb-1">
-									{GetIcon({
-										category: category,
-										color: "#E48F85",
-										strokeWidth: "1.5",
-										size: "26",
-									})}
+									{/* {GetIcon({
+                    category: category,
+                    color: "#E48F85",
+                    strokeWidth: "1.5",
+                    size: "26",
+                  })} */}
 									<p className="text-sm">{category}</p>
 								</div>
 							))}
@@ -237,12 +239,12 @@ export default function Index() {
 								</CardHeader>
 								<CardContent>
 									<Badge>
-										{GetIcon({
-											category: report.category,
-											color: "#C14E41",
-											strokeWidth: "1",
-											size: "14",
-										})}
+										{/* {GetIcon({
+                      category: report.category,
+                      color: "#C14E41",
+                      strokeWidth: "1",
+                      size: "14",
+                    })} */}
 										<p>{report.category}</p>
 									</Badge>
 									<Badge>
@@ -274,12 +276,12 @@ export default function Index() {
 								</CardHeader>
 								<CardContent>
 									<Badge>
-										{GetIcon({
-											category: report.category,
-											color: "#C14E41",
-											strokeWidth: "1",
-											size: "14",
-										})}
+										{/* {GetIcon({
+                      category: report.category,
+                      color: "#C14E41",
+                      strokeWidth: "1",
+                      size: "14",
+                    })} */}
 										<p>{report.category}</p>
 									</Badge>
 									<Badge>
