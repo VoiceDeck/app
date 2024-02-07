@@ -6,3 +6,4 @@ node_modules
 .env.local
 .envrc
 *.timestamp-*.mjs
+.DS_Store
