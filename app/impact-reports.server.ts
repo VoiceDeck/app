@@ -5,9 +5,11 @@ import {
 	HypercertMetadata,
 	HypercertsStorage,
 } from "@hypercerts-org/sdk";
-import { Claim, Report } from "~/types";
+import { CMSContent, Claim, Report } from "~/types";
 
 let reports: Report[] | null = null;
+// represents contents retrieved from CMS `reports` collection
+let cmsContents: CMSContent[] | null = null;
 let hypercertClient: HypercertClient | null = null;
 
 /**
@@ -26,23 +28,54 @@ export const fetchReports = async (ownerAddress: string): Promise<Report[]> => {
 				ownerAddress,
 				getHypercertClient().indexer,
 			);
+
 			reports = await Promise.all(
 				claims.map(async (claim, index) => {
 					const metadata = await getHypercertMetadata(
 						claim.uri as string,
 						getHypercertClient().storage,
 					);
+
+					const fromCMS = await getCMSContents();
+					const cmsReport = fromCMS.find(
+						(cmsReport) => cmsReport.title === metadata.name,
+					);
+					if (!cmsReport) {
+						throw new Error(
+							`CMS content for report titled '${metadata.name}' not found.`,
+						);
+					}
+
 					return {
-						id: claim.id,
+						hypercertId: claim.id,
 						title: metadata.name,
 						summary: metadata.description,
 						image: metadata.image,
-						// use hardcoded values for now
-						// TODO: fetch from CMS or define type(or enum or whatever)
-						state: index === 0 ? "Madhya Pradesh" : "Kerala",
+						originalReportUrl: metadata.external_url,
+						// first indice of `metadata.properties` holds the value of the state
+						state: metadata.properties?.[0].value,
 						category: metadata.hypercert?.work_scope.value?.[0],
-						// tentatively, it represent $1000
-						totalCost: 1000,
+						workTimeframe: metadata.hypercert?.work_timeframe.display_value,
+						impactScope: metadata.hypercert?.impact_scope.display_value,
+						impactTimeframe: metadata.hypercert?.impact_timeframe.display_value,
+						contributors: metadata.hypercert?.contributors.value?.map(
+							(name) => name,
+						),
+
+						// properties stored in CMS
+						cmsId: cmsReport.id,
+						status: cmsReport.status,
+						dateCreated: cmsReport.date_created,
+						slug: cmsReport.slug,
+						story: cmsReport.story,
+						bcRatio: cmsReport.bc_ratio,
+						villagesImpacted: cmsReport.villages_impacted,
+						peopleImpacted: cmsReport.people_impacted,
+						verifiedBy: cmsReport.verified_by,
+						dateUpdated: cmsReport.date_updated,
+						byline: cmsReport.byline,
+						totalCost: Number(cmsReport.total_cost),
+
 						// TODO: fetch from blockchain when Hypercert Marketplace is ready
 						fundedSoFar: Math.floor(Math.random() * 1000),
 					} as Report;
@@ -86,12 +119,7 @@ export const getHypercertClaims = async (
 	console.log(`Fetching claims owned by ${ownerAddress}`);
 	try {
 		// see graphql query: https://github.com/hypercerts-org/hypercerts/blob/d7f5fee/sdk/src/indexer/queries/claims.graphql#L1-L11
-		const response = await indexer.claimsByOwner(ownerAddress as string, {
-			orderDirections: "asc",
-			first: 100,
-			// skip the first 2 claims (they are dummy of 0x42FbF4d890B4EFA0FB0b56a9Cc2c5EB0e07C1536 in Sepolia testnet)
-			skip: 2,
-		});
+		const response = await indexer.claimsByOwner(ownerAddress as string);
 		claims = (response as ClaimsByOwnerQuery).claims as Claim[];
 		console.log(`Fetched claims: ${claims ? claims.length : 0}`);
 
@@ -123,5 +151,32 @@ export const getHypercertMetadata = async (
 	} catch (error) {
 		console.error(`Failed to fetch metadata of ${claimUri}: ${error}`);
 		throw new Error(`Failed to fetch metadata of ${claimUri}`);
+	}
+};
+
+/**
+ * Fetches the contents of the CMS `reports` collection.
+ * @returns A promise that resolves to an array of CMS contents.
+ * @throws Will throw an error if the CMS contents cannot be fetched.
+ */
+export const getCMSContents = async (): Promise<CMSContent[]> => {
+	try {
+		if (cmsContents) {
+			console.log("CMS contents already exist, no need to fetch from remote");
+			console.log(`Existing CMS contents: ${cmsContents.length}`);
+		} else {
+			console.log("Fetching CMS contents from remote");
+			const response = await fetch(process.env.CMS_ENDPOINT as string);
+			if (!response.ok) {
+				throw new Error(`failed to fetch data from CMS : ${response.status}`);
+			}
+			const data = await response.json();
+			cmsContents = data.data as CMSContent[];
+		}
+
+		return cmsContents;
+	} catch (error) {
+		console.error(`Failed to fetch CMS contents: ${error}`);
+		throw new Error("Failed to fetch CMS contents");
 	}
 };

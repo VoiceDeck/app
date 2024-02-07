@@ -1,27 +1,62 @@
 /**
- * Represents 1 Impact report
- * @property {string} id - The ID of associated hypercert
- * @property {string} title - The title of the report
- * @property {string} summary - The summary of the report
- * @property {string} image - The image of the report
- * @property {string} state - The state where the impact is being made
- * @property {string} category - The category of the report
- * @property {number} totalCost - The total cost of the report in USD
- * @property {number} fundedSoFar - The amount funded so far in USD
- * @property {string} created_at - The date the report was created
- * @property {string} updated_at - The date the report was updated
+ * Defines the structure of an Impact Report.
+ *
+ * @interface Report
+ * @property {string} hypercertId - Claim id of hypercert.
+ * @property {string} title - Title of the report.
+ * @property {string} summary - Brief summary of the report.
+ * @property {string} image - the image representing the report.
+ * @property {string} originalReportUrl - URL to the original report.
+ * @property {string} state - State where the impact is being made.
+ * @property {string} category - Category under which the report falls.
+ * @property {string} workTimeframe - Timeframe during which the work was performed.
+ * @property {string} impactScope - Scope of the impact.
+ * @property {string} impactTimeframe - Timeframe of the impact.
+ * @property {string[]} contributors - List of contributors to the report.
+ * @property {string} cmsId - Identifier for the report in the CMS.
+ * @property {string} status - Publication status of the report.
+ * @property {string | null} dateCreated - Date when the report was created.
+ * * @property {string | null} dateUpdated - Date when the report was last updated.
+ * @property {string} slug - Slug for the report URL.
+ * @property {string | null} story - Detailed story of the report.
+ * @property {number | null} bcRatio - bc ratio of the impact.
+ * @property {number | null} villagesImpacted - Number of villages impacted.
+ * @property {number | null} peopleImpacted - Number of people impacted.
+ * @property {string[] | null} verifiedBy - Entities that have verified the report.
+ * @property {string | null} byline - Byline of the report.
+ * @property {number} totalCost - Total cost of the report.
+ * @property {number} fundedSoFar - Amount funded so far.
  */
 export interface Report {
-	id: string;
+	// properties for hypercert minting
+	hypercertId: string;
 	title: string;
 	summary: string;
 	image: string;
+	originalReportUrl: string;
 	state: string;
 	category: string;
+	workTimeframe: string;
+	impactScope: string;
+	impactTimeframe: string;
+	contributors: string[];
+
+	// properties stored in CMS
+	cmsId: string;
+	dateCreated: string | null;
+	dateUpdated: string | null;
+	status: string;
+	slug: string;
+	story: string | null;
+	bcRatio: number | null;
+	villagesImpacted: number | null;
+	peopleImpacted: number | null;
+	verifiedBy: string[] | null;
+	byline: string | null;
 	totalCost: number;
+
+	// properties regarding to hypercert marketplace
 	fundedSoFar: number;
-	created_at?: string;
-	updated_at?: string;
 }
 
 /**
@@ -48,4 +83,34 @@ export interface Claim {
 	// biome-ignore lint: type definition imported from @hypercerts-org/sdk
 	totalUnits?: any | null;
 	uri?: string | null;
+}
+
+// type definition for the report object that is returned from VoiceDeck CMS
+export interface CMSContent {
+	// properties for hypercert minting
+	title: string | null;
+	summary: string | null;
+	image: string | null;
+	original_report_url: string | null;
+	states: string[] | null;
+	category: string | null;
+	work_timeframe: string | null;
+	impact_scope: string | null;
+	impact_timeframe: string | null;
+	// NOTE: it's actually comma separated string
+	contributor: string | null;
+
+	//non hypercert propoerties
+	id: string;
+	status: string;
+	date_created: string | null;
+	slug: string;
+	story: string | null;
+	bc_ratio: number | null;
+	villages_impacted: number | null;
+	people_impacted: number | null;
+	verified_by: string[] | null;
+	date_updated: string | null;
+	byline: string | null;
+	total_cost: string | null;
 }
