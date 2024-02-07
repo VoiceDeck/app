@@ -1,4 +1,4 @@
-import { Link, NavLink } from "@remix-run/react";
+import { NavLink } from "@remix-run/react";
 import { ArrowUpRight, HeartHandshake, Menu, Newspaper, X } from "lucide-react";
 
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -64,8 +64,8 @@ const MobileFooter = () => {
 							</div>
 						</DrawerHeader>
 						{externalLinks.map((link) => (
-							<Link
-								to={link.url}
+							<a
+								href={link.url}
 								key={link.title}
 								target="_blank"
 								rel="noopener noreferrer"
@@ -76,7 +76,7 @@ const MobileFooter = () => {
 							>
 								{link.title}
 								<ArrowUpRight size={24} />
-							</Link>
+							</a>
 						))}
 
 						<DrawerFooter>
@@ -110,8 +110,8 @@ const DesktopFooter = () => {
 			</div>
 			<ul>
 				{externalLinks.map((link) => (
-					<Link
-						to={link.url}
+					<a
+						href={link.url}
 						target="_blank"
 						rel="noopener noreferrer"
 						key={link.title}
@@ -122,7 +122,7 @@ const DesktopFooter = () => {
 					>
 						{link.title}
 						<ArrowUpRight size={24} />
-					</Link>
+					</a>
 				))}
 			</ul>
 		</div>
