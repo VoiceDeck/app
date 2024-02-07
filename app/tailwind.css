@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --vd-beige-200: 247 237 232;
+  --vd-beige-400: 231 201 186;
+  --vd-beige-300: 241 224 215;
+  --vd-beige-100: 251 247 245;
+  --vd-blue-900: 37 47 86;
+  --vd-blue-700: 58 82 100;
+  --vd-blue-600: 65 98 121;
+  --vd-blue-500: 75 119 143;
+  --vd-blue-400: 102 146 169;
+  --vd-blue-300: 152 184 200;
+  --vd-blue-200: 194 214 223;
+  --vd-blue-100: 223 234 238;
+  --vd-blue-50: 242 247 249;
+  --vd-orange-900: 60 23 19;
+  --vd-orange-800: 135 54 45;
+  --vd-orange-700: 159 61 50;
+  --vd-orange-600: 193 78 65;
+  --vd-orange-500: 214 105 93;
+  --vd-orange-400: 228 143 133;
+  --vd-orange-300: 239 184 178;
+  --vd-orange-200: 246 214 210;
+  --vd-gray-600: 66 66 74;
+  --vd-gray-500: 95 95 106;
+  --vd-gray-400: 146 147 158;
+  --vd-gray-300: 185 186 192;
+  --vd-gray-200: 218 218 221;
+}
+
 @layer base {
   body {
     font-family: "Plus Jakarta Sans Variable", sans-serif;
