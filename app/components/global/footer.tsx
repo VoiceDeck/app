@@ -1,4 +1,4 @@
-import { NavLink } from "@remix-run/react";
+import { Link, NavLink } from "@remix-run/react";
 import { ArrowUpRight, HeartHandshake, Menu, Newspaper, X } from "lucide-react";
 
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -57,15 +57,16 @@ const MobileFooter = () => {
 							<span className="text-xs">More</span>
 						</div>
 					</DrawerTrigger>
-					<DrawerContent className=" gap-10">
+					<DrawerContent className="gap-10">
 						<DrawerHeader>
 							<div className="flex justify-center">
 								<img className="h-10 w-10" src={logo} alt="VoiceDeck Logo" />
 							</div>
 						</DrawerHeader>
 						{externalLinks.map((link) => (
-							<a
-								href={link.url}
+							<Link
+								to={link.url}
+								key={link.title}
 								target="_blank"
 								rel="noopener noreferrer"
 								className={cn(
@@ -75,7 +76,7 @@ const MobileFooter = () => {
 							>
 								{link.title}
 								<ArrowUpRight size={24} />
-							</a>
+							</Link>
 						))}
 
 						<DrawerFooter>
@@ -109,10 +110,11 @@ const DesktopFooter = () => {
 			</div>
 			<ul>
 				{externalLinks.map((link) => (
-					<a
-						href={link.url}
+					<Link
+						to={link.url}
 						target="_blank"
 						rel="noopener noreferrer"
+						key={link.title}
 						className={cn(
 							buttonVariants({ variant: "link" }),
 							"text-lg justify-between",
@@ -120,7 +122,7 @@ const DesktopFooter = () => {
 					>
 						{link.title}
 						<ArrowUpRight size={24} />
-					</a>
+					</Link>
 				))}
 			</ul>
 		</div>
