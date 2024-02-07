@@ -17,7 +17,7 @@ import logo from "/logo.svg";
 
 const Footer = () => {
 	return (
-		<footer className="sticky inset-x-0 bottom-0 bg-red-100 text-center items-center py-2 md:static">
+		<footer className="sticky inset-x-0 bottom-0 bg-vd-beige-200 text-center items-center py-2 md:static">
 			<MobileFooter />
 			<DesktopFooter />
 		</footer>
