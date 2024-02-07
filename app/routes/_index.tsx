@@ -1,5 +1,5 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json, useLoaderData } from "@remix-run/react";
+import { Link, json, useLoaderData } from "@remix-run/react";
 import type { LucideIcon } from "lucide-react";
 import {
 	Circle,
@@ -230,40 +230,42 @@ export default function Index() {
 					</section>
 					<section className="flex flex-wrap gap-5 md:gap-3">
 						{reports.map((report: Report) => (
-							<Card key={report.hypercertId}>
-								<div className="h-[150px] overflow-hidden">
-									<img
-										src={report.image}
-										alt="gpt-generated report illustration"
-										className="object-none object-top rounded-3xl"
-									/>
-								</div>
-								<CardHeader>
-									<CardTitle>{report.title}</CardTitle>
-									<CardDescription>{report.summary}</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<Badge>
-										{GetIcon({
-											category: report.category,
-											color: "#C14E41",
-											strokeWidth: "1",
-											size: "14",
-										})}
-										<p>{report.category}</p>
-									</Badge>
-									<Badge>
-										<MapPin color="#C14E41" strokeWidth={1} size={14} />
-										<p>{report.state}</p>
-									</Badge>
-								</CardContent>
-								<CardFooter>
-									<Progress value={report.fundedSoFar / 10} />
-									<p className="text-xs">
-										${report.totalCost - report.fundedSoFar} still needed
-									</p>
-								</CardFooter>
-							</Card>
+							<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
+								<Card key={report.hypercertId}>
+									<div className="h-[150px] overflow-hidden">
+										<img
+											src={report.image}
+											alt="gpt-generated report illustration"
+											className="object-none object-top rounded-3xl"
+										/>
+									</div>
+									<CardHeader>
+										<CardTitle>{report.title}</CardTitle>
+										<CardDescription>{report.summary}</CardDescription>
+									</CardHeader>
+									<CardContent>
+										<Badge>
+											{GetIcon({
+												category: report.category,
+												color: "#C14E41",
+												strokeWidth: "1",
+												size: "14",
+											})}
+											<p>{report.category}</p>
+										</Badge>
+										<Badge>
+											<MapPin color="#C14E41" strokeWidth={1} size={14} />
+											<p>{report.state}</p>
+										</Badge>
+									</CardContent>
+									<CardFooter>
+										<Progress value={report.fundedSoFar / 10} />
+										<p className="text-xs">
+											${report.totalCost - report.fundedSoFar} still needed
+										</p>
+									</CardFooter>
+								</Card>
+							</Link>
 						))}
 						{/* mapping out our 2 reports again to see how they fit */}
 						{reports.map((report: Report) => (
