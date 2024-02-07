@@ -269,43 +269,6 @@ export default function Index() {
 								</Card>
 							</Link>
 						))}
-						{/* mapping out our 2 reports again to see how they fit */}
-						{reports.map((report: Report) => (
-							<Card key={report.hypercertId}>
-								<div className="h-[150px] overflow-hidden">
-									<img
-										src={report.image}
-										alt="gpt-generated report illustration"
-										className="object-none object-top rounded-3xl"
-									/>
-								</div>
-								<CardHeader>
-									<CardTitle>{report.title}</CardTitle>
-									<CardDescription>{report.summary}</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<Badge>
-										<DynamicCategoryIcon
-											category={report.category}
-											color="#E48F85"
-											strokeWidth="1.5"
-											size="26"
-										/>
-										<p>{report.category}</p>
-									</Badge>
-									<Badge>
-										<MapPin color="#C14E41" strokeWidth={1} size={14} />
-										<p>{report.state}</p>
-									</Badge>
-								</CardContent>
-								<CardFooter>
-									<Progress value={report.fundedSoFar / 10} />
-									<p className="text-xs">
-										${report.totalCost - report.fundedSoFar} still needed
-									</p>
-								</CardFooter>
-							</Card>
-						))}
 					</section>
 				</div>
 			</article>
