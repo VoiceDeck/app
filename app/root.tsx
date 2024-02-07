@@ -12,11 +12,13 @@ import {
 
 import "@fontsource-variable/plus-jakarta-sans";
 import { ReactNode } from "react";
+import { NavMenu } from "./components/global/nav-menu";
 import "./tailwind.css";
 
 export default function App() {
 	return (
 		<Document>
+			<NavMenu />
 			<Outlet />
 		</Document>
 	);
