@@ -104,10 +104,11 @@ export default function Index() {
 			);
 	}, [reports]);
 
-	// using id as placeholder for media outet name - not currently available on our example hypercerts
-	const uniqueIds = useMemo(() => {
+	const uniqueMediaOutlets = useMemo(() => {
 		return reports
-			.map((report: Report, index: number) => report.hypercertId)
+			.map((report: Report, index: number) =>
+				report.contributors ? report.contributors[0] : null,
+			)
 			.filter(
 				(value: string, index: number, self: string[]) =>
 					self.indexOf(value) === index,
@@ -201,19 +202,16 @@ export default function Index() {
 							{uniqueFundedAmounts.map((fundedSoFar: number) => (
 								<div key={fundedSoFar} className="flex items-center gap-2 pb-1">
 									<Circle size={18} strokeWidth={1} />
-									<p className="text-sm">${1000 - fundedSoFar}</p>
+									<p className="text-xs">${1000 - fundedSoFar}</p>
 								</div>
 							))}
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">Story from</h2>
-							{uniqueIds.map((hypercert_id: string) => (
-								<div
-									key={hypercert_id}
-									className="flex items-center gap-2 pb-1"
-								>
+							{uniqueMediaOutlets.map((outlet: string) => (
+								<div key={outlet} className="flex items-center gap-2 pb-1">
 									<Circle size={18} strokeWidth={1} />
-									<p className="text-sm">{hypercert_id.slice(0, 15)}</p>
+									<p className="text-xs">{outlet}</p>
 								</div>
 							))}
 						</div>
@@ -222,7 +220,7 @@ export default function Index() {
 							{uniqueStates.map((state: string) => (
 								<div key={state} className="flex items-center gap-2 pb-1">
 									<Circle size={18} strokeWidth={1} />
-									<p className="text-sm">{state}</p>
+									<p className="text-xs">{state}</p>
 								</div>
 							))}
 						</div>
