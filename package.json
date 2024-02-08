@@ -25,6 +25,7 @@
     "@remix-run/serve": "^2.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "html-react-parser": "^5.1.2",
     "isbot": "^4.1.0",
     "lucide-react": "^0.309.0",
     "million": "^3.0.2",
