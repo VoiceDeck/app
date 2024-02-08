@@ -149,11 +149,7 @@ export default function Index() {
 							<h2 className="text-base font-medium pb-4">Categories</h2>
 							{uniqueCategories.map((category: string) => (
 								<div key={category} className="flex items-center gap-2 pb-1">
-									<DynamicCategoryIcon
-										category={category}
-										color="#E48F85"
-										strokeWidth="1.5"
-									/>
+									<DynamicCategoryIcon category={category} />
 									<p className="text-sm">{category}</p>
 								</div>
 							))}
@@ -209,15 +205,11 @@ export default function Index() {
 										<CardDescription>{report.summary}</CardDescription>
 									</CardHeader>
 									<CardContent>
-										<Badge>
-											<DynamicCategoryIcon
-												category={report.category}
-												color="#E48F85"
-												strokeWidth="1.5"
-											/>
+										<Badge variant={"secondary"}>
+											<DynamicCategoryIcon category={report.category} />
 											<p>{report.category}</p>
 										</Badge>
-										<Badge>
+										<Badge variant={"secondary"}>
 											<MapPin color="#C14E41" strokeWidth={1} size={18} />
 											<p>{report.state}</p>
 										</Badge>
