@@ -13,7 +13,7 @@ const NavLinks = () => {
 					className={({ isActive }) =>
 						cn(
 							buttonVariants({ variant: "ghost" }),
-							"rounded-md text-lg",
+							"rounded-md text-base",
 							isActive ? "bg-vd-beige-300 dark:bg-vd-beige-100" : undefined,
 						)
 					}
@@ -26,7 +26,7 @@ const NavLinks = () => {
 					href="http://about-example.com"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={cn(buttonVariants({ variant: "link" }), "text-lg")}
+					className={cn(buttonVariants({ variant: "link" }))}
 				>
 					About
 					<ArrowUpRight size={24} />
@@ -58,7 +58,7 @@ const NavLinks = () => {
 					href="http://faqs-example.com"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={cn(buttonVariants({ variant: "link" }), "text-lg")}
+					className={cn(buttonVariants({ variant: "link" }))}
 				>
 					FAQs
 					<ArrowUpRight size={24} />

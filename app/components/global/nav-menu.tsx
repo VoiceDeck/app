@@ -7,9 +7,9 @@ import logo from "/logo.svg";
 
 const NavMenu = () => {
 	return (
-		<nav className="container mx-auto relative flex h-12 md:h-24 justify-between items-center">
+		<nav className="flex justify-between items-center py-3">
 			<NavLinks />
-			<NavLink className="absolute left-1/2 transform -translate-x-1/2" to="/">
+			<NavLink className="w-full flex justify-center" to="/">
 				<img className="h-10 w-10" src={logo} alt="VoiceDeck Logo" />
 			</NavLink>
 
@@ -18,7 +18,7 @@ const NavMenu = () => {
 				className={({ isActive }) =>
 					cn(
 						buttonVariants({ variant: "ghost" }),
-						"rounded-md text-lg hidden md:block",
+						"rounded-md hidden md:block",
 						isActive ? "bg-vd-beige-300 dark:bg-vd-beige-100" : undefined,
 					)
 				}
