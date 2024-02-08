@@ -1,7 +1,10 @@
-import type { LoaderFunctionArgs, MetaArgs } from "@remix-run/node";
-import { Link, MetaFunction, useLoaderData } from "@remix-run/react";
+import { MetaArgs, MetaFunction } from "@remix-run/react";
 import parse from "html-react-parser";
+import { MapPin } from "lucide-react";
+import DynamicCategoryIcon from "~/components/dynamic-category-icon";
 import FundingProgress from "~/components/funding-progress";
+import ReportSidebar from "~/components/report-sidebar";
+import { Badge } from "~/components/ui/badge";
 import { Report } from "~/types";
 
 const report: Report = {
@@ -31,36 +34,42 @@ const report: Report = {
 	byline: "Devansh",
 	totalCost: 1000,
 	fundedSoFar: 12,
-	impactScope: "local",
+	impactScope:
+		"The return of teachers to the classrooms of Sarvodaya Kanya Vidyalaya",
 	impactTimeframe: "2024-01-31T23:55:45.417Z",
 	workTimeframe: "2024-01-31T23:55:45.417Z",
 };
 
 export const meta: MetaFunction = ({ data }: MetaArgs) => {
 	const report = data as Report;
+	// TODO: Add the report title
 	// return [{ title: `VoiceDeck | ${report.title}` }];
 	return [{ title: "VoiceDeck | Test Report" }];
 };
 
-const parsedStory = report?.story ? parse(report.story) : "";
+const htmlParsedStory = report?.story ? parse(report.story) : "";
 
 export default function RouteComponent() {
 	return (
 		<main className="flex flex-col border-2 border-red-100 justify-between h-svh">
 			{/* 140px is added to account for the funding progress on mobile */}
-			<div className="flex flex-col space-y-2 p-4 pb-[180px]">
-				<section className="flex flex-col flex-1 space-y-2 ">
-					<h5 className="font-semibold uppercase text-vd-blue-500 tracking-wider">
+			<div className="flex flex-col gap-2 space-y-2 p-4 pb-[180px]">
+				<section className="flex flex-col flex-1 gap-4">
+					<h5 className="font-semibold text-sm uppercase text-vd-blue-500 tracking-wider">
 						Report
 					</h5>
 					<h1 className="font-semibold text-3xl tracking-tight">
-						Construction of a Dobha in Giridih District
+						{report.title}
 					</h1>
-					<ul className="flex flex-wrap space-x-3 space-y-2 items-center">
-						<li>Weee</li>
-						<li>Three</li>
-						<li>Tignoy</li>
-						<li>Tignoy</li>
+					<ul className="flex flex-wrap gap-1 space-x-3 items-center">
+						<Badge>
+							<DynamicCategoryIcon category={report.category} />
+							<p>{report.category}</p>
+						</Badge>
+						<Badge>
+							<MapPin color="#C14E41" strokeWidth={1} size={18} />
+							<p>{report.state}</p>
+						</Badge>
 					</ul>
 					{/* <FundingProgress totalAmount={100} fundedAmount={27} /> */}
 					<p>{report.summary}</p>
@@ -70,8 +79,9 @@ export default function RouteComponent() {
 						className="rounded-2xl"
 					/>
 
-					<article className="prose">{parsedStory}</article>
+					<article className="prose">{htmlParsedStory}</article>
 				</section>
+				<ReportSidebar report={report} />
 			</div>
 			<div className="fixed bottom-[56px] w-full shadow-lg">
 				<FundingProgress totalAmount={100} fundedAmount={27} />
