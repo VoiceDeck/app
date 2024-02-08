@@ -32,6 +32,7 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import VoicedeckStats from "~/components/voicedeck-stats";
+import { siteConfig } from "~/config/site";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
 
@@ -125,14 +126,9 @@ export default function Index() {
 	return (
 		<main className="flex flex-col gap-8 md:gap-6 justify-center items-center p-4 md:px-[14%]">
 			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
-				<h1 className="text-6xl font-bold text-left">
-					From individual actions to collective impact
-				</h1>
+				<h1 className="text-6xl font-bold text-left">{siteConfig.title}</h1>
 				<h2 className="text-lg font-medium text-left py-6">
-					We enable journalists to effect real change by bringing critical
-					stories to light. Your contributions directly support this mission,
-					sustaining journalism and bolstering investigative reporting that
-					matters.
+					{siteConfig.description}
 				</h2>
 			</header>
 
