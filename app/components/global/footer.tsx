@@ -17,7 +17,7 @@ import logo from "/logo.svg";
 
 const Footer = () => {
 	return (
-		<footer className="sticky inset-x-0 bottom-0 bg-vd-beige-200 text-center items-center py-2 md:static">
+		<footer className="fixed inset-x-0 bottom-0 bg-vd-beige-200 text-center items-center py-2 md:static">
 			<MobileFooter />
 			<DesktopFooter />
 		</footer>
@@ -57,7 +57,8 @@ const MobileFooter = () => {
 							<span className="text-xs">More</span>
 						</div>
 					</DrawerTrigger>
-					<DrawerContent className="gap-10">
+
+					<DrawerContent>
 						<DrawerHeader>
 							<div className="flex justify-center">
 								<img className="h-10 w-10" src={logo} alt="VoiceDeck Logo" />
@@ -71,11 +72,11 @@ const MobileFooter = () => {
 								rel="noopener noreferrer"
 								className={cn(
 									buttonVariants({ variant: "link" }),
-									"text-lg justify-between",
+									"justify-between py-6",
 								)}
 							>
 								{link.title}
-								<ArrowUpRight size={24} />
+								<ArrowUpRight size={16} />
 							</a>
 						))}
 
