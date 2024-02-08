@@ -57,7 +57,7 @@ const MobileFooter = () => {
 							<span className="text-xs">More</span>
 						</div>
 					</DrawerTrigger>
-					<DrawerContent className=" gap-10">
+					<DrawerContent className="gap-10">
 						<DrawerHeader>
 							<div className="flex justify-center">
 								<img className="h-10 w-10" src={logo} alt="VoiceDeck Logo" />
@@ -66,6 +66,7 @@ const MobileFooter = () => {
 						{externalLinks.map((link) => (
 							<a
 								href={link.url}
+								key={link.title}
 								target="_blank"
 								rel="noopener noreferrer"
 								className={cn(
@@ -113,6 +114,7 @@ const DesktopFooter = () => {
 						href={link.url}
 						target="_blank"
 						rel="noopener noreferrer"
+						key={link.title}
 						className={cn(
 							buttonVariants({ variant: "link" }),
 							"text-lg justify-between",

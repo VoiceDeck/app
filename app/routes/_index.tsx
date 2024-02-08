@@ -1,7 +1,8 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { json, useLoaderData } from "@remix-run/react";
+import { Link, json, useLoaderData } from "@remix-run/react";
 import type { LucideIcon } from "lucide-react";
 import {
+	AlertCircle,
 	Circle,
 	GlassWater,
 	Heart,
@@ -41,24 +42,25 @@ const iconComponents: { [key: string]: LucideIcon } = {
 	Dignity: Heart,
 };
 
-function GetIcon({
-	category,
-	color,
-	strokeWidth,
-	size,
-}: {
+interface DynamicCategoryIconProps {
 	category: string;
 	color: string;
 	strokeWidth: string;
 	size: string;
-}) {
-	// this is a temporary fix for the category name mismatch in CMS configuration
-	// FIXME: remove this temporary fix once the category name mismatch is resolved in CMS configuration and it's minted again
-	category = category === "Oppurtunity" ? "Opportunity" : category;
-
-	const CategoryIcon = iconComponents[category];
-	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
 }
+
+const DynamicCategoryIcon: React.FC<DynamicCategoryIconProps> = ({
+	category,
+	color,
+	strokeWidth,
+	size,
+}) => {
+	const CategoryIcon = iconComponents[category];
+	if (!CategoryIcon) {
+		return <AlertCircle size={14} />; // or a placeholder component
+	}
+	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
+};
 
 export const meta: MetaFunction = () => {
 	return [
@@ -186,12 +188,12 @@ export default function Index() {
 							<h2 className="text-base font-medium pb-4">Categories</h2>
 							{uniqueCategories.map((category: string) => (
 								<div key={category} className="flex items-center gap-2 pb-1">
-									{GetIcon({
-										category: category,
-										color: "#E48F85",
-										strokeWidth: "1.5",
-										size: "26",
-									})}
+									<DynamicCategoryIcon
+										category={category}
+										color="#E48F85"
+										strokeWidth="1.5"
+										size="26"
+									/>
 									<p className="text-sm">{category}</p>
 								</div>
 							))}
@@ -233,40 +235,42 @@ export default function Index() {
 					</section>
 					<section className="flex flex-wrap gap-5 md:gap-3">
 						{reports.map((report: Report) => (
-							<Card key={report.hypercertId}>
-								<div className="h-[150px] overflow-hidden">
-									<img
-										src={report.image}
-										alt="gpt-generated report illustration"
-										className="object-none object-top rounded-3xl"
-									/>
-								</div>
-								<CardHeader>
-									<CardTitle>{report.title}</CardTitle>
-									<CardDescription>{report.summary}</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<Badge>
-										{GetIcon({
-											category: report.category,
-											color: "#C14E41",
-											strokeWidth: "1",
-											size: "14",
-										})}
-										<p>{report.category}</p>
-									</Badge>
-									<Badge>
-										<MapPin color="#C14E41" strokeWidth={1} size={14} />
-										<p>{report.state}</p>
-									</Badge>
-								</CardContent>
-								<CardFooter>
-									<Progress value={report.fundedSoFar / 10} />
-									<p className="text-xs">
-										${report.totalCost - report.fundedSoFar} still needed
-									</p>
-								</CardFooter>
-							</Card>
+							<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
+								<Card key={report.hypercertId}>
+									<div className="h-[150px] overflow-hidden">
+										<img
+											src={report.image}
+											alt="gpt-generated report illustration"
+											className="object-none object-top rounded-3xl"
+										/>
+									</div>
+									<CardHeader>
+										<CardTitle>{report.title}</CardTitle>
+										<CardDescription>{report.summary}</CardDescription>
+									</CardHeader>
+									<CardContent>
+										<Badge>
+											<DynamicCategoryIcon
+												category={report.category}
+												color="#E48F85"
+												strokeWidth="1.5"
+												size="26"
+											/>
+											<p>{report.category}</p>
+										</Badge>
+										<Badge>
+											<MapPin color="#C14E41" strokeWidth={1} size={14} />
+											<p>{report.state}</p>
+										</Badge>
+									</CardContent>
+									<CardFooter>
+										<Progress value={report.fundedSoFar / 10} />
+										<p className="text-xs">
+											${report.totalCost - report.fundedSoFar} still needed
+										</p>
+									</CardFooter>
+								</Card>
+							</Link>
 						))}
 					</section>
 				</div>
