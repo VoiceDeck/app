@@ -162,7 +162,11 @@ export default function Index() {
 						Find and fund reports that resonate with you.
 					</p>
 					<div className="flex flex-col md:flex-row gap-3">
-						<Input type="search" placeholder="Search Reports" />
+						<Input
+							className="h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-base font-medium placeholder:text-vd-blue-500 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-500 focus-visible:ring-2"
+							type="search"
+							placeholder="Search Reports"
+						/>
 						<Select>
 							<SelectTrigger>
 								<SelectValue placeholder="Sort by" />
