@@ -16,15 +16,15 @@ const iconComponents: { [key: string]: LucideIcon } = {
 
 interface DynamicCategoryIconProps {
 	category: string;
-	color: string;
-	strokeWidth: string;
+	color?: string;
+	strokeWidth?: number;
 	size?: number;
 }
 
 const DynamicCategoryIcon: React.FC<DynamicCategoryIconProps> = ({
 	category,
-	color,
-	strokeWidth,
+	color = "#E48F85",
+	strokeWidth = 1.5,
 	size = 18,
 }) => {
 	const CategoryIcon = iconComponents[category];
