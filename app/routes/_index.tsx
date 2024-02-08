@@ -87,7 +87,7 @@ export default function Index() {
 	const reports = useLoaderData<typeof loader>();
 	const uniqueCategories = useMemo(() => {
 		return reports
-			.map((report: Report, index: number) => report.category)
+			.map((report: Report, index: number) => report.category || null)
 			.filter(
 				(value: string, index: number, self: string[]) =>
 					self.indexOf(value) === index,
@@ -97,7 +97,7 @@ export default function Index() {
 	// here using amounts directly from the HC, needs additional logic to group those amounts into displayed ranges ie $0-50, $50-100
 	const uniqueFundedAmounts = useMemo(() => {
 		return reports
-			.map((report: Report, index: number) => report.fundedSoFar)
+			.map((report: Report, index: number) => report.fundedSoFar || null)
 			.filter(
 				(value: number, index: number, self: number[]) =>
 					self.indexOf(value) === index,
@@ -106,9 +106,7 @@ export default function Index() {
 
 	const uniqueMediaOutlets = useMemo(() => {
 		return reports
-			.map((report: Report, index: number) =>
-				report.contributors ? report.contributors[0] : null,
-			)
+			.map((report: Report, index: number) => report.contributors[0] || null)
 			.filter(
 				(value: string, index: number, self: string[]) =>
 					self.indexOf(value) === index,
@@ -117,7 +115,7 @@ export default function Index() {
 
 	const uniqueStates = useMemo(() => {
 		return reports
-			.map((report: Report, index: number) => report.state)
+			.map((report: Report, index: number) => report.state || null)
 			.filter(
 				(value: string, index: number, self: string[]) =>
 					self.indexOf(value) === index,
@@ -199,6 +197,7 @@ export default function Index() {
 						</div>
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">Amount needed</h2>
+
 							{uniqueFundedAmounts.map((fundedSoFar: number) => (
 								<div key={fundedSoFar} className="flex items-center gap-2 pb-1">
 									<Circle size={18} strokeWidth={1} />
@@ -245,16 +244,16 @@ export default function Index() {
 										<CardDescription>{report.summary}</CardDescription>
 									</CardHeader>
 									<CardContent>
-										<Badge>
+										<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
 											<DynamicCategoryIcon
 												category={report.category}
 												color="#E48F85"
 												strokeWidth="1.5"
-												size="26"
+												size="14"
 											/>
 											<p>{report.category}</p>
 										</Badge>
-										<Badge>
+										<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
 											<MapPin color="#C14E41" strokeWidth={1} size={14} />
 											<p>{report.state}</p>
 										</Badge>
