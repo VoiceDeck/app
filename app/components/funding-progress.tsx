@@ -13,7 +13,7 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 	const progressPercentage = (fundedAmount / totalAmount) * 100;
 
 	return (
-		<section className="px-3 py-4 flex flex-col space-y-2 bg-slate-50/60 backdrop-blur-sm rounded-t-xl">
+		<section className="px-3 py-4 flex flex-col space-y-2 bg-slate-50/80 backdrop-blur-md rounded-t-xl">
 			<Progress value={progressPercentage} />
 			<div className="flex justify-between">
 				<div className="text-sm text-vd-blue-600">
@@ -29,6 +29,7 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 					still needed
 				</div>
 			</div>
+			<div className="p-[2px]" />
 			<Button size={"lg"} variant={"default"}>
 				Support this report
 			</Button>
