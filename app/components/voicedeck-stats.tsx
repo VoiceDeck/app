@@ -12,9 +12,13 @@ const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 	currency,
 }) => {
 	return (
-		<div className="flex flex-auto items-center gap-4 lg:w-[33%] rounded-3xl bg-vd-blue-200 p-4">
-			<img src={`/${icon}.svg`} alt={`${icon} illustration`} />
-			<div className="flex flex-col gap-2">
+		<div className="flex flex-auto items-center gap-5 lg:w-[33%] rounded-3xl bg-vd-blue-200 py-4 pl-5 pr-2">
+			<img
+				className="h-16 w-16"
+				src={`/${icon}.svg`}
+				alt={`${icon} illustration`}
+			/>
+			<div className="flex flex-col gap-1">
 				<p className="text-base font-medium">{heading}</p>
 				<p className="text-3xl md:text-3xl font-bold">
 					{data}
