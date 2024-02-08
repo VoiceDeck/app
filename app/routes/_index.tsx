@@ -235,7 +235,10 @@ export default function Index() {
 					<section className="flex flex-wrap gap-5 md:gap-3">
 						{reports.map((report: Report) => (
 							<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
-								<Card key={report.hypercertId}>
+								<Card
+									key={report.hypercertId}
+									className="w-full md:w-[275px] h-fit rounded-3xl bg-vd-beige-100 text-vd-blue-900"
+								>
 									<div className="h-[150px] overflow-hidden">
 										<img
 											src={report.image}
@@ -243,11 +246,15 @@ export default function Index() {
 											className="object-none object-top rounded-3xl"
 										/>
 									</div>
-									<CardHeader>
-										<CardTitle>{report.title}</CardTitle>
-										<CardDescription>{report.summary}</CardDescription>
+									<CardHeader className="space-y-1 pb-5">
+										<CardTitle className="text-lg font-bold tracking-wide leading-5 line-clamp-2">
+											{report.title}
+										</CardTitle>
+										<CardDescription className="text-xs tracking-normal line-clamp-2">
+											{report.summary}
+										</CardDescription>
 									</CardHeader>
-									<CardContent>
+									<CardContent className="flex justify-center gap-2 px-3 pb-5">
 										<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
 											<DynamicCategoryIcon
 												category={report.category}
@@ -262,7 +269,7 @@ export default function Index() {
 											<p>{report.state}</p>
 										</Badge>
 									</CardContent>
-									<CardFooter>
+									<CardFooter className="flex-col justify-center gap-3">
 										<Progress value={report.fundedSoFar / 10} />
 										<p className="text-xs">
 											${report.totalCost - report.fundedSoFar} still needed
