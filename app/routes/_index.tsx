@@ -232,21 +232,19 @@ export default function Index() {
 							<Button variant={"outline"}>Clear all</Button>
 						</div>
 					</section>
-					<section className="flex flex-wrap gap-5 md:gap-3">
+					<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3">
 						{reports.map((report: Report) => (
 							<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
 								<Card
 									key={report.hypercertId}
-									className="w-full md:w-[275px] h-fit rounded-3xl bg-vd-beige-100 text-vd-blue-900"
+									className="w-full rounded-3xl bg-vd-beige-100 text-vd-blue-900"
 								>
-									<div className="h-[150px] overflow-hidden">
-										<img
-											src={report.image}
-											alt="gpt-generated report illustration"
-											className="object-none object-top rounded-3xl"
-										/>
-									</div>
-									<CardHeader className="space-y-1 pb-5">
+									<img
+										src={report.image}
+										alt="gpt-generated report illustration"
+										className="w-full h-56 overflow-clip object-cover object-center rounded-t-3xl"
+									/>
+									<CardHeader className="space-y-0.5 px-5 py-3">
 										<CardTitle className="text-lg font-bold tracking-wide leading-5 line-clamp-2">
 											{report.title}
 										</CardTitle>
@@ -254,7 +252,7 @@ export default function Index() {
 											{report.summary}
 										</CardDescription>
 									</CardHeader>
-									<CardContent className="flex justify-center gap-2 px-3 pb-5">
+									<CardContent className="flex justify-center gap-2 px-2 pb-3">
 										<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
 											<DynamicCategoryIcon
 												category={report.category}
@@ -269,7 +267,7 @@ export default function Index() {
 											<p>{report.state}</p>
 										</Badge>
 									</CardContent>
-									<CardFooter className="flex-col justify-center gap-3">
+									<CardFooter className="flex-col justify-center gap-2 px-8 pb-4 pt-0">
 										<Progress value={report.fundedSoFar / 10} />
 										<p className="text-xs">
 											${report.totalCost - report.fundedSoFar} still needed
