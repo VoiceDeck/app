@@ -12,7 +12,7 @@ interface SiteConfig {
 
 export const siteConfig: SiteConfig = {
 	name: "VoiceDeck",
-	title: "From Individual Actions to Collective Impact",
+	title: "From individual actions to collective impact",
 	description:
 		"We enable journalists to effect real change by bringing critical stories to light. Your contributions directly support this mission, sustaining journalism and bolstering investigative reporting that matters.",
 	localeDefault: "en",
