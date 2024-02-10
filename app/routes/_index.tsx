@@ -94,15 +94,45 @@ export default function Index() {
 			);
 	}, [reports]);
 
-	// here using amounts directly from the HC, needs additional logic to group those amounts into displayed ranges ie $0-50, $50-100
-	const uniqueFundedAmounts = useMemo(() => {
-		return reports
-			.map((report: Report, index: number) => report.fundedSoFar || null)
-			.filter(
-				(value: number, index: number, self: number[]) =>
-					self.indexOf(value) === index,
-			);
+	const calculateFunding = useMemo(() => {
+		const allAmounts = reports.map(
+			(report: Report, index: number) => report.fundedSoFar || 0,
+		);
+		const sumOfAmounts = allAmounts.reduce((a: number, b: number) => a + b, 0);
+		const fullyFunded = allAmounts.filter((amount: number) => amount === 1000);
+		const amountNeededFilters: string[] = [];
+		for (let i = 0; i < allAmounts.length; i++) {
+			if (1000 - allAmounts[i] < 51) {
+				amountNeededFilters.push("$0 - 50");
+			} else if (1000 - allAmounts[i] < 201) {
+				amountNeededFilters.push("$50 - 200");
+			} else if (1000 - allAmounts[i] < 501) {
+				amountNeededFilters.push("$200 - 500");
+			} else {
+				amountNeededFilters.push("$500+");
+			}
+		}
+		const uniqueAmountFilters = amountNeededFilters.filter(
+			(value: string, index: number, self: string[]) =>
+				self.indexOf(value) === index,
+		);
+		return {
+			amounts: allAmounts,
+			filters: uniqueAmountFilters,
+			sum: sumOfAmounts,
+			numFunded: fullyFunded.length || 0,
+		};
 	}, [reports]);
+
+	// here using amounts directly from the HC, needs additional logic to group those amounts into displayed ranges ie $0-50, $50-100
+	// const uniqueFundedAmounts = useMemo(() => {
+	// 	return calculateFunding.amounts
+	// 		// .map((report: Report, index: number) => report.fundedSoFar || null)
+	// 		.filter(
+	// 			(value: number, index: number, self: number[]) =>
+	// 				self.indexOf(value) === index,
+	// 		);
+	// }, [calculateFunding]);
 
 	const uniqueMediaOutlets = useMemo(() => {
 		return reports
@@ -136,20 +166,20 @@ export default function Index() {
 					key="flower"
 					icon="flower"
 					heading="Total Supporters"
-					data="104"
+					data={104}
 				/>
 				<VoicedeckStats
 					key="elephant"
 					icon="elephant"
 					heading="Total Support Received"
-					data="3.6K"
+					data={calculateFunding.sum}
 					currency="USD"
 				/>
 				<VoicedeckStats
 					key="candle"
 					icon="candle"
 					heading="# of Reports Fully Funded"
-					data="12"
+					data={calculateFunding.numFunded}
 				/>
 			</section>
 
@@ -202,10 +232,10 @@ export default function Index() {
 						<div className="border border-b-vd-blue-400 pt-6 pb-4">
 							<h2 className="text-base font-medium pb-4">Amount needed</h2>
 
-							{uniqueFundedAmounts.map((fundedSoFar: number) => (
-								<div key={fundedSoFar} className="flex items-center gap-2 pb-1">
+							{calculateFunding.filters.map((range: string) => (
+								<div key={range} className="flex items-center gap-2 pb-1">
 									<Circle size={18} strokeWidth={1} />
-									<p className="text-xs">${1000 - fundedSoFar}</p>
+									<p className="text-xs">{range}</p>
 								</div>
 							))}
 						</div>

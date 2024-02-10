@@ -1,7 +1,7 @@
 interface VoicedeckStatsProps {
 	icon: string;
 	heading: string;
-	data: string;
+	data: number;
 	currency?: string;
 }
 
