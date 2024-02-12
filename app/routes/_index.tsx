@@ -1,17 +1,8 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, json, useLoaderData } from "@remix-run/react";
-import type { LucideIcon } from "lucide-react";
-import {
-	AlertCircle,
-	Circle,
-	GlassWater,
-	Heart,
-	Lightbulb,
-	MapPin,
-	Salad,
-	Search,
-} from "lucide-react";
+import { Circle, MapPin, Search } from "lucide-react";
 import { useMemo } from "react";
+import DynamicCategoryIcon from "~/components/dynamic-category-icon";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -35,33 +26,6 @@ import VoicedeckStats from "~/components/voicedeck-stats";
 import { siteConfig } from "~/config/site";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
-
-const iconComponents: { [key: string]: LucideIcon } = {
-	Hunger: Salad,
-	Thirst: GlassWater,
-	Opportunity: Lightbulb,
-	Dignity: Heart,
-};
-
-interface DynamicCategoryIconProps {
-	category: string;
-	color: string;
-	strokeWidth: string;
-	size: string;
-}
-
-const DynamicCategoryIcon: React.FC<DynamicCategoryIconProps> = ({
-	category,
-	color,
-	strokeWidth,
-	size,
-}) => {
-	const CategoryIcon = iconComponents[category];
-	if (!CategoryIcon) {
-		return <AlertCircle size={14} />; // or a placeholder component
-	}
-	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
-};
 
 export const meta: MetaFunction = () => {
 	return [
@@ -219,12 +183,7 @@ export default function Index() {
 							<h2 className="text-base font-medium pb-4">Categories</h2>
 							{uniqueCategories.map((category: string) => (
 								<div key={category} className="flex items-center gap-2 pb-1">
-									<DynamicCategoryIcon
-										category={category}
-										color="#E48F85"
-										strokeWidth="1.5"
-										size="26"
-									/>
+									<DynamicCategoryIcon category={category} />
 									<p className="text-sm">{category}</p>
 								</div>
 							))}
@@ -284,16 +243,11 @@ export default function Index() {
 									</CardHeader>
 									<CardContent className="flex justify-center gap-2 px-2 pb-3">
 										<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
-											<DynamicCategoryIcon
-												category={report.category}
-												color="#E48F85"
-												strokeWidth="1.5"
-												size="14"
-											/>
+											<DynamicCategoryIcon category={report.category} />
 											<p>{report.category}</p>
 										</Badge>
 										<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
-											<MapPin color="#C14E41" strokeWidth={1} size={14} />
+											<MapPin color="#C14E41" strokeWidth={1} size={18} />
 											<p>{report.state}</p>
 										</Badge>
 									</CardContent>
