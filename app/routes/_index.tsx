@@ -36,7 +36,7 @@ import { siteConfig } from "~/config/site";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
 
-const iconComponents: { [key: string]: LucideIcon } = {
+export const iconComponents: { [key: string]: LucideIcon } = {
 	Hunger: Salad,
 	Thirst: GlassWater,
 	Opportunity: Lightbulb,
