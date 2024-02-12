@@ -31,7 +31,7 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 		},
 	];
 	return (
-		<Card>
+		<Card className="bg-vd-beige-100">
 			<CardHeader>
 				{/* TODO: Can probably remove when card update drops in */}
 				<CardTitle className="text-2xl font-semibold leading-none tracking-tight line-clamp-none">
@@ -79,7 +79,7 @@ const EvaluationDetails = ({ report }: { report: Partial<Report> }) => {
 	];
 
 	return (
-		<Card>
+		<Card className="bg-vd-beige-100">
 			<CardHeader>
 				<CardTitle className="text-2xl font-semibold leading-none tracking-tight line-clamp-none">
 					Evaluation & Verification
