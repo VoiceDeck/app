@@ -3,6 +3,7 @@ import { Link, json, useLoaderData } from "@remix-run/react";
 import { Circle, MapPin, Search } from "lucide-react";
 import { useMemo } from "react";
 import DynamicCategoryIcon from "~/components/dynamic-category-icon";
+import ReportCard from "~/components/report-card";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -221,10 +222,21 @@ export default function Index() {
 							<Button variant={"outline"}>Clear all</Button>
 						</div>
 					</section>
+
 					<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3">
 						{reports.map((report: Report) => (
 							<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
-								<Card
+								<ReportCard
+									hypercertId={report.hypercertId}
+									image={report.image}
+									title={report.title}
+									summary={report.summary}
+									category={report.category}
+									state={report.state}
+									totalCost={report.totalCost}
+									fundedSoFar={report.fundedSoFar}
+								/>
+								{/* <Card
 									key={report.hypercertId}
 									className="w-full rounded-3xl bg-vd-beige-100 text-vd-blue-900"
 								>
@@ -257,7 +269,7 @@ export default function Index() {
 											${report.totalCost - report.fundedSoFar} still needed
 										</p>
 									</CardFooter>
-								</Card>
+								</Card> */}
 							</Link>
 						))}
 					</section>
