@@ -54,7 +54,7 @@ export default function RouteComponent() {
 	return (
 		<main className="flex flex-col border-2 border-red-100 justify-between h-svh">
 			{/* 140px is added to account for the funding progress on mobile */}
-			<div className="flex flex-col gap-2 space-y-2 p-4 pb-[180px]">
+			<div className="flex flex-col gap-2 space-y-2 p-4 pb-[192px]">
 				<section className="flex flex-col flex-1 gap-4">
 					<h5 className="font-semibold text-sm uppercase text-vd-blue-500 tracking-wider">
 						Report
@@ -83,8 +83,8 @@ export default function RouteComponent() {
 					<article className="prose">{htmlParsedStory}</article>
 				</section>
 				<ReportSidebar report={report} />
+				<ReportSupportFeed report={report} />
 			</div>
-			<ReportSupportFeed report={report} />
 			<div className="fixed bottom-[56px] w-full shadow-lg">
 				<FundingProgress totalAmount={100} fundedAmount={27} />
 			</div>
