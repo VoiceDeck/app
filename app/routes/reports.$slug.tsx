@@ -4,6 +4,7 @@ import { MapPin } from "lucide-react";
 import DynamicCategoryIcon from "~/components/dynamic-category-icon";
 import FundingProgress from "~/components/funding-progress";
 import ReportSidebar from "~/components/report-sidebar";
+import ReportSupportFeed from "~/components/report-support-feed";
 import { Badge } from "~/components/ui/badge";
 import { Report } from "~/types";
 
@@ -83,6 +84,7 @@ export default function RouteComponent() {
 				</section>
 				<ReportSidebar report={report} />
 			</div>
+			<ReportSupportFeed report={report} />
 			<div className="fixed bottom-[56px] w-full shadow-lg">
 				<FundingProgress totalAmount={100} fundedAmount={27} />
 			</div>
