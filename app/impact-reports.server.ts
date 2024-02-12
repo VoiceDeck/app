@@ -17,13 +17,20 @@ let hypercertClient: HypercertClient | null = null;
  * @returns A promise that resolves to an array of reports.
  * @throws Throws an error if fetching reports fails.
  */
-export const fetchReports = async (ownerAddress: string): Promise<Report[]> => {
+export const fetchReports = async (): Promise<Report[]> => {
+	if (!process.env.HC_OWNER_ADDRESS) {
+		throw new Error("Owner address environment variable is not set");
+	}
+	const ownerAddress = process.env.HC_OWNER_ADDRESS;
+
 	try {
 		if (reports) {
 			console.log("Reports already exist, no need to fetch from remote");
 			console.log(`Existing reports: ${reports.length}`);
 		} else {
-			console.log("Fetching reports from remote");
+			console.log(
+				`Fetching reports from remote using owner address: ${ownerAddress}`,
+			);
 			const claims = await getHypercertClaims(
 				ownerAddress,
 				getHypercertClient().indexer,
@@ -81,12 +88,35 @@ export const fetchReports = async (ownerAddress: string): Promise<Report[]> => {
 					} as Report;
 				}),
 			);
+			console.log(`Fethced reports: ${reports.length}`);
 		}
 
 		return reports;
 	} catch (error) {
 		console.error(`Failed to fetch reports: ${error}`);
 		throw new Error("Failed to fetch reports");
+	}
+};
+
+/**
+ * Fetches a report by its slug.
+ * @param slug - The slug of the report to fetch.
+ * @returns A promise that resolves to the report.
+ * @throws Throws an error if the report with the specified slug is not found.
+ */
+export const fetchReportBySlug = async (slug: string): Promise<Report> => {
+	try {
+		const reports = await fetchReports();
+
+		const foundReport = reports.find((report: Report) => report.slug === slug);
+		if (!foundReport) {
+			throw new Error(`Report with slug '${slug}' not found.`);
+		}
+
+		return foundReport;
+	} catch (error) {
+		console.error(`Failed to get report by slug ${slug}: ${error}`);
+		throw new Error("Failed to get report by slug");
 	}
 };
 
