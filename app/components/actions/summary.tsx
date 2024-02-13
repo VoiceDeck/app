@@ -4,7 +4,7 @@ import { iconComponents } from "~/routes/_index";
 
 const Summary = () => {
 	return (
-		<section className="flex flex-col gap-4">
+		<section className="flex flex-col gap-4 md:col-span-2">
 			<Card className="bg-vd-blue-200 rounded-3xl">
 				<CardHeader>
 					<CardTitle className="text-sm font-normal">My Contribution</CardTitle>
@@ -31,7 +31,7 @@ const Summary = () => {
 				</CardHeader>
 				<CardContent>
 					{/* TODO: Make Dynamic based on user */}
-					<div className="flex flex-col gap-2">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
 						{/* TODO: Refactor to use DynamicCategoryIcon component from Beyonder */}
 						{Object.entries(iconComponents).map(([icon, Icon]) => (
 							<Badge

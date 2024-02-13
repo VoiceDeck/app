@@ -16,8 +16,8 @@ import {
 
 function Actions() {
 	return (
-		<main className="container flex flex-col gap-4 text-vd-blue-900 mb-6">
-			<header className="flex justify-between my-4">
+		<main className="container grid grid-cols-1 md:grid-cols-3 auto-rows-auto md:gap-4 gap-4 text-vd-blue-900 mb-6">
+			<header className="md:col-span-3 flex justify-between my-4">
 				<h1 className="text-2xl md:text-5xl font-semibold">My Actions</h1>
 				<NavLink
 					to="/actions"
@@ -28,7 +28,7 @@ function Actions() {
 				</NavLink>
 			</header>
 			<Summary />
-			<section className="flex flex-col gap-4">
+			<section className="flex flex-col gap-4 md:col-span-1 md:row-span-2">
 				<Card className="rounded-3xl">
 					<CardHeader>
 						<img

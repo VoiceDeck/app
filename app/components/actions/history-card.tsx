@@ -3,7 +3,6 @@ import { MapPin, Salad } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import {
 	Card,
-	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
@@ -41,11 +40,12 @@ const HistoryCard = ({
 				</time>
 				<data className="mt-0">{formatCurrency(amount)}</data>
 			</div>
+			{/* Maybe this all should exist in card content and not card header? */}
 			<CardHeader className="md:flex-row">
 				<img
 					src={img.src}
 					alt={img.alt}
-					className="w-30 h-auto overflow-clip object-cover object-center rounded-3xl"
+					className="w-30 h-auto overflow-clip object-cover object-center rounded-3xl md:w-40"
 				/>
 				<div className="pt-6">
 					<CardTitle>{title}</CardTitle>
