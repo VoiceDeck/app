@@ -1,21 +1,20 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, json, useLoaderData } from "@remix-run/react";
-import { Circle, MapPin, Search } from "lucide-react";
+import { Circle, Filter } from "lucide-react";
 import { useMemo } from "react";
 import DynamicCategoryIcon from "~/components/dynamic-category-icon";
 import ReportCard from "~/components/report-card";
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "~/components/ui/card";
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger,
+} from "~/components/ui/drawer";
 import { Input } from "~/components/ui/input";
-import { Progress } from "~/components/ui/progress";
 import {
 	Select,
 	SelectContent,
@@ -180,6 +179,27 @@ export default function Index() {
 
 				<div className="flex flex-col md:flex-row gap-10 pb-16">
 					<section>
+						<div className="md:hidden">
+							<Drawer>
+								<DrawerTrigger className="flex h-9 w-full rounded-md border-input justify-between items-center bg-vd-blue-100 border border-vd-blue-500 px-3 py-2">
+									<p className="text-base font-medium text-vd-blue-500">
+										Filter
+									</p>
+									<Filter color="#3A5264" size={18} />
+								</DrawerTrigger>
+								<DrawerContent className="gap-10">
+									<DrawerFooter>
+										<DrawerClose>
+											<Button variant="ghost" size="icon">
+												<div className="flex flex-col justify-center items-center">
+													<span className="text-xs">Close</span>
+												</div>
+											</Button>
+										</DrawerClose>
+									</DrawerFooter>
+								</DrawerContent>
+							</Drawer>
+						</div>
 						<div className="border border-b-vd-blue-400 py-4">
 							<h2 className="text-base font-medium pb-4">Categories</h2>
 							{uniqueCategories.map((category: string) => (
@@ -236,40 +256,6 @@ export default function Index() {
 									totalCost={report.totalCost}
 									fundedSoFar={report.fundedSoFar}
 								/>
-								{/* <Card
-									key={report.hypercertId}
-									className="w-full rounded-3xl bg-vd-beige-100 text-vd-blue-900"
-								>
-									<img
-										src={report.image}
-										alt="gpt-generated report illustration"
-										className="w-full h-56 overflow-clip object-cover object-center rounded-t-3xl"
-									/>
-									<CardHeader className="space-y-0.5 px-5 py-3">
-										<CardTitle className="text-lg font-bold tracking-wide leading-5 line-clamp-2">
-											{report.title}
-										</CardTitle>
-										<CardDescription className="text-xs tracking-normal line-clamp-2">
-											{report.summary}
-										</CardDescription>
-									</CardHeader>
-									<CardContent className="flex justify-center gap-2 px-2 pb-3">
-										<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
-											<DynamicCategoryIcon category={report.category} />
-											<p>{report.category}</p>
-										</Badge>
-										<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
-											<MapPin color="#C14E41" strokeWidth={1} size={18} />
-											<p>{report.state}</p>
-										</Badge>
-									</CardContent>
-									<CardFooter className="flex-col justify-center gap-2 px-8 pb-4 pt-0">
-										<Progress value={report.fundedSoFar / 10} />
-										<p className="text-xs">
-											${report.totalCost - report.fundedSoFar} still needed
-										</p>
-									</CardFooter>
-								</Card> */}
 							</Link>
 						))}
 					</section>
