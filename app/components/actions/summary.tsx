@@ -5,24 +5,28 @@ import { iconComponents } from "~/routes/_index";
 const Summary = () => {
 	return (
 		<section className="flex flex-col gap-4 md:col-span-2">
-			<Card className="bg-vd-blue-200 rounded-3xl">
-				<CardHeader>
-					<CardTitle className="text-sm font-normal">My Contribution</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<data className="text-4xl font-bold">520.00 USD</data>
-				</CardContent>
-			</Card>
-			<Card className="bg-vd-beige-300 rounded-3xl">
-				<CardHeader>
-					<CardTitle className="text-sm font-normal">
-						# of reports I contributed
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<data className="text-4xl font-bold">12</data>
-				</CardContent>
-			</Card>
+			<div className="flex flex-col gap-4 md:flex-row">
+				<Card className="bg-vd-blue-200 rounded-3xl flex-1">
+					<CardHeader>
+						<CardTitle className="text-sm font-normal">
+							My Contribution
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<data className="text-4xl font-bold">520.00 USD</data>
+					</CardContent>
+				</Card>
+				<Card className="bg-vd-beige-300 rounded-3xl md:flex-1">
+					<CardHeader>
+						<CardTitle className="text-sm font-normal">
+							# of reports I contributed
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<data className="text-4xl font-bold">12</data>
+					</CardContent>
+				</Card>
+			</div>
 			<Card className="rounded-3xl">
 				<CardHeader>
 					<CardTitle className="text-sm font-normal">
