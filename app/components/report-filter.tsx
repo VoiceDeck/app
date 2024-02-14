@@ -62,59 +62,71 @@ const ReportFilter: React.FC<ReportFilterProps> = ({ reports, amounts }) => {
 
 	return (
 		<article className="w-full max-w-screen-xl">
-			<h2 className="text-3xl md:text-4xl font-semibold pt-6 md:pt-10">
-				Reports
-			</h2>
-			<div className="flex flex-col md:flex-row md:justify-between md:items-end pb-8">
-				<p className="text-sm pb-4 md:pb-0 ">
-					Find and fund reports that resonate with you.
-				</p>
-				<div className="flex flex-col md:flex-row gap-3">
+			<div className="flex flex-col xl:flex-row xl:justify-between xl:items-end pb-4 md:pb-6">
+				<div>
+					<h2 className="text-3xl md:text-4xl font-semibold pb-1 pt-6 md:pt-10">
+						Reports
+					</h2>
+					<p className="text-sm pb-4 xl:pb-0">
+						Find and fund reports that resonate with you.
+					</p>
+				</div>
+				<div className="grid grid-rows-1 md:grid-cols-5 gap-3">
 					<Drawer>
-						<DrawerTrigger className="flex h-9 w-full rounded-md border-input justify-between items-center bg-vd-blue-100 border border-vd-blue-500 px-3 py-2">
+						<DrawerTrigger className="flex h-10 w-full rounded-md border-input justify-between items-center bg-vd-blue-100 border border-vd-blue-500 px-3 py-2">
 							<p className="text-base font-medium text-vd-blue-500">Filter</p>
 							<Filter color="#3A5264" size={18} />
 						</DrawerTrigger>
-						<DrawerContent className="gap-10">
-							<div className="border border-b-vd-blue-400 py-4">
-								<h2 className="text-base font-medium pb-4">Categories</h2>
-								{uniqueCategories.map((category: string) => (
-									<div key={category} className="flex items-center gap-2 pb-1">
-										<DynamicCategoryIcon category={category} />
-										<p className="text-sm">{category}</p>
-									</div>
-								))}
-							</div>
-							<div className="border border-b-vd-blue-400 pt-6 pb-4">
-								<h2 className="text-base font-medium pb-4">Amount needed</h2>
-
-								{uniqueFundedAmounts.map((amount: number) => (
-									<div key={amount} className="flex items-center gap-2 pb-1">
-										<Circle size={18} strokeWidth={1} />
-										<p className="text-xs">{amount}</p>
-									</div>
-								))}
-							</div>
-							<div className="border border-b-vd-blue-400 pt-6 pb-4">
-								<h2 className="text-base font-medium pb-4">Story from</h2>
-								{uniqueMediaOutlets.map((outlet: string) => (
-									<div key={outlet} className="flex items-center gap-2 pb-1">
-										<Circle size={18} strokeWidth={1} />
-										<p className="text-xs">{outlet}</p>
-									</div>
-								))}
-							</div>
-							<div className="border border-b-vd-blue-400 pt-6 pb-4">
-								<h2 className="text-base font-medium pb-4">State</h2>
-								{uniqueStates.map((state: string) => (
-									<div key={state} className="flex items-center gap-2 pb-1">
-										<Circle size={18} strokeWidth={1} />
-										<p className="text-xs">{state}</p>
-									</div>
-								))}
+						<DrawerContent className="">
+							<div className="flex flex-col lg:flex-row lg:justify-around lg:px-[18%] lg:py-12">
+								<div className="border border-b-vd-blue-400 py-2 md:py-4">
+									<h2 className="text-base font-medium pb-2 md:pb-4">
+										Categories
+									</h2>
+									{uniqueCategories.map((category: string) => (
+										<div
+											key={category}
+											className="flex items-center gap-2 pb-1"
+										>
+											<DynamicCategoryIcon category={category} />
+											<p className="text-sm">{category}</p>
+										</div>
+									))}
+								</div>
+								<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
+									<h2 className="text-base font-medium pb-2 md:pb-4">
+										Amount needed
+									</h2>
+									{uniqueFundedAmounts.slice(-4).map((amount: number) => (
+										<div key={amount} className="flex items-center gap-2 pb-1">
+											<Circle size={18} strokeWidth={1} />
+											<p className="text-xs">{amount}</p>
+										</div>
+									))}
+								</div>
+								<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
+									<h2 className="text-base font-medium pb-2 md:pb-4">
+										Story from
+									</h2>
+									{uniqueMediaOutlets.map((outlet: string) => (
+										<div key={outlet} className="flex items-center gap-2 pb-1">
+											<Circle size={18} strokeWidth={1} />
+											<p className="text-xs">{outlet}</p>
+										</div>
+									))}
+								</div>
+								<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
+									<h2 className="text-base font-medium pb-2 md:pb-4">State</h2>
+									{uniqueStates.map((state: string) => (
+										<div key={state} className="flex items-center gap-2 pb-1">
+											<Circle size={18} strokeWidth={1} />
+											<p className="text-xs">{state}</p>
+										</div>
+									))}
+								</div>
 							</div>
 							<DrawerFooter>
-								<DrawerClose>
+								<DrawerClose className=" lg:py-10">
 									<Button variant="ghost" size="icon">
 										<div className="flex flex-col justify-center items-center">
 											<span className="text-xs">Close</span>
@@ -130,6 +142,9 @@ const ReportFilter: React.FC<ReportFilterProps> = ({ reports, amounts }) => {
 						type="search"
 						placeholder="Search Reports"
 					/>
+
+					<Button>Apply</Button>
+					<Button variant={"outline"}>Clear all</Button>
 
 					<Select>
 						<SelectTrigger>
@@ -147,10 +162,10 @@ const ReportFilter: React.FC<ReportFilterProps> = ({ reports, amounts }) => {
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-5 pt-8 pb-4">
+			{/* <div className="flex flex-col gap-5 pt-8 pb-4">
 				<Button>Apply</Button>
 				<Button variant={"outline"}>Clear all</Button>
-			</div>
+			</div> */}
 		</article>
 	);
 };

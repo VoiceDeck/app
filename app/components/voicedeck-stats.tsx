@@ -44,6 +44,7 @@ const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 				key="flower"
 				icon="flower"
 				heading="Total Supporters"
+				// TODO: get # of unique contributing wallets
 				data={104}
 			/>
 			<StatContainer
