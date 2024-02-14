@@ -1,11 +1,11 @@
-interface VoicedeckStatsProps {
+interface StatContainerProps {
 	icon: string;
 	heading: string;
 	data: number;
 	currency?: string;
 }
 
-const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
+const StatContainer: React.FC<StatContainerProps> = ({
 	icon,
 	heading,
 	data,
@@ -26,6 +26,40 @@ const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 				</p>
 			</div>
 		</div>
+	);
+};
+
+interface VoicedeckStatsProps {
+	sumOfContributions: number;
+	numOfContributions: number;
+}
+
+const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
+	sumOfContributions,
+	numOfContributions,
+}) => {
+	return (
+		<section className="flex flex-col lg:flex-row w-full gap-3 max-w-screen-xl">
+			<StatContainer
+				key="flower"
+				icon="flower"
+				heading="Total Supporters"
+				data={104}
+			/>
+			<StatContainer
+				key="elephant"
+				icon="elephant"
+				heading="Total Support Received"
+				data={sumOfContributions}
+				currency="USD"
+			/>
+			<StatContainer
+				key="candle"
+				icon="candle"
+				heading="# of Reports Fully Funded"
+				data={numOfContributions}
+			/>
+		</section>
 	);
 };
 

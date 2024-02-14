@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async () => {
 export default function Reports() {
 	const reports = useLoaderData<typeof loader>();
 
-	const getContributionAmounts = useMemo(() => {
+	const contributionAmounts = useMemo(() => {
 		const allAmounts = reports.map(
 			(report: Report, index: number) => report.fundedSoFar || 0,
 		);
@@ -51,32 +51,12 @@ export default function Reports() {
 				</h2>
 			</header>
 
-			<section className="flex flex-col lg:flex-row w-full gap-3 max-w-screen-xl">
-				<VoicedeckStats
-					key="flower"
-					icon="flower"
-					heading="Total Supporters"
-					data={104}
-				/>
-				<VoicedeckStats
-					key="elephant"
-					icon="elephant"
-					heading="Total Support Received"
-					data={getContributionAmounts.sum}
-					currency="USD"
-				/>
-				<VoicedeckStats
-					key="candle"
-					icon="candle"
-					heading="# of Reports Fully Funded"
-					data={getContributionAmounts.numFunded}
-				/>
-			</section>
-
-			<ReportFilter
-				reports={reports}
-				amounts={getContributionAmounts.amounts}
+			<VoicedeckStats
+				sumOfContributions={contributionAmounts.sum}
+				numOfContributions={contributionAmounts.numFunded}
 			/>
+
+			<ReportFilter reports={reports} amounts={contributionAmounts.amounts} />
 
 			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3">
 				{reports.map((report: Report) => (
