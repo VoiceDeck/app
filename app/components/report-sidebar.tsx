@@ -15,19 +15,26 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 	const details = [
 		{
 			title: "Impact Scope",
-			value: report.impactScope,
+			value: report.impactScope ?? "N/A",
 		},
 		{
 			title: "Impact Timeframe",
-			value: new Date(report.impactTimeframe).toLocaleDateString(),
+			value: report.impactTimeframe
+				? new Date(report.impactTimeframe).toLocaleDateString()
+				: "N/A",
 		},
 		{
 			title: "Work Timeframe",
-			value: new Date(report.workTimeframe).toLocaleDateString(),
+			value: report.workTimeframe
+				? new Date(report.workTimeframe).toLocaleDateString()
+				: "N/A",
 		},
 		{
 			title: "Contributors",
-			value: report.contributors.map((contributor) => contributor).join(", "),
+			value:
+				report.contributors.length > 0
+					? report.contributors.map((contributor) => contributor).join(", ")
+					: "N/A",
 		},
 	];
 	return (
