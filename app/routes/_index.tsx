@@ -35,11 +35,9 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-	const ownerAddress = process.env.HC_OWNER_ADDRESS;
-	if (!ownerAddress)
-		throw new Error("Owner address environment variable is not set");
 	try {
-		const response = await fetchReports(ownerAddress);
+		const response = await fetchReports();
+
 		return json(response);
 	} catch (error) {
 		console.error(`Failed to load impact reports: ${error}`);
