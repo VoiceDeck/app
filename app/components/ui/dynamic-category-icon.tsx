@@ -8,7 +8,7 @@ import {
 	Salad,
 } from "lucide-react";
 
-const iconComponents: { [key: string]: LucideIcon } = {
+export const iconComponents: { [key: string]: LucideIcon } = {
 	Hunger: Salad,
 	Thirst: GlassWater,
 	Opportunity: Lightbulb,
@@ -42,4 +42,6 @@ const DynamicCategoryIcon: React.FC<DynamicCategoryIconProps> = ({
 	return <CategoryIcon color={color} strokeWidth={strokeWidth} size={size} />;
 };
 
-export default DynamicCategoryIcon;
+DynamicCategoryIcon.displayName = "DynamicCategoryIcon";
+
+export { DynamicCategoryIcon };

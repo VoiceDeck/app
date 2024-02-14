@@ -34,9 +34,8 @@ const Summary = () => {
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
-					{/* TODO: Make Dynamic based on user */}
+					{/* TODO: Populate data dynamically based on user */}
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-						{/* TODO: Refactor to use DynamicCategoryIcon component from Beyonder */}
 						{Object.entries(iconComponents).map(([icon, Icon]) => (
 							<Badge
 								key={icon}
