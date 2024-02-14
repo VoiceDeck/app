@@ -7,5 +7,6 @@ export default defineConfig({
   plugins: [million.vite({ auto: true }), remix(), tsconfigPaths()],
   test: {
     include: ["./app/**/*.test.ts"],
+    reporters: ["verbose"],
   },
 });
