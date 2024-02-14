@@ -1,7 +1,7 @@
 import { LoaderFunction, json } from "@remix-run/node";
-import { MetaArgs, MetaFunction, useLoaderData } from "@remix-run/react";
+import { Link, MetaArgs, MetaFunction, useLoaderData } from "@remix-run/react";
 import parse from "html-react-parser";
-import { MapPin } from "lucide-react";
+import { ChevronLeft, MapPin } from "lucide-react";
 import DynamicCategoryIcon from "~/components/dynamic-category-icon";
 import FundingProgress from "~/components/funding-progress";
 import ReportSidebar from "~/components/report-sidebar";
@@ -37,12 +37,13 @@ export default function RouteComponent() {
 			{/* 192px is added to account for the funding progress on mobile */}
 			<div className="flex flex-col gap-2 space-y-2 p-4 pb-[192px]">
 				<section className="flex flex-col flex-1 gap-4">
-					<h5 className="font-semibold text-sm uppercase text-vd-blue-500 tracking-wider">
-						Report
-					</h5>
-					<h1 className="font-semibold text-3xl tracking-tight">
-						{report.title}
-					</h1>
+					<Link to={"/reports"} className="flex space-x-1 items-center">
+						<ChevronLeft size={24} className="text-vd-blue-400" />
+						<p className="font-semibold text-sm uppercase text-vd-blue-500 tracking-wider">
+							All Reports
+						</p>
+					</Link>
+					<h1 className="font-bold text-3xl tracking-tight">{report.title}</h1>
 					<ul className="flex flex-wrap gap-1 space-x-3 items-center">
 						<Badge>
 							<DynamicCategoryIcon category={report.category} />

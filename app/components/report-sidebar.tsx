@@ -59,13 +59,13 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 					))}
 				</ul>
 				<a
-					href={report.hypercertId}
+					href={`https://testnet.hypercerts.org/app/view#claimId=${report.hypercertId}`}
 					className={cn(
 						buttonVariants({ variant: "link" }),
 						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",
 					)}
 				>
-					<p>View on explorer</p>
+					<p>View Hypercert</p>
 					<ExternalLinkIcon size={18} />
 				</a>
 			</CardContent>
