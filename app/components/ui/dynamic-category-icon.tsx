@@ -4,6 +4,7 @@ import {
 	Heart,
 	Lightbulb,
 	LucideIcon,
+	MapPin,
 	Salad,
 } from "lucide-react";
 
@@ -12,10 +13,17 @@ const iconComponents: { [key: string]: LucideIcon } = {
 	Thirst: GlassWater,
 	Opportunity: Lightbulb,
 	Dignity: Heart,
+	Location: MapPin,
 };
 
 interface DynamicCategoryIconProps {
-	category: string;
+	category:
+		| "Hungry"
+		| "Thirst"
+		| "Opportunity"
+		| "Dignity"
+		| "Location"
+		| string;
 	color?: string;
 	strokeWidth?: number;
 	size?: number;

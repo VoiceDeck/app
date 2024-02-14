@@ -4,21 +4,48 @@ import { Settings2 } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 import { History } from "~/components/actions/history";
+import { SideBar } from "~/components/actions/sidebar";
 import { Summary } from "~/components/actions/summary";
 import { buttonVariants } from "~/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "~/components/ui/card";
+
+import historyImg from "/sample-history-img.jpeg";
+
+const mockData = [
+	{
+		id: 1,
+		date: new Date("2021-10-28"),
+		amount: 45.0,
+		img: {
+			src: historyImg,
+			alt: "sample history image",
+		},
+		title: "Construction of a Dobha in Giridih District",
+		category: "Dignity",
+		location: "Jammu and Kashmir",
+		description:
+			"lorem ipsum msg from the user after complete transaction, should just display max. 1 line here then editable on the report detail page.",
+	},
+	{
+		id: 2,
+		date: new Date("2021-06-18"),
+		amount: 145.0,
+		img: {
+			src: historyImg,
+			alt: "another sample history image",
+		},
+		title: "Construction of a well in Rishikesh",
+		category: "Thirst",
+		location: "Rishikesh",
+		description:
+			"lorem ipsum msg from the user after complete transaction, should just display max. 1 line here then editable on the report detail page.",
+	},
+];
 
 function Actions() {
 	return (
 		<main className="container grid grid-cols-1 md:grid-cols-3 auto-rows-auto md:gap-4 gap-4 text-vd-blue-900 mb-6">
 			<header className="md:col-span-3 flex justify-between my-4">
-				<h1 className="text-2xl md:text-5xl font-semibold">My Actions</h1>
+				<h1 className="text-xl md:text-3xl font-semibold">My Actions</h1>
 				<NavLink
 					to="/actions"
 					className={cn(buttonVariants({ variant: "link" }))}
@@ -28,70 +55,8 @@ function Actions() {
 				</NavLink>
 			</header>
 			<Summary />
-			<section className="flex flex-col gap-4 md:col-span-1 md:row-span-2">
-				<Card className="rounded-3xl">
-					<CardHeader>
-						<img
-							src="/water.svg"
-							alt="water in a crystal ball"
-							className="mx-auto px-6 w-40 h-auto my-2"
-						/>
-						<CardTitle className="text-center">Your Action Matters</CardTitle>
-						<CardDescription className="text-center">
-							There are 21 action reports that haven't completed their funding
-							requests yet!
-						</CardDescription>
-					</CardHeader>
-					<CardContent className="flex justify-center">
-						<NavLink
-							to="/actions/record"
-							className={cn(buttonVariants({ variant: "default", size: "lg" }))}
-						>
-							Explore
-						</NavLink>
-					</CardContent>
-				</Card>
-				<Card className="bg-vd-beige-300 rounded-3xl">
-					<CardHeader>
-						<img
-							src="/teapot.svg"
-							alt="teapot that looks like a building"
-							className="mx-auto px-6 w-40 h-auto my-4"
-						/>
-						<CardTitle className="text-center">
-							Become a Local Advocate
-						</CardTitle>
-						<CardDescription className="text-center">
-							Cares about your community? By verifying your Indian citizenship,
-							you will be able access feature like evaluation, voting features
-							on the platform.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="flex flex-col gap-2 w-full px-2">
-							<NavLink
-								to="/actions/record"
-								className={cn(
-									buttonVariants({ variant: "default", size: "lg" }),
-									"w-full",
-								)}
-							>
-								Verify now
-							</NavLink>
-							<NavLink
-								to="/actions/record"
-								className={cn(
-									buttonVariants({ variant: "ghost", size: "lg" }),
-									"w-full",
-								)}
-							>
-								Learn more
-							</NavLink>
-						</div>
-					</CardContent>
-				</Card>
-			</section>
-			<History />
+			<SideBar />
+			<History history={mockData} />
 		</main>
 	);
 }

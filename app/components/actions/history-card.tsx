@@ -10,19 +10,10 @@ import {
 } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { formatCurrency, formatDate } from "~/lib/utils";
+import DynamicCategoryIcon from "../ui/dynamic-category-icon";
+import { HistoryData } from "./history";
 
-interface HistoryCardProps {
-	date: Date;
-	amount: number;
-	img: {
-		src: string;
-		alt: string;
-	};
-	title: string;
-	category: string;
-	location: string;
-	description: string;
-}
+type HistoryCardProps = Omit<HistoryData, "id">;
 
 const HistoryCard = ({
 	date,
@@ -55,14 +46,22 @@ const HistoryCard = ({
 						<CardTitle>{title}</CardTitle>
 						{/* TODO: Refactor to use DynamicCategoryIcon component from Beyonder */}
 						<div className="flex gap-2 pt-2">
-							<Badge variant="default" className="rounded-3xl justify-between">
-								<Salad className="text-vd-orange-400 stroke-1 size-4 mr-1" />
-								<p className="font-light text-xs">{category}</p>
+							<Badge
+								variant="default"
+								className="rounded-3xl justify-between items-center"
+							>
+								<DynamicCategoryIcon category={category} />
+								{/* <Salad className="text-vd-orange-400 stroke-1 size-4 mr-1" /> */}
+								<p className="font-light text-xs ml-1">{category}</p>
 							</Badge>
 							{/* TODO: Refactor to use DynamicCategoryIcon component from Beyonder */}
-							<Badge variant="default" className="rounded-3xl justify-between">
-								<MapPin className="text-vd-orange-400 stroke-1 size-4 mr-1" />
-								<p className="font-light text-xs">{location}</p>
+							<Badge
+								variant="default"
+								className="rounded-3xl justify-between items-center"
+							>
+								<DynamicCategoryIcon category="Location" />
+								{/* <MapPin className="text-vd-orange-400 stroke-1 size-4 mr-1" /> */}
+								<p className="font-light text-xs ml-1">{location}</p>
 							</Badge>
 						</div>
 					</div>
