@@ -3,9 +3,9 @@ import { Settings2 } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 
-import { History } from "~/components/actions/history";
-import { SideBar } from "~/components/actions/sidebar";
-import { Summary } from "~/components/actions/summary";
+import { History } from "~/components/my-actions/history";
+import { SideBar } from "~/components/my-actions/sidebar";
+import { Summary } from "~/components/my-actions/summary";
 import { buttonVariants } from "~/components/ui/button";
 
 import historyImg from "/sample-history-img.jpeg";

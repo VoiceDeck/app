@@ -1,4 +1,4 @@
-import { HistoryCard } from "~/components/actions/history-card";
+import { HistoryCard } from "~/components/my-actions/history-card";
 
 export interface HistoryData {
 	id: number;
