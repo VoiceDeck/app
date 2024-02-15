@@ -1,12 +1,17 @@
+import { usePagination } from "~/hooks/use-pagination";
+import { cn } from "~/lib/utils";
 import { Report } from "~/types";
+import { Button } from "./ui/button";
 
-const reportTransactions: {
+interface IContribution {
 	amount: number;
 	visibility: string;
 	date: string;
 	supporter: string;
 	message: string;
-}[] = [
+}
+
+const reportTransactions: IContribution[] = [
 	{
 		amount: 100,
 		visibility: "public",
@@ -99,47 +104,88 @@ const transformDate = (timestamp: string) =>
 const MobileSupportFeed = ({
 	transactions,
 }: {
-	transactions: {
-		amount: number;
-		visibility: string;
-		date: string;
-		supporter: string;
-		message: string;
-	}[];
-}) => (
-	<ol className="flex flex-col gap-4 py-2 max-h-svh overflow-y-auto">
-		{transactions.map((transaction, index) => (
-			<li
-				key={`${transaction.supporter}-${transaction.date}`}
-				className="flex flex-col gap-2"
-			>
-				<p className="text-xs uppercase text-vd-orange-700 bg-vd-beige-300 px-2 py-2 rounded-md font-medium">
-					{transformDate(transaction.date)}
-				</p>
-				<div className="px-2">
-					<h5 className="text-sm font-semibold">
-						{transaction.supporter || "Anonymous"} gave{" "}
-						{transaction.amount && transaction.visibility === "public"
-							? `$${transaction.amount}`
-							: ""}
-					</h5>
-					<div className="p-1" />
-					{transaction.message && (
-						<div className="border-l-2 border-l-vd-blue-300 pl-2">
-							<q className="py-2 text-vd-blue-700 text-sm">
-								{transaction.message}
-							</q>
-						</div>
+	transactions: IContribution[];
+}) => {
+	const {
+		currentPage,
+		currentPageItems: pageTransactions,
+		loadPage,
+		maxPage,
+		pageNumbers,
+		needsPagination,
+	} = usePagination<IContribution>(transactions, 8);
 
-						// <q className="py-2 text-vd-blue-700 text-sm rounded-sm rounded-l">
-						// 	{transaction.message}
-						// </q>
-					)}
+	return (
+		<section>
+			{/* Transactions */}
+			<ol className="flex flex-col gap-4 py-2">
+				{pageTransactions.map((transaction, index) => (
+					<li
+						key={`${transaction.supporter}-${transaction.date}`}
+						className="flex flex-col gap-2"
+					>
+						<p className="text-xs uppercase text-vd-orange-700 bg-vd-beige-300 px-2 py-2 rounded-md font-medium">
+							{transformDate(transaction.date)}
+						</p>
+						<div className="px-2">
+							<h5 className="text-sm font-semibold">
+								{transaction.supporter || "Anonymous"} gave{" "}
+								{transaction.amount && transaction.visibility === "public"
+									? `$${transaction.amount}`
+									: ""}
+							</h5>
+							<div className="p-1" />
+							{transaction.message && (
+								<div className="border-l-2 border-l-vd-blue-300 pl-2">
+									<q className="py-2 text-vd-blue-700 text-sm">
+										{transaction.message}
+									</q>
+								</div>
+							)}
+						</div>
+					</li>
+				))}
+			</ol>
+
+			{/* Pagination */}
+			{needsPagination && (
+				<div className="flex items-center gap-3 py-2">
+					<Button
+						onClick={() => loadPage(currentPage - 1)}
+						variant="ghost"
+						disabled={currentPage <= 1}
+					>
+						{"Prev"}
+					</Button>
+
+					{pageNumbers.map((page, index) => (
+						<Button
+							key={`page-${page}`}
+							onClick={() => loadPage(page)}
+							className={cn(
+								"h-9 w-8 rounded-full border-vd-blue-400",
+								currentPage === page
+									? "border-2 border-vd-blue-700 ring-2 ring-vd-beige-300"
+									: "",
+							)}
+							variant="outline"
+						>
+							{page}
+						</Button>
+					))}
+
+					<Button
+						onClick={() => loadPage(currentPage + 1)}
+						variant="ghost"
+						disabled={currentPage >= maxPage}
+					>
+						{"Next"}
+					</Button>
 				</div>
-			</li>
-		))}
-	</ol>
-);
+			)}
+		</section>
+	);
+};
 
 const ReportSupportFeed = ({ report }: { report: Report }) => {
 	if (!reportTransactions.length) {

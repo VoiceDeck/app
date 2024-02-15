@@ -1,4 +1,5 @@
 import { LoaderFunction, json } from "@remix-run/node";
+
 import { Link, MetaArgs, MetaFunction, useLoaderData } from "@remix-run/react";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
