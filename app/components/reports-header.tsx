@@ -17,14 +17,16 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
+import { Slider } from "~/components/ui/slider";
 import type { Report } from "~/types";
 
-interface ReportFilterProps {
+interface ReportsHeaderProps {
 	reports: Report[];
 	amounts: number[];
 }
 
-const ReportFilter: React.FC<ReportFilterProps> = ({ reports, amounts }) => {
+const ReportFilter: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
+	console.log(amounts);
 	const uniqueCategories = useMemo(() => {
 		return reports
 			.map((report: Report, index: number) => report.category)
@@ -33,14 +35,6 @@ const ReportFilter: React.FC<ReportFilterProps> = ({ reports, amounts }) => {
 					self.indexOf(value) === index,
 			);
 	}, [reports]);
-
-	// here using amounts directly from the HC, needs additional logic to group those amounts into displayed ranges ie $0-50, $50-100
-	const uniqueFundedAmounts = useMemo(() => {
-		return amounts.filter(
-			(value: number, index: number, self: number[]) =>
-				self.indexOf(value) === index,
-		);
-	}, [amounts]);
 
 	const uniqueMediaOutlets = useMemo(() => {
 		return reports
@@ -61,6 +55,50 @@ const ReportFilter: React.FC<ReportFilterProps> = ({ reports, amounts }) => {
 	}, [reports]);
 
 	return (
+		<div>
+			<div className="flex flex-col lg:flex-row lg:justify-around lg:px-[18%] lg:py-12">
+				<div className="border border-b-vd-blue-400 py-2 md:py-4">
+					<h2 className="text-base font-medium pb-2 md:pb-4">Categories</h2>
+					{uniqueCategories.map((category: string) => (
+						<div key={category} className="flex items-center gap-2 pb-1">
+							<DynamicCategoryIcon category={category} />
+							<p className="text-sm">{category}</p>
+						</div>
+					))}
+				</div>
+				<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
+					<h2 className="text-base font-medium pb-2 md:pb-4">Story from</h2>
+					{uniqueMediaOutlets.map((outlet: string) => (
+						<div key={outlet} className="flex items-center gap-2 pb-1">
+							<Circle size={18} strokeWidth={1} />
+							<p className="text-xs">{outlet}</p>
+						</div>
+					))}
+				</div>
+				<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
+					<h2 className="text-base font-medium pb-2 md:pb-4">State</h2>
+					{uniqueStates.map((state: string) => (
+						<div key={state} className="flex items-center gap-2 pb-1">
+							<Circle size={18} strokeWidth={1} />
+							<p className="text-xs">{state}</p>
+						</div>
+					))}
+				</div>
+			</div>
+			<Slider
+				className="p-10"
+				defaultValue={[330, 660]}
+				min={Math.min(...amounts)}
+				max={Math.max(...amounts)}
+				step={10}
+				minStepsBetweenThumbs={10}
+			/>
+		</div>
+	);
+};
+
+const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
+	return (
 		<article className="w-full max-w-screen-xl">
 			<div className="flex flex-col xl:flex-row xl:justify-between xl:items-end pb-4 md:pb-6">
 				<div>
@@ -78,53 +116,7 @@ const ReportFilter: React.FC<ReportFilterProps> = ({ reports, amounts }) => {
 							<Filter color="#3A5264" size={18} />
 						</DrawerTrigger>
 						<DrawerContent className="">
-							<div className="flex flex-col lg:flex-row lg:justify-around lg:px-[18%] lg:py-12">
-								<div className="border border-b-vd-blue-400 py-2 md:py-4">
-									<h2 className="text-base font-medium pb-2 md:pb-4">
-										Categories
-									</h2>
-									{uniqueCategories.map((category: string) => (
-										<div
-											key={category}
-											className="flex items-center gap-2 pb-1"
-										>
-											<DynamicCategoryIcon category={category} />
-											<p className="text-sm">{category}</p>
-										</div>
-									))}
-								</div>
-								<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
-									<h2 className="text-base font-medium pb-2 md:pb-4">
-										Amount needed
-									</h2>
-									{uniqueFundedAmounts.slice(-4).map((amount: number) => (
-										<div key={amount} className="flex items-center gap-2 pb-1">
-											<Circle size={18} strokeWidth={1} />
-											<p className="text-xs">{amount}</p>
-										</div>
-									))}
-								</div>
-								<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
-									<h2 className="text-base font-medium pb-2 md:pb-4">
-										Story from
-									</h2>
-									{uniqueMediaOutlets.map((outlet: string) => (
-										<div key={outlet} className="flex items-center gap-2 pb-1">
-											<Circle size={18} strokeWidth={1} />
-											<p className="text-xs">{outlet}</p>
-										</div>
-									))}
-								</div>
-								<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
-									<h2 className="text-base font-medium pb-2 md:pb-4">State</h2>
-									{uniqueStates.map((state: string) => (
-										<div key={state} className="flex items-center gap-2 pb-1">
-											<Circle size={18} strokeWidth={1} />
-											<p className="text-xs">{state}</p>
-										</div>
-									))}
-								</div>
-							</div>
+							<ReportFilter reports={reports} amounts={amounts} />
 							<DrawerFooter>
 								<DrawerClose className=" lg:py-10">
 									<Button variant="ghost" size="icon">
@@ -161,13 +153,8 @@ const ReportFilter: React.FC<ReportFilterProps> = ({ reports, amounts }) => {
 					</Select>
 				</div>
 			</div>
-
-			{/* <div className="flex flex-col gap-5 pt-8 pb-4">
-				<Button>Apply</Button>
-				<Button variant={"outline"}>Clear all</Button>
-			</div> */}
 		</article>
 	);
 };
 
-export default ReportFilter;
+export default ReportsHeader;

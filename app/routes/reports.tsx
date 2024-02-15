@@ -2,7 +2,7 @@ import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, Outlet, json, useLoaderData } from "@remix-run/react";
 import { useMemo } from "react";
 import ReportCard from "~/components/report-card";
-import ReportFilter from "~/components/report-filter";
+import ReportsHeader from "~/components/reports-header";
 import VoicedeckStats from "~/components/voicedeck-stats";
 import { siteConfig } from "~/config/site";
 import { Report } from "~/types";
@@ -56,7 +56,7 @@ export default function Reports() {
 				numOfContributions={contributionAmounts.numFunded}
 			/>
 
-			<ReportFilter reports={reports} amounts={contributionAmounts.amounts} />
+			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
 			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3">
 				{reports.map((report: Report) => (
