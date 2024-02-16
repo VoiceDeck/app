@@ -3,11 +3,11 @@ import { Settings2 } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 
-import { History } from "~/components/my-actions/history";
 import { SideBar } from "~/components/my-actions/sidebar";
 import { Summary } from "~/components/my-actions/summary";
 import { buttonVariants } from "~/components/ui/button";
 
+import History from "~/components/my-actions/history";
 import historyImg from "/sample-history-img.jpeg";
 
 const mockData = [
