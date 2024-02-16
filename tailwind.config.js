@@ -19,7 +19,7 @@ module.exports = {
     extend: {
       colors: {
         "vd-beige": {
-          600: "rgb(var(--vd-beige-400) / <alpha-value>)",
+          600: "rgb(var(--vd-beige-600) / <alpha-value>)",
           400: "rgb(var(--vd-beige-400) / <alpha-value>)",
           300: "rgb(var(--vd-beige-300) / <alpha-value>)",
           200: "rgb(var(--vd-beige-200) / <alpha-value>)",

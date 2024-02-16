@@ -1,14 +1,19 @@
 import { Badge } from "~/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { iconComponents } from "~/components/ui/dynamic-category-icon";
+import { cn } from "~/lib/utils";
 
 const Summary = () => {
 	return (
 		<section className="flex flex-col gap-4 md:col-span-2">
 			<div className="flex flex-col gap-4 md:flex-row">
-				<Card className="bg-vd-blue-200 rounded-3xl flex-1">
+				<Card
+					className={cn(
+						"bg-vd-blue-200 rounded-3xl flex-1 shadow-none border-none",
+					)}
+				>
 					<CardHeader>
-						<CardTitle className="text-sm font-normal">
+						<CardTitle className={cn("text-sm font-normal")}>
 							My Contribution
 						</CardTitle>
 					</CardHeader>
@@ -16,9 +21,13 @@ const Summary = () => {
 						<data className="text-4xl font-bold">520.00 USD</data>
 					</CardContent>
 				</Card>
-				<Card className="bg-vd-beige-300 rounded-3xl md:flex-1">
+				<Card
+					className={cn(
+						"bg-vd-beige-300 rounded-3xl md:flex-1 shadow-none border-none",
+					)}
+				>
 					<CardHeader>
-						<CardTitle className="text-sm font-normal">
+						<CardTitle className={cn("text-sm font-normal")}>
 							# of reports I contributed
 						</CardTitle>
 					</CardHeader>
@@ -27,9 +36,11 @@ const Summary = () => {
 					</CardContent>
 				</Card>
 			</div>
-			<Card className="rounded-3xl">
+			<Card
+				className={cn("rounded-3xl bg-vd-beige-100 shadow-none border-none")}
+			>
 				<CardHeader>
-					<CardTitle className="text-sm font-normal">
+					<CardTitle className={cn("text-sm font-normal")}>
 						Issues I care about:
 					</CardTitle>
 				</CardHeader>
@@ -45,7 +56,7 @@ const Summary = () => {
 								<Badge
 									key={icon}
 									variant="default"
-									className="rounded-3xl w-full justify-between px-5 py-3"
+									className={cn("rounded-3xl w-full justify-between px-5 py-3")}
 								>
 									<div className="flex gap-1 items-center">
 										<Icon className="text-vd-orange-400 stroke-[1.5] size-4" />

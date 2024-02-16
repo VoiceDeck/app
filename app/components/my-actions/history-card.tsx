@@ -8,7 +8,7 @@ import {
 } from "~/components/ui/card";
 import { DynamicCategoryIcon } from "~/components/ui/dynamic-category-icon";
 import { Separator } from "~/components/ui/separator";
-import { formatCurrency, formatDate } from "~/lib/utils";
+import { cn, formatCurrency, formatDate } from "~/lib/utils";
 import { HistoryData } from "./history";
 
 type HistoryCardProps = Omit<HistoryData, "id">;
@@ -23,8 +23,8 @@ const HistoryCard = ({
 	description,
 }: HistoryCardProps) => {
 	return (
-		<Card className="rounded-3xl bg-vd-beige-100">
-			<CardHeader className="md:pb-2">
+		<Card className={cn("rounded-3xl bg-vd-beige-100 shadow-none border-none")}>
+			<CardHeader className={cn("md:pb-2")}>
 				<div className="flex justify-between pb-2 items-center">
 					<time
 						className="text-sm text-vd-blue-400"
@@ -45,14 +45,14 @@ const HistoryCard = ({
 						<div className="flex gap-2 pt-2">
 							<Badge
 								variant="default"
-								className="rounded-3xl justify-between items-center"
+								className={cn("rounded-3xl justify-between items-center")}
 							>
 								<DynamicCategoryIcon category={category} />
 								<p className="font-light text-xs ml-1">{category}</p>
 							</Badge>
 							<Badge
 								variant="default"
-								className="rounded-3xl justify-between items-center"
+								className={cn("rounded-3xl justify-between items-center")}
 							>
 								<DynamicCategoryIcon category="Location" />
 								<p className="font-light text-xs ml-1">{location}</p>
@@ -63,7 +63,7 @@ const HistoryCard = ({
 			</CardHeader>
 			<CardContent>
 				<Separator />
-				<CardDescription className="pt-4">{description}</CardDescription>
+				<CardDescription className={cn("pt-4")}>{description}</CardDescription>
 			</CardContent>
 		</Card>
 	);
