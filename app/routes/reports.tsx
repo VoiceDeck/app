@@ -1,9 +1,9 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, Outlet, json, useLoaderData } from "@remix-run/react";
 import { useMemo } from "react";
-import ReportCard from "~/components/report-card";
-import ReportsHeader from "~/components/reports-header";
-import VoicedeckStats from "~/components/voicedeck-stats";
+import ReportCard from "~/components/reports/report-card";
+import ReportsHeader from "~/components/reports/reports-header";
+import VoicedeckStats from "~/components/reports/voicedeck-stats";
 import { siteConfig } from "~/config/site";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
