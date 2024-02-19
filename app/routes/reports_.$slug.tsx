@@ -34,9 +34,9 @@ export default function RouteComponent() {
 	const htmlParsedStory = report?.story ? parse(report.story) : "";
 
 	return (
-		<main className="flex flex-col border-2 border-red-100 justify-between h-svh">
+		<main className="flex flex-col justify-between h-svh">
 			{/* 192px is added to account for the funding progress on mobile */}
-			<div className="flex flex-col gap-2 space-y-2 p-4 pb-[192px]">
+			<div className="flex flex-col gap-2 space-y-2 p-4 pb-[192px] md:pb-2 md:container">
 				<section className="flex flex-col flex-1 gap-4">
 					<Link to={"/reports"} className="flex space-x-1 items-center">
 						<ChevronLeft size={24} className="text-vd-blue-400" />
@@ -55,6 +55,9 @@ export default function RouteComponent() {
 							<p>{report.state}</p>
 						</Badge>
 					</ul>
+					<div className="fixed bottom-[56px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full shadow-lg ">
+						<FundingProgress totalAmount={100} fundedAmount={27} />
+					</div>
 					{/* <FundingProgress totalAmount={100} fundedAmount={27} /> */}
 					<p>{report.summary}</p>
 					<img
@@ -67,9 +70,6 @@ export default function RouteComponent() {
 				</section>
 				<ReportSidebar report={report} />
 				<ReportSupportFeed report={report} />
-			</div>
-			<div className="fixed bottom-[56px] w-full shadow-lg">
-				<FundingProgress totalAmount={100} fundedAmount={27} />
 			</div>
 		</main>
 	);

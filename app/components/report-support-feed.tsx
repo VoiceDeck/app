@@ -205,6 +205,7 @@ const MobileSupportFeed = ({
 							<PaginationItem
 								onClick={() => loadPage(pageNum)}
 								className="hover:cursor-pointer"
+								key={`page-${pageNum}`}
 							>
 								<PaginationLink isActive={currentPage === pageNum}>
 									{pageNum}

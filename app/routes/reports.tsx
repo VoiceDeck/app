@@ -74,8 +74,6 @@ export default function Reports() {
 					</Link>
 				))}
 			</section>
-
-			<Outlet />
 		</main>
 	);
 }
