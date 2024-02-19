@@ -14,7 +14,7 @@ const NavMenu = () => {
 			</NavLink>
 
 			<NavLink
-				to="/actions"
+				to="/my-actions"
 				className={({ isActive }) =>
 					cn(
 						buttonVariants({ variant: "ghost" }),
