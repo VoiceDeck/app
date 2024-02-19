@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --vd-beige-200: 247 237 232;
+  --vd-beige-600: 198 139 109;
   --vd-beige-400: 231 201 186;
   --vd-beige-300: 241 224 215;
+  --vd-beige-200: 247 237 232;
   --vd-beige-100: 251 247 245;
   --vd-blue-900: 37 47 86;
   --vd-blue-700: 58 82 100;
@@ -35,6 +36,6 @@
   body {
     font-family: "Plus Jakarta Sans Variable", sans-serif;
     color: #252f56;
-    background-color: #f2efed;
+    background-color: #f7ede8;
   }
 }

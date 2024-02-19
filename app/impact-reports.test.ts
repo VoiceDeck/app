@@ -17,7 +17,7 @@ describe.concurrent("fetch reports", async () => {
 		// address used to mint test hypercerts in Sepolia testnet
 		import.meta.env.HC_OWNER_ADDRESS =
 			"0x475DB4E7c8976fd243D3d6fA444fda524cefbaf9";
-		import.meta.env.CMS_ENDPOINT = "https://directus.vd-dev.org/items/reports";
+		import.meta.env.CMS_ENDPOINT = "https://directus.vd-dev.org/";
 	});
 
 	afterAll(() => {
@@ -30,7 +30,7 @@ describe.concurrent("fetch reports", async () => {
 		expectTypeOf(result).toEqualTypeOf<Report[]>();
 		expect(result.length).toBeGreaterThan(0);
 		expect(consoleMock).toHaveBeenCalledWith(
-			`Fetching reports from remote using owner address: ${
+			`[server] Fetching reports from remote using owner address: ${
 				import.meta.env.HC_OWNER_ADDRESS
 			}`,
 		);
@@ -42,7 +42,7 @@ describe.concurrent("fetch reports", async () => {
 		expectTypeOf(result).toEqualTypeOf<Report[]>();
 		expect(result.length).toBeGreaterThan(0);
 		expect(consoleMock).toHaveBeenCalledWith(
-			"Reports already exist, no need to fetch from remote",
+			"[server] Reports already exist, no need to fetch from remote",
 		);
 	});
 
