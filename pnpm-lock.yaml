@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@directus/sdk':
+    specifier: ^15.0.1
+    version: 15.0.1
   '@fontsource-variable/plus-jakarta-sans':
     specifier: ^5.0.19
     version: 5.0.19
@@ -71,6 +74,9 @@ dependencies:
   vaul:
     specifier: ^0.9.0
     version: 0.9.0(@types/react-dom@18.2.18)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
+  viem:
+    specifier: ^2.7.9
+    version: 2.7.9(typescript@5.3.3)
 
 devDependencies:
   '@biomejs/biome':
@@ -569,6 +575,17 @@ packages:
       '@chainsafe/as-sha256': 0.3.1
       '@chainsafe/persistent-merkle-tree': 0.4.2
       case: 1.6.3
+    dev: false
+
+  /@directus/sdk@15.0.1:
+    resolution: {integrity: sha512-NuP+S2SZ23gmcSNnHiX7LxlUxkdIjX0mV3kFKqTdU07epj4OJNHk7ZXfSV2y67fnQjFrb7apTHe2LdWnU8Y6vQ==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@directus/system-data': 1.0.0
+    dev: false
+
+  /@directus/system-data@1.0.0:
+    resolution: {integrity: sha512-AKzYkLg39phx9AysQhcf7AmIGq1D/PIkor5B8Y5NB8R+jq+jkH1PBtg/l5Ev4hfsidpNBi5DmpuFy/xmQEYhHQ==}
     dev: false
 
   /@emotion/hash@0.9.1:
@@ -3166,6 +3183,20 @@ packages:
     peerDependencies:
       typescript: '>=5.0.4'
       zod: ^3 >=3.19.1
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.3.3
+    dev: false
+
+  /abitype@1.0.0(typescript@5.3.3):
+    resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -8046,6 +8077,29 @@ packages:
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
       abitype: 0.9.8(typescript@5.3.3)
+      isows: 1.0.3(ws@8.13.0)
+      typescript: 5.3.3
+      ws: 8.13.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+    dev: false
+
+  /viem@2.7.9(typescript@5.3.3):
+    resolution: {integrity: sha512-iDfc8TwaZFp1K95zlsxYh6Cs0OWCt35Tqs8uYgXKSxtz7w075mZ0H5SJ8zSyJGoEaticVDhtdmRRX6TtcW9EeQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.0
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@scure/bip32': 1.3.2
+      '@scure/bip39': 1.2.1
+      abitype: 1.0.0(typescript@5.3.3)
       isows: 1.0.3(ws@8.13.0)
       typescript: 5.3.3
       ws: 8.13.0
