@@ -2,6 +2,15 @@ import { usePagination } from "~/hooks/use-pagination";
 import { cn } from "~/lib/utils";
 import { Report } from "~/types";
 import { Button } from "./ui/button";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "./ui/pagination";
 
 interface IContribution {
 	amount: number;
@@ -149,39 +158,73 @@ const MobileSupportFeed = ({
 
 			{/* Pagination */}
 			{needsPagination && (
-				<div className="flex items-center gap-3 py-2">
-					<Button
-						onClick={() => loadPage(currentPage - 1)}
-						variant="ghost"
-						disabled={currentPage <= 1}
-					>
-						{"Prev"}
-					</Button>
+				// <div className="flex items-center gap-3 py-2">
+				// 	<Button
+				// 		onClick={() => loadPage(currentPage - 1)}
+				// 		variant="ghost"
+				// 		disabled={currentPage <= 1}
+				// 	>
+				// 		{"Prev"}
+				// 	</Button>
 
-					{pageNumbers.map((page, index) => (
-						<Button
-							key={`page-${page}`}
-							onClick={() => loadPage(page)}
-							className={cn(
-								"h-9 w-8 rounded-full border-vd-blue-400",
-								currentPage === page
-									? "border-2 border-vd-blue-700 ring-2 ring-vd-beige-300"
-									: "",
-							)}
-							variant="outline"
-						>
-							{page}
-						</Button>
-					))}
+				// 	{pageNumbers.map((page, index) => (
+				// 		<Button
+				// 			key={`page-${page}`}
+				// 			onClick={() => loadPage(page)}
+				// 			className={cn(
+				// 				"h-9 w-8 rounded-full border-vd-blue-400",
+				// 				currentPage === page
+				// 					? "border-2 border-vd-blue-700 ring-2 ring-vd-beige-300"
+				// 					: "",
+				// 			)}
+				// 			variant="outline"
+				// 		>
+				// 			{page}
+				// 		</Button>
+				// 	))}
 
-					<Button
-						onClick={() => loadPage(currentPage + 1)}
-						variant="ghost"
-						disabled={currentPage >= maxPage}
-					>
-						{"Next"}
-					</Button>
-				</div>
+				// 	<Button
+				// 		onClick={() => loadPage(currentPage + 1)}
+				// 		variant="ghost"
+				// 		disabled={currentPage >= maxPage}
+				// 	>
+				// 		{"Next"}
+				// 	</Button>
+				// </div>
+
+				<Pagination>
+					<PaginationContent>
+						<PaginationItem className="hover:cursor-pointer">
+							<PaginationPrevious
+								onClick={() =>
+									currentPage > 1 ? loadPage(currentPage - 1) : null
+								}
+							/>
+						</PaginationItem>
+						{[1, 2, 3, 4, 5].map((pageNum, index) => (
+							<PaginationItem
+								onClick={() => loadPage(pageNum)}
+								className="hover:cursor-pointer"
+							>
+								<PaginationLink isActive={currentPage === pageNum}>
+									{pageNum}
+								</PaginationLink>
+							</PaginationItem>
+						))}
+						{maxPage > 4 && (
+							<PaginationItem>
+								<PaginationEllipsis />
+							</PaginationItem>
+						)}
+						<PaginationItem className="hover:cursor-pointer">
+							<PaginationNext
+								onClick={() =>
+									currentPage < maxPage ? loadPage(currentPage + 1) : null
+								}
+							/>
+						</PaginationItem>
+					</PaginationContent>
+				</Pagination>
 			)}
 		</section>
 	);
@@ -191,7 +234,9 @@ const ReportSupportFeed = ({ report }: { report: Report }) => {
 	if (!reportTransactions.length) {
 		return (
 			<section>
-				<h3 className="text-2xl font-semibold py-4">Support Feed</h3>
+				<h3 className="text-2xl font-semibold py-4" id="support-feed-title">
+					Support Feed
+				</h3>
 				<p className="text-neutral-500 dark:text-neutral-300">
 					Nothing to show yet. Be the first to support this cause!
 				</p>
