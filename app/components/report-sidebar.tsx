@@ -38,10 +38,10 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 		},
 	];
 	return (
-		<Card className="bg-vd-beige-100">
+		<Card className="bg-vd-beige-100 md:min-w-[300px] shadow-none">
 			<CardHeader>
 				{/* TODO: Can probably remove when card update drops in */}
-				<CardTitle className="text-2xl font-semibold leading-none tracking-tight line-clamp-none">
+				<CardTitle className="text-xl font-semibold leading-none tracking-tight line-clamp-none">
 					Impact Details
 				</CardTitle>
 			</CardHeader>
@@ -86,9 +86,9 @@ const EvaluationDetails = ({ report }: { report: Partial<Report> }) => {
 	];
 
 	return (
-		<Card className="bg-vd-beige-100">
+		<Card className="bg-vd-beige-100 md:min-w-[300px] shadow-none">
 			<CardHeader>
-				<CardTitle className="text-2xl font-semibold leading-none tracking-tight line-clamp-none">
+				<CardTitle className="text-xl font-semibold leading-none tracking-tight line-clamp-none">
 					Evaluation & Verification
 				</CardTitle>
 			</CardHeader>
@@ -130,9 +130,49 @@ const EvaluationDetails = ({ report }: { report: Partial<Report> }) => {
 	);
 };
 
+const BCRatio = ({ report }: { report: Partial<Report> }) => {
+	const verifiedData = [
+		{
+			title: "Verified By",
+			value: report.verifiedBy || "Not Verified",
+		},
+		{
+			title: "Byline",
+			value: report.byline || "Anonymous",
+		},
+	];
+
+	return (
+		<Card className="bg-vd-orange-200 md:min-w-[300px] shadow-none">
+			<CardHeader>
+				<CardTitle className="text-xl font-semibold leading-none tracking-tight line-clamp-none">
+					Benefit cost ratio
+				</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<h5 className="text-5xl font-bold tracking-tighter">
+					{report.bcRatio || "N/A"}
+				</h5>
+				{/* TODO: @thebeyondr Add correct link to learn more */}
+				<a
+					href={report.originalReportUrl}
+					className={cn(
+						buttonVariants({ variant: "link" }),
+						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",
+					)}
+				>
+					<p>Learn more</p>
+					<ExternalLinkIcon size={18} />
+				</a>
+			</CardContent>
+		</Card>
+	);
+};
+// TODO: @thebeyondr - Refactor cards to use the same skeleton
 const ReportSidebar = ({ report }: { report: Report }) => {
 	return (
 		<aside className="flex flex-col gap-4">
+			<BCRatio report={report} />
 			<ImpactDetails report={report} />
 			<EvaluationDetails report={report} />
 		</aside>
