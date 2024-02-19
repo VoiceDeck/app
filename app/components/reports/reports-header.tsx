@@ -1,6 +1,5 @@
 import { Circle, Filter } from "lucide-react";
 import { useMemo } from "react";
-import DynamicCategoryIcon from "~/components/dynamic-category-icon";
 import { Button } from "~/components/ui/button";
 import {
 	Drawer,
@@ -9,6 +8,7 @@ import {
 	DrawerFooter,
 	DrawerTrigger,
 } from "~/components/ui/drawer";
+import { DynamicCategoryIcon } from "~/components/ui/dynamic-category-icon";
 import { Input } from "~/components/ui/input";
 import {
 	Select,

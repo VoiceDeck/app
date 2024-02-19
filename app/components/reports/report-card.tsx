@@ -8,8 +8,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "~/components/ui/card";
+import { DynamicCategoryIcon } from "~/components/ui/dynamic-category-icon";
 import { Progress } from "~/components/ui/progress";
-import DynamicCategoryIcon from "../dynamic-category-icon";
 
 interface ReportCardProps {
 	hypercertId: string;
