@@ -1,3 +1,5 @@
+import { Hash } from "viem";
+
 /**
  * Defines the structure of an Impact Report.
  *
@@ -85,7 +87,13 @@ export interface Claim {
 	uri?: string | null;
 }
 
-// type definition for the report object that is returned from VoiceDeck CMS
+/*************
+ *
+ * type definition from Directus CMS collections
+ *
+ ************/
+
+// Directus schema of `report` collection
 export interface CMSContent {
 	// properties for hypercert minting
 	title: string | null;
@@ -114,3 +122,11 @@ export interface CMSContent {
 	byline: string | null;
 	total_cost: string | null;
 }
+
+// Directus schema of `contributions` collection
+export type Contribution = {
+	txid: Hash;
+	hypercert_id: string;
+	sender: string;
+	amount: number;
+};

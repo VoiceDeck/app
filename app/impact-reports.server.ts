@@ -5,11 +5,10 @@ import {
 	HypercertMetadata,
 	HypercertsStorage,
 } from "@hypercerts-org/sdk";
-import { CMSContent, Claim, Report } from "~/types";
+import { Claim, Report } from "~/types";
+import { getReports } from "./directus.server";
 
 let reports: Report[] | null = null;
-// represents contents retrieved from CMS `reports` collection
-let cmsContents: CMSContent[] | null = null;
 let hypercertClient: HypercertClient | null = null;
 
 /**
@@ -19,17 +18,19 @@ let hypercertClient: HypercertClient | null = null;
  */
 export const fetchReports = async (): Promise<Report[]> => {
 	if (!process.env.HC_OWNER_ADDRESS) {
-		throw new Error("Owner address environment variable is not set");
+		throw new Error("[server] Owner address environment variable is not set");
 	}
 	const ownerAddress = process.env.HC_OWNER_ADDRESS;
 
 	try {
 		if (reports) {
-			console.log("Reports already exist, no need to fetch from remote");
-			console.log(`Existing reports: ${reports.length}`);
+			console.log(
+				"[server] Reports already exist, no need to fetch from remote",
+			);
+			console.log(`[server] Existing reports: ${reports.length}`);
 		} else {
 			console.log(
-				`Fetching reports from remote using owner address: ${ownerAddress}`,
+				`[server] Fetching reports from remote using owner address: ${ownerAddress}`,
 			);
 			const claims = await getHypercertClaims(
 				ownerAddress,
@@ -43,13 +44,13 @@ export const fetchReports = async (): Promise<Report[]> => {
 						getHypercertClient().storage,
 					);
 
-					const fromCMS = await getCMSContents();
+					const fromCMS = await getReports();
 					const cmsReport = fromCMS.find(
 						(cmsReport) => cmsReport.title === metadata.name,
 					);
 					if (!cmsReport) {
 						throw new Error(
-							`CMS content for report titled '${metadata.name}' not found.`,
+							`[server] CMS content for report titled '${metadata.name}' not found.`,
 						);
 					}
 
@@ -88,13 +89,13 @@ export const fetchReports = async (): Promise<Report[]> => {
 					} as Report;
 				}),
 			);
-			console.log(`Fethced reports: ${reports.length}`);
+			console.log(`[server] total reports: ${reports.length}`);
 		}
 
 		return reports;
 	} catch (error) {
-		console.error(`Failed to fetch reports: ${error}`);
-		throw new Error("Failed to fetch reports");
+		console.error(`[server] Failed to fetch reports: ${error}`);
+		throw new Error(`[server] Failed to fetch reports: ${error}`);
 	}
 };
 
@@ -110,13 +111,13 @@ export const fetchReportBySlug = async (slug: string): Promise<Report> => {
 
 		const foundReport = reports.find((report: Report) => report.slug === slug);
 		if (!foundReport) {
-			throw new Error(`Report with slug '${slug}' not found.`);
+			throw new Error(`[server] Report with slug '${slug}' not found.`);
 		}
 
 		return foundReport;
 	} catch (error) {
-		console.error(`Failed to get report by slug ${slug}: ${error}`);
-		throw new Error("Failed to get report by slug");
+		console.error(`[server] Failed to get report by slug ${slug}: ${error}`);
+		throw new Error(`[server] Failed to get report by slug ${slug}: ${error}`);
 	}
 };
 
@@ -146,17 +147,21 @@ export const getHypercertClaims = async (
 ): Promise<Claim[]> => {
 	let claims: Claim[] | null;
 
-	console.log(`Fetching claims owned by ${ownerAddress}`);
+	console.log(`[Hypercerts] Fetching claims owned by ${ownerAddress}`);
 	try {
 		// see graphql query: https://github.com/hypercerts-org/hypercerts/blob/d7f5fee/sdk/src/indexer/queries/claims.graphql#L1-L11
 		const response = await indexer.claimsByOwner(ownerAddress as string);
 		claims = (response as ClaimsByOwnerQuery).claims as Claim[];
-		console.log(`Fetched claims: ${claims ? claims.length : 0}`);
+		console.log(`[Hypercerts] Fetched claims: ${claims ? claims.length : 0}`);
 
 		return claims;
 	} catch (error) {
-		console.error(`Failed to fetch claims owned by ${ownerAddress}: ${error}`);
-		throw new Error(`Failed to fetch claims claims owned by ${ownerAddress}`);
+		console.error(
+			`[Hypercerts] Failed to fetch claims owned by ${ownerAddress}: ${error}`,
+		);
+		throw new Error(
+			`[Hypercerts] Failed to fetch claims owned by ${ownerAddress}: ${error}`,
+		);
 	}
 };
 
@@ -179,34 +184,11 @@ export const getHypercertMetadata = async (
 
 		return metadata;
 	} catch (error) {
-		console.error(`Failed to fetch metadata of ${claimUri}: ${error}`);
-		throw new Error(`Failed to fetch metadata of ${claimUri}`);
-	}
-};
-
-/**
- * Fetches the contents of the CMS `reports` collection.
- * @returns A promise that resolves to an array of CMS contents.
- * @throws Will throw an error if the CMS contents cannot be fetched.
- */
-export const getCMSContents = async (): Promise<CMSContent[]> => {
-	try {
-		if (cmsContents) {
-			console.log("CMS contents already exist, no need to fetch from remote");
-			console.log(`Existing CMS contents: ${cmsContents.length}`);
-		} else {
-			console.log("Fetching CMS contents from remote");
-			const response = await fetch(process.env.CMS_ENDPOINT as string);
-			if (!response.ok) {
-				throw new Error(`failed to fetch data from CMS : ${response.status}`);
-			}
-			const data = await response.json();
-			cmsContents = data.data as CMSContent[];
-		}
-
-		return cmsContents;
-	} catch (error) {
-		console.error(`Failed to fetch CMS contents: ${error}`);
-		throw new Error("Failed to fetch CMS contents");
+		console.error(
+			`[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
+		);
+		throw new Error(
+			`[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
+		);
 	}
 };
