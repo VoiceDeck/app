@@ -58,7 +58,10 @@ export default function RouteComponent() {
 						</Badge>
 					</ul>
 					<div className="fixed bottom-[56px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
-						<FundingProgress totalAmount={100} fundedAmount={27} />
+						<FundingProgress
+							totalAmount={report.totalCost}
+							fundedAmount={report.fundedSoFar}
+						/>
 					</div>
 					<Separator />
 				</section>
