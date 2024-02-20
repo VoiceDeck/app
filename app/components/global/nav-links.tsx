@@ -6,15 +6,15 @@ import { buttonVariants } from "../ui/button";
 
 const NavLinks = () => {
 	return (
-		<ul className="md:flex gap-1 hidden">
+		<ul className="hidden md:flex gap-1">
 			<li>
 				<NavLink
 					to="/"
 					className={({ isActive }) =>
 						cn(
 							buttonVariants({ variant: "ghost" }),
-							"rounded-md text-base",
-							isActive ? "bg-vd-beige-300 dark:bg-vd-beige-100" : undefined,
+							"rounded-md font-semibold",
+							isActive ?? "bg-vd-beige-300 dark:bg-vd-beige-100",
 						)
 					}
 				>
@@ -26,10 +26,11 @@ const NavLinks = () => {
 					href="http://about-example.com"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={cn(buttonVariants({ variant: "link" }))}
+					className={cn(buttonVariants({ variant: "link" }), "font-semibold")}
 				>
 					About
-					<ArrowUpRight size={24} />
+					<div className="p-0.5" />
+					<ArrowUpRight size={18} />
 				</a>
 				{/* TODO: I believe that About and FAQs are external Links. If they are different Routes use below. Confirm in Design Review */}
 				{/* <NavLink
@@ -58,10 +59,11 @@ const NavLinks = () => {
 					href="http://faqs-example.com"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={cn(buttonVariants({ variant: "link" }))}
+					className={cn(buttonVariants({ variant: "link" }), "font-semibold")}
 				>
 					FAQs
-					<ArrowUpRight size={24} />
+					<div className="p-0.5" />
+					<ArrowUpRight size={18} />
 				</a>
 			</li>
 		</ul>
