@@ -35,7 +35,7 @@ export default function RouteComponent() {
 	const htmlParsedStory = report?.story ? parse(report.story) : "";
 
 	return (
-		<main className="flex flex-col justify-between h-svh md:h-fit">
+		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12">
 			{/* 192px is added to account for the funding progress on mobile */}
 			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[192px] md:pb-2 md:max-w-[1200px] md:mx-auto">
 				<section className="flex flex-col flex-1 gap-4">
