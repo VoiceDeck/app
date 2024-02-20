@@ -39,8 +39,11 @@ export default function RouteComponent() {
 			{/* 192px is added to account for the funding progress on mobile */}
 			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[192px] md:pb-2 md:max-w-[1200px] md:mx-auto">
 				<section className="flex flex-col flex-1 gap-4">
-					<Link to={"/reports"} className="flex space-x-1 items-center">
-						<ChevronLeft size={24} className="text-vd-blue-400" />
+					<Link to={"/reports"} className="group flex space-x-1 items-center">
+						<ChevronLeft
+							size={24}
+							className="text-vd-blue-400 group-hover:-translate-x-2 transition-transform duration-300 ease-in-out"
+						/>
 						<p className="font-semibold text-sm uppercase text-vd-blue-500 tracking-wider">
 							All Reports
 						</p>
@@ -63,9 +66,9 @@ export default function RouteComponent() {
 							fundedAmount={report.fundedSoFar}
 						/>
 					</div>
-					<Separator />
+					{/* <Separator className="bg-vd-beige-300" /> */}
 				</section>
-				<section className="flex flex-col gap-2 md:flex-row md:gap-12">
+				<section className="flex flex-col gap-2 md:flex-row md:gap-12 pt-8">
 					<section className="flex flex-col gap-2">
 						<div>
 							<h3 className="font-bold text-2xl pb-3">Summary</h3>
