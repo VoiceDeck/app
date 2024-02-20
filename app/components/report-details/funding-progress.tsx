@@ -1,5 +1,5 @@
-import { Button } from "./ui/button";
-import { Progress } from "./ui/progress";
+import { Button } from "../ui/button";
+import { Progress } from "../ui/progress";
 
 interface FundingProgressProps {
 	totalAmount: number;

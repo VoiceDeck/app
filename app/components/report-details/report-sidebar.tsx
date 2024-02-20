@@ -8,8 +8,8 @@ import {
 } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { Report } from "~/types";
-import { buttonVariants } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { buttonVariants } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const ImpactDetails = ({ report }: { report: Report }) => {
 	const details = [

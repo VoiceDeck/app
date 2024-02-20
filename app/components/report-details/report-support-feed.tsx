@@ -1,7 +1,5 @@
 import { usePagination } from "~/hooks/use-pagination";
-import { cn } from "~/lib/utils";
 import { Report } from "~/types";
-import { Button } from "./ui/button";
 import {
 	Pagination,
 	PaginationContent,
@@ -10,7 +8,7 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-} from "./ui/pagination";
+} from "../ui/pagination";
 
 interface IContribution {
 	amount: number;
@@ -158,40 +156,6 @@ const MobileSupportFeed = ({
 
 			{/* Pagination */}
 			{needsPagination && (
-				// <div className="flex items-center gap-3 py-2">
-				// 	<Button
-				// 		onClick={() => loadPage(currentPage - 1)}
-				// 		variant="ghost"
-				// 		disabled={currentPage <= 1}
-				// 	>
-				// 		{"Prev"}
-				// 	</Button>
-
-				// 	{pageNumbers.map((page, index) => (
-				// 		<Button
-				// 			key={`page-${page}`}
-				// 			onClick={() => loadPage(page)}
-				// 			className={cn(
-				// 				"h-9 w-8 rounded-full border-vd-blue-400",
-				// 				currentPage === page
-				// 					? "border-2 border-vd-blue-700 ring-2 ring-vd-beige-300"
-				// 					: "",
-				// 			)}
-				// 			variant="outline"
-				// 		>
-				// 			{page}
-				// 		</Button>
-				// 	))}
-
-				// 	<Button
-				// 		onClick={() => loadPage(currentPage + 1)}
-				// 		variant="ghost"
-				// 		disabled={currentPage >= maxPage}
-				// 	>
-				// 		{"Next"}
-				// 	</Button>
-				// </div>
-
 				<Pagination>
 					<PaginationContent>
 						<PaginationItem className="hover:cursor-pointer">
@@ -201,7 +165,7 @@ const MobileSupportFeed = ({
 								}
 							/>
 						</PaginationItem>
-						{[1, 2, 3, 4, 5].map((pageNum, index) => (
+						{pageNumbers.map((pageNum, index) => (
 							<PaginationItem
 								onClick={() => loadPage(pageNum)}
 								className="hover:cursor-pointer"
