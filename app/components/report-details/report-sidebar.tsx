@@ -40,7 +40,6 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 	return (
 		<Card className="bg-vd-beige-100 md:min-w-[300px] shadow-none">
 			<CardHeader>
-				{/* TODO: Can probably remove when card update drops in */}
 				<CardTitle className="text-xl font-semibold leading-none tracking-tight line-clamp-none">
 					Impact Details
 				</CardTitle>
@@ -143,7 +142,7 @@ const BCRatio = ({ report }: { report: Partial<Report> }) => {
 	];
 
 	return (
-		<Card className="bg-vd-orange-200 md:min-w-[300px] shadow-none">
+		<Card className="bg-vd-beige-300 md:min-w-[300px] shadow-none">
 			<CardHeader>
 				<CardTitle className="text-xl font-semibold leading-none tracking-tight line-clamp-none">
 					Benefit cost ratio
