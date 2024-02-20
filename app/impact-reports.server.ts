@@ -119,6 +119,29 @@ export const fetchReportBySlug = async (slug: string): Promise<Report> => {
 	}
 };
 
+export const fetchReportByHCId = async (
+	hypercertId: string,
+): Promise<Report> => {
+	try {
+		const reports = await fetchReports();
+
+		const foundReport = reports.find(
+			(report: Report) => report.hypercertId === hypercertId,
+		);
+		if (!foundReport) {
+			throw new Error(
+				`[server] Report with hypercert Id '${hypercertId}' not found.`,
+			);
+		}
+
+		return foundReport;
+	} catch (error) {
+		throw new Error(
+			`[server] Failed to get report with hypercert Id '${hypercertId}': ${error}`,
+		);
+	}
+};
+
 /**
  * Retrieves the singleton instance of the HypercertClient.
  * @returns The HypercertClient instance.
