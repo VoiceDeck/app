@@ -30,6 +30,7 @@
     "clsx": "^2.1.0",
     "html-react-parser": "^5.1.2",
     "isbot": "^4.1.0",
+    "localforage": "^1.10.0",
     "lucide-react": "^0.309.0",
     "million": "^3.0.2",
     "react": "^18.2.0",
