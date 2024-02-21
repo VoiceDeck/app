@@ -52,7 +52,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 			<h2 className="text-3xl md:text-4xl font-semibold pb-1 pt-6 md:pt-10">
 				Reports
 			</h2>
-			<p className="text-sm">Select a category that resonates with you.</p>
+			<p className="text-sm">Find and fund reports that resonate with you.</p>
 			<div className="flex flex-col xl:flex-row xl:justify-between gap-3 w-full py-4">
 				<div className="flex gap-2">
 					{uniqueCategories.map((category: string) => (
@@ -66,7 +66,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 					))}
 				</div>
 
-				<div className="flex flex-1 gap-2">
+				<div className="flex flex-1 max-w-[500px] gap-2">
 					<Input
 						className="pr-[50px] h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-base font-medium placeholder:text-vd-blue-500 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-500 focus-visible:ring-2"
 						type="search"
@@ -84,7 +84,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 							amounts={amounts}
 						/>
 					</div>
-					<div className="w-full min-w-[250px]">
+					<div className="max-w-[400px] min-w-[250px]">
 						<Select>
 							<SelectTrigger>
 								<SelectValue placeholder="Sort by" />

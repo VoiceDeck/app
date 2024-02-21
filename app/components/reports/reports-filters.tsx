@@ -1,3 +1,4 @@
+import { Separator } from "@radix-ui/react-separator";
 import { Circle, Filter } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
@@ -28,10 +29,20 @@ const FilterItems: React.FC<ReportFiltersProps> = ({
 	amounts,
 }) => {
 	return (
-		<div>
-			<div className="flex flex-col lg:flex-row lg:justify-around lg:px-[18%] lg:py-12">
-				<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
-					<h2 className="text-base font-medium pb-2 md:pb-4">Story from</h2>
+		<div className="p-6">
+			<h2 className="pl-4 font-medium">Amount needed</h2>
+			<Slider
+				className="px-6 py-8"
+				defaultValue={[330, 660]}
+				min={Math.min(...amounts)}
+				max={Math.max(...amounts)}
+				step={10}
+				minStepsBetweenThumbs={10}
+			/>
+			<div className="w-full h-[1px] bg-vd-blue-900 my-6 md:my-10" />
+			<div className="flex flex-col md:flex-row md:justify-between">
+				<div className="pl-4">
+					<h2 className="font-medium pb-2 md:pb-4">Story from</h2>
 					{outlets.map((outlet: string) => (
 						<div key={outlet} className="flex items-center gap-2 pb-1">
 							<Circle size={18} strokeWidth={1} />
@@ -39,8 +50,9 @@ const FilterItems: React.FC<ReportFiltersProps> = ({
 						</div>
 					))}
 				</div>
-				<div className="border border-b-vd-blue-400 pt-4 md:pt-6 pb-2 md:pb-4">
-					<h2 className="text-base font-medium pb-2 md:pb-4">State</h2>
+				<div className="md:hidden w-full h-[1px] bg-vd-blue-900 my-6" />
+				<div className="pl-4">
+					<h2 className="font-medium pb-2 md:pb-4">State</h2>
 					{states.map((state: string) => (
 						<div key={state} className="flex items-center gap-2 pb-1">
 							<Circle size={18} strokeWidth={1} />
@@ -49,14 +61,6 @@ const FilterItems: React.FC<ReportFiltersProps> = ({
 					))}
 				</div>
 			</div>
-			<Slider
-				className="p-10"
-				defaultValue={[330, 660]}
-				min={Math.min(...amounts)}
-				max={Math.max(...amounts)}
-				step={10}
-				minStepsBetweenThumbs={10}
-			/>
 		</div>
 	);
 };
@@ -76,10 +80,18 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 					</DrawerTrigger>
 					<DrawerContent className="">
 						<FilterItems outlets={outlets} states={states} amounts={amounts} />
-						<Button variant={"outline"}>Clear all</Button>
-						<DrawerFooter>
+						<DrawerFooter className="flex-row justify-center gap-2 pb-8">
+							<Button
+								className="text-xs w-36 h-7"
+								variant={"outline"}
+								size={"sm"}
+							>
+								Clear all
+							</Button>
 							<DrawerClose>
-								<Button>Apply</Button>
+								<Button className="text-xs w-36 h-7" size={"sm"}>
+									Apply
+								</Button>
 							</DrawerClose>
 						</DrawerFooter>
 					</DrawerContent>
@@ -93,10 +105,18 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 					</DialogTrigger>
 					<DialogContent>
 						<FilterItems outlets={outlets} states={states} amounts={amounts} />
-						<Button variant={"outline"}>Clear all</Button>
-						<DialogFooter className="sm:justify-start">
+						<DialogFooter className="justify-end gap-2 pb-4">
+							<Button
+								className="text-xs w-36 h-7"
+								variant={"outline"}
+								size={"sm"}
+							>
+								Clear all
+							</Button>
 							<DialogClose asChild>
-								<Button>Apply</Button>
+								<Button className="text-xs w-36 h-7" size={"sm"}>
+									Apply
+								</Button>
 							</DialogClose>
 						</DialogFooter>
 					</DialogContent>
