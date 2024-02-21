@@ -7,7 +7,14 @@ import {
 	readItems,
 	rest,
 } from "@directus/sdk";
-import { http, Hash, PublicClient, createPublicClient } from "viem";
+import {
+	http,
+	Address,
+	Hash,
+	PublicClient,
+	createPublicClient,
+	getAddress,
+} from "viem";
 import { sepolia } from "viem/chains";
 
 import { CMSContent, Contribution } from "./types";
@@ -63,7 +70,7 @@ export async function processNewContribution(
 
 export async function createContribution(contribution: Contribution) {
 	const user = {
-		address: contribution.sender,
+		address: getAddress(contribution.sender),
 	};
 	const client = getDirectusClient();
 
@@ -187,6 +194,67 @@ export const getNumberOfContributors = async (): Promise<number> => {
 		console.error(`[Directus] Failed to get number of contributors: ${error}`);
 		throw new Error(
 			`[Directus] Failed to get number of contributors: ${error}`,
+		);
+	}
+};
+
+/**
+ * Retrieves a list of contributions associated with a given address.
+ * It fetches the user by address and then iterates over the user's contributions,
+ * fetching each contribution's details from the 'contributions' collection.
+ *
+ * @param address - The wallet address to fetch contributions for.
+ * @returns - A promise that resolves to an array of contributions.
+ * @throws {Error} - Throws an error if fetching contributions fails.
+ */
+export const getContributionsByAddress = async (
+	address: Address,
+): Promise<Contribution[]> => {
+	const client = getDirectusClient();
+	try {
+		const response = await client.request(
+			readItems("users", {
+				fields: ["contributions"],
+				filter: {
+					address: {
+						_eq: getAddress(address),
+					},
+				},
+			}),
+		);
+
+		if (response.length === 0) {
+			console.log(`[Directus] No user found with address: ${address}`);
+			return [];
+		}
+
+		const contributions = await Promise.all(
+			response[0].contributions.map(async (txId: string) => {
+				try {
+					return (await client.request(
+						readItem("contributions", txId),
+					)) as Contribution;
+				} catch (error) {
+					console.error(
+						`[Directus] Failed to fetch contribution ${txId}: ${error}`,
+					);
+					return null;
+				}
+			}),
+		);
+
+		const validContributions = contributions.filter(Boolean) as Contribution[];
+		console.log(
+			`[Directus] Fetched contributions of ${address}: ${validContributions.length}`,
+		);
+
+		return validContributions;
+	} catch (error) {
+		console.error(
+			`[Directus] Failed to fetch contributions by address ${address}: ${error}`,
+		);
+		throw new Error(
+			`[Directus] Failed to fetch contributions by address ${address}: ${error}`,
 		);
 	}
 };

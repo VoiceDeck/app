@@ -1,7 +1,8 @@
+import { Hex } from "viem";
 import { HistoryCard } from "~/components/my-actions/history-card";
 
 export interface HistoryData {
-	id: number;
+	id: Hex;
 	date: Date;
 	amount: number;
 	img: {
