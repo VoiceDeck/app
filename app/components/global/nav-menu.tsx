@@ -7,24 +7,28 @@ import logo from "/logo.svg";
 
 const NavMenu = () => {
 	return (
-		<nav className="container mx-auto relative flex h-12 md:h-24 justify-between items-center">
-			<NavLinks />
-			<NavLink className="absolute left-1/2 transform -translate-x-1/2" to="/">
-				<img className="h-10 w-10" src={logo} alt="VoiceDeck Logo" />
-			</NavLink>
+		<nav className="py-5 border-b-[1.5px] border-b-vd-beige-300">
+			<section className="container max-w-7xl flex justify-between items-center">
+				<div className="flex flex-1 md:absolute md:top-4 md:left-[50%]">
+					<NavLink className="w-full flex justify-center" to="/reports">
+						<img className="size-10" src={logo} alt="VoiceDeck Logo" />
+					</NavLink>
+				</div>
+				<NavLinks />
 
-			<NavLink
-				to="/my-actions"
-				className={({ isActive }) =>
-					cn(
-						buttonVariants({ variant: "ghost" }),
-						"rounded-md text-lg hidden md:block",
-						isActive ? "bg-vd-beige-300 dark:bg-vd-beige-100" : undefined,
-					)
-				}
-			>
-				My Actions
-			</NavLink>
+				<NavLink
+					to="/my-actions"
+					className={({ isActive }) =>
+						cn(
+							buttonVariants({ variant: "ghost" }),
+							"rounded-md hidden md:inline-flex font-medium",
+							isActive ? "bg-vd-beige-300 dark:bg-vd-beige-100" : undefined,
+						)
+					}
+				>
+					My Actions
+				</NavLink>
+			</section>
 		</nav>
 	);
 };

@@ -45,7 +45,9 @@ export default function Reports() {
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
 			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
-				<h1 className="text-6xl font-bold text-left">{siteConfig.title}</h1>
+				<h1 className="text-3xl md:text-6xl font-bold text-left">
+					{siteConfig.title}
+				</h1>
 				<h2 className="text-lg font-medium text-left py-6">
 					{siteConfig.description}
 				</h2>
@@ -74,8 +76,6 @@ export default function Reports() {
 					</Link>
 				))}
 			</section>
-
-			<Outlet />
 		</main>
 	);
 }
