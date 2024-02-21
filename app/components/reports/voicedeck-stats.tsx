@@ -30,11 +30,13 @@ const StatContainer: React.FC<StatContainerProps> = ({
 };
 
 interface VoicedeckStatsProps {
+	numOfContributors: number;
 	sumOfContributions: number;
 	numOfContributions: number;
 }
 
 const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
+	numOfContributors,
 	sumOfContributions,
 	numOfContributions,
 }) => {
@@ -44,8 +46,7 @@ const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 				key="flower"
 				icon="flower"
 				heading="Total Supporters"
-				// TODO: get # of unique contributing wallets
-				data={104}
+				data={numOfContributors}
 			/>
 			<StatContainer
 				key="elephant"

@@ -6,7 +6,7 @@ import {
 	HypercertsStorage,
 } from "@hypercerts-org/sdk";
 import { Claim, Report } from "~/types";
-import { getReports } from "./directus.server";
+import { getFundedAmountByHCId, getReports } from "./directus.server";
 
 let reports: Report[] | null = null;
 let hypercertClient: HypercertClient | null = null;
@@ -83,9 +83,7 @@ export const fetchReports = async (): Promise<Report[]> => {
 						dateUpdated: cmsReport.date_updated,
 						byline: cmsReport.byline,
 						totalCost: Number(cmsReport.total_cost),
-
-						// TODO: fetch from blockchain when Hypercert Marketplace is ready
-						fundedSoFar: Math.floor(Math.random() * 1000),
+						fundedSoFar: await getFundedAmountByHCId(claim.id),
 					} as Report;
 				}),
 			);
