@@ -12,12 +12,9 @@ import {
 
 import "@fontsource-variable/plus-jakarta-sans";
 import { ReactNode } from "react";
-import { configureGlobalCache } from "remix-client-cache";
 import { Footer } from "~/components/global/footer";
 import { NavMenu } from "~/components/global/nav-menu";
 import "./tailwind.css";
-
-configureGlobalCache(() => localStorage);
 
 export default function App() {
 	return (
