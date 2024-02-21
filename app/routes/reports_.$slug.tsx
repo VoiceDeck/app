@@ -1,6 +1,12 @@
-import { LoaderFunction, json } from "@remix-run/node";
+import { LoaderFunction } from "@remix-run/node";
 
-import { Link, MetaArgs, MetaFunction, useLoaderData } from "@remix-run/react";
+import {
+	ClientLoaderFunction,
+	Link,
+	MetaArgs,
+	MetaFunction,
+	useLoaderData,
+} from "@remix-run/react";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import FundingProgress from "~/components/report-details/funding-progress";
@@ -8,7 +14,6 @@ import ReportSidebar from "~/components/report-details/report-sidebar";
 import ReportSupportFeed from "~/components/report-details/report-support-feed";
 import { Badge } from "~/components/ui/badge";
 import { DynamicCategoryIcon } from "~/components/ui/dynamic-category-icon";
-import { Separator } from "~/components/ui/separator";
 import { fetchReportBySlug } from "~/impact-reports.server";
 import { Report } from "~/types";
 
@@ -22,16 +27,34 @@ export const loader: LoaderFunction = async ({ params }) => {
 	try {
 		const response = await fetchReportBySlug(slug as string);
 
-		return json(response);
+		return { report: response };
 	} catch (error) {
 		console.error(`Failed to load impact report: ${error}`);
 		throw new Response("Failed to load impact report", { status: 500 });
 	}
 };
 
+// Cache reports individually in session storage in the browser for super fast
+// back/forward/revisits during the session, but will fetch fresh data
+// from the server if the user closes the tab and comes back later
+export const clientLoader: ClientLoaderFunction = async ({
+	serverLoader,
+	params,
+}) => {
+	const cacheKey = `report-${params.slug}`;
+	const cache = sessionStorage.getItem(cacheKey);
+	if (cache) {
+		console.log("Using cached report data");
+		return { report: JSON.parse(cache) };
+	}
+
+	const { report } = await serverLoader<{ report: Report }>();
+	sessionStorage.setItem(cacheKey, JSON.stringify(report));
+	return { report };
+};
+
 export default function RouteComponent() {
-	const response = useLoaderData<typeof loader>();
-	const report = response as Report;
+	const { report } = useLoaderData<typeof loader>();
 	const htmlParsedStory = report?.story ? parse(report.story) : "";
 
 	return (
