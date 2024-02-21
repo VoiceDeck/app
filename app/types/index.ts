@@ -1,4 +1,4 @@
-import { Hash } from "viem";
+import { Address, Hash } from "viem";
 
 /**
  * Defines the structure of an Impact Report.
@@ -127,6 +127,7 @@ export interface CMSContent {
 export type Contribution = {
 	txid: Hash;
 	hypercert_id: string;
-	sender: string;
+	sender: Address;
 	amount: number;
+	date_created: string;
 };
