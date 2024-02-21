@@ -127,6 +127,71 @@ export const getReports = async (): Promise<CMSContent[]> => {
 };
 
 /**
+ * Retrieves the total funded amount for a given hypercert by its ID.
+ * It fetches all contributions related to the hypercert and sums up their amounts.
+ *
+ * @param hypercertId - The unique identifier of the hypercert.
+ * @returns - A promise that resolves to the total funded amount as a number.
+ * @throws {Error} - Throws an error if the request to fetch contributions fails.
+ */
+export const getFundedAmountByHCId = async (
+	hypercertId: string,
+): Promise<number> => {
+	const client = getDirectusClient();
+
+	try {
+		const response = await client.request(
+			readItems("contributions", {
+				fields: ["amount"],
+				filter: {
+					hypercert_id: {
+						_eq: hypercertId,
+					},
+				},
+			}),
+		);
+
+		const funded = response.reduce(
+			(total, contribution) => total + contribution.amount,
+			0,
+		);
+		return funded;
+	} catch (error) {
+		console.error(
+			`[Directus] Failed to get funded amount for hypercert Id '${hypercertId}': ${error}`,
+		);
+		throw new Error(
+			`[Directus] Failed to get funded amount for hypercert Id '${hypercertId}': ${error}`,
+		);
+	}
+};
+
+/**
+ * Retrieves the number of unique contributors from the Directus users collection.
+ *
+ * @returns - A promise that resolves to the number of contributors.
+ * @throws {Error} - Throws an error if the request to fetch the number of contributors fails.
+ */
+export const getNumberOfContributors = async (): Promise<number> => {
+	const client = getDirectusClient();
+
+	try {
+		const response = await client.request(
+			readItems("users", {
+				fields: ["address"],
+			}),
+		);
+
+		return response.length;
+	} catch (error) {
+		console.error(`[Directus] Failed to get number of contributors: ${error}`);
+		throw new Error(
+			`[Directus] Failed to get number of contributors: ${error}`,
+		);
+	}
+};
+
+/**
  * Retrieves the singleton instance of the DirectusClient.
  */
 // biome-ignore lint/suspicious/noExplicitAny: type definition imported from @directus/sdk

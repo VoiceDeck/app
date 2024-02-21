@@ -5,6 +5,7 @@ import ReportCard from "~/components/reports/report-card";
 import ReportsHeader from "~/components/reports/reports-header";
 import VoicedeckStats from "~/components/reports/voicedeck-stats";
 import { siteConfig } from "~/config/site";
+import { getNumberOfContributors } from "~/directus.server";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
 
@@ -17,9 +18,10 @@ export const meta: MetaFunction = () => {
 
 export const loader: LoaderFunction = async () => {
 	try {
-		const response = await fetchReports();
+		const reports = await fetchReports();
+		const numOfContributors = await getNumberOfContributors();
 
-		return json(response);
+		return { reports, numOfContributors };
 	} catch (error) {
 		console.error(`Failed to load impact reports: ${error}`);
 		throw new Response("Failed to load impact reports", { status: 500 });
@@ -27,7 +29,7 @@ export const loader: LoaderFunction = async () => {
 };
 
 export default function Reports() {
-	const reports = useLoaderData<typeof loader>();
+	const { reports, numOfContributors } = useLoaderData<typeof loader>();
 
 	const contributionAmounts = useMemo(() => {
 		const allAmounts = reports.map(
@@ -54,6 +56,7 @@ export default function Reports() {
 			</header>
 
 			<VoicedeckStats
+				numOfContributors={numOfContributors}
 				sumOfContributions={contributionAmounts.sum}
 				numOfContributions={contributionAmounts.numFunded}
 			/>
