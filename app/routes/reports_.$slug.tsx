@@ -44,7 +44,6 @@ export const clientLoader: ClientLoaderFunction = async ({
 	const cacheKey = `report-${params.slug}`;
 	const cache = sessionStorage.getItem(cacheKey);
 	if (cache) {
-		console.log("Using cached report data");
 		return { report: JSON.parse(cache) };
 	}
 
