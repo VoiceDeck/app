@@ -4,8 +4,9 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [million.vite({ auto: true }), remix(), tsconfigPaths()],
+  plugins: [million.vite({auto: true}), remix(), tsconfigPaths()],
   test: {
     include: ["./app/**/*.test.ts"],
+    reporters: ["verbose"],
   },
 });

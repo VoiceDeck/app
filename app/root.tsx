@@ -60,7 +60,7 @@ export function ErrorBoundary() {
 
 function Document(props: { children: ReactNode; title?: string }) {
 	return (
-		<html lang="en">
+		<html lang="en" className="scroll-smooth">
 			<head>
 				{props.title ? <title>{props.title}</title> : null}
 				<meta charSet="utf-8" />
@@ -68,7 +68,7 @@ function Document(props: { children: ReactNode; title?: string }) {
 				<Meta />
 				<Links />
 			</head>
-			<body>
+			<body className="bg-vd-beige-200">
 				{props.children}
 				<ScrollRestoration />
 				<Scripts />
