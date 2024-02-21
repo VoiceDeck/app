@@ -28,17 +28,24 @@ const FilterItems: React.FC<ReportFiltersProps> = ({
 	states,
 	amounts,
 }) => {
+	const minAmountNeeded = Math.min(...amounts);
+	const maxAmountNeeded = Math.max(...amounts);
+	const rangeBetweenAmounts = maxAmountNeeded - minAmountNeeded;
 	return (
 		<div className="p-6">
 			<h2 className="pl-4 font-medium">Amount needed</h2>
-			<Slider
-				className="px-6 py-8"
-				defaultValue={[330, 660]}
-				min={Math.min(...amounts)}
-				max={Math.max(...amounts)}
-				step={10}
-				minStepsBetweenThumbs={10}
-			/>
+			<div className="px-6 py-8">
+				<Slider
+					defaultValue={[
+						Math.floor(rangeBetweenAmounts * 0.25),
+						Math.floor(rangeBetweenAmounts * 0.75),
+					]}
+					min={minAmountNeeded}
+					max={maxAmountNeeded}
+					step={4}
+					minStepsBetweenThumbs={18}
+				/>
+			</div>
 			<div className="w-full h-[1px] bg-vd-blue-900 my-6 md:my-10" />
 			<div className="flex flex-col md:flex-row md:justify-between">
 				<div className="pl-4">
