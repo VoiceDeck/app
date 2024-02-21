@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import { useMemo } from "react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -67,11 +68,13 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 
 				<div className="flex flex-1 gap-2">
 					<Input
-						className="h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-base font-medium placeholder:text-vd-blue-500 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-500 focus-visible:ring-2"
+						className="pr-[50px] h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-base font-medium placeholder:text-vd-blue-500 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-500 focus-visible:ring-2"
 						type="search"
 						placeholder="Search Reports"
 					/>
-					<Button>Search</Button>
+					<Button className="ml-[-50px]">
+						<Search />
+					</Button>
 				</div>
 				<div className="flex gap-3">
 					<div>
