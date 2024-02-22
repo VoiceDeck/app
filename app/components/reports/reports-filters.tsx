@@ -107,8 +107,8 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 			<div className="hidden md:flex">
 				<Dialog>
 					<DialogTrigger className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2">
-						<p className="text-base font-medium text-vd-blue-500">Filter</p>
-						<Filter color="#3A5264" size={18} />
+						<p className="text-sm font-medium text-vd-blue-500">Filter</p>
+						<Filter color="#4B778F" size={18} />
 					</DialogTrigger>
 					<DialogContent>
 						<FilterItems outlets={outlets} states={states} amounts={amounts} />

@@ -68,11 +68,11 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 
 				<div className="flex flex-1 max-w-[500px] gap-2">
 					<Input
-						className="pr-[50px] h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-base font-medium placeholder:text-vd-blue-500 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-500 focus-visible:ring-2"
+						className="pr-[65px] rounded-r-3xl h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
 						type="search"
-						placeholder="Search Reports"
+						placeholder="Search in title, description"
 					/>
-					<Button className="ml-[-50px]">
+					<Button className="ml-[-65px]">
 						<Search />
 					</Button>
 				</div>
@@ -84,7 +84,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 							amounts={amounts}
 						/>
 					</div>
-					<div className="max-w-[400px] min-w-[250px]">
+					<div className="w-full min-w-[180px]">
 						<Select>
 							<SelectTrigger>
 								<SelectValue placeholder="Sort by" />
