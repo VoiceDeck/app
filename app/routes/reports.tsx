@@ -54,10 +54,9 @@ clientLoader.hydrate = true;
 
 export default function Reports() {
 	const { reports, numOfContributors } = useLoaderData<typeof loader>();
-	const safeReports = Array.isArray(reports) ? reports : [];
 
 	const contributionAmounts = useMemo(() => {
-		const allAmounts = safeReports.map(
+		const allAmounts = reports.map(
 			(report: Report, index: number) => report.fundedSoFar || 0,
 		);
 		const sumOfAmounts = allAmounts.reduce((a: number, b: number) => a + b, 0);
@@ -67,7 +66,7 @@ export default function Reports() {
 			sum: sumOfAmounts,
 			numFunded: fullyFunded.length || 0,
 		};
-	}, [safeReports]);
+	}, [reports]);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
