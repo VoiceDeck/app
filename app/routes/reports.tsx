@@ -1,5 +1,5 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { Link, Outlet, json, useLoaderData } from "@remix-run/react";
+import { ClientLoaderFunction, Link, useLoaderData } from "@remix-run/react";
 import { useMemo } from "react";
 import ReportCard from "~/components/reports/report-card";
 import ReportsHeader from "~/components/reports/reports-header";
@@ -16,17 +16,46 @@ export const meta: MetaFunction = () => {
 	];
 };
 
+interface IPageData {
+	reports: Report[];
+	numOfContributors: number;
+}
+
 export const loader: LoaderFunction = async () => {
 	try {
 		const reports = await fetchReports();
 		const numOfContributors = await getNumberOfContributors();
 
-		return { reports, numOfContributors };
+		return {
+			reports,
+			numOfContributors,
+		};
 	} catch (error) {
-		console.error(`Failed to load impact reports: ${error}`);
-		throw new Response("Failed to load impact reports", { status: 500 });
+		console.error("Failed to load reports or number of contributors:", error);
+		throw new Response("Failed to load data", { status: 500 });
 	}
 };
+
+let cacheData: IPageData;
+
+export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
+	if (cacheData) {
+		return {
+			reports: cacheData.reports,
+			numOfContributors: cacheData.numOfContributors,
+		};
+	}
+
+	const serverLoaderData = await serverLoader<IPageData>();
+	const { reports, numOfContributors } = serverLoaderData;
+	cacheData = {
+		reports,
+		numOfContributors,
+	};
+	return cacheData;
+};
+
+clientLoader.hydrate = true;
 
 export default function Reports() {
 	const { reports, numOfContributors } = useLoaderData<typeof loader>();
@@ -63,22 +92,24 @@ export default function Reports() {
 
 			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
-			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3">
-				{reports.map((report: Report) => (
-					<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
-						<ReportCard
-							hypercertId={report.hypercertId}
-							image={report.image}
-							title={report.title}
-							summary={report.summary}
-							category={report.category}
-							state={report.state}
-							totalCost={report.totalCost}
-							fundedSoFar={report.fundedSoFar}
-						/>
-					</Link>
-				))}
-			</section>
+			{reports.length && (
+				<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3">
+					{reports.map((report: Report) => (
+						<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
+							<ReportCard
+								hypercertId={report.hypercertId}
+								image={report.image}
+								title={report.title}
+								summary={report.summary}
+								category={report.category}
+								state={report.state}
+								totalCost={report.totalCost}
+								fundedSoFar={report.fundedSoFar}
+							/>
+						</Link>
+					))}
+				</section>
+			)}
 		</main>
 	);
 }
