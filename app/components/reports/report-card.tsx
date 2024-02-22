@@ -61,7 +61,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 				</Badge>
 			</CardContent>
 			<CardFooter className="flex-col justify-center gap-2 px-8 pb-4 pt-0">
-				<Progress value={fundedSoFar / 10} />
+				<Progress value={(fundedSoFar / totalCost) * 100} />
 				<p className="text-xs">${totalCost - fundedSoFar} still needed</p>
 			</CardFooter>
 		</Card>

@@ -6,7 +6,7 @@ import {
 	HypercertsStorage,
 } from "@hypercerts-org/sdk";
 import { Claim, Report } from "~/types";
-import { getReports } from "./directus.server";
+import { getFundedAmountByHCId, getReports } from "./directus.server";
 
 let reports: Report[] | null = null;
 let hypercertClient: HypercertClient | null = null;
@@ -83,9 +83,7 @@ export const fetchReports = async (): Promise<Report[]> => {
 						dateUpdated: cmsReport.date_updated,
 						byline: cmsReport.byline,
 						totalCost: Number(cmsReport.total_cost),
-
-						// TODO: fetch from blockchain when Hypercert Marketplace is ready
-						fundedSoFar: Math.floor(Math.random() * 1000),
+						fundedSoFar: await getFundedAmountByHCId(claim.id),
 					} as Report;
 				}),
 			);
@@ -118,6 +116,29 @@ export const fetchReportBySlug = async (slug: string): Promise<Report> => {
 	} catch (error) {
 		console.error(`[server] Failed to get report by slug ${slug}: ${error}`);
 		throw new Error(`[server] Failed to get report by slug ${slug}: ${error}`);
+	}
+};
+
+export const fetchReportByHCId = async (
+	hypercertId: string,
+): Promise<Report> => {
+	try {
+		const reports = await fetchReports();
+
+		const foundReport = reports.find(
+			(report: Report) => report.hypercertId === hypercertId,
+		);
+		if (!foundReport) {
+			throw new Error(
+				`[server] Report with hypercert Id '${hypercertId}' not found.`,
+			);
+		}
+
+		return foundReport;
+	} catch (error) {
+		throw new Error(
+			`[server] Failed to get report with hypercert Id '${hypercertId}': ${error}`,
+		);
 	}
 };
 

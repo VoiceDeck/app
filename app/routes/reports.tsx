@@ -1,10 +1,11 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { Link, Outlet, json, useLoaderData } from "@remix-run/react";
+import { ClientLoaderFunction, Link, useLoaderData } from "@remix-run/react";
 import { useMemo } from "react";
 import ReportCard from "~/components/reports/report-card";
 import ReportsHeader from "~/components/reports/reports-header";
 import VoicedeckStats from "~/components/reports/voicedeck-stats";
 import { siteConfig } from "~/config/site";
+import { getNumberOfContributors } from "~/directus.server";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
 
@@ -15,19 +16,49 @@ export const meta: MetaFunction = () => {
 	];
 };
 
+interface IPageData {
+	reports: Report[];
+	numOfContributors: number;
+}
+
 export const loader: LoaderFunction = async () => {
 	try {
-		const response = await fetchReports();
+		const reports = await fetchReports();
+		const numOfContributors = await getNumberOfContributors();
 
-		return json(response);
+		return {
+			reports,
+			numOfContributors,
+		};
 	} catch (error) {
-		console.error(`Failed to load impact reports: ${error}`);
-		throw new Response("Failed to load impact reports", { status: 500 });
+		console.error("Failed to load reports or number of contributors:", error);
+		throw new Response("Failed to load data", { status: 500 });
 	}
 };
 
+let cacheData: IPageData;
+
+export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
+	if (cacheData) {
+		return {
+			reports: cacheData.reports,
+			numOfContributors: cacheData.numOfContributors,
+		};
+	}
+
+	const serverLoaderData = await serverLoader<IPageData>();
+	const { reports, numOfContributors } = serverLoaderData;
+	cacheData = {
+		reports,
+		numOfContributors,
+	};
+	return cacheData;
+};
+
+clientLoader.hydrate = true;
+
 export default function Reports() {
-	const reports = useLoaderData<typeof loader>();
+	const { reports, numOfContributors } = useLoaderData<typeof loader>();
 
 	const contributionAmounts = useMemo(() => {
 		const allAmounts = reports.map(
@@ -45,13 +76,16 @@ export default function Reports() {
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
 			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
-				<h1 className="text-6xl font-bold text-left">{siteConfig.title}</h1>
+				<h1 className="text-3xl md:text-6xl font-bold text-left">
+					{siteConfig.title}
+				</h1>
 				<h2 className="text-lg font-medium text-left py-6">
 					{siteConfig.description}
 				</h2>
 			</header>
 
 			<VoicedeckStats
+				numOfContributors={numOfContributors}
 				sumOfContributions={contributionAmounts.sum}
 				numOfContributions={contributionAmounts.numFunded}
 			/>
@@ -74,8 +108,6 @@ export default function Reports() {
 					</Link>
 				))}
 			</section>
-
-			<Outlet />
 		</main>
 	);
 }
