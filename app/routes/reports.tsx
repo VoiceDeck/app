@@ -22,13 +22,18 @@ interface IPageData {
 }
 
 export const loader: LoaderFunction = async () => {
-	const reports = await fetchReports();
-	const numOfContributors = await getNumberOfContributors();
+	try {
+		const reports = await fetchReports();
+		const numOfContributors = await getNumberOfContributors();
 
-	return {
-		reports,
-		numOfContributors,
-	};
+		return {
+			reports,
+			numOfContributors,
+		};
+	} catch (error) {
+		console.error("Failed to load reports or number of contributors:", error);
+		throw new Response("Failed to load data", { status: 500 });
+	}
 };
 
 let cacheData: IPageData;
