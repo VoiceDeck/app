@@ -44,14 +44,14 @@ const HistoryCard = ({
 						<CardTitle>{title}</CardTitle>
 						<div className="flex gap-2 pt-2">
 							<Badge
-								variant="default"
+								variant="secondary"
 								className={cn("rounded-3xl justify-between items-center")}
 							>
 								<DynamicCategoryIcon category={category} />
 								<p className="font-light text-xs ml-1">{category}</p>
 							</Badge>
 							<Badge
-								variant="default"
+								variant="secondary"
 								className={cn("rounded-3xl justify-between items-center")}
 							>
 								<DynamicCategoryIcon category="Location" />
