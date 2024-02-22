@@ -51,11 +51,11 @@ const ReportCard: React.FC<ReportCardProps> = ({
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="flex justify-center gap-2 px-2 pb-3">
-				<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
+				<Badge variant={"secondary"}>
 					<DynamicCategoryIcon category={category} />
 					<p>{category}</p>
 				</Badge>
-				<Badge className="gap-1 rounded-full px-2 py-1 text-[10px] font-normal">
+				<Badge variant={"secondary"}>
 					<MapPin color="#C14E41" strokeWidth={1} size={18} />
 					<p>{state}</p>
 				</Badge>
