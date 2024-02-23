@@ -40,7 +40,7 @@ const MobileFooter = () => {
 			</li>
 			<li>
 				<NavLink
-					to="/actions"
+					to="/my-actions"
 					className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
 				>
 					<div className="flex flex-col justify-center items-center">
