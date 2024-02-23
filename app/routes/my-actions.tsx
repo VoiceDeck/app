@@ -52,7 +52,7 @@ function Actions() {
 			<header className="md:col-span-3 flex justify-between my-4">
 				<h1 className="text-xl md:text-3xl font-semibold">My Actions</h1>
 				<NavLink
-					to="/actions"
+					to="/my-actions"
 					className={cn(buttonVariants({ variant: "link" }))}
 				>
 					Settings
