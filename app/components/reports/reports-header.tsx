@@ -38,6 +38,8 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 			);
 	}, [reports]);
 
+	// updated to return a type Option[] of {label: state, value: state} objects
+	// needed to pass into MultipleSelector component for State filter
 	const uniqueStates = useMemo(() => {
 		return reports
 			.map((report: Report, index: number) => ({
