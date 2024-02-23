@@ -86,9 +86,10 @@ export default function RouteComponent() {
 						<FundingProgress
 							totalAmount={report.totalCost}
 							fundedAmount={report.fundedSoFar}
+							reportImage={report.image}
+							reportTitle={report.title}
 						/>
 					</div>
-					{/* <Separator className="bg-vd-beige-300" /> */}
 				</section>
 				<section className="flex flex-col gap-2 md:flex-row md:gap-12 pt-8">
 					<section className="flex flex-col gap-2">
