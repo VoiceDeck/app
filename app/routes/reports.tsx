@@ -92,24 +92,22 @@ export default function Reports() {
 
 			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
-			{reports.length && (
-				<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3">
-					{reports.map((report: Report) => (
-						<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
-							<ReportCard
-								hypercertId={report.hypercertId}
-								image={report.image}
-								title={report.title}
-								summary={report.summary}
-								category={report.category}
-								state={report.state}
-								totalCost={report.totalCost}
-								fundedSoFar={report.fundedSoFar}
-							/>
-						</Link>
-					))}
-				</section>
-			)}
+			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
+				{reports.map((report: Report) => (
+					<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
+						<ReportCard
+							hypercertId={report.hypercertId}
+							image={report.image}
+							title={report.title}
+							summary={report.summary}
+							category={report.category}
+							state={report.state}
+							totalCost={report.totalCost}
+							fundedSoFar={report.fundedSoFar}
+						/>
+					</Link>
+				))}
+			</section>
 		</main>
 	);
 }

@@ -55,7 +55,7 @@ const Summary = () => {
 							return (
 								<Badge
 									key={icon}
-									variant="default"
+									variant="secondary"
 									className={cn("rounded-3xl w-full justify-between px-5 py-3")}
 								>
 									<div className="flex gap-1 items-center">

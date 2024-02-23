@@ -45,20 +45,20 @@ const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 			<StatContainer
 				key="flower"
 				icon="flower"
-				heading="Total Supporters"
+				heading="Total supporters"
 				data={numOfContributors}
 			/>
 			<StatContainer
 				key="elephant"
 				icon="elephant"
-				heading="Total Support Received"
+				heading="Total support received"
 				data={sumOfContributions}
 				currency="USD"
 			/>
 			<StatContainer
 				key="candle"
 				icon="candle"
-				heading="# of Reports Fully Funded"
+				heading="# of reports fully funded"
 				data={numOfContributions}
 			/>
 		</section>
