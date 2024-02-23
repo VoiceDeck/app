@@ -40,10 +40,16 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 
 	const uniqueStates = useMemo(() => {
 		return reports
-			.map((report: Report, index: number) => report.state)
+			.map((report: Report, index: number) => ({
+				label: report.state,
+				value: report.state,
+			}))
 			.filter(
-				(value: string, index: number, self: string[]) =>
-					self.indexOf(value) === index,
+				(
+					value: { label: string; value: string },
+					index: number,
+					self: { label: string; value: string }[],
+				) => self.findIndex((t) => t.label === value.label) === index,
 			);
 	}, [reports]);
 

@@ -15,12 +15,34 @@ import {
 	DrawerFooter,
 	DrawerTrigger,
 } from "~/components/ui/drawer";
+import MultipleSelector, { Option } from "~/components/ui/multiple-selector";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
 import { Slider } from "~/components/ui/slider";
 
+const OPTIONS: Option[] = [
+	{ label: "nextjs", value: "nextjs" },
+	{ label: "React", value: "react" },
+	{ label: "Remix", value: "remix" },
+	{ label: "Vite", value: "vite" },
+	{ label: "Nuxt", value: "nuxt" },
+	{ label: "Vue", value: "vue" },
+	{ label: "Svelte", value: "svelte" },
+	{ label: "Angular", value: "angular" },
+	{ label: "Ember", value: "ember", disable: true },
+	{ label: "Gatsby", value: "gatsby", disable: true },
+	{ label: "Astro", value: "astro" },
+];
+
 interface ReportFiltersProps {
 	outlets: string[];
-	states: string[];
+	states: Option[];
 	amounts: number[];
 }
 
@@ -34,8 +56,8 @@ const FilterItems: React.FC<ReportFiltersProps> = ({
 	const rangeBetweenAmounts = maxAmountNeeded - minAmountNeeded;
 	return (
 		<div className="p-6">
-			<h2 className="pl-4 text-lg font-medium">Amount needed</h2>
-			<div className="px-6 py-8">
+			<h2 className="px-6 font-medium">Amount needed</h2>
+			<div className="px-6 pt-4 pb-8">
 				<Slider
 					defaultValue={[
 						Math.floor(rangeBetweenAmounts * 0.25),
@@ -47,34 +69,39 @@ const FilterItems: React.FC<ReportFiltersProps> = ({
 					minStepsBetweenThumbs={18}
 				/>
 			</div>
-			<Separator className="bg-vd-blue-500 my-6 md:my-10" />
-			<div className="flex flex-col md:flex-row md:justify-between">
-				<div className="pl-4">
-					<h2 className="text-lg font-medium pb-2 md:pb-4">Story from</h2>
-					{outlets.map((outlet: string) => (
-						<div key={outlet} className="flex items-center gap-2 pb-2">
-							<Checkbox className="h-6 w-6 rounded-full border-vd-blue-500 data-[state=checked]:bg-vd-blue-500 data-[state=checked]:text-vd-beige-100" />
-							<p className="text-base">{outlet}</p>
-						</div>
-					))}
-				</div>
-				<Separator
-					className="md:hidden bg-vd-blue-500 my-6"
-					orientation="horizontal"
+			<Separator className="bg-vd-blue-500 my-10" />
+			<div className="px-6">
+				<h2 className="font-medium pb-2 md:pb-4">State</h2>
+				<MultipleSelector
+					defaultOptions={states}
+					placeholder="Select states"
+					hidePlaceholderWhenSelected
+					emptyIndicator={
+						<p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+							no results found.
+						</p>
+					}
 				/>
-				<Separator
-					className="hidden md:flex bg-vd-blue-500 mx-6"
-					orientation="vertical"
-				/>
-				<div className="pl-4">
-					<h2 className="text-lg font-medium pb-2 md:pb-4">State</h2>
-					{states.map((state: string) => (
-						<div key={state} className="flex items-center gap-2 pb-2">
-							<Checkbox className="h-6 w-6 rounded-full border-vd-blue-500 data-[state=checked]:bg-vd-blue-500 data-[state=checked]:text-vd-beige-100" />
-							<p className="text-base">{state}</p>
-						</div>
-					))}
-				</div>
+				{/* <Select>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="" />
+          </SelectTrigger>
+          <SelectContent>
+            {states.map((state: string) => (
+              <SelectItem key={state} value={state}>{state}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>				 */}
+			</div>
+			<Separator className="bg-vd-blue-500 my-10" />
+			<div className="px-6">
+				<h2 className="font-medium pb-2 md:pb-4">Story from</h2>
+				{outlets.map((outlet: string) => (
+					<div key={outlet} className="flex items-center gap-2 pb-2">
+						<Checkbox className="h-6 w-6 rounded-full border-vd-blue-500 data-[state=checked]:bg-vd-blue-500 data-[state=checked]:text-vd-beige-100" />
+						<p className="text-sm">{outlet}</p>
+					</div>
+				))}
 			</div>
 		</div>
 	);
