@@ -32,7 +32,7 @@ const SideBar = () => {
 				</CardHeader>
 				<CardContent className={cn("flex justify-center")}>
 					<NavLink
-						to="/actions/record"
+						to="/my-actions/record"
 						className={cn(buttonVariants({ variant: "default", size: "lg" }))}
 					>
 						Explore
@@ -60,7 +60,7 @@ const SideBar = () => {
 				<CardContent>
 					<div className="flex flex-col gap-2 w-full px-2">
 						<NavLink
-							to="/actions/record"
+							to="/my-actions/record"
 							className={cn(
 								buttonVariants({ variant: "default", size: "lg" }),
 								"w-full",
@@ -69,7 +69,7 @@ const SideBar = () => {
 							Verify now
 						</NavLink>
 						<NavLink
-							to="/actions/record"
+							to="/my-actions/record"
 							className={cn(
 								buttonVariants({ variant: "ghost", size: "lg" }),
 								"w-full",
