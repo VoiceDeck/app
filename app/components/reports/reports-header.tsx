@@ -1,5 +1,7 @@
+import { ClientActionFunctionArgs, Form } from "@remix-run/react";
 import { Search } from "lucide-react";
 import { useMemo } from "react";
+// import { Form } from "@remix-run/react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { DynamicCategoryIcon } from "~/components/ui/dynamic-category-icon";
@@ -18,6 +20,16 @@ interface ReportsHeaderProps {
 	reports: Report[];
 	amounts: number[];
 }
+
+export const clientAction = async ({
+	request,
+	// params,
+	serverAction,
+}: ClientActionFunctionArgs) => {
+	// invalidateClientSideCache();
+	const formData = await serverAction();
+	return formData;
+};
 
 const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 	const uniqueCategories = useMemo(() => {
@@ -64,13 +76,15 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 			<div className="flex flex-col xl:flex-row xl:justify-between gap-3 w-full py-4">
 				<div className="flex gap-2">
 					{uniqueCategories.map((category: string) => (
-						<Badge
-							key={category}
-							className="flex flex-col md:flex-row items-center gap-1 px-3 py-2 bg-vd-beige-100"
-						>
-							<DynamicCategoryIcon category={category} />
-							<p className="text-xs">{category}</p>
-						</Badge>
+						<Form key={category} preventScrollReset={true}>
+							<input type="hidden" name="category" value={category} readOnly />
+							<button type="submit">
+								<Badge className="flex flex-col md:flex-row items-center gap-1 px-3 py-2 bg-vd-beige-100">
+									<DynamicCategoryIcon category={category} />
+									<p className="text-xs">{category}</p>
+								</Badge>
+							</button>
+						</Form>
 					))}
 				</div>
 
