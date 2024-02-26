@@ -17,7 +17,7 @@ const SupportProcessingDrawer = ({
 	container,
 }: { container: HTMLDivElement | null }) => {
 	return (
-		<Drawer.Root>
+		<Drawer.Root dismissible={false}>
 			<Drawer.Trigger asChild>
 				<Button size={"lg"} variant={"default"}>
 					Support this report
