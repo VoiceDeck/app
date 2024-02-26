@@ -1,6 +1,8 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
+	ClientActionFunctionArgs,
 	ClientLoaderFunction,
+	Form,
 	Link,
 	useLoaderData,
 	useSearchParams,
@@ -25,6 +27,19 @@ interface IPageData {
 	reports: Report[];
 	numOfContributors: number;
 }
+
+// export const clientAction = async ({
+// 	request,
+// 	params,
+// 	serverAction,
+// }: ClientActionFunctionArgs) => {
+// 	// invalidateClientSideCache();
+//   const body = await request.formData();
+//   // const category = params.category
+//   // return category
+// 	// const formData = await serverAction();
+// 	// return formData;
+// };
 
 export const loader: LoaderFunction = async () => {
 	try {
@@ -80,6 +95,7 @@ export default function Reports() {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const category = searchParams.get("category");
+	const sortBy = searchParams.get("sort");
 	const selectedReports = useMemo(() => {
 		if (category) {
 			return reports.filter((report: Report) => report.category === category);
