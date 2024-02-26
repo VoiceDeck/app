@@ -9,8 +9,12 @@ declare module "wagmi" {
 	}
 }
 
+if (!process.env.WALLET_CONNECT_ID) {
+	throw new Error("WalletConnect ID environment variable is not set");
+}
+
 // 1. Get projectId at https://cloud.walletconnect.com
-const projectId = "YOUR_PROJECT_ID";
+const projectId = process.env.WALLET_CONNECT_ID;
 
 // 2. Create wagmiConfig
 const metadata = {
