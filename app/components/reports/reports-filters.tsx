@@ -1,3 +1,4 @@
+import { useSearchParams } from "@remix-run/react";
 import { Filter } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -30,9 +31,11 @@ const FilterItems: React.FC<ReportFiltersProps> = ({
 	states,
 	amounts,
 }) => {
+	const [searchParams, setSearchParams] = useSearchParams();
 	const minAmountNeeded = Math.min(...amounts);
 	const maxAmountNeeded = Math.max(...amounts);
 	const rangeBetweenAmounts = maxAmountNeeded - minAmountNeeded;
+
 	return (
 		<div className="p-6">
 			<h2 className="px-6 font-medium">Amount needed to complete funding</h2>

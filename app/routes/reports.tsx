@@ -1,8 +1,6 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
-	ClientActionFunctionArgs,
 	ClientLoaderFunction,
-	Form,
 	Link,
 	useLoaderData,
 	useSearchParams,
@@ -27,19 +25,6 @@ interface IPageData {
 	reports: Report[];
 	numOfContributors: number;
 }
-
-// export const clientAction = async ({
-// 	request,
-// 	params,
-// 	serverAction,
-// }: ClientActionFunctionArgs) => {
-// 	// invalidateClientSideCache();
-//   const body = await request.formData();
-//   // const category = params.category
-//   // return category
-// 	// const formData = await serverAction();
-// 	// return formData;
-// };
 
 export const loader: LoaderFunction = async () => {
 	try {
@@ -96,12 +81,40 @@ export default function Reports() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const category = searchParams.get("category");
 	const sortBy = searchParams.get("sort");
-	const selectedReports = useMemo(() => {
+	const getSelectedReports = useMemo(() => {
+		let selectedReports = reports;
 		if (category) {
-			return reports.filter((report: Report) => report.category === category);
+			selectedReports = selectedReports.filter(
+				(report: Report) => report.category === category,
+			);
 		}
-		return reports;
-	}, [reports, category]);
+		if (sortBy) {
+			if (sortBy === "Amount needed") {
+				selectedReports = selectedReports.sort(
+					(a: Report, b: Report) => a.fundedSoFar - b.fundedSoFar,
+				);
+			}
+			if (sortBy === "Newest to oldest") {
+				selectedReports = selectedReports.sort(
+					(a: Report, b: Report) =>
+						Date.parse(b.dateCreated || "") - Date.parse(a.dateCreated || ""),
+				);
+			}
+			if (sortBy === "Oldest to newest") {
+				selectedReports = selectedReports.sort(
+					(a: Report, b: Report) =>
+						Date.parse(a.dateCreated || "") - Date.parse(b.dateCreated || ""),
+				);
+			}
+			if (sortBy === "Most contributors") {
+				// using bcRatio as a placeholder for # of contributors (not currently avaiable per report)
+				selectedReports = selectedReports.sort(
+					(a: Report, b: Report) => (b.bcRatio || 0) - (a.bcRatio || 0),
+				);
+			}
+		}
+		return selectedReports;
+	}, [reports, category, sortBy]);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
@@ -123,9 +136,12 @@ export default function Reports() {
 			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
 			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
-				{selectedReports.map((report: Report) => (
+				{getSelectedReports.map((report: Report) => (
 					<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
 						<ReportCard
+							bcRatio={report.bcRatio}
+							dateCreated={report.dateCreated}
+							dateUpdated={report.dateUpdated}
 							hypercertId={report.hypercertId}
 							image={report.image}
 							title={report.title}

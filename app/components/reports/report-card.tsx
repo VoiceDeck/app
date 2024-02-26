@@ -12,6 +12,9 @@ import { DynamicCategoryIcon } from "~/components/ui/dynamic-category-icon";
 import { Progress } from "~/components/ui/progress";
 
 interface ReportCardProps {
+	bcRatio: number | null;
+	dateCreated: string | null;
+	dateUpdated: string | null;
 	hypercertId: string;
 	image: string;
 	title: string;
@@ -23,6 +26,9 @@ interface ReportCardProps {
 }
 
 const ReportCard: React.FC<ReportCardProps> = ({
+	bcRatio,
+	dateCreated,
+	dateUpdated,
 	hypercertId,
 	image,
 	title,
@@ -63,6 +69,9 @@ const ReportCard: React.FC<ReportCardProps> = ({
 			<CardFooter className="flex-col justify-center gap-2 px-8 pb-4 pt-0">
 				<Progress value={(fundedSoFar / totalCost) * 100} />
 				<p className="text-xs">${totalCost - fundedSoFar} still needed</p>
+				<p>{bcRatio}</p>
+				<p>timsestamp: {Date.parse(dateCreated || "")}</p>
+				<p>created: {dateCreated}</p>
 			</CardFooter>
 		</Card>
 	);
