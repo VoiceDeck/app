@@ -12,6 +12,7 @@ import {
 
 import "@fontsource-variable/plus-jakarta-sans";
 import { ReactNode } from "react";
+import "vaul/dist/index.css";
 import { Footer } from "~/components/global/footer";
 import { NavMenu } from "~/components/global/nav-menu";
 import "./tailwind.css";
