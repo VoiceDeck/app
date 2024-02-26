@@ -1,3 +1,5 @@
+import { Loader } from "lucide-react";
+import { useState } from "react";
 import { Report } from "~/types";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -7,12 +9,48 @@ import {
 	DialogHeader,
 	DialogTrigger,
 } from "../ui/dialog";
+
+import { Drawer } from "vaul";
 import { Separator } from "../ui/separator";
+
+const SupportProcessingDrawer = ({
+	container,
+}: { container: HTMLDivElement | null }) => {
+	return (
+		<Drawer.Root>
+			<Drawer.Trigger asChild>
+				<Button size={"lg"} variant={"default"}>
+					Support this report
+				</Button>
+			</Drawer.Trigger>
+			<Drawer.Portal container={container}>
+				<Drawer.Overlay className="fixed inset-0 bg-stone-900/60" />
+				<Drawer.Content className="bg-stone-100 flex flex-col rounded-t-xl max-h-[50%] fixed bottom-0 left-0 right-0 after:hidden">
+					<div className="flex flex-col gap-4 px-4 py-6">
+						<div className="flex justify-center animate-spin">
+							<Loader />
+						</div>
+						<div className="flex flex-col gap-4">
+							<h4 className="font-bold text-center">Processing your support</h4>
+							<p className="text-center">
+								Please wait while we process your support. This may take a few
+								seconds.
+							</p>
+						</div>
+					</div>
+				</Drawer.Content>
+			</Drawer.Portal>
+		</Drawer.Root>
+	);
+};
 
 const SupportReportDialog = ({
 	image: reportImage,
 	title: reportTitle,
 }: Partial<Report>) => {
+	const [drawerContainer, setDrawerContainer] = useState<HTMLDivElement | null>(
+		null,
+	);
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -20,7 +58,10 @@ const SupportReportDialog = ({
 					Support this report
 				</Button>
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent
+				ref={(el) => setDrawerContainer(el)}
+				className="overflow-clip"
+			>
 				<DialogHeader className="text-xl font-bold">
 					Support this report
 				</DialogHeader>
@@ -122,6 +163,7 @@ const SupportReportDialog = ({
 						<Button size={"lg"} variant={"default"} className="w-full">
 							Connect wallet
 						</Button>
+						<SupportProcessingDrawer container={drawerContainer} />
 					</div>
 				</div>
 			</DialogContent>
