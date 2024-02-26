@@ -35,11 +35,15 @@ const HistoryCard = ({
 					<data className="mt-0">{formatCurrency(amount)}</data>
 				</div>
 				<div className="flex flex-col gap-2 md:flex-row md:items-center">
-					<img
-						src={img.src}
-						alt={img.alt}
-						className="w-30 md:w-auto h-full md:h-auto overflow-clip object-cover object-center rounded-3xl mb-2"
-					/>
+					<div className="overflow-hidden">
+						<img
+							src={img.src}
+							alt={img.alt}
+							className={cn(
+								"h-auto md:max-h-32 transition-all aspect-[3/2] w-full rounded-2xl object-cover",
+							)}
+						/>
+					</div>
 					<div className="flex flex-col gap-3">
 						<CardTitle>{title}</CardTitle>
 						<div className="flex gap-2 pt-2">
