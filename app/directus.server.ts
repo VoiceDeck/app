@@ -6,6 +6,7 @@ import {
 	readItem,
 	readItems,
 	rest,
+	staticToken,
 } from "@directus/sdk";
 import {
 	http,
@@ -271,8 +272,11 @@ export const getDirectusClient = (): DirectusClient<any> & RestClient<any> => {
 	if (!process.env.CMS_ENDPOINT) {
 		throw new Error("[server] CMS_ENDPOINT environment variable is not set");
 	}
+
 	try {
-		directusClient = createDirectus(process.env.CMS_ENDPOINT).with(rest());
+		directusClient = createDirectus(process.env.CMS_ENDPOINT)
+			.with(staticToken(process.env.CMS_ACCESS_TOKEN as string))
+			.with(rest());
 	} catch (error) {
 		console.error(
 			`[server] Failed to create Directus client using endpoint ${process.env.CMS_ENDPOINT}: ${error}`,
