@@ -9,3 +9,5 @@ const RootProvider = ({ children }: { children: React.ReactNode }) => {
 		</Web3Provider>
 	);
 };
+
+export default RootProvider;
