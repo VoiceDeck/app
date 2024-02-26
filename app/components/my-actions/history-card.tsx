@@ -39,9 +39,7 @@ const HistoryCard = ({
 						<img
 							src={img.src}
 							alt={img.alt}
-							className={cn(
-								"h-auto md:max-h-32 transition-all aspect-[3/2] w-full rounded-2xl object-cover",
-							)}
+							className="h-auto md:max-h-32 aspect-[3/2] w-full rounded-2xl object-cover"
 						/>
 					</div>
 					<div className="flex flex-col gap-3">
