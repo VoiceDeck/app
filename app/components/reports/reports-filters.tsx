@@ -84,6 +84,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 	states,
 	amounts,
 }) => {
+	const [searchParams, setSearchParams] = useSearchParams();
 	return (
 		<div>
 			<div className="md:hidden">
@@ -128,7 +129,19 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 								Clear all
 							</Button>
 							<DialogClose asChild>
-								<Button className="text-xs w-36 h-7" size={"sm"}>
+								<Button
+									className="text-xs w-36 h-7"
+									size={"sm"}
+									// onClick={() => {
+									//   if (searchParams.has("outlet")) {
+									//     searchParams.delete("outlet");
+									//   }
+									//   searchParams.append("outlet", outlet);
+									//   setSearchParams(searchParams, {
+									//     preventScrollReset: true,
+									//   });
+									// }}
+								>
 									Apply
 								</Button>
 							</DialogClose>

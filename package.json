@@ -30,6 +30,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
+    "fuse.js": "^7.0.0",
     "html-react-parser": "^5.1.2",
     "isbot": "^4.1.0",
     "lucide-react": "^0.309.0",

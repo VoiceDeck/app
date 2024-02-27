@@ -1,6 +1,6 @@
 import { useSearchParams } from "@remix-run/react";
 import { Search } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { DynamicCategoryIcon } from "~/components/ui/dynamic-category-icon";
@@ -64,6 +64,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 	}, [reports]);
 
 	const [searchParams, setSearchParams] = useSearchParams();
+	const [searchBarInput, setsearchBarInput] = useState("");
 
 	return (
 		<article className="w-full max-w-screen-xl">
@@ -98,8 +99,22 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 						className="pr-[65px] rounded-r-3xl h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
 						type="search"
 						placeholder="Search in title, description"
+						onChange={(e) => {
+							setsearchBarInput(e.target.value);
+						}}
 					/>
-					<Button className="ml-[-65px]">
+					<Button
+						className="ml-[-65px]"
+						onClick={() => {
+							if (searchParams.has("search")) {
+								searchParams.delete("search");
+							}
+							searchParams.append("search", searchBarInput);
+							setSearchParams(searchParams, {
+								preventScrollReset: true,
+							});
+						}}
+					>
 						<Search />
 					</Button>
 				</div>

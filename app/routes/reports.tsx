@@ -5,6 +5,7 @@ import {
 	useLoaderData,
 	useSearchParams,
 } from "@remix-run/react";
+import Fuse from "fuse.js";
 import { useMemo } from "react";
 import ReportCard from "~/components/reports/report-card";
 import ReportsHeader from "~/components/reports/reports-header";
@@ -80,6 +81,7 @@ export default function Reports() {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const category = searchParams.get("category");
+	const searchTerms = searchParams.get("search");
 	const sortBy = searchParams.get("sort");
 	const getSelectedReports = useMemo(() => {
 		let selectedReports = reports;
@@ -87,6 +89,19 @@ export default function Reports() {
 			selectedReports = selectedReports.filter(
 				(report: Report) => report.category === category,
 			);
+		}
+		if (searchTerms) {
+			const fuseOptions = {
+				minMatchCharLength: 5,
+				findAllMatches: true,
+				ignoreLocation: true,
+				// Search in titles and summaries of reports
+				keys: ["title"],
+			};
+			const fuse = new Fuse(selectedReports, fuseOptions);
+			const searchResults = fuse.search(searchTerms);
+			selectedReports = searchResults.map((result) => result.item);
+			console.log(selectedReports);
 		}
 		if (sortBy) {
 			if (sortBy === "Amount needed") {
@@ -113,8 +128,9 @@ export default function Reports() {
 				);
 			}
 		}
+
 		return selectedReports;
-	}, [reports, category, sortBy]);
+	}, [reports, category, searchTerms, sortBy]);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
@@ -136,23 +152,42 @@ export default function Reports() {
 			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
 			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
-				{getSelectedReports.map((report: Report) => (
-					<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
-						<ReportCard
-							bcRatio={report.bcRatio}
-							dateCreated={report.dateCreated}
-							dateUpdated={report.dateUpdated}
-							hypercertId={report.hypercertId}
-							image={report.image}
-							title={report.title}
-							summary={report.summary}
-							category={report.category}
-							state={report.state}
-							totalCost={report.totalCost}
-							fundedSoFar={report.fundedSoFar}
+				{getSelectedReports.length
+					? getSelectedReports.map((report: Report) => (
+							<Link to={`/reports/${report.slug}`} key={report.cmsId}>
+								<ReportCard
+									// bcRatio={report.bcRatio}
+									// dateCreated={report.dateCreated}
+									// dateUpdated={report.dateUpdated}
+									hypercertId={report.hypercertId}
+									image={report.image}
+									title={report.title}
+									summary={report.summary}
+									category={report.category}
+									state={report.state}
+									totalCost={report.totalCost}
+									fundedSoFar={report.fundedSoFar}
+								/>
+							</Link>
+					  ))
+					: null}
+			</section>
+			<section>
+				{!getSelectedReports.length ? (
+					<div className="flex flex-col items-center text-center pt-4 pb-32 md:pt-10 md:pb-10">
+						<img
+							className="h-20 w-20"
+							src="/reports_not_found.svg"
+							alt="flower illustration"
 						/>
-					</Link>
-				))}
+						<p className="text-vd-beige-600">
+							No reports matched your request.
+						</p>
+						<p className="text-vd-beige-600">
+							Please remove some of your filters and try again.
+						</p>
+					</div>
+				) : null}
 			</section>
 		</main>
 	);
