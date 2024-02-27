@@ -15,6 +15,7 @@ import { ReactNode } from "react";
 import "vaul/dist/index.css";
 import { Footer } from "~/components/global/footer";
 import { NavMenu } from "~/components/global/nav-menu";
+import RootProvider from "./providers/root-provider";
 import "./tailwind.css";
 
 export default function App() {
