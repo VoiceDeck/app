@@ -24,10 +24,17 @@ interface IPageData {
 export const loader: LoaderFunction = async () => {
 	try {
 		const reports = await fetchReports();
+		const reportIds = new Set();
+		// If it a report cmsId is not unique, it will be filtered out, this seems to always return the first report
+		const uniqueReports = reports.filter((report) => {
+			const isUnique = !reportIds.has(report.cmsId);
+			reportIds.add(report.cmsId);
+			return isUnique;
+		});
 		const numOfContributors = await getNumberOfContributors();
 
 		return {
-			reports,
+			reports: uniqueReports,
 			numOfContributors,
 		};
 	} catch (error) {
@@ -94,7 +101,11 @@ export default function Reports() {
 
 			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
 				{reports.map((report: Report) => (
-					<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
+					<Link
+						to={`/reports/${report.slug}`}
+						key={report.hypercertId}
+						prefetch="intent"
+					>
 						<ReportCard
 							hypercertId={report.hypercertId}
 							image={report.image}
