@@ -96,13 +96,13 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 					<DrawerContent className="">
 						<FilterItems outlets={outlets} states={states} amounts={amounts} />
 						<DrawerFooter className="flex-row justify-center gap-2 pb-8">
-							<Button
+							{/* <Button
 								className="text-xs w-36 h-7"
 								variant={"outline"}
 								size={"sm"}
 							>
 								Clear all
-							</Button>
+							</Button> */}
 							<DrawerClose>
 								<Button className="text-xs w-36 h-7" size={"sm"}>
 									Apply
@@ -121,13 +121,13 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 					<DialogContent className="bg-vd-beige-200">
 						<FilterItems outlets={outlets} states={states} amounts={amounts} />
 						<DialogFooter className="justify-end gap-2 pb-4">
-							<Button
+							{/* <Button
 								className="text-xs w-36 h-7"
 								variant={"outline"}
 								size={"sm"}
 							>
 								Clear all
-							</Button>
+							</Button> */}
 							<DialogClose asChild>
 								<Button
 									className="text-xs w-36 h-7"

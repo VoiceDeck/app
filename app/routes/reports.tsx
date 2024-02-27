@@ -81,7 +81,7 @@ export default function Reports() {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const category = searchParams.get("category");
-	const searchTerms = searchParams.get("search");
+	const searchInput = searchParams.get("search-input");
 	const sortBy = searchParams.get("sort");
 	const getSelectedReports = useMemo(() => {
 		let selectedReports = reports;
@@ -90,16 +90,17 @@ export default function Reports() {
 				(report: Report) => report.category === category,
 			);
 		}
-		if (searchTerms) {
+		if (searchInput) {
 			const fuseOptions = {
-				minMatchCharLength: 5,
+				minMatchCharLength: 3,
+				threshold: 0.9,
+				distance: 10000,
 				findAllMatches: true,
-				ignoreLocation: true,
 				// Search in titles and summaries of reports
-				keys: ["title"],
+				keys: ["title, summary"],
 			};
 			const fuse = new Fuse(selectedReports, fuseOptions);
-			const searchResults = fuse.search(searchTerms);
+			const searchResults = fuse.search(searchInput);
 			selectedReports = searchResults.map((result) => result.item);
 			console.log(selectedReports);
 		}
@@ -128,12 +129,11 @@ export default function Reports() {
 				);
 			}
 		}
-
 		return selectedReports;
-	}, [reports, category, searchTerms, sortBy]);
+	}, [reports, category, searchInput, sortBy]);
 
 	return (
-		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
+		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
 			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
 				<h1 className="text-3xl md:text-6xl font-bold text-left">
 					{siteConfig.title}
@@ -154,11 +154,10 @@ export default function Reports() {
 			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
 				{getSelectedReports.length
 					? getSelectedReports.map((report: Report) => (
-							<Link to={`/reports/${report.slug}`} key={report.cmsId}>
+							<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
 								<ReportCard
 									// bcRatio={report.bcRatio}
 									// dateCreated={report.dateCreated}
-									// dateUpdated={report.dateUpdated}
 									hypercertId={report.hypercertId}
 									image={report.image}
 									title={report.title}

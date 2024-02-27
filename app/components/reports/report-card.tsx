@@ -14,7 +14,6 @@ import { Progress } from "~/components/ui/progress";
 interface ReportCardProps {
 	// bcRatio: number | null;
 	// dateCreated: string | null;
-	// dateUpdated: string | null;
 	hypercertId: string;
 	image: string;
 	title: string;
@@ -28,7 +27,6 @@ interface ReportCardProps {
 const ReportCard: React.FC<ReportCardProps> = ({
 	// bcRatio,
 	// dateCreated,
-	// dateUpdated,
 	hypercertId,
 	image,
 	title,

@@ -77,7 +77,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 					{uniqueCategories.map((category: string) => (
 						<Badge
 							key={category}
-							className="flex flex-col md:flex-row items-center gap-1 px-3 py-2 bg-vd-beige-100 cursor-pointer"
+							className="flex flex-auto flex-col md:flex-row items-center gap-1 px-3 py-2 bg-vd-beige-100 cursor-pointer"
 							onClick={() => {
 								if (searchParams.has("category")) {
 									searchParams.delete("category");
@@ -98,7 +98,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 					<Input
 						className="pr-[65px] rounded-r-3xl h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
 						type="search"
-						placeholder="Search in title, description"
+						placeholder="Search in title, summary"
 						onChange={(e) => {
 							setsearchBarInput(e.target.value);
 						}}
@@ -106,10 +106,10 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 					<Button
 						className="ml-[-65px]"
 						onClick={() => {
-							if (searchParams.has("search")) {
-								searchParams.delete("search");
+							if (searchParams.has("search-input")) {
+								searchParams.delete("search-input");
 							}
-							searchParams.append("search", searchBarInput);
+							searchParams.append("search-input", searchBarInput);
 							setSearchParams(searchParams, {
 								preventScrollReset: true,
 							});
@@ -118,7 +118,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 						<Search />
 					</Button>
 				</div>
-				<div className="flex gap-3">
+				<div className="flex gap-2">
 					<div>
 						<ReportsFilters
 							outlets={uniqueMediaOutlets}
@@ -138,7 +138,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 							});
 						}}
 					>
-						<SelectTrigger className="max-w-[300px] min-w-[180px]">
+						<SelectTrigger className="max-w-[300px] min-w-[170px]">
 							<SelectValue placeholder="Sort by" />
 						</SelectTrigger>
 						<SelectContent>
@@ -149,6 +149,17 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 							))}
 						</SelectContent>
 					</Select>
+					<Button
+						className="text-xs"
+						variant={"outline"}
+						onClick={() => {
+							setSearchParams("", {
+								preventScrollReset: true,
+							});
+						}}
+					>
+						Reset
+					</Button>
 				</div>
 			</div>
 		</article>
