@@ -15,6 +15,7 @@
   "dependencies": {
     "@directus/sdk": "^15.0.1",
     "@fontsource-variable/plus-jakarta-sans": "^5.0.19",
+    "@hypercerts-org/marketplace-sdk": "^0.0.19",
     "@hypercerts-org/sdk": "^1.4.2-alpha.0",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
