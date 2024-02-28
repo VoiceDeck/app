@@ -31,8 +31,9 @@ interface FilterItemsProps {
 	maxAmountNeeded: number;
 	amountRangeSelected: number[];
 	setAmountRangeSelected: React.Dispatch<React.SetStateAction<number[]>>;
-	outletChoices: string[];
-	setOutletChoices: React.Dispatch<React.SetStateAction<string[]>>;
+	setStatesSelected: React.Dispatch<React.SetStateAction<string[]>>;
+	outletsSelected: string[];
+	setOutletsSelected: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 type Props = ReportFiltersProps & FilterItemsProps;
@@ -45,15 +46,16 @@ const FilterItems: React.FC<Props> = ({
 	maxAmountNeeded,
 	amountRangeSelected,
 	setAmountRangeSelected,
-	outletChoices,
-	setOutletChoices,
+	setStatesSelected,
+	outletsSelected,
+	setOutletsSelected,
 }) => {
 	const handleCheckboxClick = (outlet: string) => {
-		if (outletChoices.includes(outlet)) {
-			setOutletChoices(outletChoices.filter((o) => o !== outlet));
+		if (outletsSelected.includes(outlet)) {
+			setOutletsSelected(outletsSelected.filter((o) => o !== outlet));
 			return;
 		}
-		setOutletChoices([...outletChoices, outlet]);
+		setOutletsSelected([...outletsSelected, outlet]);
 	};
 
 	return (
@@ -80,6 +82,9 @@ const FilterItems: React.FC<Props> = ({
 						<p className="text-center text-sm leading-10 text-gray-600 dark:text-gray-400">
 							no results found.
 						</p>
+					}
+					onChange={(options: Option[]) =>
+						setStatesSelected(options.map(({ value }) => value))
 					}
 				/>
 			</div>
@@ -112,21 +117,30 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 		minAmountNeeded,
 		maxAmountNeeded,
 	]);
-	const [outletChoices, setOutletChoices] = useState<string[]>([]);
+	const [statesSelected, setStatesSelected] = useState<string[]>([]);
+	const [outletsSelected, setOutletsSelected] = useState<string[]>([]);
 
 	const handleApplyFilters = () => {
-		if (outletChoices) {
-			if (searchParams.has("outlet")) {
-				searchParams.delete("outlet");
-			}
-			for (let i = 0; i < outletChoices.length; i++) {
-				searchParams.append("outlet", outletChoices[i]);
-			}
-		}
 		searchParams.delete("min");
 		searchParams.delete("max");
 		searchParams.append("min", String(amountRangeSelected[0]));
 		searchParams.append("max", String(amountRangeSelected[1]));
+		if (outletsSelected) {
+			if (searchParams.has("outlet")) {
+				searchParams.delete("outlet");
+			}
+			for (let i = 0; i < outletsSelected.length; i++) {
+				searchParams.append("outlet", outletsSelected[i]);
+			}
+		}
+		if (statesSelected) {
+			if (searchParams.has("state")) {
+				searchParams.delete("state");
+			}
+			for (let i = 0; i < statesSelected.length; i++) {
+				searchParams.append("state", statesSelected[i]);
+			}
+		}
 		setSearchParams(searchParams, {
 			preventScrollReset: true,
 		});
@@ -140,7 +154,8 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
 						onClick={() => {
 							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
-							setOutletChoices([]);
+							setOutletsSelected([]);
+							setStatesSelected([]);
 						}}
 					>
 						<p className="text-sm font-medium text-vd-blue-500">Filter</p>
@@ -155,8 +170,9 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 							maxAmountNeeded={maxAmountNeeded}
 							amountRangeSelected={amountRangeSelected}
 							setAmountRangeSelected={setAmountRangeSelected}
-							outletChoices={outletChoices}
-							setOutletChoices={setOutletChoices}
+							setStatesSelected={setStatesSelected}
+							outletsSelected={outletsSelected}
+							setOutletsSelected={setOutletsSelected}
 						/>
 						<DrawerFooter className="flex-row justify-center gap-2 pb-8">
 							<DrawerClose>
@@ -178,7 +194,8 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
 						onClick={() => {
 							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
-							setOutletChoices([]);
+							setOutletsSelected([]);
+							setStatesSelected([]);
 						}}
 					>
 						<p className="text-sm font-medium text-vd-blue-500">Filter</p>
@@ -193,8 +210,9 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 							maxAmountNeeded={maxAmountNeeded}
 							amountRangeSelected={amountRangeSelected}
 							setAmountRangeSelected={setAmountRangeSelected}
-							outletChoices={outletChoices}
-							setOutletChoices={setOutletChoices}
+							setStatesSelected={setStatesSelected}
+							outletsSelected={outletsSelected}
+							setOutletsSelected={setOutletsSelected}
 						/>
 						<DialogFooter className="justify-end gap-2 pb-4">
 							<DialogClose asChild>

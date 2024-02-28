@@ -85,6 +85,7 @@ export default function Reports() {
 		const searchInput = searchParams.get("search-input");
 		const minAmount = Number(searchParams.get("min"));
 		const maxAmount = Number(searchParams.get("max"));
+		const states = searchParams.getAll("state");
 		const outlets = searchParams.getAll("outlet");
 		const sortBy = searchParams.get("sort");
 		let selectedReports = reports;
@@ -113,6 +114,12 @@ export default function Reports() {
 				(report: Report) =>
 					maxAmount >= report.totalCost - report.fundedSoFar &&
 					minAmount <= report.totalCost - report.fundedSoFar,
+			);
+		}
+		if (states.length) {
+			console.log(states);
+			selectedReports = selectedReports.filter((report: Report) =>
+				states.includes(report.state),
 			);
 		}
 		if (outlets.length) {
@@ -167,7 +174,7 @@ export default function Reports() {
 
 			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
-			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
+			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl pb-16 md:pb-8">
 				{getSelectedReports.length
 					? getSelectedReports.map((report: Report) => (
 							<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
@@ -189,7 +196,7 @@ export default function Reports() {
 			</section>
 			<section>
 				{!getSelectedReports.length ? (
-					<div className="flex flex-col items-center text-center pt-4 pb-32 md:pt-10 md:pb-10">
+					<div className="flex flex-col items-center text-center pb-24 md:pb-10">
 						<img
 							className="h-20 w-20"
 							src="/reports_not_found.svg"
