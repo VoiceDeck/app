@@ -107,12 +107,10 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 }) => {
 	const minAmountNeeded = Math.min(...amounts);
 	const maxAmountNeeded = Math.max(...amounts);
-	const defaultMin = Math.floor((maxAmountNeeded - minAmountNeeded) * 0.25);
-	const defaultMax = Math.floor((maxAmountNeeded - minAmountNeeded) * 0.75);
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [amountRangeSelected, setAmountRangeSelected] = useState([
-		defaultMin,
-		defaultMax,
+		minAmountNeeded,
+		maxAmountNeeded,
 	]);
 	const [outletChoices, setOutletChoices] = useState<string[]>([]);
 
@@ -141,7 +139,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 					<DrawerTrigger
 						className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
 						onClick={() => {
-							setAmountRangeSelected([defaultMin, defaultMax]);
+							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
 							setOutletChoices([]);
 						}}
 					>
@@ -179,7 +177,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 					<DialogTrigger
 						className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
 						onClick={() => {
-							setAmountRangeSelected([defaultMin, defaultMax]);
+							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
 							setOutletChoices([]);
 						}}
 					>

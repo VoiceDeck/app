@@ -86,6 +86,7 @@ export default function Reports() {
 	const maxAmount = Number(searchParams.get("max"));
 	const outlets = searchParams.getAll("outlet");
 	const sortBy = searchParams.get("sort");
+
 	const getSelectedReports = useMemo(() => {
 		let selectedReports = reports;
 		if (category) {
@@ -108,14 +109,15 @@ export default function Reports() {
 			selectedReports = searchResults.map((result) => result.item);
 			console.log(selectedReports);
 		}
-		if (minAmount) {
+		if (searchParams.has("min")) {
 			selectedReports = selectedReports.filter(
 				(report: Report) =>
-					maxAmount > report.totalCost - report.fundedSoFar &&
-					minAmount < report.totalCost - report.fundedSoFar,
+					maxAmount >= report.totalCost - report.fundedSoFar &&
+					minAmount <= report.totalCost - report.fundedSoFar,
 			);
 		}
-		if (outlets) {
+		if (outlets.length) {
+			console.log(outlets);
 			selectedReports = selectedReports.filter((report: Report) =>
 				outlets.includes(report.contributors[0]),
 			);
@@ -123,12 +125,12 @@ export default function Reports() {
 		if (sortBy) {
 			if (sortBy === "$ to $$$ needed") {
 				selectedReports = selectedReports.sort(
-					(a: Report, b: Report) => a.fundedSoFar - b.fundedSoFar,
+					(a: Report, b: Report) => b.fundedSoFar - a.fundedSoFar,
 				);
 			}
 			if (sortBy === "$$$ to $ needed") {
 				selectedReports = selectedReports.sort(
-					(a: Report, b: Report) => b.fundedSoFar - a.fundedSoFar,
+					(a: Report, b: Report) => a.fundedSoFar - b.fundedSoFar,
 				);
 			}
 			if (sortBy === "Newest to oldest") {
@@ -145,7 +147,16 @@ export default function Reports() {
 			}
 		}
 		return selectedReports;
-	}, [reports, category, searchInput, minAmount, maxAmount, outlets, sortBy]);
+	}, [
+		reports,
+		searchParams,
+		category,
+		searchInput,
+		minAmount,
+		maxAmount,
+		outlets,
+		sortBy,
+	]);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
