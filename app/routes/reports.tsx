@@ -65,6 +65,7 @@ clientLoader.hydrate = true;
 
 export default function Reports() {
 	const { reports, numOfContributors } = useLoaderData<typeof loader>();
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	const contributionAmounts = useMemo(() => {
 		const allAmounts = reports.map(
@@ -79,15 +80,13 @@ export default function Reports() {
 		};
 	}, [reports]);
 
-	const [searchParams, setSearchParams] = useSearchParams();
-	const category = searchParams.get("category");
-	const searchInput = searchParams.get("search-input");
-	const minAmount = Number(searchParams.get("min"));
-	const maxAmount = Number(searchParams.get("max"));
-	const outlets = searchParams.getAll("outlet");
-	const sortBy = searchParams.get("sort");
-
 	const getSelectedReports = useMemo(() => {
+		const category = searchParams.get("category");
+		const searchInput = searchParams.get("search-input");
+		const minAmount = Number(searchParams.get("min"));
+		const maxAmount = Number(searchParams.get("max"));
+		const outlets = searchParams.getAll("outlet");
+		const sortBy = searchParams.get("sort");
 		let selectedReports = reports;
 		if (category) {
 			selectedReports = selectedReports.filter(
@@ -147,16 +146,7 @@ export default function Reports() {
 			}
 		}
 		return selectedReports;
-	}, [
-		reports,
-		searchParams,
-		category,
-		searchInput,
-		minAmount,
-		maxAmount,
-		outlets,
-		sortBy,
-	]);
+	}, [reports, searchParams]);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
