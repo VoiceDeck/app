@@ -82,6 +82,8 @@ export default function Reports() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const category = searchParams.get("category");
 	const searchInput = searchParams.get("search-input");
+	const minAmount = Number(searchParams.get("min"));
+	const maxAmount = Number(searchParams.get("max"));
 	const outlets = searchParams.getAll("outlet");
 	const sortBy = searchParams.get("sort");
 	const getSelectedReports = useMemo(() => {
@@ -105,6 +107,13 @@ export default function Reports() {
 			const searchResults = fuse.search(searchInput);
 			selectedReports = searchResults.map((result) => result.item);
 			console.log(selectedReports);
+		}
+		if (minAmount) {
+			selectedReports = selectedReports.filter(
+				(report: Report) =>
+					maxAmount > report.totalCost - report.fundedSoFar &&
+					minAmount < report.totalCost - report.fundedSoFar,
+			);
 		}
 		if (outlets) {
 			selectedReports = selectedReports.filter((report: Report) =>
@@ -137,7 +146,7 @@ export default function Reports() {
 			}
 		}
 		return selectedReports;
-	}, [reports, category, searchInput, outlets, sortBy]);
+	}, [reports, category, searchInput, minAmount, maxAmount, outlets, sortBy]);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
