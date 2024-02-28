@@ -21,10 +21,10 @@ interface ReportsHeaderProps {
 }
 
 const sortingOptions = [
-	"Amount needed",
+	"$ to $$$ needed",
+	"$$$ to $ needed",
 	"Newest to oldest",
 	"Oldest to newest",
-	"Most contributors",
 ];
 
 const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {

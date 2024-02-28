@@ -121,9 +121,14 @@ export default function Reports() {
 			);
 		}
 		if (sortBy) {
-			if (sortBy === "Amount needed") {
+			if (sortBy === "$ to $$$ needed") {
 				selectedReports = selectedReports.sort(
 					(a: Report, b: Report) => a.fundedSoFar - b.fundedSoFar,
+				);
+			}
+			if (sortBy === "$$$ to $ needed") {
+				selectedReports = selectedReports.sort(
+					(a: Report, b: Report) => b.fundedSoFar - a.fundedSoFar,
 				);
 			}
 			if (sortBy === "Newest to oldest") {
@@ -136,12 +141,6 @@ export default function Reports() {
 				selectedReports = selectedReports.sort(
 					(a: Report, b: Report) =>
 						Date.parse(a.dateCreated || "") - Date.parse(b.dateCreated || ""),
-				);
-			}
-			if (sortBy === "Most contributors") {
-				// using bcRatio as a placeholder for # of contributors (not currently avaiable per report)
-				selectedReports = selectedReports.sort(
-					(a: Report, b: Report) => (b.bcRatio || 0) - (a.bcRatio || 0),
 				);
 			}
 		}
