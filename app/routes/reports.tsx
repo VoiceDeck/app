@@ -82,6 +82,7 @@ export default function Reports() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const category = searchParams.get("category");
 	const searchInput = searchParams.get("search-input");
+	const outlets = searchParams.getAll("outlet");
 	const sortBy = searchParams.get("sort");
 	const getSelectedReports = useMemo(() => {
 		let selectedReports = reports;
@@ -92,9 +93,10 @@ export default function Reports() {
 		}
 		if (searchInput) {
 			const fuseOptions = {
-				minMatchCharLength: 3,
-				threshold: 0.9,
-				distance: 10000,
+				// minMatchCharLength: 3,
+				// threshold: 0.9,
+				// distance: 10000,
+				ignoreDistance: true,
 				findAllMatches: true,
 				// Search in titles and summaries of reports
 				keys: ["title, summary"],
@@ -103,6 +105,11 @@ export default function Reports() {
 			const searchResults = fuse.search(searchInput);
 			selectedReports = searchResults.map((result) => result.item);
 			console.log(selectedReports);
+		}
+		if (outlets) {
+			selectedReports = selectedReports.filter((report: Report) =>
+				outlets.includes(report.contributors[0]),
+			);
 		}
 		if (sortBy) {
 			if (sortBy === "Amount needed") {
@@ -130,7 +137,7 @@ export default function Reports() {
 			}
 		}
 		return selectedReports;
-	}, [reports, category, searchInput, sortBy]);
+	}, [reports, category, searchInput, outlets, sortBy]);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">

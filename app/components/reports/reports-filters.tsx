@@ -1,5 +1,6 @@
 import { useSearchParams } from "@remix-run/react";
 import { Filter } from "lucide-react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
@@ -25,16 +26,31 @@ interface ReportFiltersProps {
 	states: Option[];
 	amounts: number[];
 }
+interface FilterItemsProps {
+	outletChoices: string[];
+	setOutletChoices: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-const FilterItems: React.FC<ReportFiltersProps> = ({
+type Props = ReportFiltersProps & FilterItemsProps;
+
+const FilterItems: React.FC<Props> = ({
 	outlets,
 	states,
 	amounts,
+	outletChoices,
+	setOutletChoices,
 }) => {
-	const [searchParams, setSearchParams] = useSearchParams();
 	const minAmountNeeded = Math.min(...amounts);
 	const maxAmountNeeded = Math.max(...amounts);
 	const rangeBetweenAmounts = maxAmountNeeded - minAmountNeeded;
+
+	const handleCheckboxClick = (outlet: string) => {
+		if (outletChoices.includes(outlet)) {
+			setOutletChoices(outletChoices.filter((o) => o !== outlet));
+			return;
+		}
+		setOutletChoices([...outletChoices, outlet]);
+	};
 
 	return (
 		<div className="p-6">
@@ -70,7 +86,10 @@ const FilterItems: React.FC<ReportFiltersProps> = ({
 				<h2 className="font-medium pb-2 md:pb-4">Story from media outlet</h2>
 				{outlets.map((outlet: string) => (
 					<div key={outlet} className="flex items-center gap-2 pb-2">
-						<Checkbox className="h-6 w-6 rounded-full border-vd-blue-500 data-[state=checked]:bg-vd-blue-500 data-[state=checked]:text-vd-beige-100" />
+						<Checkbox
+							className="h-6 w-6 rounded-md border-vd-blue-500 data-[state=checked]:bg-vd-blue-500 data-[state=checked]:text-vd-beige-100"
+							onClick={() => handleCheckboxClick(outlet)}
+						/>
 						<p className="text-sm">{outlet}</p>
 					</div>
 				))}
@@ -85,26 +104,48 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 	amounts,
 }) => {
 	const [searchParams, setSearchParams] = useSearchParams();
+	const [outletChoices, setOutletChoices] = useState<string[]>([]);
+
+	const handleApplyFilters = () => {
+		if (outletChoices) {
+			if (searchParams.has("outlet")) {
+				searchParams.delete("outlet");
+			}
+			for (let i = 0; i < outletChoices.length; i++) {
+				searchParams.append("outlet", outletChoices[i]);
+			}
+			setSearchParams(searchParams, {
+				preventScrollReset: true,
+			});
+		}
+	};
+
 	return (
 		<div>
 			<div className="md:hidden">
 				<Drawer>
-					<DrawerTrigger className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2">
+					<DrawerTrigger
+						className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
+						onClick={() => setOutletChoices([])}
+					>
 						<p className="text-sm font-medium text-vd-blue-500">Filter</p>
 						<Filter color="#4B778F" size={18} />
 					</DrawerTrigger>
 					<DrawerContent className="">
-						<FilterItems outlets={outlets} states={states} amounts={amounts} />
+						<FilterItems
+							outlets={outlets}
+							states={states}
+							amounts={amounts}
+							outletChoices={outletChoices}
+							setOutletChoices={setOutletChoices}
+						/>
 						<DrawerFooter className="flex-row justify-center gap-2 pb-8">
-							{/* <Button
-								className="text-xs w-36 h-7"
-								variant={"outline"}
-								size={"sm"}
-							>
-								Clear all
-							</Button> */}
 							<DrawerClose>
-								<Button className="text-xs w-36 h-7" size={"sm"}>
+								<Button
+									className="text-xs w-36 h-7"
+									size={"sm"}
+									onClick={() => handleApplyFilters()}
+								>
 									Apply
 								</Button>
 							</DrawerClose>
@@ -114,33 +155,27 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 			</div>
 			<div className="hidden md:flex">
 				<Dialog>
-					<DialogTrigger className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2">
+					<DialogTrigger
+						className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
+						onClick={() => setOutletChoices([])}
+					>
 						<p className="text-sm font-medium text-vd-blue-500">Filter</p>
 						<Filter color="#4B778F" size={18} />
 					</DialogTrigger>
 					<DialogContent className="bg-vd-beige-200">
-						<FilterItems outlets={outlets} states={states} amounts={amounts} />
+						<FilterItems
+							outlets={outlets}
+							states={states}
+							amounts={amounts}
+							outletChoices={outletChoices}
+							setOutletChoices={setOutletChoices}
+						/>
 						<DialogFooter className="justify-end gap-2 pb-4">
-							{/* <Button
-								className="text-xs w-36 h-7"
-								variant={"outline"}
-								size={"sm"}
-							>
-								Clear all
-							</Button> */}
 							<DialogClose asChild>
 								<Button
 									className="text-xs w-36 h-7"
 									size={"sm"}
-									// onClick={() => {
-									//   if (searchParams.has("outlet")) {
-									//     searchParams.delete("outlet");
-									//   }
-									//   searchParams.append("outlet", outlet);
-									//   setSearchParams(searchParams, {
-									//     preventScrollReset: true,
-									//   });
-									// }}
+									onClick={() => handleApplyFilters()}
 								>
 									Apply
 								</Button>
