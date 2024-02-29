@@ -59,7 +59,15 @@ export interface Report {
 
 	// properties regarding to hypercert marketplace
 	fundedSoFar: number;
+
+	order: Order | null;
 }
+
+/*************
+ *
+ * type definition from Hypercerts SDK
+ *
+ ************/
 
 /**
  * Represents 1 Hypercert
@@ -86,6 +94,30 @@ export interface Claim {
 	totalUnits?: any | null;
 	uri?: string | null;
 }
+
+// Represents an Order in the Hypercerts Marketplace
+export type Order = {
+	hypercertId: string;
+	additionalParameters: string;
+	amounts: number[];
+	chainId: number;
+	collection: string;
+	collectionType: number;
+	createdAt: string;
+	currency: string;
+	endTime: number;
+	globalNonce: string;
+	id: string;
+	itemIds: string[];
+	orderNonce: string;
+	price: string;
+	quoteType: number;
+	signature: string;
+	signer: string;
+	startTime: number;
+	strategyId: number;
+	subsetNonce: number;
+};
 
 /*************
  *

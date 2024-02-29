@@ -14,6 +14,7 @@
   "dependencies": {
     "@directus/sdk": "^15.0.2",
     "@fontsource-variable/plus-jakarta-sans": "^5.0.20",
+    "@hypercerts-org/marketplace-sdk": "0.0.23",
     "@hypercerts-org/sdk": "^1.4.3",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -32,6 +33,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
+    "ethers": "^6.11.1",
     "html-react-parser": "^5.1.8",
     "lucide-react": "^0.350.0",
     "next": "14.1.3",
