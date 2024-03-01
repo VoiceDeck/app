@@ -190,8 +190,6 @@ export default function Reports() {
 								prefetch="intent"
 							>
 								<ReportCard
-									// bcRatio={report.bcRatio}
-									// dateCreated={report.dateCreated}
 									hypercertId={report.hypercertId}
 									image={report.image}
 									title={report.title}
