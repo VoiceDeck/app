@@ -10,8 +10,18 @@ import { useMemo } from "react";
 import ReportCard from "~/components/reports/report-card";
 import ReportsHeader from "~/components/reports/reports-header";
 import VoicedeckStats from "~/components/reports/voicedeck-stats";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "~/components/ui/pagination";
 import { siteConfig } from "~/config/site";
 import { getNumberOfContributors } from "~/directus.server";
+import { usePagination } from "~/hooks/use-pagination";
 import { Report } from "~/types";
 import { fetchReports } from "../impact-reports.server";
 
@@ -159,8 +169,19 @@ export default function Reports() {
 				);
 			}
 		}
+
 		return selectedReports;
 	}, [reports, searchParams]);
+
+	const {
+		currentPage,
+		currentPageItems: pageTransactions,
+		loadPage,
+		maxPage,
+		pageNumbers,
+		needsPagination,
+		// set to 3 reports per page for testing because currently only 8 reports exist
+	} = usePagination<Report>(getSelectedReports, 3);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
@@ -181,28 +202,69 @@ export default function Reports() {
 
 			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
-			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl pb-16 md:pb-8">
-				{getSelectedReports.length
-					? getSelectedReports.map((report: Report) => (
-							<Link
-								to={`/reports/${report.slug}`}
-								key={report.hypercertId}
-								prefetch="intent"
-							>
-								<ReportCard
-									hypercertId={report.hypercertId}
-									image={report.image}
-									title={report.title}
-									summary={report.summary}
-									category={report.category}
-									state={report.state}
-									totalCost={report.totalCost}
-									fundedSoFar={report.fundedSoFar}
+			<section>
+				<div className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl pb-16 md:pb-8">
+					{getSelectedReports.length
+						? pageTransactions.map((report: Report) => (
+								<Link
+									to={`/reports/${report.slug}`}
+									key={report.hypercertId}
+									prefetch="intent"
+								>
+									<ReportCard
+										hypercertId={report.hypercertId}
+										image={report.image}
+										title={report.title}
+										summary={report.summary}
+										category={report.category}
+										state={report.state}
+										totalCost={report.totalCost}
+										fundedSoFar={report.fundedSoFar}
+									/>
+								</Link>
+						  ))
+						: null}
+				</div>
+
+				{/* Pagination */}
+				{needsPagination && (
+					<Pagination>
+						<PaginationContent>
+							<PaginationItem className="hover:cursor-pointer">
+								<PaginationPrevious
+									onClick={() =>
+										currentPage > 1 ? loadPage(currentPage - 1) : null
+									}
 								/>
-							</Link>
-					  ))
-					: null}
+							</PaginationItem>
+							{pageNumbers.map((pageNum, index) => (
+								<PaginationItem
+									onClick={() => loadPage(pageNum)}
+									className="hover:cursor-pointer"
+									key={`page-${pageNum}`}
+								>
+									<PaginationLink isActive={currentPage === pageNum}>
+										{pageNum}
+									</PaginationLink>
+								</PaginationItem>
+							))}
+							{maxPage > 4 && (
+								<PaginationItem>
+									<PaginationEllipsis />
+								</PaginationItem>
+							)}
+							<PaginationItem className="hover:cursor-pointer">
+								<PaginationNext
+									onClick={() =>
+										currentPage < maxPage ? loadPage(currentPage + 1) : null
+									}
+								/>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
+				)}
 			</section>
+
 			<section>
 				{!getSelectedReports.length ? (
 					<div className="flex flex-col items-center text-center pb-24 md:pb-10">
