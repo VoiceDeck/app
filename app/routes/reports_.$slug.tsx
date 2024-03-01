@@ -3,9 +3,9 @@ import { LoaderFunction } from "@remix-run/node";
 import {
 	ClientLoaderFunction,
 	Link,
-	MetaArgs,
 	MetaFunction,
 	useLoaderData,
+	useNavigation,
 } from "@remix-run/react";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
@@ -16,11 +16,6 @@ import { Badge } from "~/components/ui/badge";
 import { DynamicCategoryIcon } from "~/components/ui/dynamic-category-icon";
 import { fetchReportBySlug } from "~/impact-reports.server";
 import { Report } from "~/types";
-
-export const meta: MetaFunction = ({ data }: MetaArgs) => {
-	const report = data as Report;
-	return [{ title: `VoiceDeck | ${report.title}` }];
-};
 
 export const loader: LoaderFunction = async ({ params }) => {
 	const slug = params.slug;
@@ -34,6 +29,9 @@ export const loader: LoaderFunction = async ({ params }) => {
 	}
 };
 
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+	return [{ title: `VoiceDeck | ${data.report.title}` }];
+};
 // Cache reports individually in session storage in the browser for super fast
 // back/forward/revisits during the session, but will fetch fresh data
 // from the server if the user closes the tab and comes back later
@@ -53,6 +51,14 @@ export const clientLoader: ClientLoaderFunction = async ({
 };
 
 export default function RouteComponent() {
+	const navigation = useNavigation();
+	if (navigation.state === "loading") {
+		return (
+			<section className="flex justify-center items-center p-5 gap-3">
+				Loading report...
+			</section>
+		);
+	}
 	const { report } = useLoaderData<typeof loader>();
 	const htmlParsedStory = report?.story ? parse(report.story) : "";
 

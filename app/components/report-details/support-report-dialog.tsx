@@ -160,9 +160,11 @@ const SupportReportDialog = ({
 						</div>
 					</section>
 					<div className="flex w-full">
-						<Button size={"lg"} variant={"default"} className="w-full">
+						{/* <w3m-button /> */}
+
+						{/* <Button size={"lg"} variant={"default"} className="w-full">
 							Connect wallet
-						</Button>
+						</Button> */}
 						<SupportProcessingDrawer container={drawerContainer} />
 					</div>
 				</div>

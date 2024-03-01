@@ -1,6 +1,7 @@
 import { NavLink } from "@remix-run/react";
 import { cn } from "~/lib/utils";
 
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { NavLinks } from "~/components/global/nav-links";
 import { buttonVariants } from "~/components/ui/button";
 import logo from "/logo.svg";
@@ -16,18 +17,21 @@ const NavMenu = () => {
 				</div>
 				<NavLinks />
 
-				<NavLink
-					to="/my-actions"
-					className={({ isActive }) =>
-						cn(
-							buttonVariants({ variant: "ghost" }),
-							"rounded-md hidden md:inline-flex font-medium",
-							isActive ? "bg-vd-beige-300 dark:bg-vd-beige-100" : undefined,
-						)
-					}
-				>
-					My Actions
-				</NavLink>
+				<div className="flex gap-2">
+					<NavLink
+						to="/my-actions"
+						className={({ isActive }) =>
+							cn(
+								buttonVariants({ variant: "ghost" }),
+								"rounded-md hidden md:inline-flex font-medium",
+								isActive ? "bg-vd-beige-300 dark:bg-vd-beige-100" : undefined,
+							)
+						}
+					>
+						My Actions
+					</NavLink>
+					<ConnectButton />
+				</div>
 			</section>
 		</nav>
 	);
