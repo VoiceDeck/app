@@ -1,5 +1,12 @@
 import { NavLink } from "@remix-run/react";
-import { ArrowUpRight, HeartHandshake, Menu, Newspaper, X } from "lucide-react";
+import {
+	ArrowUpRight,
+	HeartHandshake,
+	Menu,
+	Newspaper,
+	Sparkles,
+	X,
+} from "lucide-react";
 
 import { Button, buttonVariants } from "~/components/ui/button";
 import {
@@ -105,9 +112,15 @@ const DesktopFooter = () => {
 					<img className="h-10 w-10" src={logo} alt="VoiceDeck Logo" />
 					<h3 className="text-5xl font-semibold">VoiceDeck</h3>
 				</div>
-				<small className="text-base">
-					An Open Source project. A funding platform for the collective impact.
-				</small>
+				<div className="flex gap-2">
+					<small className="text-base">
+						Funding platform for collective impact
+					</small>
+					<div className="self-center">
+						<Sparkles color="#973A30" size={18} />
+					</div>
+					<small className="text-base">An open source project</small>
+				</div>
 			</div>
 			<ul>
 				{externalLinks.map((link) => (
