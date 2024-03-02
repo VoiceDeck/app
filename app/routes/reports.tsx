@@ -62,7 +62,7 @@ export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
 	return cacheData;
 };
 
-clientLoader.hydrate = true;
+// clientLoader.hydrate = true;
 
 export default function Reports() {
 	const { reports, numOfContributors } = useLoaderData<typeof loader>();
