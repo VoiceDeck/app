@@ -113,18 +113,15 @@ export default function Reports() {
 		}
 		if (searchInput) {
 			const fuseOptions = {
-				// minMatchCharLength: 3,
-				// threshold: 0.9,
-				// distance: 10000,
+				minMatchCharLength: 3,
+				threshold: 0.5,
 				ignoreDistance: true,
 				findAllMatches: true,
-				// Search in titles and summaries of reports
-				keys: ["title, summary"],
+				keys: ["title", "summary"],
 			};
 			const fuse = new Fuse(selectedReports, fuseOptions);
 			const searchResults = fuse.search(searchInput);
 			selectedReports = searchResults.map((result) => result.item);
-			console.log(selectedReports);
 		}
 		if (searchParams.has("min")) {
 			selectedReports = selectedReports.filter(
@@ -181,7 +178,7 @@ export default function Reports() {
 		pageNumbers,
 		needsPagination,
 		// set to 3 reports per page for testing because currently only 8 reports exist
-	} = usePagination<Report>(getSelectedReports, 3);
+	} = usePagination<Report>(getSelectedReports, 6);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
