@@ -1,8 +1,8 @@
 import "@fontsource-variable/plus-jakarta-sans";
 import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
 import {
-	injectedWallet,
 	metaMaskWallet,
+	rabbyWallet,
 	rainbowWallet,
 	zerionWallet,
 } from "@rainbow-me/rainbowkit/wallets";
@@ -20,7 +20,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Link } from "lucide-react";
 import { http, WagmiProvider } from "wagmi";
-import { mainnet, sepolia } from "wagmi/chains";
+import { sepolia } from "wagmi/chains";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import "vaul/dist/index.css";
@@ -67,12 +67,14 @@ export function ErrorBoundary() {
 	return <h1>Unknown Error</h1>;
 }
 
-export function Layout({
+function Layout({
 	children,
 	title,
+	env,
 }: {
 	children: React.ReactNode;
 	title: string;
+	env?: { INFURA_API_KEY: string; WALLET_CONNECT_ID: string };
 }) {
 	return (
 		<html lang="en" className="scroll-smooth">
@@ -106,35 +108,34 @@ export default function App() {
 
 	const config = getDefaultConfig({
 		ssr: true,
-		appName: "RainbowKit Remix Example",
+		appName: "VoiceDeck",
 		projectId: ENV.WALLET_CONNECT_ID,
-		chains: [sepolia, mainnet],
+		chains: [sepolia],
 		wallets: [
 			{
 				groupName: "Recommended",
-				wallets: [rainbowWallet, zerionWallet, metaMaskWallet, injectedWallet],
+				wallets: [rainbowWallet, zerionWallet, rabbyWallet, metaMaskWallet],
 			},
 		],
 		transports: {
+			// [mainnet.id]: http(`https://mainnet.infura.io/v3/${ENV.INFURA_API_KEY}`),
 			[sepolia.id]: http(`https://sepolia.infura.io/v3/${ENV.INFURA_API_KEY}`),
 		},
 	});
 
 	return (
-		<WagmiProvider config={config}>
-			<QueryClientProvider client={queryClient}>
-				<RainbowKitProvider>
-					<NavMenu />
-					<script
-						// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-						dangerouslySetInnerHTML={{
-							__html: `window.ENV = ${JSON.stringify(ENV)}`,
-						}}
-					/>
-					<Outlet />
-					<Footer />
-				</RainbowKitProvider>
-			</QueryClientProvider>
-		</WagmiProvider>
+		<Layout title="VoiceDeck" env={ENV}>
+			{config && (
+				<WagmiProvider config={config}>
+					<QueryClientProvider client={queryClient}>
+						<RainbowKitProvider>
+							<NavMenu />
+							<Outlet />
+							<Footer />
+						</RainbowKitProvider>
+					</QueryClientProvider>
+				</WagmiProvider>
+			)}
+		</Layout>
 	);
 }
