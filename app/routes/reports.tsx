@@ -202,8 +202,8 @@ export default function Reports() {
 
 			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
-			<section>
-				<div className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl pb-16 md:pb-8">
+			<section className="pb-16 md:pb-8">
+				<div className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
 					{getSelectedReports.length
 						? pageTransactions.map((report: Report) => (
 								<Link
@@ -228,7 +228,7 @@ export default function Reports() {
 
 				{/* Pagination */}
 				{needsPagination && (
-					<Pagination>
+					<Pagination className="pt-6">
 						<PaginationContent>
 							<PaginationItem className="hover:cursor-pointer">
 								<PaginationPrevious

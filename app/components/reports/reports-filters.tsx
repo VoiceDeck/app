@@ -110,8 +110,9 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 	states,
 	amounts,
 }) => {
-	const minAmountNeeded = Math.min(...amounts);
-	const maxAmountNeeded = Math.max(...amounts);
+	const amountsNeeded = amounts.map((amount) => 1000 - amount);
+	const minAmountNeeded = Math.min(...amountsNeeded);
+	const maxAmountNeeded = Math.max(...amountsNeeded);
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [amountRangeSelected, setAmountRangeSelected] = useState([
 		minAmountNeeded,
