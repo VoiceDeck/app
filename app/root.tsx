@@ -1,5 +1,11 @@
 import "@fontsource-variable/plus-jakarta-sans";
-import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import {
+	RainbowKitProvider,
+	Theme,
+	darkTheme,
+	getDefaultConfig,
+	lightTheme,
+} from "@rainbow-me/rainbowkit";
 import {
 	metaMaskWallet,
 	rabbyWallet,
@@ -27,6 +33,24 @@ import "vaul/dist/index.css";
 import { Footer } from "./components/global/footer";
 import { NavMenu } from "./components/global/nav-menu";
 import "./tailwind.css";
+
+import _ from "lodash";
+
+const customRainbowTheme: Theme = _.merge(lightTheme(), {
+	fonts: {
+		body: "Plus Jakarta Sans, sans-serif",
+	},
+	colors: {
+		accentColor: "#C14E41",
+		modalText: "#252F56",
+		modalTextDim: "#6B6B6B",
+		modalTextSecondary: "#42424A",
+		actionButtonSecondaryBackground: "#C14E41",
+	},
+	blurs: {
+		modalOverlay: "medium",
+	},
+});
 
 export async function loader() {
 	// IMPORTANT: This seems like a security risk, not sure I want to expose env variables to frontend
@@ -128,7 +152,7 @@ export default function App() {
 			{config && (
 				<WagmiProvider config={config}>
 					<QueryClientProvider client={queryClient}>
-						<RainbowKitProvider>
+						<RainbowKitProvider theme={customRainbowTheme}>
 							<NavMenu />
 							<Outlet />
 							<Footer />
