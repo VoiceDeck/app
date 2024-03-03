@@ -1,30 +1,46 @@
+import "@rainbow-me/rainbowkit/styles.css";
+import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
 import {
 	Link,
 	Links,
-	LiveReload,
 	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
 	isRouteErrorResponse,
+	useLoaderData,
 	useRouteError,
 } from "@remix-run/react";
 
+import {
+	WagmiConfig,
+	configureChains,
+	createConfig,
+	mainnet,
+	sepolia,
+} from "wagmi";
+
 import "@fontsource-variable/plus-jakarta-sans";
-import { ReactNode } from "react";
-import { Footer } from "~/components/global/footer";
-import { NavMenu } from "~/components/global/nav-menu";
+import {
+	RainbowKitProvider,
+	getDefaultWallets,
+	lightTheme,
+} from "@rainbow-me/rainbowkit";
+import { useState } from "react";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { useNonce } from "~/lib/utils/nonce-provider";
 import "./tailwind.css";
 
-export default function App() {
-	return (
-		<Document>
-			<NavMenu />
-			<Outlet />
-			<Footer />
-		</Document>
-	);
-}
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+	return [
+		{
+			title: data
+				? "Intuition App Template - Remix"
+				: "Error | Intuition App Template - Remix",
+		},
+		{ name: "description", content: "Start your Intuition journey." },
+	];
+};
 
 export function ErrorBoundary() {
 	const error = useRouteError();
@@ -55,22 +71,99 @@ export function ErrorBoundary() {
 	return <h1>Unknown Error</h1>;
 }
 
-function Document(props: { children: ReactNode; title?: string }) {
+export async function loader({ request }: LoaderFunctionArgs) {
+	return json({
+		ENV: {
+			INFURA_API_KEY: process.env.INFURA_API_KEY,
+			INFURA_RPC_URL: process.env.INFURA_RPC_URL,
+			WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
+		},
+	});
+}
+
+function Document({
+	children,
+	title,
+	nonce,
+	env = {},
+}: {
+	children: React.ReactNode;
+	title?: string;
+	nonce?: string;
+	theme?: string;
+	env?: Record<string, string>;
+}) {
 	return (
-		<html lang="en" className="scroll-smooth">
+		<html lang="en">
 			<head>
-				{props.title ? <title>{props.title}</title> : null}
 				<meta charSet="utf-8" />
+				<title>{title}</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<Meta />
 				<Links />
 			</head>
-			<body className="bg-vd-beige-200">
-				{props.children}
+			<body>
+				{children}
 				<ScrollRestoration />
 				<Scripts />
-				<LiveReload />
 			</body>
 		</html>
+	);
+}
+
+export default function App() {
+	const { ENV } = useLoaderData<typeof loader>();
+	const nonce = useNonce();
+
+	const [{ config, chains }] = useState(() => {
+		const { chains, publicClient, webSocketPublicClient } = configureChains(
+			[sepolia, mainnet],
+			[
+				jsonRpcProvider({
+					rpc: () => {
+						if (!ENV.INFURA_RPC_URL) {
+							throw new Error("INFURA_RPC_URL is not defined");
+						}
+						return { http: ENV.INFURA_RPC_URL };
+					},
+				}),
+			],
+		);
+
+		const { connectors } = getDefaultWallets({
+			appName: "Voicedeck",
+			chains,
+			projectId: ENV.WALLETCONNECT_PROJECT_ID || "",
+		});
+
+		const config = createConfig({
+			autoConnect: true,
+			connectors,
+			publicClient,
+			webSocketPublicClient,
+		});
+
+		return {
+			config,
+			chains,
+		};
+	});
+
+	return (
+		<Document nonce={nonce} env={ENV} title="VoiceDeck">
+			{config && chains ? (
+				<>
+					<WagmiConfig config={config}>
+						<RainbowKitProvider
+							chains={chains}
+							modalSize="compact"
+							theme={lightTheme()}
+						>
+							<Outlet />
+						</RainbowKitProvider>
+					</WagmiConfig>
+				</>
+			) : null}
+		</Document>
 	);
 }
