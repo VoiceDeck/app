@@ -1,8 +1,8 @@
-import { optimismSepolia } from "viem/chains";
+import { sepolia } from "viem/chains";
 
 export const DEFAULT_DOMAIN = "localhost";
-export const DEFAULT_URI = "http://localhost:3000";
-export const DEFAULT_CHAIN_ID = optimismSepolia.id.toString();
+export const DEFAULT_URI = "http://localhost:5173";
+export const DEFAULT_CHAIN_ID = sepolia.id.toString();
 
 export const DEFAULT_STRATEGY_OPTIONS = {
 	domain: DEFAULT_DOMAIN,

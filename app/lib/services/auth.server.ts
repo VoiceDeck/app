@@ -50,12 +50,12 @@ export async function authenticate(
 
 export async function login(request: Request) {
 	await authenticator.authenticate("auth", request, {
-		successRedirect: "/app",
+		successRedirect: "/reports",
 	});
 }
 
 export async function logout(request: Request) {
-	await authenticator.logout(request, { redirectTo: "/login" });
+	await authenticator.logout(request, { redirectTo: "/" });
 }
 
 export const requireAuthedUser = async <TRequest extends Request>(
