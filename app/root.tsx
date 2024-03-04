@@ -75,7 +75,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	return json({
 		ENV: {
 			INFURA_API_KEY: process.env.INFURA_API_KEY,
-			INFURA_RPC_URL: process.env.INFURA_RPC_URL,
+			INFURA_SEPOLIA_RPC_URL: process.env.INFURA_SEPOLIA_RPC_URL,
 			WALLETCONNECT_PROJECT_ID: process.env.WALLETCONNECT_PROJECT_ID,
 		},
 	});
@@ -121,10 +121,10 @@ export default function App() {
 			[
 				jsonRpcProvider({
 					rpc: () => {
-						if (!ENV.INFURA_RPC_URL) {
+						if (!ENV.INFURA_SEPOLIA_RPC_URL) {
 							throw new Error("INFURA_RPC_URL is not defined");
 						}
-						return { http: ENV.INFURA_RPC_URL };
+						return { http: ENV.INFURA_SEPOLIA_RPC_URL };
 					},
 				}),
 			],
