@@ -1,8 +1,7 @@
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import { Loader2Icon } from "lucide-react";
 import type { User } from "types/user";
-import { optimismSepolia } from "viem/chains";
-import { useSwitchNetwork } from "wagmi";
+import { sepolia, useSwitchNetwork } from "wagmi";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils/misc";
 
@@ -21,7 +20,7 @@ export function ConnectButton({
 
 	const handleSwitch = () => {
 		if (switchNetwork) {
-			switchNetwork(optimismSepolia.id);
+			switchNetwork(sepolia.id);
 		}
 	};
 
@@ -70,7 +69,7 @@ export function ConnectButton({
 							>
 								<Loader2Icon className="mr-1 h-5 w-5 animate-spin" /> Signing...
 							</Button>
-						) : chain?.id !== optimismSepolia.id ? (
+						) : chain?.id !== sepolia.id ? (
 							<Button
 								size={size}
 								variant="default"

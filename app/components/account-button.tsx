@@ -1,8 +1,9 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { LogOut } from "lucide-react";
+import { Link } from "@remix-run/react";
+import { HandIcon, LogOut } from "lucide-react";
 import { MetaMaskAvatar } from "react-metamask-avatar";
 import type { User } from "types/user";
-import { optimismSepolia } from "viem/chains";
+import { sepolia } from "viem/chains";
 import { useSwitchNetwork } from "wagmi";
 import { Button } from "~/components/ui/button";
 import {
@@ -32,7 +33,7 @@ export function AccountButton({
 
 	const handleSwitch = () => {
 		if (switchNetwork) {
-			switchNetwork(optimismSepolia.id);
+			switchNetwork(sepolia.id);
 		}
 	};
 
@@ -52,7 +53,7 @@ export function AccountButton({
 					chain &&
 					(!authenticationStatus || authenticationStatus === "authenticated");
 
-				if (connected && chain?.id !== optimismSepolia.id) {
+				if (connected && chain?.id !== sepolia.id) {
 					return (
 						<Button
 							size={size}
@@ -76,7 +77,7 @@ export function AccountButton({
 						})}
 					>
 						{connected && !!user ? (
-							<div className="flex gap-2 rounded-full p-1">
+							<div className="flex gap-2 rounded-full p-1 bg-vd-beige-400">
 								<DropdownMenu>
 									<DropdownMenuTrigger asChild>
 										<Button
@@ -84,7 +85,7 @@ export function AccountButton({
 											variant="ghost"
 											className={cn(
 												className,
-												"h-10 w-10 overflow-hidden rounded-full transition-transform hover:scale-105",
+												"h-8 w-8 overflow-hidden rounded-full transition-transform hover:scale-105",
 											)}
 										>
 											<div className="flex items-center gap-1">
@@ -96,7 +97,10 @@ export function AccountButton({
 											</div>
 										</Button>
 									</DropdownMenuTrigger>
-									<DropdownMenuContent align="end" className="bg-popover w-48">
+									<DropdownMenuContent
+										align="end"
+										className="bg-vd-beige-200 w-48"
+									>
 										<DropdownMenuLabel className="flex items-center gap-2">
 											<div className="space-y-1">
 												<div className="text-sm font-normal text-primary-500">
@@ -108,6 +112,15 @@ export function AccountButton({
 											</div>
 										</DropdownMenuLabel>
 										<DropdownMenuSeparator />
+										<DropdownMenuItem className="hover:bg-vd-beige-300 cursor-pointer hover:font-medium">
+											<Link
+												to={"/app/my-actions"}
+												className="flex justify-start items-center w-full h-full"
+											>
+												<HandIcon className="mr-2 h-4 w-4 " />
+												My actions
+											</Link>
+										</DropdownMenuItem>
 										<DropdownMenuItem
 											onSelect={(e) => {
 												e.preventDefault();
