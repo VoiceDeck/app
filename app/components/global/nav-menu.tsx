@@ -25,7 +25,7 @@ const NavMenu = ({ user, handleSignout }: NavProps) => {
 				<NavLinks />
 
 				<div className="flex gap-2">
-					<NavLink
+					{/* <NavLink
 						to="/my-actions"
 						className={({ isActive }) =>
 							cn(
@@ -36,7 +36,7 @@ const NavMenu = ({ user, handleSignout }: NavProps) => {
 						}
 					>
 						My Actions
-					</NavLink>
+					</NavLink> */}
 					{user?.wallet ? (
 						<AccountButton
 							handleSignOut={handleSignout}

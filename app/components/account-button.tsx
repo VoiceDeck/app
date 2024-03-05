@@ -114,11 +114,11 @@ export function AccountButton({
 										<DropdownMenuSeparator />
 										<DropdownMenuItem className="hover:bg-vd-beige-300 cursor-pointer hover:font-medium">
 											<Link
-												to={"/app/my-actions"}
+												to={`/profile/${account?.address}`}
 												className="flex justify-start items-center w-full h-full"
 											>
 												<HandIcon className="mr-2 h-4 w-4 " />
-												My actions
+												My Profile
 											</Link>
 										</DropdownMenuItem>
 										<DropdownMenuItem
