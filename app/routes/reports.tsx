@@ -4,16 +4,13 @@ import { makeDomainFunction } from "domain-functions";
 import { useEffect, useState } from "react";
 import { User } from "types/user";
 import {
-	sepolia,
 	useAccount,
 	useDisconnect,
-	useNetwork,
-	useSwitchNetwork,
+	useSwitchChain,
 	useWalletClient,
 } from "wagmi";
+import { sepolia } from "wagmi/chains";
 import { z } from "zod";
-import { Footer } from "~/components/global/footer";
-import { NavMenu } from "~/components/global/nav-menu";
 import { isAuthedUser, login } from "~/lib/services/auth.server";
 import { formAction } from "~/lib/services/form.server";
 import { newDIDSessionFromWalletClient } from "~/lib/utils/siwe";
@@ -48,9 +45,8 @@ export default function ReportLayout() {
 	const fetcher = useFetcher();
 	const submit = useSubmit();
 
-	const { isConnected, address } = useAccount();
-	const { chain } = useNetwork();
-	const { switchNetwork } = useSwitchNetwork();
+	const { isConnected, address, chain } = useAccount();
+	const { switchChain } = useSwitchChain();
 	const { disconnect } = useDisconnect();
 	const { data: walletClient } = useWalletClient();
 
@@ -100,10 +96,10 @@ export default function ReportLayout() {
 
 	// Detect Wrong Network
 	useEffect(() => {
-		if (chain !== sepolia && switchNetwork) {
-			switchNetwork(sepolia.id);
+		if (chain !== sepolia && switchChain) {
+			switchChain({ chainId: sepolia.id });
 		}
-	}, [chain, switchNetwork]);
+	}, [chain, switchChain]);
 
 	// Trigger remix auth action if user has a did session and has signed
 	useEffect(() => {
@@ -114,9 +110,7 @@ export default function ReportLayout() {
 
 	return (
 		<>
-			<NavMenu user={user} handleSignout={handleSignOut} />
 			<Outlet />
-			<Footer />
 		</>
 	);
 }

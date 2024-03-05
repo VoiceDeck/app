@@ -1,7 +1,8 @@
 import { ConnectButton as RainbowkitConnectButton } from "@rainbow-me/rainbowkit";
 import { Loader2Icon } from "lucide-react";
 import type { User } from "types/user";
-import { sepolia, useSwitchNetwork } from "wagmi";
+import { useSwitchChain } from "wagmi";
+import { sepolia } from "wagmi/chains";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils/misc";
 
@@ -16,11 +17,11 @@ export function ConnectButton({
 	size = "default",
 	className,
 }: ConnectButtonProps) {
-	const { switchNetwork } = useSwitchNetwork();
+	const { switchChain } = useSwitchChain();
 
 	const handleSwitch = () => {
-		if (switchNetwork) {
-			switchNetwork(sepolia.id);
+		if (switchChain) {
+			switchChain({ chainId: sepolia.id });
 		}
 	};
 

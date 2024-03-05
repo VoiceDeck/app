@@ -12,22 +12,13 @@ import {
 	useRouteError,
 } from "@remix-run/react";
 
-import {
-	WagmiConfig,
-	configureChains,
-	createConfig,
-	mainnet,
-	sepolia,
-} from "wagmi";
+import { http, WagmiProvider } from "wagmi";
+
+import { sepolia } from "wagmi/chains";
 
 import "@fontsource-variable/plus-jakarta-sans";
-import {
-	RainbowKitProvider,
-	getDefaultWallets,
-	lightTheme,
-} from "@rainbow-me/rainbowkit";
-import { useState } from "react";
-import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNonce } from "~/lib/utils/nonce-provider";
 import "./tailwind.css";
 
@@ -111,59 +102,42 @@ function Document({
 	);
 }
 
+const queryClient = new QueryClient();
+
 export default function App() {
 	const { ENV } = useLoaderData<typeof loader>();
 	const nonce = useNonce();
 
-	const [{ config, chains }] = useState(() => {
-		const { chains, publicClient, webSocketPublicClient } = configureChains(
-			[sepolia, mainnet],
-			[
-				jsonRpcProvider({
-					rpc: () => {
-						if (!ENV.INFURA_SEPOLIA_RPC_URL) {
-							throw new Error("INFURA_RPC_URL is not defined");
-						}
-						return { http: ENV.INFURA_SEPOLIA_RPC_URL };
+	const config = getDefaultConfig({
+		appName: "VoiceDeck",
+		projectId: ENV.WALLETCONNECT_PROJECT_ID || "",
+		chains: [
+			{
+				...sepolia,
+				rpcUrls: {
+					default: {
+						http: [
+							ENV.INFURA_SEPOLIA_RPC_URL ?? sepolia.rpcUrls.default.http[0],
+						],
 					},
-				}),
-			],
-		);
-
-		const { connectors } = getDefaultWallets({
-			appName: "Voicedeck",
-			chains,
-			projectId: ENV.WALLETCONNECT_PROJECT_ID || "",
-		});
-
-		const config = createConfig({
-			autoConnect: true,
-			connectors,
-			publicClient,
-			webSocketPublicClient,
-		});
-
-		return {
-			config,
-			chains,
-		};
+				},
+			},
+		],
+		transports: {
+			[sepolia.id]: http(),
+		},
+		ssr: true,
 	});
 
 	return (
 		<Document nonce={nonce} env={ENV} title="VoiceDeck">
-			{config && chains ? (
-				<>
-					<WagmiConfig config={config}>
-						<RainbowKitProvider
-							chains={chains}
-							modalSize="compact"
-							theme={lightTheme()}
-						>
-							<Outlet />
-						</RainbowKitProvider>
-					</WagmiConfig>
-				</>
-			) : null}
+			<WagmiProvider config={config}>
+				<QueryClientProvider client={queryClient}>
+					<RainbowKitProvider initialChain={sepolia}>
+						<Outlet />
+					</RainbowKitProvider>
+				</QueryClientProvider>
+			</WagmiProvider>
 		</Document>
 	);
 }

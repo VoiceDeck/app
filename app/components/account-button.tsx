@@ -3,8 +3,8 @@ import { Link } from "@remix-run/react";
 import { HandIcon, LogOut } from "lucide-react";
 import { MetaMaskAvatar } from "react-metamask-avatar";
 import type { User } from "types/user";
-import { sepolia } from "viem/chains";
-import { useSwitchNetwork } from "wagmi";
+import { useSwitchChain } from "wagmi";
+import { sepolia } from "wagmi/chains";
 import { Button } from "~/components/ui/button";
 import {
 	DropdownMenu,
@@ -29,11 +29,11 @@ export function AccountButton({
 	handleSignOut,
 	className,
 }: AccountButtonProps) {
-	const { switchNetwork } = useSwitchNetwork();
+	const { switchChain } = useSwitchChain();
 
 	const handleSwitch = () => {
-		if (switchNetwork) {
-			switchNetwork(sepolia.id);
+		if (switchChain) {
+			switchChain({ chainId: sepolia.id });
 		}
 	};
 
@@ -42,9 +42,9 @@ export function AccountButton({
 			{({
 				account,
 				chain,
-				openConnectModal,
 				authenticationStatus,
 				mounted,
+				openConnectModal,
 			}) => {
 				const ready = mounted && authenticationStatus !== "loading";
 				const connected =
@@ -53,6 +53,13 @@ export function AccountButton({
 					chain &&
 					(!authenticationStatus || authenticationStatus === "authenticated");
 
+				if (!user && !ready) {
+					return (
+						<Button onClick={openConnectModal} type="button">
+							Connect Wallet
+						</Button>
+					);
+				}
 				if (connected && chain?.id !== sepolia.id) {
 					return (
 						<Button

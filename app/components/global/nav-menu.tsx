@@ -1,19 +1,28 @@
-import { NavLink } from "@remix-run/react";
+import { NavLink, useFetcher } from "@remix-run/react";
 import { cn } from "~/lib/utils";
 
+// import { ConnectButton } from "../connect-button";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { User } from "types/user";
+import { useDisconnect } from "wagmi";
 import { NavLinks } from "~/components/global/nav-links";
 import { buttonVariants } from "~/components/ui/button";
 import logo from "/logo.svg";
 import { AccountButton } from "../account-button";
-import { ConnectButton } from "../connect-button";
 
 export interface NavProps {
 	user: User | null;
-	handleSignout: () => void;
 }
 
-const NavMenu = ({ user, handleSignout }: NavProps) => {
+const NavMenu = ({ user }: NavProps) => {
+	const fetcher = useFetcher();
+	const { disconnect } = useDisconnect();
+
+	async function handleSignout() {
+		disconnect();
+		fetcher.submit({}, { method: "post", action: "/actions/auth/logout" });
+	}
+
 	return (
 		<nav className="py-5 border-b-[1.5px] border-b-vd-beige-300">
 			<section className="container max-w-7xl flex justify-between items-center">
@@ -37,15 +46,14 @@ const NavMenu = ({ user, handleSignout }: NavProps) => {
 					>
 						My Actions
 					</NavLink>
-					{user?.wallet ? (
-						<AccountButton
-							handleSignOut={handleSignout}
-							user={user}
-							size="lg"
-						/>
-					) : (
-						<ConnectButton size="lg" user={user} />
-					)}
+					<AccountButton handleSignOut={handleSignout} user={user} size="lg" />
+
+					{/* <ConnectButton
+						accountStatus={{
+							smallScreen: "avatar",
+							largeScreen: "full",
+						}}
+					/> */}
 				</div>
 			</section>
 		</nav>

@@ -6,8 +6,7 @@ import { sepolia } from "viem/chains";
 import {
 	useAccount,
 	useDisconnect,
-	useNetwork,
-	useSwitchNetwork,
+	useSwitchChain,
 	useWalletClient,
 } from "wagmi";
 import { z } from "zod";
@@ -49,9 +48,8 @@ export default function LoginIndexRoute() {
 	const fetcher = useFetcher();
 	const submit = useSubmit();
 
-	const { isConnected, address } = useAccount();
-	const { chain } = useNetwork();
-	const { switchNetwork } = useSwitchNetwork();
+	const { isConnected, address, chain } = useAccount();
+	const { switchChain } = useSwitchChain();
 	const { disconnect } = useDisconnect();
 	const { data: walletClient } = useWalletClient();
 
@@ -100,10 +98,10 @@ export default function LoginIndexRoute() {
 
 	// Detect Wrong Network
 	useEffect(() => {
-		if (chain !== sepolia && switchNetwork) {
-			switchNetwork(sepolia.id);
+		if (chain !== sepolia && switchChain) {
+			switchChain({ chainId: sepolia.id });
 		}
-	}, [chain, switchNetwork]);
+	}, [chain, switchChain]);
 
 	// Trigger remix auth action if user has a did session and has signed
 	useEffect(() => {

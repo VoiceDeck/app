@@ -1,11 +1,15 @@
+import { userInfo } from "os";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { ClientLoaderFunction, Link, useLoaderData } from "@remix-run/react";
 import { useMemo } from "react";
+import { User } from "types/user";
+import { NavMenu } from "~/components/global/nav-menu";
 import ReportCard from "~/components/reports/report-card";
 import ReportsHeader from "~/components/reports/reports-header";
 import VoicedeckStats from "~/components/reports/voicedeck-stats";
 import { siteConfig } from "~/config/site";
 import { getNumberOfContributors } from "~/directus.server";
+import { isAuthedUser } from "~/lib/services/auth.server";
 import { Report } from "~/types";
 import { fetchReports } from "../../impact-reports.server";
 
@@ -17,6 +21,7 @@ export const meta: MetaFunction = () => {
 };
 
 interface IPageData {
+	user?: User | null;
 	reports: Report[];
 	numOfContributors: number;
 }
@@ -25,8 +30,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 	try {
 		const reports = await fetchReports();
 		const numOfContributors = await getNumberOfContributors();
+		const user = (await isAuthedUser(request)) as User;
 
 		return {
+			user,
 			reports,
 			numOfContributors,
 		};
@@ -55,10 +62,10 @@ export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
 	return cacheData;
 };
 
-clientLoader.hydrate = true;
+// clientLoader.hydrate = true;
 
 export default function Reports() {
-	const { user, reports, numOfContributors } = useLoaderData<typeof loader>();
+	const { reports, numOfContributors, user } = useLoaderData<typeof loader>();
 
 	const contributionAmounts = useMemo(() => {
 		const allAmounts = reports.map(
@@ -75,6 +82,7 @@ export default function Reports() {
 
 	return (
 		<>
+			<NavMenu user={user} />
 			<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
 				<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
 					<h1 className="text-3xl md:text-6xl font-bold text-left">

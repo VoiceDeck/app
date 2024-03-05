@@ -58,9 +58,9 @@ export default function AppLayout() {
 
 	return (
 		<>
-			<NavMenu user={user} handleSignout={handleSignout} />
+			{/* <NavMenu user={user} handleSignout={handleSignout} /> */}
 			<Outlet />
-			<Footer />
+			{/* <Footer /> */}
 		</>
 	);
 }
