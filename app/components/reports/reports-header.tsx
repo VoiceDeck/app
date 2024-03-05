@@ -98,7 +98,6 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 					<Input
 						className="pr-[65px] rounded-r-3xl h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
 						type="search"
-						// value="Search in title, summary"
 						placeholder="Search in title, summary"
 						onChange={(e) => {
 							setsearchBarInput(e.target.value);

@@ -35,11 +35,17 @@ export const usePagination = <GT,>(items: GT[], itemsPerPage: number) => {
 		[maxPage],
 	);
 
-	const currentPageItems = useMemo(() => {
-		const start = (currentPage - 1) * itemsPerPage;
-		const end = start + itemsPerPage;
-		return needsPagination ? items.slice(start, end) : items;
-	}, [currentPage, items, itemsPerPage, needsPagination]);
+	// const currentPageItems = useMemo(() => {
+	// 	const start = (currentPage - 1) * itemsPerPage;
+	// 	const end = start + itemsPerPage;
+	// 	return needsPagination ? items.slice(start, end) : items;
+	// }, [currentPage, items, itemsPerPage, needsPagination]);
+
+	// removing these from useMemo(), need recalculation to render correct reports
+	// when filter/sort options are updated
+	const start = (currentPage - 1) * itemsPerPage;
+	const end = start + itemsPerPage;
+	const currentPageItems = needsPagination ? items.slice(start, end) : items;
 
 	// 'useCallback' because we don't want to recreate this function on every render
 	const loadPage = useCallback(

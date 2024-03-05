@@ -131,13 +131,11 @@ export default function Reports() {
 			);
 		}
 		if (states.length) {
-			console.log(states);
 			selectedReports = selectedReports.filter((report: Report) =>
 				states.includes(report.state),
 			);
 		}
 		if (outlets.length) {
-			console.log(outlets);
 			selectedReports = selectedReports.filter((report: Report) =>
 				outlets.includes(report.contributors[0]),
 			);
@@ -178,7 +176,7 @@ export default function Reports() {
 		pageNumbers,
 		needsPagination,
 		// set to 3 reports per page for testing because currently only 8 reports exist
-	} = usePagination<Report>(getSelectedReports, 6);
+	} = usePagination<Report>(getSelectedReports, 3);
 
 	return (
 		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
