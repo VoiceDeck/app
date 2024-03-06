@@ -65,7 +65,8 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [searchBarInput, setsearchBarInput] = useState("");
-	const [inputKey, setInputKey] = useState(0);
+	const [categorySelected, setCategorySelected] = useState<string>();
+	const [dynamicKeyForInput, setDynamicKeyForInput] = useState(0);
 
 	return (
 		<article className="w-full max-w-screen-xl">
@@ -78,8 +79,13 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 					{uniqueCategories.map((category: string) => (
 						<Badge
 							key={category}
-							className="flex flex-auto flex-col md:flex-row items-center gap-1 px-3 py-2 bg-vd-beige-100 cursor-pointer"
+							className={`border-vd-blue-500 rounded-full flex flex-auto flex-col md:flex-row items-center gap-1 px-3 py-2 cursor-pointer ${
+								categorySelected === category
+									? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
+									: ""
+							}`}
 							onClick={() => {
+								setCategorySelected(category);
 								if (searchParams.has("category")) {
 									searchParams.delete("category");
 								}
@@ -98,7 +104,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 				<div className="flex flex-1 max-w-[500px] gap-2">
 					<Input
 						className="pr-[65px] rounded-r-3xl h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
-						key={inputKey}
+						key={dynamicKeyForInput}
 						type="search"
 						placeholder="Search in title, summary"
 						onChange={(e) => {
@@ -129,7 +135,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 						/>
 					</div>
 					<Select
-						key={inputKey}
+						key={dynamicKeyForInput}
 						name="sort"
 						onValueChange={(value) => {
 							if (searchParams.has("sort")) {
@@ -156,7 +162,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 						className="text-xs"
 						variant={"outline"}
 						onClick={() => {
-							setInputKey(Math.ceil(Math.random() * 10));
+							setDynamicKeyForInput(Math.ceil(Math.random() * 10));
 							setSearchParams("", {
 								preventScrollReset: true,
 							});
