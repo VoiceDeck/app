@@ -1,6 +1,6 @@
-import { randomBytes } from "crypto";
 import { Cacao, SiweMessage } from "@didtools/cacao";
 import { DIDSession, createDIDKey } from "did-session";
+import { getRandomBytesSync } from "ethereum-cryptography/random.js";
 import { generateNonce } from "siwe";
 import { DEFAULT_CHAIN_ID } from "./constants";
 
@@ -32,7 +32,7 @@ export async function newDIDSessionFromWalletClient(walletClient: {
 	if (!walletClient.account.address) throw new Error("No wallet client");
 
 	// keys
-	const keySeed = randomBytes(32);
+	const keySeed = getRandomBytesSync(32);
 	const didKey = await createDIDKey(keySeed);
 
 	const base = createSignInMessage();

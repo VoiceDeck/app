@@ -24,14 +24,6 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
-    nodePolyfills({
-      globals: {
-        Buffer: true, // can also be 'build', 'dev', or false
-        global: true,
-        process: true,
-      },
-      protocolImports: false,
-    }),
   ],
   build: {
     target: "ES2022",
