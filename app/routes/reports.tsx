@@ -260,8 +260,8 @@ export default function Reports() {
 				)}
 			</section>
 
-			<section>
-				{!getSelectedReports.length ? (
+			{!getSelectedReports.length ? (
+				<section>
 					<div className="flex flex-col items-center text-center pb-24 md:pb-10">
 						<img
 							className="h-20 w-20"
@@ -275,8 +275,8 @@ export default function Reports() {
 							Please remove some of your filters and try again.
 						</p>
 					</div>
-				) : null}
-			</section>
+				</section>
+			) : null}
 		</main>
 	);
 }
