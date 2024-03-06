@@ -18,10 +18,11 @@ import {
 } from "viem";
 import { sepolia } from "viem/chains";
 
+import { updateFundedAmount } from "./impact-reports.server";
 import { CMSContent, Contribution } from "./types";
 
 // represents contents retrieved from CMS `reports` collection
-let reports: CMSContent[] | null = null;
+let CMSReports: CMSContent[] | null = null;
 
 // biome-ignore lint/suspicious/noExplicitAny: type definition imported from @directus/sdk
 let directusClient: (DirectusClient<any> & RestClient<any>) | null = null;
@@ -41,6 +42,29 @@ export async function processNewContribution(
 	amount: number,
 ) {
 	try {
+		const client = getDirectusClient();
+
+		// check if the transaction is already processed
+		const response = await client.request(
+			readItems("contributions", {
+				fields: ["txid"],
+				filter: {
+					txid: {
+						_eq: txId,
+					},
+				},
+			}),
+		);
+
+		// if the transaction is already processed, do not create a contribution
+		if (response.length > 0) {
+			console.log(
+				`[Directus] tx ${txId} already processed, skipping contribution creation in Directus`,
+			);
+			return;
+		}
+
+		// wait for the transaction to be included in a block
 		console.log(
 			`[Viem] waiting for tx ${txId} to be included in a block . . .`,
 		);
@@ -57,12 +81,16 @@ export async function processNewContribution(
 			return;
 		}
 
-		createContribution({
+		// create a contribution record in Directus
+		await createContribution({
 			sender: txReceipt.from,
 			hypercert_id: hypercertId,
 			amount: amount,
 			txid: txId,
 		} as Contribution);
+
+		// update the funded amount of the hypercert in server memory
+		await updateFundedAmount(hypercertId, amount);
 	} catch (error) {
 		console.error(`[server] failed to process new contribution: ${error}`);
 		throw new Error(`[server] failed to process new contribution: ${error}`);
@@ -111,23 +139,23 @@ export async function createContribution(contribution: Contribution) {
  * @returns A promise that resolves to an array of CMS contents.
  * @throws Will throw an error if the CMS contents cannot be fetched.
  */
-export const getReports = async (): Promise<CMSContent[]> => {
+export const getCMSReports = async (): Promise<CMSContent[]> => {
 	const client = getDirectusClient();
 
 	try {
-		if (reports) {
+		if (CMSReports) {
 			console.log(
 				"[Directus] CMS contents already exist, no need to fetch from remote",
 			);
-			console.log(`[Directus] Existing CMS contents: ${reports.length}`);
+			console.log(`[Directus] Existing CMS contents: ${CMSReports.length}`);
 		} else {
 			console.log("[Directus] Fetching CMS contents from remote");
 			const response = await client.request(readItems("reports"));
-			reports = response as CMSContent[];
-			console.log("[Directus] fetched CMS contents: ", reports.length);
+			CMSReports = response as CMSContent[];
+			console.log("[Directus] fetched CMS contents: ", CMSReports.length);
 		}
 
-		return reports;
+		return CMSReports;
 	} catch (error) {
 		console.error(`[Directus] Failed to fetch CMS contents: ${error}`);
 		throw new Error(`[Directus] Failed to fetch CMS contents: ${error}`);

@@ -33,6 +33,7 @@
     "@remix-run/react": "^2.8.0",
     "@remix-run/serve": "^2.8.0",
     "@remix-run/server-runtime": "^2.8.0",
+    "async-mutex": "^0.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",

@@ -65,6 +65,9 @@ dependencies:
   '@remix-run/server-runtime':
     specifier: ^2.8.0
     version: 2.8.0(typescript@5.3.3)
+  async-mutex:
+    specifier: ^0.4.1
+    version: 0.4.1
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -5419,6 +5422,12 @@ packages:
 
   /async-mutex@0.2.6:
     resolution: {integrity: sha512-Hs4R+4SPgamu6rSGW8C7cV9gaWUKEHykfzCCvIRuaVv636Ju10ZdeUbvb4TBEW0INuq2DHZqXbK4Nd3yG4RaRw==}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
+  /async-mutex@0.4.1:
+    resolution: {integrity: sha512-WfoBo4E/TbCX1G95XTjbWTE3X2XLG0m1Xbv2cwOtuPdyH9CZvnaA5nCt1ucjaKEgW2A5IF71hxrRhr83Je5xjA==}
     dependencies:
       tslib: 2.6.2
     dev: false
