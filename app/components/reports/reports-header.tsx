@@ -162,6 +162,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 						className="text-xs"
 						variant={"outline"}
 						onClick={() => {
+							setCategorySelected("");
 							setDynamicKeyForInput(Math.ceil(Math.random() * 10));
 							setSearchParams("", {
 								preventScrollReset: true,

@@ -26,7 +26,7 @@ interface ReportFiltersProps {
 	states: Option[];
 	amounts: number[];
 }
-interface FilterItemsProps {
+interface FilterItemsProps extends ReportFiltersProps {
 	minAmountNeeded: number;
 	maxAmountNeeded: number;
 	amountRangeSelected: number[];
@@ -36,9 +36,7 @@ interface FilterItemsProps {
 	setOutletsSelected: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-type Props = ReportFiltersProps & FilterItemsProps;
-
-const FilterItems: React.FC<Props> = ({
+const FilterItems: React.FC<FilterItemsProps> = ({
 	outlets,
 	states,
 	amounts,
