@@ -7,7 +7,7 @@ import VoicedeckStats from "~/components/reports/voicedeck-stats";
 import { siteConfig } from "~/config/site";
 import { getNumberOfContributors } from "~/directus.server";
 import { Report } from "~/types";
-import { fetchReports } from "../impact-reports.server";
+import { fetchReports } from "../../impact-reports.server";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -21,7 +21,7 @@ interface IPageData {
 	numOfContributors: number;
 }
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
 	try {
 		const reports = await fetchReports();
 		const numOfContributors = await getNumberOfContributors();
@@ -58,7 +58,7 @@ export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
 clientLoader.hydrate = true;
 
 export default function Reports() {
-	const { reports, numOfContributors } = useLoaderData<typeof loader>();
+	const { user, reports, numOfContributors } = useLoaderData<typeof loader>();
 
 	const contributionAmounts = useMemo(() => {
 		const allAmounts = reports.map(
@@ -74,40 +74,45 @@ export default function Reports() {
 	}, [reports]);
 
 	return (
-		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
-			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
-				<h1 className="text-3xl md:text-6xl font-bold text-left">
-					{siteConfig.title}
-				</h1>
-				<h2 className="text-lg font-medium text-left py-6">
-					{siteConfig.description}
-				</h2>
-			</header>
+		<>
+			<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-4 md:px-[14%]">
+				<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
+					<h1 className="text-3xl md:text-6xl font-bold text-left">
+						{siteConfig.title}
+					</h1>
+					<h2 className="text-lg font-medium text-left py-6">
+						{siteConfig.description}
+					</h2>
+				</header>
 
-			<VoicedeckStats
-				numOfContributors={numOfContributors}
-				sumOfContributions={contributionAmounts.sum}
-				numOfContributions={contributionAmounts.numFunded}
-			/>
+				<VoicedeckStats
+					numOfContributors={numOfContributors}
+					sumOfContributions={contributionAmounts.sum}
+					numOfContributions={contributionAmounts.numFunded}
+				/>
 
-			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
+				<ReportsHeader
+					reports={reports}
+					amounts={contributionAmounts.amounts}
+				/>
 
-			<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
-				{reports.map((report: Report) => (
-					<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
-						<ReportCard
-							hypercertId={report.hypercertId}
-							image={report.image}
-							title={report.title}
-							summary={report.summary}
-							category={report.category}
-							state={report.state}
-							totalCost={report.totalCost}
-							fundedSoFar={report.fundedSoFar}
-						/>
-					</Link>
-				))}
-			</section>
-		</main>
+				<section className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
+					{reports.map((report: Report) => (
+						<Link to={`/reports/${report.slug}`} key={report.hypercertId}>
+							<ReportCard
+								hypercertId={report.hypercertId}
+								image={report.image}
+								title={report.title}
+								summary={report.summary}
+								category={report.category}
+								state={report.state}
+								totalCost={report.totalCost}
+								fundedSoFar={report.fundedSoFar}
+							/>
+						</Link>
+					))}
+				</section>
+			</main>
+		</>
 	);
 }

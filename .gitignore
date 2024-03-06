@@ -2,8 +2,18 @@ node_modules
 
 /.cache
 /build
+/public/build
 .env
 .env.local
 .envrc
-*.timestamp-*.mjs
+
+.DS_Store
 **/.DS_Store
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/coverage
+*.timestamp-*.mjs
+
+# avoid pollution from IntelliJ-based IDE
+.idea
