@@ -68,6 +68,19 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 	const [categorySelected, setCategorySelected] = useState<string>();
 	const [dynamicKeyForInput, setDynamicKeyForInput] = useState(0);
 
+	const toggleCategorySelection = (category: string) => {
+		searchParams.delete("category");
+		if (category === categorySelected) {
+			setCategorySelected("");
+		} else {
+			setCategorySelected(category);
+			searchParams.append("category", category);
+		}
+		setSearchParams(searchParams, {
+			preventScrollReset: true,
+		});
+	};
+
 	return (
 		<article className="w-full max-w-screen-xl">
 			<h2 className="text-3xl md:text-4xl font-semibold pb-1 pt-6 md:pt-10">
@@ -84,16 +97,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 									? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
 									: ""
 							}`}
-							onClick={() => {
-								setCategorySelected(category);
-								if (searchParams.has("category")) {
-									searchParams.delete("category");
-								}
-								searchParams.append("category", category);
-								setSearchParams(searchParams, {
-									preventScrollReset: true,
-								});
-							}}
+							onClick={() => toggleCategorySelection(category)}
 						>
 							<DynamicCategoryIcon category={category} />
 							<p className="text-xs">{category}</p>
