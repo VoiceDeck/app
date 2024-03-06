@@ -5,10 +5,13 @@ import {
 	HypercertMetadata,
 	HypercertsStorage,
 } from "@hypercerts-org/sdk";
+import { Mutex } from "async-mutex";
 import { Claim, Report } from "~/types";
-import { getFundedAmountByHCId, getReports } from "./directus.server";
+import { getCMSReports, getFundedAmountByHCId } from "./directus.server";
 
 let reports: Report[] | null = null;
+const reportsMutex = new Mutex();
+
 let hypercertClient: HypercertClient | null = null;
 
 /**
@@ -44,7 +47,7 @@ export const fetchReports = async (): Promise<Report[]> => {
 						getHypercertClient().storage,
 					);
 
-					const fromCMS = await getReports();
+					const fromCMS = await getCMSReports();
 					const cmsReport = fromCMS.find(
 						(cmsReport) => cmsReport.title === metadata.name,
 					);
@@ -142,6 +145,13 @@ export const fetchReportByHCId = async (
 	}
 };
 
+export const getReports = (): Report[] => {
+	if (reports) {
+		return reports;
+	}
+	return [];
+};
+
 /**
  * Retrieves the singleton instance of the HypercertClient.
  * @returns The HypercertClient instance.
@@ -211,5 +221,23 @@ export const getHypercertMetadata = async (
 		throw new Error(
 			`[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
 		);
+	}
+};
+
+// update the fundedSoFar field of the report
+export const updateFundedAmount = async (
+	hypercertId: string,
+	amount: number,
+): Promise<void> => {
+	const release = await reportsMutex.acquire();
+
+	try {
+		const reports = getReports();
+		const report = reports.find((r) => r.hypercertId === hypercertId);
+		if (report) {
+			report.fundedSoFar += amount;
+		}
+	} finally {
+		release();
 	}
 };
