@@ -40,17 +40,18 @@ interface IPageData {
 export const loader: LoaderFunction = async ({ request }) => {
 	try {
 		const reports = await fetchReports();
-		const reportIds = new Set();
-		// If it a report cmsId is not unique, it will be filtered out, this seems to always return the first report
-		const uniqueReports = reports.filter((report) => {
-			const isUnique = !reportIds.has(report.cmsId);
-			reportIds.add(report.cmsId);
-			return isUnique;
-		});
+		// const reportIds = new Set();
+		// // If it a report cmsId is not unique, it will be filtered out, this seems to always return the first report
+		// const uniqueReports = reports.filter((report) => {
+		// 	const isUnique = !reportIds.has(report.cmsId);
+		// 	reportIds.add(report.cmsId);
+		// 	return isUnique;
+		// });
 		const numOfContributors = await getNumberOfContributors();
 
 		return {
-			reports: uniqueReports,
+			reports,
+			// reports: uniqueReports,
 			numOfContributors,
 		};
 	} catch (error) {

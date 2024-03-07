@@ -176,8 +176,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						<DrawerFooter className="flex-row justify-center gap-2 pb-8">
 							<DrawerClose>
 								<Button
-									className="text-xs w-36 h-7"
-									size={"sm"}
+									className="px-24 py-4"
 									onClick={() => handleApplyFilters()}
 								>
 									Apply
@@ -216,8 +215,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						<DialogFooter className="justify-end gap-2 pb-4">
 							<DialogClose asChild>
 								<Button
-									className="text-xs w-36 h-7"
-									size={"sm"}
+									className="px-24 py-4"
 									onClick={() => handleApplyFilters()}
 								>
 									Apply
