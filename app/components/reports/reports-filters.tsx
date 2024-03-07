@@ -64,8 +64,8 @@ const FilterItems: React.FC<FilterItemsProps> = ({
 					defaultValue={[amountRangeSelected[0], amountRangeSelected[1]]}
 					min={minAmountNeeded}
 					max={maxAmountNeeded}
-					step={1}
-					minStepsBetweenThumbs={50}
+					step={10}
+					minStepsBetweenThumbs={5}
 					onValueChange={(e) => setAmountRangeSelected([e[0], e[1]])}
 				/>
 			</div>
