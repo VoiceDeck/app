@@ -213,6 +213,7 @@ const MultipleSelector = React.forwardRef<
 			[selected, onChange],
 		);
 
+		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		const handleKeyDown = React.useCallback(
 			(e: React.KeyboardEvent<HTMLDivElement>) => {
 				const input = inputRef.current;
@@ -228,7 +229,7 @@ const MultipleSelector = React.forwardRef<
 					}
 				}
 			},
-			[selected, handleUnselect],
+			[handleUnselect, selected],
 		);
 
 		useEffect(() => {

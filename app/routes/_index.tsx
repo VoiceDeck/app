@@ -1,3 +1,6 @@
-import { redirect } from "@remix-run/node";
+import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
 
-export const loader = () => redirect("/reports");
+export async function loader(args: LoaderFunctionArgs) {
+	throw redirect("/reports", 302);
+}
