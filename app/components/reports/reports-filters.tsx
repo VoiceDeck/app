@@ -25,8 +25,12 @@ interface ReportFiltersProps {
 	outlets: string[];
 	states: Option[];
 	amounts: number[];
+	numFiltersApplied: number;
+	setNumFiltersApplied: React.Dispatch<React.SetStateAction<number>>;
 }
-interface FilterItemsProps extends ReportFiltersProps {
+interface FilterItemsProps {
+	outlets: string[];
+	states: Option[];
 	minAmountNeeded: number;
 	maxAmountNeeded: number;
 	amountRangeSelected: number[];
@@ -39,7 +43,6 @@ interface FilterItemsProps extends ReportFiltersProps {
 const FilterItems: React.FC<FilterItemsProps> = ({
 	outlets,
 	states,
-	amounts,
 	minAmountNeeded,
 	maxAmountNeeded,
 	amountRangeSelected,
@@ -107,6 +110,8 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 	outlets,
 	states,
 	amounts,
+	numFiltersApplied,
+	setNumFiltersApplied,
 }) => {
 	const amountsNeeded = amounts.map((amount) => 1000 - amount);
 	const minAmountNeeded = Math.min(...amountsNeeded);
@@ -120,11 +125,13 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 	const [outletsSelected, setOutletsSelected] = useState<string[]>([]);
 
 	const handleApplyFilters = () => {
+		let filtersApplied = 1;
 		searchParams.delete("min");
 		searchParams.delete("max");
 		searchParams.append("min", String(amountRangeSelected[0]));
 		searchParams.append("max", String(amountRangeSelected[1]));
-		if (outletsSelected) {
+		if (outletsSelected.length) {
+			filtersApplied++;
 			if (searchParams.has("outlet")) {
 				searchParams.delete("outlet");
 			}
@@ -132,7 +139,8 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 				searchParams.append("outlet", outletsSelected[i]);
 			}
 		}
-		if (statesSelected) {
+		if (statesSelected.length) {
+			filtersApplied++;
 			if (searchParams.has("state")) {
 				searchParams.delete("state");
 			}
@@ -140,6 +148,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 				searchParams.append("state", statesSelected[i]);
 			}
 		}
+		setNumFiltersApplied(filtersApplied);
 		setSearchParams(searchParams, {
 			preventScrollReset: true,
 		});
@@ -150,21 +159,26 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 			<div className="md:hidden">
 				<Drawer>
 					<DrawerTrigger
-						className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
+						className="flex gap-2 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
 						onClick={() => {
 							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
 							setOutletsSelected([]);
 							setStatesSelected([]);
 						}}
 					>
-						<p className="text-sm font-medium text-vd-blue-500">Filter</p>
-						<Filter color="#4B778F" size={18} />
+						<p className="text-sm font-medium text-vd-blue-500">Filters</p>
+						{numFiltersApplied ? (
+							<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1">
+								{numFiltersApplied}
+							</div>
+						) : (
+							<Filter color="#4B778F" size={16} />
+						)}
 					</DrawerTrigger>
 					<DrawerContent className="">
 						<FilterItems
 							outlets={outlets}
 							states={states}
-							amounts={amounts}
 							minAmountNeeded={minAmountNeeded}
 							maxAmountNeeded={maxAmountNeeded}
 							amountRangeSelected={amountRangeSelected}
@@ -189,21 +203,26 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 			<div className="hidden md:flex">
 				<Dialog>
 					<DialogTrigger
-						className="flex gap-3 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
+						className="flex gap-2 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
 						onClick={() => {
 							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
 							setOutletsSelected([]);
 							setStatesSelected([]);
 						}}
 					>
-						<p className="text-sm font-medium text-vd-blue-500">Filter</p>
-						<Filter color="#4B778F" size={18} />
+						<p className="text-sm font-medium text-vd-blue-500">Filters</p>
+						{numFiltersApplied > 0 ? (
+							<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1">
+								{numFiltersApplied}
+							</div>
+						) : (
+							<Filter color="#4B778F" size={16} />
+						)}
 					</DialogTrigger>
 					<DialogContent className="bg-vd-beige-200">
 						<FilterItems
 							outlets={outlets}
 							states={states}
-							amounts={amounts}
 							minAmountNeeded={minAmountNeeded}
 							maxAmountNeeded={maxAmountNeeded}
 							amountRangeSelected={amountRangeSelected}

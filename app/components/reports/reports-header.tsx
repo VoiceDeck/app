@@ -67,6 +67,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 	const [searchBarInput, setsearchBarInput] = useState("");
 	const [categorySelected, setCategorySelected] = useState<string>();
 	const [dynamicKeyForInput, setDynamicKeyForInput] = useState(0);
+	const [numFiltersApplied, setNumFiltersApplied] = useState(0);
 
 	const toggleCategorySelection = (category: string) => {
 		searchParams.delete("category");
@@ -136,6 +137,8 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 							outlets={uniqueMediaOutlets}
 							states={uniqueStates}
 							amounts={amounts}
+							numFiltersApplied={numFiltersApplied}
+							setNumFiltersApplied={setNumFiltersApplied}
 						/>
 					</div>
 					<Select
@@ -168,6 +171,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
 						onClick={() => {
 							setCategorySelected("");
 							setDynamicKeyForInput(Math.ceil(Math.random() * 10));
+							setNumFiltersApplied(0);
 							setSearchParams("", {
 								preventScrollReset: true,
 							});
