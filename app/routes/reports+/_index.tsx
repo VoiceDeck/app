@@ -40,18 +40,18 @@ interface IPageData {
 export const loader: LoaderFunction = async ({ request }) => {
 	try {
 		const reports = await fetchReports();
-		// const reportIds = new Set();
-		// // If it a report cmsId is not unique, it will be filtered out, this seems to always return the first report
-		// const uniqueReports = reports.filter((report) => {
-		// 	const isUnique = !reportIds.has(report.cmsId);
-		// 	reportIds.add(report.cmsId);
-		// 	return isUnique;
-		// });
+		const reportIds = new Set();
+		// If it a report cmsId is not unique, it will be filtered out, this seems to always return the first report
+		const uniqueReports = reports.filter((report) => {
+			const isUnique = !reportIds.has(report.cmsId);
+			reportIds.add(report.cmsId);
+			return isUnique;
+		});
 		const numOfContributors = await getNumberOfContributors();
 
 		return {
-			reports,
-			// reports: uniqueReports,
+			// reports,
+			reports: uniqueReports,
 			numOfContributors,
 		};
 	} catch (error) {
@@ -180,109 +180,104 @@ export default function Reports() {
 	} = usePagination<Report>(getSelectedReports, 3);
 
 	return (
-		<>
-			<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
-				<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
-					<h1 className="text-3xl md:text-6xl font-bold text-left">
-						{siteConfig.title}
-					</h1>
-					<h2 className="text-lg font-medium text-left py-6">
-						{siteConfig.description}
-					</h2>
-				</header>
+		<main className="flex flex-col gap-6 md:gap-4 justify-center items-center p-2 pt-4 md:px-[14%]">
+			<header className="flex-row bg-[url('/hero_imgLG.jpg')] bg-cover bg-center justify-start items-baseline text-vd-beige-200 rounded-3xl p-4 pt-24 md:pt-36 md:pr-48 md:pb-2 md:pl-8 max-w-screen-xl">
+				<h1 className="text-3xl md:text-6xl font-bold text-left">
+					{siteConfig.title}
+				</h1>
+				<h2 className="text-lg font-medium text-left py-6">
+					{siteConfig.description}
+				</h2>
+			</header>
 
-				<VoicedeckStats
-					numOfContributors={numOfContributors}
-					sumOfContributions={contributionAmounts.sum}
-					numOfContributions={contributionAmounts.numFunded}
-				/>
+			<VoicedeckStats
+				numOfContributors={numOfContributors}
+				sumOfContributions={contributionAmounts.sum}
+				numOfContributions={contributionAmounts.numFunded}
+			/>
 
-				<ReportsHeader
-					reports={reports}
-					amounts={contributionAmounts.amounts}
-				/>
+			<ReportsHeader reports={reports} amounts={contributionAmounts.amounts} />
 
-				<section className="pb-16 md:pb-8">
-					<div className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
-						{getSelectedReports.length
-							? pageTransactions.map((report: Report) => (
-									<Link
-										to={`/reports/${report.slug}`}
-										key={report.hypercertId}
-										prefetch="intent"
-									>
-										<ReportCard
-											hypercertId={report.hypercertId}
-											image={report.image}
-											title={report.title}
-											summary={report.summary}
-											category={report.category}
-											state={report.state}
-											totalCost={report.totalCost}
-											fundedSoFar={report.fundedSoFar}
-										/>
-									</Link>
-							  ))
-							: null}
+			<section className="px-2 pb-16 md:pb-8">
+				<div className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
+					{getSelectedReports.length
+						? pageTransactions.map((report: Report) => (
+								<Link
+									to={`/reports/${report.slug}`}
+									key={report.hypercertId}
+									prefetch="intent"
+								>
+									<ReportCard
+										hypercertId={report.hypercertId}
+										image={report.image}
+										title={report.title}
+										summary={report.summary}
+										category={report.category}
+										state={report.state}
+										totalCost={report.totalCost}
+										fundedSoFar={report.fundedSoFar}
+									/>
+								</Link>
+						  ))
+						: null}
+				</div>
+
+				{/* Pagination */}
+				{needsPagination && (
+					<Pagination className="pt-6">
+						<PaginationContent>
+							<PaginationItem className="hover:cursor-pointer">
+								<PaginationPrevious
+									onClick={() =>
+										currentPage > 1 ? loadPage(currentPage - 1) : null
+									}
+								/>
+							</PaginationItem>
+							{pageNumbers.map((pageNum, index) => (
+								<PaginationItem
+									onClick={() => loadPage(pageNum)}
+									className="hover:cursor-pointer"
+									key={`page-${pageNum}`}
+								>
+									<PaginationLink isActive={currentPage === pageNum}>
+										{pageNum}
+									</PaginationLink>
+								</PaginationItem>
+							))}
+							{maxPage > 4 && (
+								<PaginationItem>
+									<PaginationEllipsis />
+								</PaginationItem>
+							)}
+							<PaginationItem className="hover:cursor-pointer">
+								<PaginationNext
+									onClick={() =>
+										currentPage < maxPage ? loadPage(currentPage + 1) : null
+									}
+								/>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
+				)}
+			</section>
+
+			{!getSelectedReports.length ? (
+				<section>
+					<div className="flex flex-col items-center text-center pb-24 md:pb-10">
+						<img
+							className="h-20 w-20"
+							src="/reports_not_found.svg"
+							alt="flower illustration"
+						/>
+						<p className="text-vd-beige-600">
+							No reports matched your request.
+						</p>
+						<p className="text-vd-beige-600">
+							Please remove some of your filters and try again.
+						</p>
 					</div>
-
-					{/* Pagination */}
-					{needsPagination && (
-						<Pagination className="pt-6">
-							<PaginationContent>
-								<PaginationItem className="hover:cursor-pointer">
-									<PaginationPrevious
-										onClick={() =>
-											currentPage > 1 ? loadPage(currentPage - 1) : null
-										}
-									/>
-								</PaginationItem>
-								{pageNumbers.map((pageNum, index) => (
-									<PaginationItem
-										onClick={() => loadPage(pageNum)}
-										className="hover:cursor-pointer"
-										key={`page-${pageNum}`}
-									>
-										<PaginationLink isActive={currentPage === pageNum}>
-											{pageNum}
-										</PaginationLink>
-									</PaginationItem>
-								))}
-								{maxPage > 4 && (
-									<PaginationItem>
-										<PaginationEllipsis />
-									</PaginationItem>
-								)}
-								<PaginationItem className="hover:cursor-pointer">
-									<PaginationNext
-										onClick={() =>
-											currentPage < maxPage ? loadPage(currentPage + 1) : null
-										}
-									/>
-								</PaginationItem>
-							</PaginationContent>
-						</Pagination>
-					)}
 				</section>
-
-				{!getSelectedReports.length ? (
-					<section>
-						<div className="flex flex-col items-center text-center pb-24 md:pb-10">
-							<img
-								className="h-20 w-20"
-								src="/reports_not_found.svg"
-								alt="flower illustration"
-							/>
-							<p className="text-vd-beige-600">
-								No reports matched your request.
-							</p>
-							<p className="text-vd-beige-600">
-								Please remove some of your filters and try again.
-							</p>
-						</div>
-					</section>
-				) : null}
-			</main>
-		</>
+			) : null}
+		</main>
 	);
 }
