@@ -1,6 +1,4 @@
 import ReportCard from "@/components/reports/report-card";
-import ReportsHeader from "@/components/reports/reports-header";
-import VoicedeckStats from "@/components/reports/voicedeck-stats";
 import { siteConfig } from "@/config/site";
 import { getNumberOfContributors } from "@/lib/directus";
 import { fetchReports } from "@/lib/impact-reports";
