@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import "vaul/dist/index.css"
+import "vaul/dist/index.css";
 import { cn } from "@/lib/utils";
 
-import { cookieToInitialState } from 'wagmi'
+import { cookieToInitialState } from "wagmi";
 
 import { headers } from "next/headers";
 import { WagmiContextProvider } from "@/contexts/wagmi";
 import { config } from "@/config/wagmi";
 import { siteConfig } from "@/config/site";
+import { NavMenu } from "@/components/global/nav-menu";
+import { Footer } from "@/components/global/footer";
 
-const fontSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: '--font-sans' });
+const fontSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: siteConfig.title,
@@ -23,17 +28,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-	const initialState = cookieToInitialState(config, headers().get('cookie'))
+  const initialState = cookieToInitialState(config, headers().get("cookie"));
   return (
     <html lang="en">
-      <body className={cn(
+      <body
+        className={cn(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable
         )}
-			>
-				<WagmiContextProvider initialState={initialState}>
-				{children}
-				</WagmiContextProvider></body>
+      >
+        <WagmiContextProvider initialState={initialState}>
+          <NavMenu />
+          {children}
+          <Footer />
+        </WagmiContextProvider>
+      </body>
     </html>
   );
 }
