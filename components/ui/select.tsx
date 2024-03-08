@@ -1,3 +1,4 @@
+"use client"
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { ArrowDownUp, Check } from "lucide-react";
 import * as React from "react";
