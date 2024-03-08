@@ -19,6 +19,12 @@
 # misc
 .DS_Store
 *.pem
+**/.DS_Store
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/coverage
+*.timestamp-*.mjs
 
 # debug
 npm-debug.log*
@@ -27,6 +33,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.envrc
 
 # vercel
 .vercel
@@ -34,3 +41,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# avoid pollution from IntelliJ-based IDE
+.idea
