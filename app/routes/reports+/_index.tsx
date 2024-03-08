@@ -233,18 +233,24 @@ export default function Reports() {
 									}
 								/>
 							</PaginationItem>
-							{pageNumbers.map((pageNum, index) => (
-								<PaginationItem
-									onClick={() => loadPage(pageNum)}
-									className="hover:cursor-pointer"
-									key={`page-${pageNum}`}
-								>
-									<PaginationLink isActive={currentPage === pageNum}>
-										{pageNum}
-									</PaginationLink>
-								</PaginationItem>
-							))}
-							{maxPage > 4 && (
+							{pageNumbers
+								.filter((pageNum) =>
+									[currentPage - 1, currentPage, currentPage + 1].includes(
+										pageNum,
+									),
+								)
+								.map((pageNum, index) => (
+									<PaginationItem
+										onClick={() => loadPage(pageNum)}
+										className="hover:cursor-pointer"
+										key={`page-${pageNum}`}
+									>
+										<PaginationLink isActive={currentPage === pageNum}>
+											{pageNum}
+										</PaginationLink>
+									</PaginationItem>
+								))}
+							{maxPage > 3 && (
 								<PaginationItem>
 									<PaginationEllipsis />
 								</PaginationItem>
