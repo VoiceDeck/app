@@ -1,3 +1,4 @@
+import ConnectButton from "@/components/connect-button";
 import { getNumberOfContributors } from "@/lib/directus"
 import { fetchReports } from "@/lib/impact-reports";
 import { Report } from "@/types"
@@ -12,6 +13,7 @@ async function getData() {
 export default async function Page() {
   const data = await getData()
   return <main>
+		<ConnectButton />
 		<h1>Reports</h1>
 		<p>Number of contributors: {data.numContributors}</p>
 		<ul>
