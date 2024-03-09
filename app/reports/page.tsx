@@ -55,18 +55,25 @@ import Link from "next/link";
 // clientLoader.hydrate = true;
 
 async function getData() {
-	const reports = await fetchReports();
+	try {
+		const response = await fetch("http://localhost:3000/api/reports");
+		const reports = (await response.json()) as Report[];
 
-	const reportIds = new Set();
-	// If it a report cmsId is not unique, it will be filtered out, this seems to always return the first report
-	const uniqueReports = reports.filter((report) => {
-		const isUnique = !reportIds.has(report.cmsId);
-		reportIds.add(report.cmsId);
-		return isUnique;
-	});
-	const numOfContributors = await getNumberOfContributors();
+		const uniqueReports = reports.reduce((acc, report) => {
+			const reportExists = acc.find((r) => r.cmsId === report.cmsId);
+			if (!reportExists) {
+				acc.push(report);
+			}
+			return acc;
+		}, [] as Report[]);
 
-	return { reports: uniqueReports, numOfContributors };
+		const numOfContributors = await getNumberOfContributors();
+
+		return { reports: uniqueReports, numOfContributors };
+	} catch (error) {
+		console.error("Failed to fetch reports:", error);
+		throw new Error("Failed to fetch reports");
+	}
 }
 
 export default async function ReportsPage() {
