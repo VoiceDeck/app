@@ -130,4 +130,5 @@ export type Contribution = {
 	sender: Address;
 	amount: number;
 	date_created: string;
+	comment?: string;
 };
