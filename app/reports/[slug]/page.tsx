@@ -8,9 +8,19 @@ import { ChevronLeft, MapPin } from "lucide-react";
 import Link from "next/link";
 
 const getReportData = async (slug?: string | string[]) => {
-	const res = await fetch(`http://localhost:3000/api/reports/${slug}`);
-	const data = await res.json();
-	return data;
+	try {
+		const res = await fetch(`http://localhost:3000/api/reports/${slug}`);
+		if (!res.ok) {
+			throw new Error(
+				`Failed to fetch report data for slug: ${slug}, Status: ${res.status}`,
+			);
+		}
+		const reportData = await res.json();
+		return reportData;
+	} catch (error) {
+		console.error(`Error fetching report data for slug: ${slug}`, error);
+		throw new Error(`Error fetching report data for slug: ${slug}`);
+	}
 };
 
 // export const loader: LoaderFunction = async ({ params }) => {
@@ -49,7 +59,6 @@ export default async function ReportPage({
 	const { slug } = params;
 	const report = await getReportData(slug);
 	const htmlParsedStory = parse(report.story);
-	// console.log({ report });
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
