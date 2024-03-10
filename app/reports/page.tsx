@@ -77,7 +77,7 @@ async function getData() {
 export default async function ReportsPage() {
 	const { reports, numOfContributors } = await getData();
 	const uniqueReports = new Set(reports);
-	const [searchParams, setSearchParams] = useState(new URLSearchParams());
+	// const [searchParams, setSearchParams] = useState(new URLSearchParams());
 	// const searchParams = new URLSearchParams()
 
 	// const contributionAmounts = useMemo(() => {
@@ -204,12 +204,12 @@ export default async function ReportsPage() {
 				numOfContributions={contributionAmounts().numFunded}
 			/>
 
-			<ReportsHeader
+			{/* <ReportsHeader
 				searchParams={searchParams}
 				setSearchParams={setSearchParams}
 				reports={reports}
 				amounts={contributionAmounts().amounts}
-			/>
+			/> */}
 
 			<section className="px-2 pb-16 md:pb-8">
 				<div className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
