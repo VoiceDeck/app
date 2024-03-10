@@ -1,6 +1,5 @@
 import FundingProgress from "@/components/report-details/funding-progress";
 import ReportSidebar from "@/components/report-details/report-sidebar";
-import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import parse from "html-react-parser";
@@ -59,6 +58,7 @@ export default async function ReportPage({
 	const { slug } = params;
 	const report = await getReportData(slug);
 	const htmlParsedStory = parse(report.story);
+
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
@@ -89,8 +89,11 @@ export default async function ReportPage({
 						<FundingProgress
 							totalAmount={report.totalCost}
 							fundedAmount={report.fundedSoFar}
-							reportImage={report.image}
-							reportTitle={report.title}
+							reportInfo={{
+								image: report.image,
+								title: report.title,
+								hypercertId: report.hypercertId,
+							}}
 						/>
 					</div>
 				</section>
