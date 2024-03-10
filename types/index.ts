@@ -1,4 +1,4 @@
-import { Address, Hash } from "viem";
+import type { Address, Hash } from "viem";
 
 /**
  * Defines the structure of an Impact Report.
@@ -30,37 +30,37 @@ import { Address, Hash } from "viem";
  * @property {number} fundedSoFar - Amount funded so far.
  */
 export interface Report {
-	// properties for hypercert minting
-	hypercertId: string;
-	title: string;
-	summary: string;
-	image: string;
-	originalReportUrl: string;
-	state: string;
-	category: string;
-	workTimeframe: string;
-	impactScope: string;
-	impactTimeframe: string;
-	contributors: string[];
+  // properties for hypercert minting
+  hypercertId: string;
+  title: string;
+  summary: string;
+  image: string;
+  originalReportUrl: string;
+  state: string;
+  category: string;
+  workTimeframe: string;
+  impactScope: string;
+  impactTimeframe: string;
+  contributors: string[];
 
-	// properties stored in CMS
-	cmsId: string;
-	dateCreated: string | null;
-	dateUpdated: string | null;
-	status: string;
-	slug: string;
-	story: string | null;
-	bcRatio: number | null;
-	villagesImpacted: number | null;
-	peopleImpacted: number | null;
-	verifiedBy: string[] | null;
-	byline: string | null;
-	totalCost: number;
+  // properties stored in CMS
+  cmsId: string;
+  dateCreated: string | null;
+  dateUpdated: string | null;
+  status: string;
+  slug: string;
+  story: string | null;
+  bcRatio: number | null;
+  villagesImpacted: number | null;
+  peopleImpacted: number | null;
+  verifiedBy: string[] | null;
+  byline: string | null;
+  totalCost: number;
 
-	// properties regarding to hypercert marketplace
-	fundedSoFar: number;
+  // properties regarding to hypercert marketplace
+  fundedSoFar: number;
 
-	order: Order | null;
+  order: Order | null;
 }
 
 /*************
@@ -81,42 +81,42 @@ export interface Report {
  * @property {string} uri - The URI of the claim metadata.
  */
 export interface Claim {
-	__typename?: "Claim";
-	contract: string;
-	// biome-ignore lint: type definition imported from @hypercerts-org/sdk
-	tokenID: any;
-	// biome-ignore lint: type definition imported from @hypercerts-org/sdk
-	creator?: any | null;
-	id: string;
-	// biome-ignore lint: type definition imported from @hypercerts-org/sdk
-	owner?: any | null;
-	// biome-ignore lint: type definition imported from @hypercerts-org/sdk
-	totalUnits?: any | null;
-	uri?: string | null;
+  __typename?: "Claim";
+  contract: string;
+  // biome-ignore lint: type definition imported from @hypercerts-org/sdk
+  tokenID: any;
+  // biome-ignore lint: type definition imported from @hypercerts-org/sdk
+  creator?: any | null;
+  id: string;
+  // biome-ignore lint: type definition imported from @hypercerts-org/sdk
+  owner?: any | null;
+  // biome-ignore lint: type definition imported from @hypercerts-org/sdk
+  totalUnits?: any | null;
+  uri?: string | null;
 }
 
 // Represents an Order in the Hypercerts Marketplace
 export type Order = {
-	hypercertId: string;
-	additionalParameters: string;
-	amounts: number[];
-	chainId: number;
-	collection: string;
-	collectionType: number;
-	createdAt: string;
-	currency: string;
-	endTime: number;
-	globalNonce: string;
-	id: string;
-	itemIds: string[];
-	orderNonce: string;
-	price: string;
-	quoteType: number;
-	signature: string;
-	signer: string;
-	startTime: number;
-	strategyId: number;
-	subsetNonce: number;
+  hypercertId: string;
+  additionalParameters: string;
+  amounts: number[];
+  chainId: number;
+  collection: string;
+  collectionType: number;
+  createdAt: string;
+  currency: string;
+  endTime: number;
+  globalNonce: string;
+  id: string;
+  itemIds: string[];
+  orderNonce: string;
+  price: string;
+  quoteType: number;
+  signature: string;
+  signer: string;
+  startTime: number;
+  strategyId: number;
+  subsetNonce: number;
 };
 
 /*************
@@ -127,40 +127,46 @@ export type Order = {
 
 // Directus schema of `report` collection
 export interface CMSContent {
-	// properties for hypercert minting
-	title: string | null;
-	summary: string | null;
-	image: string | null;
-	original_report_url: string | null;
-	states: string[] | null;
-	category: string | null;
-	work_timeframe: string | null;
-	impact_scope: string | null;
-	impact_timeframe: string | null;
-	// NOTE: it's actually comma separated string
-	contributor: string | null;
+  // properties for hypercert minting
+  title: string | null;
+  summary: string | null;
+  image: string | null;
+  original_report_url: string | null;
+  states: string[] | null;
+  category: string | null;
+  work_timeframe: string | null;
+  impact_scope: string | null;
+  impact_timeframe: string | null;
+  // NOTE: it's actually comma separated string
+  contributor: string | null;
 
-	//non hypercert propoerties
-	id: string;
-	status: string;
-	date_created: string | null;
-	slug: string;
-	story: string | null;
-	bc_ratio: number | null;
-	villages_impacted: number | null;
-	people_impacted: number | null;
-	verified_by: string[] | null;
-	date_updated: string | null;
-	byline: string | null;
-	total_cost: string | null;
+  //non hypercert propoerties
+  id: string;
+  status: string;
+  date_created: string | null;
+  slug: string;
+  story: string | null;
+  bc_ratio: number | null;
+  villages_impacted: number | null;
+  people_impacted: number | null;
+  verified_by: string[] | null;
+  date_updated: string | null;
+  byline: string | null;
+  total_cost: string | null;
 }
 
 // Directus schema of `contributions` collection
 export type Contribution = {
-	txid: Hash;
-	hypercert_id: string;
-	sender: Address;
-	amount: number;
-	date_created: string;
-	comment?: string;
+  txid: Hash;
+  hypercert_id: string;
+  sender: Address;
+  amount: number;
+  date_created: string;
+  comment?: string;
+};
+
+export type SupportReportInfo = {
+  image: Partial<Report>["image"];
+  title: Partial<Report>["title"];
+  hypercertId: Partial<Report>["hypercertId"];
 };
