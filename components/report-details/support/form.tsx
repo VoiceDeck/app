@@ -148,7 +148,7 @@ const SupportReportForm = ({
 			getOrdersForReport(
 				HCExchangeClient,
 				// TODO: Replace with actual hypercert ID
-				"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
+				"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-67375908650345815765748172271490105868288",
 				chainId,
 			),
 	});
@@ -157,9 +157,9 @@ const SupportReportForm = ({
 
 	if (orderError) return `An error has occurred: ${orderError.message}`;
 
-	// console.log(orders?.[2]);
+	// console.log(orders?.[0]);
 
-	const order = orders?.[2];
+	const order = orders?.[0];
 
 	const handleBuyFraction = async (amount: number) => {
 		if (!publicClient) {
