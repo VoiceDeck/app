@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@directus/sdk": "^15.0.2",
+    "@ethersproject/providers": "^5.7.2",
     "@fontsource-variable/plus-jakarta-sans": "^5.0.20",
     "@hypercerts-org/marketplace-sdk": "^0.0.23",
     "@hypercerts-org/sdk": "^1.4.3",
