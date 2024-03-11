@@ -1,7 +1,9 @@
+import FundingDataWrapper from "@/components/report-details/funding-data-wrapper";
 import FundingProgress from "@/components/report-details/funding-progress";
 import ReportSidebar from "@/components/report-details/report-sidebar";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
+import type { Report } from "@/types";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import Link from "next/link";
@@ -56,8 +58,8 @@ export default async function ReportPage({
 	params,
 }: { params: { slug: string } }) {
 	const { slug } = params;
-	const report = await getReportData(slug);
-	const htmlParsedStory = parse(report.story);
+	const report: Report = await getReportData(slug);
+	const htmlParsedStory = parse(report.story ?? "");
 
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
@@ -85,16 +87,21 @@ export default async function ReportPage({
 							<p>{report.state}</p>
 						</Badge>
 					</ul>
-					<div className="fixed bottom-[56px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
-						<FundingProgress
-							totalAmount={report.totalCost}
-							fundedAmount={report.fundedSoFar}
-							reportInfo={{
-								image: report.image,
-								title: report.title,
-								hypercertId: report.hypercertId,
-							}}
-						/>
+					<div className="fixed bottom-[72px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
+						<FundingDataWrapper
+							hypercertId={report.hypercertId}
+							totalReportCost={report.totalCost}
+						>
+							<FundingProgress
+								totalAmount={report.totalCost}
+								fundedAmount={report.fundedSoFar}
+								reportInfo={{
+									image: report.image,
+									title: report.title,
+									hypercertId: report.hypercertId,
+								}}
+							/>
+						</FundingDataWrapper>
 					</div>
 				</section>
 				<section className="flex flex-col gap-2 md:flex-row md:gap-12 pt-8">
