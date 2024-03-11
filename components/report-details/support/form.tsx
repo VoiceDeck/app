@@ -1,14 +1,25 @@
 "use client";
 import ConnectButton from "@/components/connect-button";
+import { Button } from "@/components/ui/button";
+import { useEthersProvider } from "@/hooks/use-ethers-provider";
+import { useEthersSigner } from "@/hooks/use-ethers-signer";
 import { useHypercertExchangeClient } from "@/hooks/use-hypercert-exchange-client";
 import { fetchOrder } from "@/lib/marketplace";
 import type { Order, Report } from "@/types";
-import type { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
+import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { useQuery } from "@tanstack/react-query";
+import { waitForTransaction } from "@wagmi/core";
 import type { BigNumberish } from "ethers";
 import React from "react";
+import type { Address } from "viem";
 import { waitForTransactionReceipt } from "viem/actions";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { sepolia } from "viem/chains";
+import {
+	useAccount,
+	usePublicClient,
+	useWaitForTransactionReceipt,
+	useWalletClient,
+} from "wagmi";
 import SupportProcessingDrawer from "./processing-drawer";
 
 interface SupportReportFormProps {
@@ -42,63 +53,67 @@ async function getOrdersForReport(
 	return orders;
 }
 
-// async function buyFractionalSale(
-// 	// Address of the buyer
-// 	address: string,
-// 	// Order retreived from API
-// 	order: Order,
-// 	// Price to pay per unit in WEI, should be >= the requested price
-// 	pricePerUnit: BigNumberish,
-// 	// Number of units to buy, should be minUnits < unitAmount < maxUnits
-// 	unitAmount: BigNumberish,
-// 	hypercertExchangeClient: HypercertExchangeClient,
-// ) {
-// 	// Create taker bid
-// 	const takerOrder = hypercertExchangeClient.createFractionalSaleTakerBid(
-// 		order,
-// 		address,
-// 		unitAmount,
-// 		pricePerUnit,
-// 	);
-
-// 	try {
-// 		// Set approval for exchange to spend funds
-// 		const totalPrice = BigInt(order.price) * BigInt(unitAmount);
-// 		const approveTx = await hypercertExchangeClient.approveErc20(
-// 			order.currency, // Be sure to set the allowance for the correct currency
-// 			totalPrice,
-// 		);
-// 		const result = useWaitForTransactionReceipt({
-// 			hash: approveTx.hash as `0x${string}`,
-// 		});
-// 		// await waitForTransactionReceipt(walletClientData, {
-// 		//   hash: approveTx.hash as `0x${string}`,
-// 		// });
-// 	} catch (e) {
-// 		console.error(e);
-// 	}
-
-// 	try {
-// 		// Perform the trade
-// 		const { call } = hypercertExchangeClient.executeOrder(
-// 			order,
-// 			takerOrder,
-// 			order.signature,
-// 		);
-// 		const tx = await call();
-// 		const result = useWaitForTransactionReceipt({
-// 			hash: tx.hash as `0x${string}`,
-// 		});
-// 	} catch (e) {
-// 		console.error(e);
-// 	}
-// }
-
-export default function SupportReportForm({
+const SupportReportForm = ({
 	drawerContainer,
 	hypercertId,
-}: SupportReportFormProps) {
+}: SupportReportFormProps) => {
 	const { address, isConnected, chainId } = useAccount();
+	const provider = useEthersProvider({ chainId });
+	const signer = useEthersSigner({ chainId });
+
+	// async function buyFractionalSale(
+	// 	// Address of the buyer
+	// 	address: Address,
+	// 	// Order retreived from API
+	// 	order: Order,
+	// 	// Price to pay per unit in WEI, should be >= the requested price
+	// 	pricePerUnit: BigNumberish,
+	// 	// Number of units to buy, should be minUnits < unitAmount < maxUnits
+	// 	unitAmount: BigNumberish,
+	// 	hypercertExchangeClient: HypercertExchangeClient,
+	// ) {
+	// 	// Create taker bid
+	// 	const takerOrder = hypercertExchangeClient.createFractionalSaleTakerBid(
+	// 		order,
+	// 		address,
+	// 		unitAmount,
+	// 		pricePerUnit,
+	// 	);
+
+	// 	try {
+	// 		// Set approval for exchange to spend funds
+	// 		const totalPrice = BigInt(order.price) * BigInt(unitAmount);
+	// 		const approveTx = await hypercertExchangeClient.approveErc20(
+	// 			order.currency, // Be sure to set the allowance for the correct currency
+	// 			totalPrice,
+	// 		);
+	// 		const result = usePublicClient().waitForTransactionReceipt({
+	// 			hash: approveTx.hash as `0x${string}`,
+	// 		});
+	// 		// await waitForTransactionReceipt(walletClientData, {
+	// 		//   hash: approveTx.hash as `0x${string}`,
+	// 		// });
+	// 	} catch (e) {
+	// 		console.error(e);
+	// 	}
+
+	// 	try {
+	// 		// Perform the trade
+	// 		const { call } = hypercertExchangeClient.executeOrder(
+	// 			order,
+	// 			takerOrder,
+	// 			order.signature,
+	// 		);
+	// 		const tx = await call();
+	// 		const result = useWaitForTransactionReceipt({
+	// 			hash: tx.hash as `0x${string}`,
+	// 		});
+	// 	} catch (e) {
+	// 		console.error(e);
+	// 	}
+	// }
+
+	// console.log({ provider, signer });
 
 	if (!isConnected && !address) {
 		return (
@@ -113,7 +128,15 @@ export default function SupportReportForm({
 		);
 	}
 
-	const { client, isLoading } = useHypercertExchangeClient();
+	const HCExchangeClient = new HypercertExchangeClient(
+		chainId ?? sepolia.id,
+		// @ts-ignore
+		provider,
+		signer,
+	);
+
+	const publicClient = usePublicClient({ chainId });
+	const { data: walletClient } = useWalletClient();
 
 	const {
 		isPending: isOrdersPending,
@@ -123,39 +146,91 @@ export default function SupportReportForm({
 		queryKey: ["ordersFromHypercert"],
 		queryFn: () =>
 			getOrdersForReport(
-				client,
+				HCExchangeClient,
 				// TODO: Replace with actual hypercert ID
 				"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
 				chainId,
 			),
 	});
 
-	// const {
-	// 	isPending: isProcessingSale,
-	// 	error: saleError,
-	// 	data: sale,
-	// } = useQuery({
-	// 	queryKey: ["fractionSale"],
-	// 	queryFn: () =>
-	// 		// getOrdersForReport(
-	// 		// 	client,
-	// 		// 	// TODO: Replace with actual hypercert ID
-	// 		// 	"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
-	// 		// 	chainId,
-	// 		// ),
-
-	// 		buyFractionalSale(
-	// 			address,
-	// 			orders?.[2],
-	// 			orders?.[2].price,
-	// 		)
-	// });
-
 	if (isOrdersPending) return "Loading...";
 
 	if (orderError) return `An error has occurred: ${orderError.message}`;
 
-	console.log(orders?.[2]);
+	// console.log(orders?.[2]);
+
+	const order = orders?.[2];
+
+	const handleBuyFraction = async (amount: number) => {
+		if (!publicClient) {
+			console.error("No public client found");
+			return;
+		}
+		// if (!hypercertId) {
+		// 	console.error("No hypercert ID found");
+		// 	return;
+		// }
+
+		// const orders = await getOrdersForReport(
+		// 	HCExchangeClient,
+		// 	hypercertId ??
+		// 		"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
+		// 	chainId,
+		// );
+		// // for testing purposes
+		// const order = orders?.[2];
+		if (!order) {
+			console.error("No order found");
+			return;
+		}
+
+		const takerOrder = HCExchangeClient.createFractionalSaleTakerBid(
+			order,
+			address,
+			amount,
+			order.price,
+		);
+
+		try {
+			// Set approval for exchange to spend funds
+			const totalPrice = BigInt(order.price) * BigInt(amount);
+			const approveTx = await HCExchangeClient.approveErc20(
+				order.currency, // Be sure to set the allowance for the correct currency
+				totalPrice,
+			);
+			const approveResult = await waitForTransactionReceipt(publicClient, {
+				hash: approveTx.hash as `0x${string}`,
+			});
+			console.log({ approveResult });
+		} catch (e) {
+			console.error(e);
+		}
+
+		try {
+			console.info("making trade", {
+				order,
+				takerOrder,
+				signature: order.signature,
+			});
+			// Perform the trade
+			const { call } = HCExchangeClient.executeOrder(
+				order,
+				takerOrder,
+				order.signature,
+			);
+			console.info("Awaiting buy signature");
+			const tx = await call();
+			console.info("Awaiting confirmation");
+			// console.log("Loading..", { tx });
+			const txnReceipt = await waitForTransactionReceipt(publicClient, {
+				hash: tx.hash as `0x${string}`,
+			});
+			console.log({ txnReceipt });
+			return txnReceipt;
+		} catch (e) {
+			console.error(e);
+		}
+	};
 
 	return (
 		<section>
@@ -233,8 +308,16 @@ export default function SupportReportForm({
 				</div>
 			</section>
 			<div className="flex w-full">
-				<SupportProcessingDrawer container={drawerContainer} />
+				<Button
+					className="w-full bg-vd-blue-500 text-white rounded-lg py-3"
+					onClick={() => handleBuyFraction(50)}
+				>
+					Support this report
+				</Button>
+				{/* <SupportProcessingDrawer container={drawerContainer} /> */}
 			</div>
 		</section>
 	);
-}
+};
+
+export default SupportReportForm;
