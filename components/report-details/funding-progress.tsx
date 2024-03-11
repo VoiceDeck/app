@@ -1,4 +1,5 @@
 "use client";
+import { useFunding } from "@/contexts/funding-context";
 import type { SupportReportInfo } from "@/types";
 import { Progress } from "../ui/progress";
 import { SupportReportDialog } from "./support/dialog";
@@ -11,11 +12,10 @@ interface FundingProgressProps {
 
 const FundingProgress: React.FC<FundingProgressProps> = ({
 	totalAmount,
-	fundedAmount,
 	reportInfo,
 }) => {
-	const progressPercentage = (fundedAmount / totalAmount) * 100;
-	const isFullyFunded = progressPercentage === 100;
+	const { percentProgress, dollarAmountNeeded } = useFunding();
+	const isFullyFunded = percentProgress === 100;
 
 	return (
 		<section className="px-3 py-4 flex flex-col space-y-2 md:flex-row md:space-x-4 md:justify-between bg-slate-50/80 backdrop-blur-md rounded-t-xl md:rounded-b-xl shadow-md max-w-3xl">
@@ -30,16 +30,15 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 					{!isFullyFunded && (
 						<div className="text-sm text-vd-blue-600">
 							<span className="text-vd-blue-900 font-semibold text-lg">
-								${totalAmount - fundedAmount}
+								${dollarAmountNeeded}
 							</span>{" "}
 							NEEDED
 						</div>
 					)}
 				</div>
-				<Progress value={progressPercentage} />
+				<Progress value={percentProgress} />
 			</div>
 			<div className="p-[2px]" />
-			{/* {supportActionContent} */}
 			<SupportReportDialog
 				image={reportInfo.image}
 				title={reportInfo.title}

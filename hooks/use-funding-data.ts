@@ -28,6 +28,7 @@ export const useFetchFundingData = (
       queryFn: () =>
         indexer.fractionsByClaim(
           // hypercertId
+          // "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-67375908650345815765748172271490105868288"
           "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896"
         ),
     });
