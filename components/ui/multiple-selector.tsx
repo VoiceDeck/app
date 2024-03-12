@@ -1,10 +1,10 @@
 "use client";
 
 import { X } from "lucide-react";
-import * as React from "react";
+// import * as React from "react";
 
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
-import { forwardRef, useEffect } from "react";
+import React, { forwardRef, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
 	Command,
