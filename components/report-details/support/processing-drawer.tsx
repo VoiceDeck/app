@@ -12,7 +12,7 @@ export default function SupportProcessingDrawer({
 	return (
 		<Drawer.Root dismissible={false}>
 			<Drawer.Trigger asChild>
-				<Button size={"lg"} variant={"default"}>
+				<Button size={"lg"} variant={"default"} type="submit">
 					Support this report
 				</Button>
 			</Drawer.Trigger>
