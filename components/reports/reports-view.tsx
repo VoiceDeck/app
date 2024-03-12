@@ -201,7 +201,7 @@ export function ReportsView ({ reports, numOfContributors }: IPageData) {
           )}
         </section>
   
-        {!reports.length ? (
+        {!getSelectedReports.length ? (
           <section>
             <div className="flex flex-col items-center text-center pb-24 md:pb-10">
               <img
