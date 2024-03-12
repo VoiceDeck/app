@@ -1,13 +1,13 @@
 import {
-  ClaimsByOwnerQuery,
+  type ClaimsByOwnerQuery,
   HypercertClient,
-  HypercertIndexerInterface,
-  HypercertMetadata,
-  HypercertsStorage,
+  type HypercertIndexerInterface,
+  type HypercertMetadata,
+  type HypercertsStorage,
 } from "@hypercerts-org/sdk";
 import { Mutex } from "async-mutex";
 
-import { Claim, Report } from "@/types";
+import type { Claim, Report } from "@/types";
 import { getCMSReports, getFundedAmountByHCId } from "./directus";
 import { getOrders } from "./marketplace";
 
