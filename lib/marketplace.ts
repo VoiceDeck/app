@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { ethers } from "ethers";
 import { sepolia } from "viem/chains";
