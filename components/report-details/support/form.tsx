@@ -129,7 +129,7 @@ const SupportReportForm = ({
 	const order = orders?.[5];
 	console.log({ order, orders });
 
-	const handleBuyFraction = async (amount: number) => {
+	const handleBuyFraction = async (amount: number, unitsToBuy: number, comment?: string) => {
 		if (!publicClient) {
 			console.error("No public client found");
 			return;
@@ -185,6 +185,23 @@ const SupportReportForm = ({
 			console.info("Awaiting buy signature");
 			const tx = await call();
 			console.info("Awaiting confirmation", tx);
+
+
+		console.log("Processing new contribution in CMS");
+			await fetch("http://localhost:3000/api/contributions", {
+						method: "POST",
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							txId: tx.hash as `0x${string}`,
+							hypercertId: hypercertId ?? "",
+							amount: unitsToBuy,
+							comment: comment,
+						}),
+					});
+
+
 			const txnReceipt = await waitForTransactionReceipt(publicClient, {
 				hash: tx.hash as `0x${string}`,
 			});
@@ -202,20 +219,9 @@ const SupportReportForm = ({
 		// ✅ This will be type-safe and validated.
 		console.log(values, { unitsBought: values.fractionPayment / pricePerUnit });
 		// form.reset();
+
 		const unitsToBuy = values.fractionPayment / pricePerUnit;
-		handleBuyFraction(unitsToBuy)
-			.then((txnReceipt) => {
-				if (txnReceipt) {
-					console.log("Processing new contribution in CMS");
-					processNewContribution(
-						txnReceipt.transactionHash,
-						hypercertId ?? "",
-						unitsToBuy,
-						values.comment,
-					);
-				}
-			})
-			.catch((e) => console.error(e));
+		handleBuyFraction(unitsToBuy, unitsToBuy, values.comment).catch((e) => console.error(e));
 	}
 
 	return (

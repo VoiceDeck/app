@@ -161,7 +161,7 @@ export type Contribution = {
   hypercert_id: string;
   sender: Address;
   amount: number;
-  date_created: string;
+  date_created?: string;
   comment?: string;
 };
 
