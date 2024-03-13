@@ -1,4 +1,6 @@
 // @ts-nocheck
+import 'server-only'
+
 import {
   type DirectusClient,
   type RestClient,
@@ -22,6 +24,7 @@ import { sepolia } from "viem/chains";
 
 import type { CMSContent, Contribution } from "@/types";
 import { updateFundedAmount } from "./impact-reports";
+
 
 // represents contents retrieved from CMS `reports` collection
 let CMSReports: CMSContent[] | null = null;
@@ -49,7 +52,7 @@ export async function processNewContribution(
   hypercertId: string,
   amount: number,
   comment?: string
-) {
+    ) {
   try {
     const client = getDirectusClient();
 
@@ -92,7 +95,7 @@ export async function processNewContribution(
     }
 
     const contribution = {
-      sender: txReceipt.from,
+      sender: getAddress(txReceipt.from),
       hypercert_id: hypercertId,
       amount: amount,
       txid: txId,
@@ -113,7 +116,7 @@ export async function processNewContribution(
 
 export async function createContribution(contribution: Contribution) {
   const user = {
-    address: getAddress(contribution.sender),
+    address: contribution.sender,
   };
   const client = getDirectusClient();
 
@@ -444,6 +447,9 @@ const updateContribution = async (
   const release = await contributionsMutex.acquire();
 
   try {
+    if (!contributionsByHCId[hypercertId]) {
+      contributionsByHCId[hypercertId] = [];
+    }
     contributionsByHCId[hypercertId].push(contribution);
   } finally {
     release();

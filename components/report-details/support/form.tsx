@@ -20,7 +20,6 @@ import {
 } from "@/hooks/use-buy-fraction";
 import { useEthersProvider } from "@/hooks/use-ethers-provider";
 import { useEthersSigner } from "@/hooks/use-ethers-signer";
-import { processNewContribution } from "@/lib/directus";
 import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +34,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import type { Address } from "viem";
 import { sepolia } from "viem/chains";
 import { useAccount, usePublicClient } from "wagmi";
 import { z } from "zod";
@@ -103,7 +101,6 @@ const SupportReportForm = ({
 	const signer = useEthersSigner({ chainId });
 	const publicClient = usePublicClient({ chainId });
 	const { dollarAmountNeeded, pricePerUnit } = useFunding();
-	const [transactionHash, setTransactionHash] = useState<Address | null>(null);
 	const [isProcessing, setIsProcessing] = useState<boolean>(false);
 	const fractionSaleFormSchema = z.object({
 		fractionPayment: z.coerce.number().min(1).max(Number(dollarAmountNeeded)),
@@ -128,10 +125,8 @@ const SupportReportForm = ({
 		signer,
 	);
 
-	const { handleBuyFraction, transactionStatus } = useHandleBuyFraction(
-		publicClient,
-		HCExchangeClient,
-	);
+	const { handleBuyFraction, transactionStatus, transactionHash } =
+		useHandleBuyFraction(publicClient, HCExchangeClient);
 
 	if (!isConnected && !address) {
 		return (
@@ -171,23 +166,32 @@ const SupportReportForm = ({
 
 	async function onSubmit(values: z.infer<typeof fractionSaleFormSchema>) {
 		setIsProcessing(true);
-		// console.log(values, { unitsBought: values.fractionPayment / pricePerUnit });
 		form.reset();
 		const unitsToBuy = values.fractionPayment / pricePerUnit;
-		handleBuyFraction(order, unitsToBuy, address)
-			.then((txnReceipt) => {
-				if (txnReceipt) {
-					setTransactionHash(txnReceipt.transactionHash);
-					console.log("Processing new contribution in CMS");
-					processNewContribution(
-						txnReceipt.transactionHash,
-						hypercertId ?? "",
-						unitsToBuy,
-						values.comment,
-					);
+		try {
+			const txnReceipt = await handleBuyFraction(order, unitsToBuy, address);
+			if (txnReceipt) {
+				console.log("Processing new contribution in CMS");
+				try {
+					await fetch("http://localhost:3000/api/contributions", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							txId: txnReceipt.transactionHash as `0x${string}`,
+							hypercertId: hypercertId ?? "",
+							amount: unitsToBuy,
+							comment: values.comment,
+						}),
+					});
+				} catch (error) {
+					console.error("Failed to post contribution:", error);
 				}
-			})
-			.catch((e) => console.error(e));
+			}
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	return (
