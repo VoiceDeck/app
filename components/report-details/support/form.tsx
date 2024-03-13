@@ -20,23 +20,15 @@ import {
 } from "@/hooks/use-buy-fraction";
 import { useEthersProvider } from "@/hooks/use-ethers-provider";
 import { useEthersSigner } from "@/hooks/use-ethers-signer";
+import useSupportForm from "@/hooks/use-support-form";
 import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { useQuery } from "@tanstack/react-query";
-import {
-	AlertTriangle,
-	ArrowUpRight,
-	CheckCircle,
-	Loader2,
-	Wallet2,
-} from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { AlertTriangle, CheckCircle, Loader2, Wallet2 } from "lucide-react";
 import { sepolia } from "viem/chains";
 import { useAccount, usePublicClient } from "wagmi";
-import { z } from "zod";
+import TransactionStatus from "./transaction-status";
 
 interface SupportReportFormProps {
 	drawerContainer: HTMLDivElement | null;
@@ -45,20 +37,28 @@ interface SupportReportFormProps {
 
 const transactionStatusContent: Record<
 	keyof typeof TransactionStatuses,
-	{ icon: JSX.Element; title: string; content: string }
+	{
+		icon: JSX.Element;
+		title: string;
+		content: string;
+		label: keyof typeof TransactionStatuses;
+	}
 > = {
 	Pending: {
+		label: "Pending",
 		icon: <Loader2 size={36} />,
 		title: "Just a moment! We're working on it.",
 		content: "We're connecting to your wallet to process the transaction.",
 	},
 	Failed: {
+		label: "Failed",
 		icon: <AlertTriangle size={36} />,
 		title: "Sorry! There was an issue.",
 		content:
 			"We ran into a problem while processing the transaction. Could you try again?",
 	},
 	Confirmed: {
+		label: "Confirmed",
 		icon: <CheckCircle size={36} />,
 		title: "Thank you! We got your support.",
 		content:
@@ -79,17 +79,23 @@ async function getOrdersForReport(
 		console.warn("[Fetching orders] - No hypercert client found");
 		return [];
 	}
-	if (!chainId) {
+	if (chainId === undefined) {
 		console.warn("[Fetching orders] - No chainId provided");
 		return [];
 	}
 
-	const { data: orders } = await hypercertClient.api.fetchOrdersByHypercertId({
-		hypercertId,
-		chainId,
-	});
-
-	return orders;
+	try {
+		const { data: orders } = await hypercertClient.api.fetchOrdersByHypercertId(
+			{
+				hypercertId,
+				chainId,
+			},
+		);
+		return orders;
+	} catch (error) {
+		console.error("[Fetching orders] - Error fetching orders", error);
+		return [];
+	}
 }
 
 const SupportReportForm = ({
@@ -101,23 +107,7 @@ const SupportReportForm = ({
 	const signer = useEthersSigner({ chainId });
 	const publicClient = usePublicClient({ chainId });
 	const { dollarAmountNeeded, pricePerUnit } = useFunding();
-	const [isProcessing, setIsProcessing] = useState<boolean>(false);
-	const fractionSaleFormSchema = z.object({
-		fractionPayment: z.coerce.number().min(1).max(Number(dollarAmountNeeded)),
-		comment: z.string(),
-		hideName: z.boolean(),
-		hideAmount: z.boolean(),
-	});
 
-	const form = useForm<z.infer<typeof fractionSaleFormSchema>>({
-		resolver: zodResolver(fractionSaleFormSchema),
-		defaultValues: {
-			fractionPayment: 1,
-			comment: "",
-			hideName: false,
-			hideAmount: false,
-		},
-	});
 	const HCExchangeClient = new HypercertExchangeClient(
 		chainId ?? sepolia.id,
 		// @ts-ignore
@@ -127,19 +117,6 @@ const SupportReportForm = ({
 
 	const { handleBuyFraction, transactionStatus, transactionHash } =
 		useHandleBuyFraction(publicClient, HCExchangeClient);
-
-	if (!isConnected && !address) {
-		return (
-			<div className="flex flex-col gap-4 p-4">
-				<div className="flex flex-col gap-4 justify-center items-center">
-					<h4 className="font-bold text-center">
-						Connect your wallet to support this report
-					</h4>
-					<ConnectButton />
-				</div>
-			</div>
-		);
-	}
 
 	const {
 		isPending: isOrdersPending,
@@ -157,41 +134,26 @@ const SupportReportForm = ({
 			),
 	});
 
-	if (isOrdersPending) return "Loading...";
+	const { form, onSubmit, isProcessing } = useSupportForm(
+		Number(dollarAmountNeeded),
+		pricePerUnit,
+		orders?.[5],
+		handleBuyFraction,
+		address,
+		hypercertId,
+	);
 
-	if (orderError) return `An error has occurred: ${orderError.message}`;
-
-	const order = orders?.[5];
-	// console.log({ order, orders });
-
-	async function onSubmit(values: z.infer<typeof fractionSaleFormSchema>) {
-		setIsProcessing(true);
-		form.reset();
-		const unitsToBuy = values.fractionPayment / pricePerUnit;
-		try {
-			const txnReceipt = await handleBuyFraction(order, unitsToBuy, address);
-			if (txnReceipt) {
-				console.log("Processing new contribution in CMS");
-				try {
-					await fetch("http://localhost:3000/api/contributions", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({
-							txId: txnReceipt.transactionHash as `0x${string}`,
-							hypercertId: hypercertId ?? "",
-							amount: unitsToBuy,
-							comment: values.comment,
-						}),
-					});
-				} catch (error) {
-					console.error("Failed to post contribution:", error);
-				}
-			}
-		} catch (e) {
-			console.error(e);
-		}
+	if (!isConnected && !address) {
+		return (
+			<div className="flex flex-col gap-4 p-4">
+				<div className="flex flex-col gap-4 justify-center items-center">
+					<h4 className="font-bold text-center">
+						Connect your wallet to support this report
+					</h4>
+					<ConnectButton />
+				</div>
+			</div>
+		);
 	}
 
 	return (
@@ -315,54 +277,10 @@ const SupportReportForm = ({
 				</Form>
 			)}
 			{isProcessing && (
-				<div
-					className={cn(
-						"flex flex-col gap-2 p-4 rounded-md bg-vd-beige-100 border-vd-beige-200 border-2",
-					)}
-				>
-					<div
-						className={cn("flex justify-center", {
-							"animate-spin": transactionStatus === "Pending",
-						})}
-					>
-						{transactionStatusContent[transactionStatus].icon}
-					</div>
-					<div className="flex flex-col gap-4">
-						<h4 className="font-bold text-lg text-center">
-							{transactionStatusContent[transactionStatus].title}
-						</h4>
-						<p className="text-center">
-							{transactionStatusContent[transactionStatus].content}
-						</p>
-						{transactionHash && (
-							<Button
-								variant={"default"}
-								className="hover:bg-vd-blue-400 hover:text-green-50 transition-colors duration-200"
-							>
-								<a
-									// TODO: UPDATE FOR MAINNET WHEN READY
-									href={`https://sepolia.etherscan.io/tx/${transactionHash}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="w-full h-full flex gap-2 justify-center items-center"
-								>
-									View transaction on explorer
-									<ArrowUpRight size={16} />
-								</a>
-							</Button>
-						)}
-					</div>
-					{transactionStatus !== "Pending" && (
-						<Button
-							className="space-y-1.5"
-							variant={"outline"}
-							type="button"
-							onClick={() => window.location.reload()}
-						>
-							Close
-						</Button>
-					)}
-				</div>
+				<TransactionStatus
+					statusContent={transactionStatusContent[transactionStatus]}
+					transactionHash={transactionHash}
+				/>
 			)}
 		</section>
 	);
