@@ -2,7 +2,7 @@
 import { FundingProvider } from "@/contexts/funding-context";
 import { useFetchFundingData } from "@/hooks/use-funding-data";
 import type { Report } from "@/types";
-import { LoaderIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 interface FundingDataWrapperProps {
 	hypercertId: Partial<Report>["hypercertId"];
@@ -37,7 +37,7 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 		return (
 			<section className="h-20 shadow-md max-w-3xl flex justify-center items-center bg-vd-beige-100 gap-2 rounded-lg ease-in duration-300">
 				<div className="animate-spin">
-					<LoaderIcon size={18} />
+					<Loader2 size={18} />
 				</div>
 				Loading funding data...
 			</section>
