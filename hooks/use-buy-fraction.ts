@@ -16,6 +16,7 @@ const useHandleBuyFraction = (
 ) => {
   const [transactionStatus, setTransactionStatus] =
     useState<keyof typeof TransactionStatuses>("Pending");
+  const [transactionHash, setTransactionHash] = useState<Address | null>(null);
 
   const handleBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -80,6 +81,7 @@ const useHandleBuyFraction = (
       );
       console.info("Awaiting buy signature");
       const tx = await call();
+      setTransactionHash(tx.hash as Address);
       console.info("Awaiting confirmation", tx);
       const txnReceipt = await waitForTransactionReceipt(publicClient, {
         hash: tx.hash as `0x${string}`,
@@ -93,7 +95,7 @@ const useHandleBuyFraction = (
     }
   };
 
-  return { handleBuyFraction, transactionStatus };
+  return { handleBuyFraction, transactionStatus, transactionHash };
 };
 
 export { useHandleBuyFraction };
