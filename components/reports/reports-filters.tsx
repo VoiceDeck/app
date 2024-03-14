@@ -26,7 +26,7 @@ interface ReportFiltersProps {
   setSearchParams: React.Dispatch<React.SetStateAction<URLSearchParams>>;
 	outlets: string[];
 	states: ComboboxOption[];
-	amounts: number[];
+	amountsNeeded: number[];
 	numFiltersApplied: number;
 	setNumFiltersApplied: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -103,12 +103,11 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
   setSearchParams,
 	outlets,
 	states,
-	amounts,
+	amountsNeeded,
 	numFiltersApplied,
 	setNumFiltersApplied,
 }) => {
   const router = useRouter();
-	const amountsNeeded = amounts.map((amount) => 1000 - amount);
 	const minAmountNeeded = Math.min(...amountsNeeded);
 	const maxAmountNeeded = Math.max(...amountsNeeded);
 	const [amountRangeSelected, setAmountRangeSelected] = useState([
@@ -119,11 +118,14 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 	const [outletsSelected, setOutletsSelected] = useState<string[]>([]);
 
 	const handleApplyFilters = () => {
-		let filtersApplied = 1;
+		let filtersApplied = 0;
 		searchParams.delete("min");
 		searchParams.delete("max");
-		searchParams.append("min", String(amountRangeSelected[0]));
-		searchParams.append("max", String(amountRangeSelected[1]));
+		if(amountRangeSelected[0] !== minAmountNeeded || amountRangeSelected[1] !== maxAmountNeeded){
+			filtersApplied++;
+			searchParams.append("min", String(amountRangeSelected[0]));
+			searchParams.append("max", String(amountRangeSelected[1]));
+		}
 		if (outletsSelected.length) {
 			filtersApplied++;
 			if (searchParams.has("outlet")) {
@@ -135,11 +137,11 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 		}
 		if (statesSelected.length) {
 			filtersApplied++;
-			if (searchParams.has("state")) {
-				searchParams.delete("state");
+			if (searchParams.has("states")) {
+				searchParams.delete("states");
 			}
 			for (let i = 0; i < statesSelected.length; i++) {
-				searchParams.append("state", statesSelected[i]);
+				searchParams.append("states", statesSelected[i]);
 			}
 		}
 		setNumFiltersApplied(filtersApplied);
