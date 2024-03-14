@@ -15,7 +15,6 @@ interface ReportsHeaderProps {
   searchParams: URLSearchParams;
   setSearchParams: React.Dispatch<React.SetStateAction<URLSearchParams>>;
 	reports: Report[];
-	amounts: number[];
 }
 
 const sortingOptions = [
@@ -25,7 +24,7 @@ const sortingOptions = [
 	"Oldest to newest",
 ];
 
-const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchParams, reports, amounts }) => {
+const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchParams, reports }) => {
 	const uniqueCategories = useMemo(() => {
 		return reports
 			.map((report: Report, index: number) => report.category)
@@ -61,22 +60,22 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchPa
 	}, [reports]);
 
   const router = useRouter();
-  // const [searchParams, setSearchParams] = useState(new URLSearchParams());
+	const localSearchParams = searchParams; // make a copy of the searchParams object to edit
 	const [searchBarInput, setsearchBarInput] = useState("");
 	const [categorySelected, setCategorySelected] = useState<string>();
 	const [dynamicKeyForInput, setDynamicKeyForInput] = useState(0);
 	const [numFiltersApplied, setNumFiltersApplied] = useState(0);
 
 	const toggleCategorySelection = (category: string) => {
-		searchParams.delete("category");
+		localSearchParams.delete("category");
 		if (category === categorySelected) {
 			setCategorySelected("");
 		} else {
 			setCategorySelected(category);
-			searchParams.append("category", category);
+			localSearchParams.append("category", category);
 		}
-		setSearchParams(searchParams);
-    router.push(`reports/?${searchParams.toString()}`, {scroll: false})
+		setSearchParams(localSearchParams);
+    router.push(`reports/?${localSearchParams.toString()}`, {scroll: false})
 	};
 
 	return (
@@ -107,7 +106,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchPa
 					<Input
 						className="pr-[65px] rounded-r-3xl h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
 						key={dynamicKeyForInput}
-						type="search"
+						type="q"
 						placeholder="Search in title, summary"
 						onChange={(e) => {
 							setsearchBarInput(e.target.value);
@@ -116,12 +115,12 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchPa
 					<Button
 						className="ml-[-65px]"
 						onClick={() => {
-							if (searchParams.has("search-input")) {
-								searchParams.delete("search-input");
+							if (localSearchParams.has("q")) {
+								localSearchParams.delete("q");
 							}
-							searchParams.append("search-input", searchBarInput);
-							setSearchParams(searchParams);
-              router.push(`reports/?${searchParams.toString()}`, {scroll: false})
+							localSearchParams.append("q", searchBarInput);
+							setSearchParams(localSearchParams);
+              router.push(`reports/?${localSearchParams.toString()}`, {scroll: false})
 						}}
 					>
 						<Search />
@@ -134,7 +133,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchPa
               setSearchParams={setSearchParams}
 							outlets={uniqueMediaOutlets}
 							states={uniqueStates}
-							amounts={amounts}
+							amountsNeeded={reports.map((report: Report) => report.totalCost - report.fundedSoFar || 0)}
 							numFiltersApplied={numFiltersApplied}
 							setNumFiltersApplied={setNumFiltersApplied}
 						/>
