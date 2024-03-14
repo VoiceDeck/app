@@ -12,29 +12,28 @@ import {
 	DrawerFooter,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import MultipleSelector, {
-	type Option,
-} from "@/components/ui/multiple-selector";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "../ui/checkbox";
 import { Filter } from "lucide-react";
-import { Button } from "../ui/button";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { ComboboxOption, StateCombobox } from "./states-combobox";
 
 interface ReportFiltersProps {
   searchParams: URLSearchParams;
   setSearchParams: React.Dispatch<React.SetStateAction<URLSearchParams>>;
 	outlets: string[];
-	states: Option[];
+	states: ComboboxOption[];
 	amounts: number[];
 	numFiltersApplied: number;
 	setNumFiltersApplied: React.Dispatch<React.SetStateAction<number>>;
 }
 interface FilterItemsProps {
 	outlets: string[];
-	states: Option[];
+	states: ComboboxOption[];
+	statesSelected: string[];
 	minAmountNeeded: number;
 	maxAmountNeeded: number;
 	amountRangeSelected: number[];
@@ -51,6 +50,7 @@ const FilterItems: React.FC<FilterItemsProps> = ({
 	maxAmountNeeded,
 	amountRangeSelected,
 	setAmountRangeSelected,
+	statesSelected,
 	setStatesSelected,
 	outletsSelected,
 	setOutletsSelected,
@@ -77,21 +77,9 @@ const FilterItems: React.FC<FilterItemsProps> = ({
 				/>
 			</div>
 			<Separator className="bg-vd-blue-500 my-10" />
-			<div className="px-6">
+			<div className="px-6 z-[60]">
 				<h2 className="font-medium pb-2 md:pb-4">State impacted</h2>
-				<MultipleSelector
-					defaultOptions={states}
-					placeholder="Choose states"
-					hidePlaceholderWhenSelected
-					emptyIndicator={
-						<p className="text-center text-sm leading-10 text-gray-600 dark:text-gray-400">
-							no results found.
-						</p>
-					}
-					onChange={(options: Option[]) =>
-						setStatesSelected(options.map(({ value }) => value))
-					}
-				/>
+				<StateCombobox states={states} setSelectedStates={setStatesSelected} selectedStates={statesSelected}/>
 			</div>
 			<Separator className="bg-vd-blue-500 my-10" />
 			<div className="px-6">
@@ -167,8 +155,8 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						className="flex gap-2 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
 						onClick={() => {
 							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
-							setOutletsSelected([]);
-							setStatesSelected([]);
+							setOutletsSelected(outletsSelected ?? []);
+							setStatesSelected(statesSelected ?? []);
 						}}
 					>
 						<p className="text-sm font-medium text-vd-blue-500">Filters</p>
@@ -184,6 +172,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						<FilterItems
 							outlets={outlets}
 							states={states}
+							statesSelected={statesSelected}
 							minAmountNeeded={minAmountNeeded}
 							maxAmountNeeded={maxAmountNeeded}
 							amountRangeSelected={amountRangeSelected}
@@ -228,6 +217,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						<FilterItems
 							outlets={outlets}
 							states={states}
+							statesSelected={statesSelected}
 							minAmountNeeded={minAmountNeeded}
 							maxAmountNeeded={maxAmountNeeded}
 							amountRangeSelected={amountRangeSelected}

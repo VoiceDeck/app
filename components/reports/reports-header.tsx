@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { ComboboxOption } from "./states-combobox";
 
 interface ReportsHeaderProps {
   searchParams: URLSearchParams;
@@ -43,9 +44,8 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchPa
 			);
 	}, [reports]);
 
-	// updated to return a type Option[] of {label: state, value: state} objects
-	// needed to pass into MultipleSelector component for State filter
-	const uniqueStates = useMemo(() => {
+	// updated to return a type ComboboxOption[] of {label: state, value: state} objects
+	const uniqueStates: ComboboxOption[] = useMemo(() => {
 		return reports
 			.map((report: Report, index: number) => ({
 				label: report.state,

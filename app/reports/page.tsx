@@ -32,6 +32,7 @@ export default async function ReportsPage() {
 					{siteConfig.description}
 				</h2>
 			</header>
+
 			{uniqueReports.length ? (
 				<ReportsView
 					reports={uniqueReports}
