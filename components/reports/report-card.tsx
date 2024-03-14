@@ -35,7 +35,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 	return (
 		<Card
 			key={hypercertId}
-			className="w-full rounded-3xl bg-vd-beige-100 text-vd-blue-900 hover:scale-105 ease-out transition-transform duration-150 hover:shadow-md"
+			className="w-[325px] rounded-3xl bg-vd-beige-100 text-vd-blue-900 hover:scale-105 ease-out transition-transform duration-150 hover:shadow-md"
 		>
 			<CardHeader className="p-0">
 				<img
