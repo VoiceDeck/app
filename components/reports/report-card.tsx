@@ -35,34 +35,36 @@ const ReportCard: React.FC<ReportCardProps> = ({
 	return (
 		<Card
 			key={hypercertId}
-			className="w-full rounded-3xl bg-vd-beige-100 text-vd-blue-900"
+			className="w-full rounded-3xl bg-vd-beige-100 text-vd-blue-900 hover:scale-105 ease-out transition-transform duration-150 hover:shadow-md"
 		>
-			<img
-				src={image}
-				alt="gpt-generated report illustration"
-				className="w-full h-56 overflow-clip object-cover object-center rounded-t-3xl"
-			/>
-			<CardHeader className="space-y-0.5 px-5 py-3">
-				<CardTitle className="text-lg font-bold tracking-wide leading-5 line-clamp-2">
-					{title}
-				</CardTitle>
-				<CardDescription className="text-xs tracking-normal line-clamp-2">
-					{summary}
-				</CardDescription>
+			<CardHeader className="p-0">
+				<img
+					src={image}
+					alt={title}
+					className="w-full h-44 overflow-clip object-cover object-center rounded-t-3xl"
+				/>
+				<section className="flex flex-col gap-1 px-5 py-2">
+					<CardTitle className="text-lg font-bold leading-tight line-clamp-2">
+						{title}
+					</CardTitle>
+					<CardDescription className="text-xs tracking-normal line-clamp-2">
+						{summary}
+					</CardDescription>
+				</section>
 			</CardHeader>
-			<CardContent className="flex justify-center gap-2 px-2 pb-3">
-				<Badge variant="secondary" className="font-normal">
+			<CardContent className="flex gap-2 px-5 py-2">
+				<Badge variant="secondary" className="font-normal hover:bg-vd-beige-200 pointer-events-none">
 					<DynamicCategoryIcon category={category} />
 					<p>{category}</p>
 				</Badge>
-				<Badge variant="secondary" className="font-normal">
+				<Badge variant="secondary" className="font-normal hover:bg-vd-beige-200 pointer-events-none">
 					<MapPin color="#C14E41" strokeWidth={1} size={18} />
 					<p>{state}</p>
 				</Badge>
 			</CardContent>
-			<CardFooter className="flex-col justify-center gap-2 px-8 pb-4 pt-0">
-				<Progress value={(fundedSoFar / totalCost) * 100} />
-				<p className="text-xs">${totalCost - fundedSoFar} still needed</p>
+			<CardFooter className="flex-col justify-center gap-2 p-3">
+				<Progress className="w-full" value={(fundedSoFar / totalCost) * 100} />
+				{/* <p className="text-xs">${totalCost - fundedSoFar} still needed</p> */}
 			</CardFooter>
 		</Card>
 	);
