@@ -1,7 +1,6 @@
 'use client'
 import ReportCard from "@/components/reports/report-card";
 import ReportsHeader from "@/components/reports/reports-header";
-import VoicedeckStats from "@/components/reports/voicedeck-stats";
 import {
 	Pagination,
 	PaginationContent,
@@ -19,30 +18,17 @@ import { useMemo, useState } from "react";
 
 interface IPageData {
 	reports: Report[];
-	numOfContributors: number;
 }
 
-export function ReportsView ({ reports, numOfContributors }: IPageData) {
-    const [searchParams, setSearchParams] = useState(new URLSearchParams());  
-    const contributionAmounts = useMemo(() => {
-      const allAmounts = reports.map(
-        (report: Report, index: number) => report.fundedSoFar || 0,
-      );
-      const sumOfAmounts = allAmounts.reduce((a: number, b: number) => a + b, 0);
-      const fullyFunded = allAmounts.filter((amount: number) => amount === 1000);
-      return {
-        amounts: allAmounts,
-        sum: sumOfAmounts,
-        numFunded: fullyFunded.length || 0,
-      };
-    }, [reports]);
-  
+export function ReportsView ({ reports }: IPageData) {
+    const [searchParams, setSearchParams] = useState(new URLSearchParams()); 
+
     const getSelectedReports = useMemo(() => {
       const category = searchParams.get("category");
-      const searchInput = searchParams.get("search-input");
+      const searchInput = searchParams.get("q");
       const minAmount = Number(searchParams.get("min"));
       const maxAmount = Number(searchParams.get("max"));
-      const states = searchParams.getAll("state");
+      const states = searchParams.getAll("states");
       const outlets = searchParams.getAll("outlet");
       const sortBy = searchParams.get("sort");
       let selectedReports = reports;
@@ -120,21 +106,17 @@ export function ReportsView ({ reports, numOfContributors }: IPageData) {
   
     return (
       <article>
-        <VoicedeckStats
-          numOfContributors={numOfContributors}
-          sumOfContributions={contributionAmounts.sum}
-          numOfContributions={contributionAmounts.numFunded}
-        />
-  
+
         <ReportsHeader
           searchParams={searchParams}
           setSearchParams={setSearchParams}
           reports={reports}
-          amounts={contributionAmounts.amounts}
         />
-  
-        <section className="px-2 pb-16 md:pb-8">
-          <div className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 md:gap-3 max-w-screen-xl">
+
+        {/* <section className="px-2 pb-16 md:pb-8"> */}
+				<section>
+          {/* <div className="grid grid-rows-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 md:gap-5 max-w-screen-xl"> */}
+					<div className="flex gap-5 flex-wrap justify-center md:justify-start">
             {getSelectedReports.length
               ? pageTransactions.map((report: Report) => (
                   <Link
@@ -156,7 +138,7 @@ export function ReportsView ({ reports, numOfContributors }: IPageData) {
                 ))
               : null}
           </div>
-  
+
           {needsPagination && (
             <Pagination className="pt-6">
               <PaginationContent>
