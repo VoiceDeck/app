@@ -13,8 +13,12 @@ import {
 import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
-import { createFilterOptions, filterReports } from "@/lib/search-filter-utils";
-import type { Report } from "@/types";
+import {
+	createFilterOptions,
+	filterReports,
+	sortingOptions,
+} from "@/lib/search-filter-utils";
+import type { ISortingOption, Report } from "@/types";
 import Fuse from "fuse.js";
 import { useMemo, useState } from "react";
 import { Button } from "../ui/button";
@@ -26,6 +30,9 @@ interface IPageData {
 
 export function ReportsView({ reports }: IPageData) {
 	const { filters, updateSearchParams } = useFilters();
+	const [activeSortOption, setActiveSortOption] = useState(
+		sortingOptions.createdNewestFirst.value,
+	);
 	let filteredReports = reports;
 
 	const filterOptions = useMemo(() => {
@@ -44,6 +51,19 @@ export function ReportsView({ reports }: IPageData) {
 	if (filters.length > 0) {
 		filteredReports = filterReports(reports, filters, fuse);
 	}
+
+	const sortReports = (
+		reports: Report[],
+		sortOption: ISortingOption["value"],
+	) => {
+		const sortFn = sortingOptions[sortOption]?.sortFn;
+		if (sortFn) {
+			return [...reports].sort(sortFn);
+		}
+		return reports;
+	};
+
+	filteredReports = sortReports(filteredReports, activeSortOption);
 
 	const {
 		currentPage,
@@ -71,6 +91,8 @@ export function ReportsView({ reports }: IPageData) {
 						filterOverlayOpen={filterOpen}
 						setFilterOverlayOpen={setFilterOpen}
 						filterOptions={filterOptions}
+						activeSort={activeSortOption}
+						setActiveSort={setActiveSortOption}
 					/>
 					<div className="flex gap-5 flex-wrap justify-center md:justify-start">
 						{pageTransactions.length ? (

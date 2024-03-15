@@ -1,10 +1,21 @@
 "use client";
 import { useFilters } from "@/contexts/filter";
-import type { createFilterOptions } from "@/lib/search-filter-utils";
-import type { Report } from "@/types";
+import {
+	type createFilterOptions,
+	sortingOptions,
+} from "@/lib/search-filter-utils";
+import type { ISortingOption, Report } from "@/types";
 import { Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "../ui/select";
 import ReportsFilters from "./reports-filters";
 
 interface ReportsHeaderProps {
@@ -12,14 +23,16 @@ interface ReportsHeaderProps {
 	filterOverlayOpen: boolean;
 	setFilterOverlayOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	filterOptions: ReturnType<typeof createFilterOptions>;
+	activeSort: ISortingOption["value"];
+	setActiveSort: React.Dispatch<React.SetStateAction<ISortingOption["value"]>>;
 }
 // TODO: Add sorting options
-const sortingOptions = [
-	"$ to $$$ needed",
-	"$$$ to $ needed",
-	"Newest to oldest",
-	"Oldest to newest",
-];
+// const sortingOptions = [
+// 	"$ to $$$ needed",
+// 	"$$$ to $ needed",
+// 	"Newest to oldest",
+// 	"Oldest to newest",
+// ];
 
 const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 	filterOverlayOpen,
@@ -31,6 +44,8 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 		maxAmountNeeded,
 		minAmountNeeded,
 	},
+	activeSort,
+	setActiveSort,
 }) => {
 	const { filters, updateSearchParams } = useFilters();
 	const searchBarInput = filters.find(([key, _]) => key === "q")?.[1] || "";
@@ -79,6 +94,29 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 				</div>
 
 				{/* TODO: Add sorting options */}
+				<Select
+					name="sort"
+					onValueChange={(value) => {
+						setActiveSort(value);
+					}}
+				>
+					<SelectTrigger className="max-w-[300px] min-w-[170px]">
+						<SelectValue
+							placeholder={
+								activeSort ? sortingOptions[activeSort].label : "Sort by"
+							}
+						/>
+					</SelectTrigger>
+					<SelectContent>
+						<SelectGroup>
+							{Object.values(sortingOptions).map((option) => (
+								<SelectItem key={option.value} value={option.value}>
+									{option.label}
+								</SelectItem>
+							))}
+						</SelectGroup>
+					</SelectContent>
+				</Select>
 				{/* <Select
 						// key={dynamicKeyForInput}
 						name="sort"

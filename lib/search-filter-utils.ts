@@ -1,4 +1,4 @@
-import { Report } from "@/types";
+import { ISortingOption, Report } from "@/types";
 import type Fuse from "fuse.js";
 
 export const filterReports = (
@@ -81,4 +81,31 @@ export const createFilterOptions = (reports: Report[]) => {
     minAmountNeeded,
     maxAmountNeeded,
   };
+};
+
+export const sortingOptions: Record<string, ISortingOption> = {
+  amountNeededAsc: {
+    label: "$ to $$$ needed",
+    value: "amountNeededAsc",
+    sortFn: (a: Report, b: Report) => a.totalCost - b.totalCost,
+  },
+  amountNeededDesc: {
+    label: "$$$ to $ needed",
+    value: "amountNeededDesc",
+    sortFn: (a: Report, b: Report) => b.totalCost - a.totalCost,
+  },
+  createdNewestFirst: {
+    label: "Newest to oldest",
+    value: "createdNewestFirst",
+    sortFn: (a: Report, b: Report) =>
+      new Date(b.dateCreated || "").getTime() -
+      new Date(a.dateCreated || "").getTime(),
+  },
+  createdOldestFirst: {
+    label: "Oldest to newest",
+    value: "createdOldestFirst",
+    sortFn: (a: Report, b: Report) =>
+      new Date(a.dateCreated || "").getTime() -
+      new Date(b.dateCreated || "").getTime(),
+  },
 };
