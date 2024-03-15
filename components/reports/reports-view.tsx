@@ -14,9 +14,11 @@ import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
 import { createFilterOptions, filterReports } from "@/lib/search-filter-utils";
+import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
 import Fuse from "fuse.js";
 import { useMemo, useState } from "react";
+import { Button } from "../ui/button";
 import { SidebarFilter } from "./filter-sidebar";
 
 interface IPageData {
@@ -25,7 +27,7 @@ interface IPageData {
 
 export function ReportsView({ reports }: IPageData) {
 	const [searchParams, setSearchParams] = useState(new URLSearchParams());
-	const { filters } = useFilters();
+	const { filters, updateSearchParams } = useFilters();
 	let filteredReports = reports;
 
 	const filterOptions = useMemo(() => {
@@ -64,9 +66,8 @@ export function ReportsView({ reports }: IPageData) {
 				setIsOpen={setFilterOpen}
 				filterOptions={filterOptions}
 			/>
-
-			<section className="flex-1">
-				<section className="flex flex-col px-3 md:px-6 py-4">
+			<section className={cn("flex-1 py-6", filterOpen ? "px-6" : "px-12")}>
+				<section className="flex flex-col px-3">
 					<ReportsHeader
 						searchParams={searchParams}
 						setSearchParams={setSearchParams}
@@ -76,25 +77,44 @@ export function ReportsView({ reports }: IPageData) {
 						filterOptions={filterOptions}
 					/>
 					<div className="flex gap-5 flex-wrap justify-center md:justify-start">
-						{
-							// getSelectedReports.length
-							pageTransactions.length
-								? pageTransactions.map((report: Report) => (
-										<ReportCard
-											key={report.hypercertId}
-											slug={report.slug}
-											hypercertId={report.hypercertId}
-											image={report.image}
-											title={report.title}
-											summary={report.summary}
-											category={report.category}
-											state={report.state}
-											totalCost={report.totalCost}
-											fundedSoFar={report.fundedSoFar}
-										/>
-								  ))
-								: null
-						}
+						{pageTransactions.length ? (
+							pageTransactions.map((report: Report) => (
+								<ReportCard
+									key={report.hypercertId}
+									slug={report.slug}
+									hypercertId={report.hypercertId}
+									image={report.image}
+									title={report.title}
+									summary={report.summary}
+									category={report.category}
+									state={report.state}
+									totalCost={report.totalCost}
+									fundedSoFar={report.fundedSoFar}
+								/>
+							))
+						) : (
+							<section className="w-full flex py-6">
+								<div className="flex flex-col items-center text-center pb-24 md:pb-10">
+									<img
+										className="h-20 w-20"
+										src="/reports_not_found.svg"
+										alt="flower illustration"
+									/>
+									<p className="text-lg font-bold text-vd-beige-600">
+										We couldn't find any reports matching your search or filter.
+									</p>
+									<p className="text-vd-beige-600">
+										Please remove some of your filters and try again.
+									</p>
+									<Button
+										className="mt-4"
+										onClick={() => updateSearchParams([])}
+									>
+										Clear filters and search
+									</Button>
+								</div>
+							</section>
+						)}
 					</div>
 
 					{needsPagination && (
@@ -141,26 +161,6 @@ export function ReportsView({ reports }: IPageData) {
 					)}
 				</section>
 			</section>
-
-			{/* TODO: handle the case where no reports match the filters */}
-			{/*
-			{!filters.length ? (
-				<section>
-					<div className="flex flex-col items-center text-center pb-24 md:pb-10">
-						<img
-							className="h-20 w-20"
-							src="/reports_not_found.svg"
-							alt="flower illustration"
-						/>
-						<p className="text-vd-beige-600">
-							No reports matched your request.
-						</p>
-						<p className="text-vd-beige-600">
-							Please remove some of your filters and try again.
-						</p>
-					</div>
-				</section>
-			) : null} */}
 		</section>
 	);
 }
