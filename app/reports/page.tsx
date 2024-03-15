@@ -1,6 +1,7 @@
 import { ReportsView } from "@/components/reports/reports-view";
 import VoicedeckStats from "@/components/reports/voicedeck-stats";
 import { siteConfig } from "@/config/site";
+import { FilterProvider } from "@/contexts/filter";
 import { getNumberOfContributors } from "@/lib/directus";
 import { fetchReports } from "@/lib/impact-reports";
 import type { Report } from "@/types";
@@ -24,9 +25,9 @@ export default async function ReportsPage() {
 	}
 
 	return (
-		<main className="flex flex-col gap-4">
+		<main className="flex flex-col gap-4 pb-[60px]">
 			<section className="flex flex-col items-center p-4 md:p-8 gap-4">
-				<header className="w-full flex flex-col justify-end bg-[url('/hero_img.jpg')] bg-cover bg-center max-w-screen-xl h-[520px] text-vd-beige-100 rounded-3xl p-4 md:p-6">
+				<header className="w-full flex flex-col justify-end bg-[url('/hero_img.jpg')] bg-cover bg-center max-w-screen-xl h-[520px] text-vd-beige-100 rounded-3xl p-4 md:p-8">
 					<h1 className="text-3xl md:text-6xl font-bold text-left max-w-screen-md">
 						{siteConfig.title}
 					</h1>
@@ -41,7 +42,9 @@ export default async function ReportsPage() {
 			</section>
 
 			{uniqueReports.length ? (
-				<ReportsView reports={uniqueReports} />
+				<FilterProvider>
+					<ReportsView reports={uniqueReports} />
+				</FilterProvider>
 			) : (
 				<section className="flex flex-col items-center w-full pt-6 pb-24 md:pb-6">
 					<img
