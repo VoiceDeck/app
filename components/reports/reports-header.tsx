@@ -3,7 +3,6 @@ import { useFilters } from "@/contexts/filter";
 import type { createFilterOptions } from "@/lib/search-filter-utils";
 import type { Report } from "@/types";
 import { Search } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import ReportsFilters from "./reports-filters";
@@ -34,23 +33,15 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 	},
 }) => {
 	const { filters, updateSearchParams } = useFilters();
+	const searchBarInput = filters.find(([key, _]) => key === "q")?.[1] || "";
 
-	const [searchBarInput, setsearchBarInput] = useState(
-		filters.find(([key, _]) => key === "q")?.[1] || "",
-	);
-
-	const handleSearch = () => {
+	const handleSearch = (searchText: string) => {
 		const newFilter = filters.filter(([key, _]) => key !== "q");
-		if (searchBarInput.length > 0) {
-			newFilter.push(["q", searchBarInput]);
+		if (searchText.length > 0) {
+			newFilter.push(["q", searchText]);
 		}
 		updateSearchParams(newFilter);
 	};
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		handleSearch();
-	}, [searchBarInput]);
 
 	return (
 		<article className="w-full">
@@ -77,12 +68,11 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 							<Search className="text-vd-blue-600" />
 						</span>
 						<Input
-							className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
 							value={searchBarInput}
-							type="search"
+							className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
 							placeholder="Search in title, summary"
 							onChange={(e) => {
-								setsearchBarInput(e.target.value);
+								handleSearch(e.target.value);
 							}}
 						/>
 					</div>
