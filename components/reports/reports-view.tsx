@@ -89,7 +89,7 @@ export function ReportsView({ reports }: IPageData) {
 								/>
 							))
 						) : (
-							<section className="w-full flex py-6">
+							<section className="w-full flex justify-center items-center py-6">
 								<div className="flex flex-col items-center text-center pb-24 md:pb-10">
 									<img
 										className="h-20 w-20"
