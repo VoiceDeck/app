@@ -84,16 +84,6 @@ export const createFilterOptions = (reports: Report[]) => {
 };
 
 export const sortingOptions: Record<string, ISortingOption> = {
-  amountNeededAsc: {
-    label: "$ to $$$ needed",
-    value: "amountNeededAsc",
-    sortFn: (a: Report, b: Report) => a.totalCost - b.totalCost,
-  },
-  amountNeededDesc: {
-    label: "$$$ to $ needed",
-    value: "amountNeededDesc",
-    sortFn: (a: Report, b: Report) => b.totalCost - a.totalCost,
-  },
   createdNewestFirst: {
     label: "Newest to oldest",
     value: "createdNewestFirst",
@@ -107,5 +97,15 @@ export const sortingOptions: Record<string, ISortingOption> = {
     sortFn: (a: Report, b: Report) =>
       new Date(a.dateCreated || "").getTime() -
       new Date(b.dateCreated || "").getTime(),
+  },
+  amountNeededAsc: {
+    label: "$ to $$$ needed",
+    value: "amountNeededAsc",
+    sortFn: (a: Report, b: Report) => a.totalCost - b.totalCost,
+  },
+  amountNeededDesc: {
+    label: "$$$ to $ needed",
+    value: "amountNeededDesc",
+    sortFn: (a: Report, b: Report) => b.totalCost - a.totalCost,
   },
 };
