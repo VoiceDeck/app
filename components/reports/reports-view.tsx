@@ -14,7 +14,6 @@ import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
 import { createFilterOptions, filterReports } from "@/lib/search-filter-utils";
-import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
 import Fuse from "fuse.js";
 import { useMemo, useState } from "react";
@@ -65,7 +64,7 @@ export function ReportsView({ reports }: IPageData) {
 				setIsOpen={setFilterOpen}
 				filterOptions={filterOptions}
 			/>
-			<section className={cn("flex-1 py-6", filterOpen ? "px-6" : "px-12")}>
+			<section className={"flex-1 py-6 px-3 md:px-8"}>
 				<section className="flex flex-col px-3">
 					<ReportsHeader
 						reports={reports}
