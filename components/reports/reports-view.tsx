@@ -26,7 +26,6 @@ interface IPageData {
 }
 
 export function ReportsView({ reports }: IPageData) {
-	const [searchParams, setSearchParams] = useState(new URLSearchParams());
 	const { filters, updateSearchParams } = useFilters();
 	let filteredReports = reports;
 
@@ -54,7 +53,7 @@ export function ReportsView({ reports }: IPageData) {
 		maxPage,
 		pageNumbers,
 		needsPagination,
-		// set to 3 reports per page for testing because currently only 8 reports exist
+		// TODO: Reset reports per page to 10
 	} = usePagination<Report>(filteredReports, 5);
 
 	const [filterOpen, setFilterOpen] = useState(false);
@@ -69,8 +68,6 @@ export function ReportsView({ reports }: IPageData) {
 			<section className={cn("flex-1 py-6", filterOpen ? "px-6" : "px-12")}>
 				<section className="flex flex-col px-3">
 					<ReportsHeader
-						searchParams={searchParams}
-						setSearchParams={setSearchParams}
 						reports={reports}
 						filterOverlayOpen={filterOpen}
 						setFilterOverlayOpen={setFilterOpen}
