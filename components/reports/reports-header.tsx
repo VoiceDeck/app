@@ -1,22 +1,22 @@
-"use client"
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import ReportsFilters from "./reports-filters";
-import { Report } from "@/types";
-import { Badge } from "../ui/badge";
-import { DynamicCategoryIcon } from "../ui/dynamic-category-icon";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+"use client";
+import { useFilters } from "@/contexts/filter";
+import type { createFilterOptions } from "@/lib/search-filter-utils";
+import type { Report } from "@/types";
 import { Search } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { ComboboxOption } from "./states-combobox";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import ReportsFilters from "./reports-filters";
 
 interface ReportsHeaderProps {
-  searchParams: URLSearchParams;
-  setSearchParams: React.Dispatch<React.SetStateAction<URLSearchParams>>;
+	searchParams: URLSearchParams;
+	setSearchParams: React.Dispatch<React.SetStateAction<URLSearchParams>>;
 	reports: Report[];
+	filterOverlayOpen: boolean;
+	setFilterOverlayOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	filterOptions: ReturnType<typeof createFilterOptions>;
 }
-
+// TODO: Add sorting options
 const sortingOptions = [
 	"$ to $$$ needed",
 	"$$$ to $ needed",
@@ -24,122 +24,69 @@ const sortingOptions = [
 	"Oldest to newest",
 ];
 
-const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchParams, reports }) => {
-	const uniqueCategories = useMemo(() => {
-		return reports
-			.map((report: Report, index: number) => report.category)
-			.filter(
-				(value: string, index: number, self: string[]) =>
-					self.indexOf(value) === index,
-			);
-	}, [reports]);
+const ReportsHeader: React.FC<ReportsHeaderProps> = ({
+	searchParams,
+	setSearchParams,
+	reports,
+	filterOverlayOpen,
+	setFilterOverlayOpen,
+	filterOptions: {
+		uniqueCategories,
+		uniqueOutlets,
+		uniqueStates,
+		maxAmountNeeded,
+		minAmountNeeded,
+	},
+}) => {
+	const { filters, updateSearchParams } = useFilters();
 
-	const uniqueMediaOutlets = useMemo(() => {
-		return reports
-			.map((report: Report, index: number) => report.contributors[0])
-			.filter(
-				(value: string, index: number, self: string[]) =>
-					self.indexOf(value) === index,
-			);
-	}, [reports]);
-
-	// updated to return a type ComboboxOption[] of {label: state, value: state} objects
-	const uniqueStates: ComboboxOption[] = useMemo(() => {
-		return reports
-			.map((report: Report, index: number) => ({
-				label: report.state,
-				value: report.state,
-			}))
-			.filter(
-				(
-					value: { label: string; value: string },
-					index: number,
-					self: { label: string; value: string }[],
-				) => self.findIndex((t) => t.label === value.label) === index,
-			);
-	}, [reports]);
-
-  const router = useRouter();
-	const localSearchParams = searchParams; // make a copy of the searchParams object to edit
 	const [searchBarInput, setsearchBarInput] = useState("");
-	const [categorySelected, setCategorySelected] = useState<string>();
-	const [dynamicKeyForInput, setDynamicKeyForInput] = useState(0);
-	const [numFiltersApplied, setNumFiltersApplied] = useState(0);
 
-	const toggleCategorySelection = (category: string) => {
-		localSearchParams.delete("category");
-		if (category === categorySelected) {
-			setCategorySelected("");
-		} else {
-			setCategorySelected(category);
-			localSearchParams.append("category", category);
+	const handleSearch = () => {
+		const newFilter = filters.filter(([key, _]) => key !== "q");
+		if (searchBarInput) {
+			newFilter.push(["q", searchBarInput]);
 		}
-		setSearchParams(localSearchParams);
-    router.push(`reports/?${localSearchParams.toString()}`, {scroll: false})
+		updateSearchParams(newFilter);
 	};
 
+	const defaultSearchValue = filters.find(([key, _]) => key === "q")?.[1] || "";
+
 	return (
-		<article className="w-full max-w-screen-xl">
-			<h2 className="text-3xl md:text-4xl font-semibold pb-1 pt-6 md:pt-10">
-				Reports
-			</h2>
+		<article className="w-full">
+			<h2 className="text-3xl md:text-4xl font-semibold pb-1">Reports</h2>
 			<p className="text-sm">Find and fund reports that resonate with you.</p>
-			<div className="flex flex-col xl:flex-row xl:justify-between gap-3 w-full py-4">
-				<div className="flex gap-2">
-					{uniqueCategories.map((category: string) => (
-						<Badge
-							key={category}
-							className={`border-vd-blue-500 rounded-full flex flex-auto flex-col md:flex-row items-center gap-1 px-3 py-2 cursor-pointer ${
-								categorySelected === category
-									? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
-									: ""
-							}`}
-							onClick={() => toggleCategorySelection(category)}
-						>
-							<DynamicCategoryIcon category={category} />
-							<p className="text-xs">{category}</p>
-						</Badge>
-					))}
-				</div>
+			<div className="flex gap-3 w-full py-4">
+				<ReportsFilters
+					isOpen={filterOverlayOpen}
+					setIsOpen={setFilterOverlayOpen}
+					filterOptions={{
+						uniqueCategories,
+						uniqueOutlets,
+						uniqueStates,
+						maxAmountNeeded,
+						minAmountNeeded,
+					}}
+				/>
 
 				<div className="flex flex-1 max-w-[500px] gap-2">
 					<Input
 						className="pr-[65px] rounded-r-3xl h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
-						key={dynamicKeyForInput}
-						type="q"
+						defaultValue={defaultSearchValue}
+						type="search"
 						placeholder="Search in title, summary"
 						onChange={(e) => {
 							setsearchBarInput(e.target.value);
 						}}
 					/>
-					<Button
-						className="ml-[-65px]"
-						onClick={() => {
-							if (localSearchParams.has("q")) {
-								localSearchParams.delete("q");
-							}
-							localSearchParams.append("q", searchBarInput);
-							setSearchParams(localSearchParams);
-              router.push(`reports/?${localSearchParams.toString()}`, {scroll: false})
-						}}
-					>
+					<Button className="ml-[-65px]" onClick={(e) => handleSearch()}>
 						<Search />
 					</Button>
 				</div>
-				<div className="flex gap-2">
-					<div>
-						<ReportsFilters
-              searchParams={searchParams}
-              setSearchParams={setSearchParams}
-							outlets={uniqueMediaOutlets}
-							states={uniqueStates}
-							amountsNeeded={reports.map((report: Report) => report.totalCost - report.fundedSoFar || 0)}
-							numFiltersApplied={numFiltersApplied}
-							setNumFiltersApplied={setNumFiltersApplied}
-						/>
-					</div>
-					<Select
-						key={dynamicKeyForInput}
+
+				{/* TODO: Add sorting options */}
+				{/* <Select
+						// key={dynamicKeyForInput}
 						name="sort"
 						onValueChange={(value) => {
 							if (searchParams.has("sort")) {
@@ -147,7 +94,9 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchPa
 							}
 							searchParams.append("sort", value);
 							setSearchParams(searchParams);
-              router.push(`reports/?${searchParams.toString()}`, {scroll: false})
+							router.push(`reports/?${searchParams.toString()}`, {
+								scroll: false,
+							});
 						}}
 					>
 						<SelectTrigger className="max-w-[300px] min-w-[170px]">
@@ -160,21 +109,15 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({ searchParams, setSearchPa
 								</SelectItem>
 							))}
 						</SelectContent>
-					</Select>
-					<Button
-						className="text-xs"
-						variant={"outline"}
-						onClick={() => {
-							setCategorySelected("");
-							setDynamicKeyForInput(Math.ceil(Math.random() * 10));
-							setNumFiltersApplied(0);
-							setSearchParams(new URLSearchParams());
-              router.push("reports", {scroll: false})
-						}}
-					>
-						Reset
-					</Button>
-				</div>
+					</Select> */}
+				<Button
+					className="text-xs"
+					variant={"outline"}
+					onClick={updateSearchParams.bind(null, [])}
+				>
+					Reset
+				</Button>
+				{/* </div> */}
 			</div>
 		</article>
 	);
