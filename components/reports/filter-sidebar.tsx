@@ -40,7 +40,7 @@ const SidebarFilter = ({
 						onClick={() => setIsOpen(false)}
 						title="Close sidebar"
 						aria-label="Close sidebar"
-						className="hover:-translate-x-1 transition-transform ease-in-out duration-300"
+						className="hover:-translate-x-1 transition-transform ease-in-out duration-300 text-vd-blue-600"
 					>
 						<RewindIcon size={28} />
 					</button>
