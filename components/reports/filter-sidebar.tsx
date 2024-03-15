@@ -21,7 +21,7 @@ const SidebarFilter = ({
 	return (
 		<aside
 			className={cn(
-				"w-[380px] p-5 bg-vd-beige-100 border-r border-r-stone-300 transition-[margin-left] ease-[cubic-bezier(0.65, 0, 0.35, 1)] duration-700",
+				"w-[380px] p-5 bg-vd-beige-100 border-r border-r-stone-300 transition-[margin-left] ease-[cubic-bezier(0.65, 0, 0.35, 1)] duration-700 h-full",
 				isOpen ? "ml-0" : "ml-[-380px]",
 			)}
 		>

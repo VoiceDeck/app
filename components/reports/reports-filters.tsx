@@ -123,7 +123,6 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 					)}
 				</div>
 			</section>
-			{/* <div className="p-5" /> */}
 			<section className="pt-4">
 				<h2 className="font-medium">Amount needed to complete funding</h2>
 				<div className="p-2" />
