@@ -172,23 +172,28 @@ const SupportReportForm = ({
 									<FormLabel>Support amount</FormLabel>
 									<div className="grid grid-cols-5 gap-4">
 										{[5, 10, 20, 50, 100].map((amount) => (
-											<button
+											<Button
 												key={amount}
 												disabled={amount > Number(dollarAmountNeeded)}
 												type="button"
-												className={cn(
-													"flex justify-center items-center h-10 rounded-lg border-[1.5px] font-bold hover:bg-vd-beige-200 transition-colors duration-200 text-primary hover:text-primary disabled:opacity-15",
+												variant={
 													form.watch("fractionPayment") === amount
-														? "bg-vd-beige-600 text-white"
-														: "bg-transparent text-primary",
+														? "default"
+														: "outline"
+												}
+												className={cn(
+													"flex justify-center items-center h-10 rounded-lg font-bold transition-colors duration-200",
+													form.watch("fractionPayment") === amount
+														? "bg-vd-beige-600 text-white hover:bg-vd-beige-700"
+														: "text-primary hover:bg-vd-beige-200 hover:text-primary",
 													amount > Number(dollarAmountNeeded)
-														? "cursor-not-allowed"
+														? "cursor-not-allowed disabled:opacity-15"
 														: "",
 												)}
 												onClick={() => form.setValue("fractionPayment", amount)}
 											>
 												${amount}
-											</button>
+											</Button>
 										))}
 									</div>
 									<FormControl>
@@ -220,9 +225,6 @@ const SupportReportForm = ({
 											className="w-full px-4 py-2 border rounded-lg resize-none"
 										/>
 									</FormControl>
-									{/* <FormDescription>
-									Leave a message with your donation (optional).
-								</FormDescription> */}
 									<FormMessage />
 								</FormItem>
 							)}
@@ -234,9 +236,6 @@ const SupportReportForm = ({
 								<FormItem className="flex flex-row items-center justify-between">
 									<div className="space-y-0.5">
 										<FormLabel>Hide my name from the donation</FormLabel>
-										{/* <FormDescription>
-										Choose whether to hide your name from the donation.
-									</FormDescription> */}
 									</div>
 									<FormControl>
 										<Switch
