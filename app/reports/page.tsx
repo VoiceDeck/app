@@ -56,16 +56,15 @@ import Link from "next/link";
 
 async function getData() {
 	try {
-		const response = await fetch("http://localhost:3000/api/reports");
-		const reports = (await response.json()) as Report[];
+		const reports: Report[] = await fetchReports();
 
-		const uniqueReports = reports.reduce((acc, report) => {
-			const reportExists = acc.find((r) => r.cmsId === report.cmsId);
+		const uniqueReports = reports.reduce((acc: Report[], report: Report) => {
+			const reportExists = acc.find((r: Report) => r.cmsId === report.cmsId);
 			if (!reportExists) {
 				acc.push(report);
 			}
 			return acc;
-		}, [] as Report[]);
+		}, []);
 
 		const numOfContributors = await getNumberOfContributors();
 
