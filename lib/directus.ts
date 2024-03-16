@@ -1,5 +1,5 @@
 // @ts-nocheck
-import 'server-only'
+import "server-only";
 
 import {
   type DirectusClient,
@@ -24,7 +24,6 @@ import { sepolia } from "viem/chains";
 
 import type { CMSContent, Contribution } from "@/types";
 import { updateFundedAmount } from "./impact-reports";
-
 
 // represents contents retrieved from CMS `reports` collection
 let CMSReports: CMSContent[] | null = null;
@@ -52,7 +51,7 @@ export async function processNewContribution(
   hypercertId: string,
   amount: number,
   comment?: string
-    ) {
+) {
   try {
     const client = getDirectusClient();
 
@@ -402,22 +401,20 @@ export const getDirectusClient = (): DirectusClient<any> & RestClient<any> => {
     return directusClient;
   }
 
-  if (!process.env.NEXT_PUBLIC_CMS_ENDPOINT) {
-    throw new Error(
-      "[server] NEXT_PUBLIC_CMS_ENDPOINT environment variable is not set"
-    );
+  if (!process.env.CMS_ENDPOINT) {
+    throw new Error("[server] CMS_ENDPOINT environment variable is not set");
   }
 
   try {
-    directusClient = createDirectus(process.env.NEXT_PUBLIC_CMS_ENDPOINT)
+    directusClient = createDirectus(process.env.CMS_ENDPOINT)
       .with(staticToken(process.env.CMS_ACCESS_TOKEN as string))
       .with(rest());
   } catch (error) {
     console.error(
-      `[server] Failed to create Directus client using endpoint ${process.env.NEXT_PUBLIC_CMS_ENDPOINT}: ${error}`
+      `[server] Failed to create Directus client using endpoint ${process.env.CMS_ENDPOINT}: ${error}`
     );
     throw new Error(
-      `[server] failed to create Directus client using endpoint ${process.env.NEXT_PUBLIC_CMS_ENDPOINT}: ${error}`
+      `[server] failed to create Directus client using endpoint ${process.env.CMS_ENDPOINT}: ${error}`
     );
   }
 
