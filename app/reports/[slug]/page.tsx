@@ -3,6 +3,7 @@ import FundingProgress from "@/components/report-details/funding-progress";
 import ReportSidebar from "@/components/report-details/report-sidebar";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
+import { fetchReportBySlug } from "@/lib/impact-reports";
 import type { Report } from "@/types";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
@@ -10,49 +11,13 @@ import Link from "next/link";
 
 const getReportData = async (slug?: string | string[]) => {
 	try {
-		const res = await fetch(`http://localhost:3000/api/reports/${slug}`);
-		if (!res.ok) {
-			throw new Error(
-				`Failed to fetch report data for slug: ${slug}, Status: ${res.status}`,
-			);
-		}
-		const reportData = await res.json();
+		const reportData = await fetchReportBySlug(slug as string);
 		return reportData;
 	} catch (error) {
 		console.error(`Error fetching report data for slug: ${slug}`, error);
 		throw new Error(`Error fetching report data for slug: ${slug}`);
 	}
 };
-
-// export const loader: LoaderFunction = async ({ params }) => {
-// 	const slug = params.slug;
-// 	try {
-// 		const response = await fetchReportBySlug(slug as string);
-
-// 		return { report: response };
-// 	} catch (error) {
-// 		console.error(`Failed to load impact report: ${error}`);
-// 		throw new Response("Failed to load impact report", { status: 500 });
-// 	}
-// };
-
-// // Cache reports individually in session storage in the browser for super fast
-// // back/forward/revisits during the session, but will fetch fresh data
-// // from the server if the user closes the tab and comes back later
-// export const clientLoader: ClientLoaderFunction = async ({
-// 	serverLoader,
-// 	params,
-// }) => {
-// 	const cacheKey = `report-${params.slug}`;
-// 	const cache = sessionStorage.getItem(cacheKey);
-// 	if (cache) {
-// 		return { report: JSON.parse(cache) };
-// 	}
-
-// 	const { report } = await serverLoader<{ report: Report }>();
-// 	sessionStorage.setItem(cacheKey, JSON.stringify(report));
-// 	return { report };
-// };
 
 export default async function ReportPage({
 	params,
