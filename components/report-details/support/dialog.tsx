@@ -38,12 +38,10 @@ const SupportDialogContent = ({
 		);
 	}
 	return (
-		<>
-			<SupportReportForm
-				drawerContainer={drawerContainer}
-				hypercertId={hypercertId}
-			/>
-		</>
+		<SupportReportForm
+			drawerContainer={drawerContainer}
+			hypercertId={hypercertId}
+		/>
 	);
 };
 
