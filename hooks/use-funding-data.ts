@@ -17,7 +17,7 @@ export const useFetchFundingData = (
   const publicClient = usePublicClient({ chainId: sepolia.id });
 
   const { indexer } = new HypercertClient({
-    chain: { id: 11155111 }, // Sepolia testnet
+    chain: { id: sepolia.id }, // Sepolia testnet
     // @ts-ignore
     publicClient,
   });

@@ -33,15 +33,6 @@ const useHandleBuyFraction = (
       return;
     }
 
-    // console.log({
-    //   order,
-    //   address,
-    //   amount,
-    //   orderPrice: order.price,
-    // });
-
-    // setStep("Setting up order execution");
-
     const takerOrder = hypercertExhangeClient.createFractionalSaleTakerBid(
       order,
       address,
@@ -67,13 +58,6 @@ const useHandleBuyFraction = (
     }
 
     try {
-      // console.info("making trade", {
-      //   order,
-      //   takerOrder,
-      //   signature: order.signature,
-      // });
-      // Perform the trade
-      // setStep("Setting up order execution");
       const { call } = hypercertExhangeClient.executeOrder(
         order,
         takerOrder,
