@@ -1,6 +1,6 @@
-import { Loader } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { Drawer } from "vaul";
-import { Button } from "../../ui/button";
 
 interface SupportProcessingDrawerProps {
 	container: HTMLDivElement | null;
@@ -21,7 +21,7 @@ export default function SupportProcessingDrawer({
 				<Drawer.Content className="bg-stone-100 flex flex-col rounded-t-xl max-h-[50%] fixed bottom-0 left-0 right-0 after:hidden">
 					<div className="flex flex-col gap-4 px-4 py-6">
 						<div className="flex justify-center animate-spin">
-							<Loader />
+							<Loader2 />
 						</div>
 						<div className="flex flex-col gap-4">
 							<h4 className="font-bold text-center">Processing your support</h4>
