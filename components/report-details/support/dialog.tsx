@@ -1,17 +1,16 @@
-import type { Report, SupportReportInfo } from "@/types";
-import { useState } from "react";
-import { Button } from "../../ui/button";
-import { Card } from "../../ui/card";
+import ConnectButton from "@/components/connect-button";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTrigger,
-} from "../../ui/dialog";
-
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import type { Report, SupportReportInfo } from "@/types";
+import { useState } from "react";
 import { useAccount } from "wagmi";
-import ConnectButton from "../../connect-button";
-import { Separator } from "../../ui/separator";
 import SupportReportForm from "./form";
 
 const SupportDialogContent = ({
