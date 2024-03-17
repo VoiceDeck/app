@@ -1,13 +1,6 @@
 "use client";
-import { useFilters } from "@/contexts/filter";
-import {
-	type createFilterOptions,
-	sortingOptions,
-} from "@/lib/search-filter-utils";
-import type { ISortingOption, Report } from "@/types";
-import { Search } from "lucide-react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -15,7 +8,14 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
+import { useFilters } from "@/contexts/filter";
+import {
+	type createFilterOptions,
+	sortingOptions,
+} from "@/lib/search-filter-utils";
+import type { ISortingOption, Report } from "@/types";
+import { Search } from "lucide-react";
 import ReportsFilters from "./reports-filters";
 
 interface ReportsHeaderProps {
@@ -45,11 +45,11 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 		updateSearchParams(newFilter);
 	};
 
-	const renderSearchInput = (placeholderText: string, inputClass: string) => (
+	const SearchInput = () => (
 		<Input
 			value={searchBarInput}
-			className={inputClass}
-			placeholder={placeholderText}
+			className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
+			placeholder={"Search in title, summary"}
 			onChange={(e) => handleSearch(e.target.value)}
 		/>
 	);
@@ -85,10 +85,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 				<span className="absolute top-1/2 left-2 transform -translate-y-1/2">
 					<Search className="text-vd-blue-600" />
 				</span>
-				{renderSearchInput(
-					"Search in title, summary",
-					"pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2",
-				)}
+				<SearchInput />
 			</div>
 			<div className="flex gap-2">
 				<ReportsFilters
@@ -119,10 +116,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 				<span className="absolute top-1/2 left-2 transform -translate-y-1/2">
 					<Search className="text-vd-blue-600" />
 				</span>
-				{renderSearchInput(
-					"Search in title, summary",
-					"pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2",
-				)}
+				<SearchInput />
 			</div>
 			{renderSelectSort("max-w-[200px] min-w-[170px]")}
 			<Button
