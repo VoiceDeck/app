@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Address } from "viem";
 import { z } from "zod";
+import { getVoiceDeckUrl } from "@/config/endpoint";
 import type { useHandleBuyFraction } from "./use-buy-fraction";
 
 interface SupportFormInputs {
@@ -55,7 +56,7 @@ const useSupportForm = (
       if (txnReceipt) {
         console.log("Processing new contribution in CMS");
         try {
-          await fetch("http://localhost:3000/api/contributions", {
+          await fetch(`${getVoiceDeckUrl()}/api/contributions`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
