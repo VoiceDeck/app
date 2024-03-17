@@ -13,6 +13,7 @@ import {
 import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
+import { Button } from "@/components/ui/button";
 import {
 	createFilterOptions,
 	filterReports,
@@ -21,7 +22,6 @@ import {
 import type { ISortingOption, Report } from "@/types";
 import Fuse from "fuse.js";
 import { useMemo, useState } from "react";
-import { Button } from "../ui/button";
 import { SidebarFilter } from "./filter-sidebar";
 
 interface IPageData {
