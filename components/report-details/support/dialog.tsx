@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import type { Report, SupportReportInfo } from "@/types";
+import Image from "next/image";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import SupportReportForm from "./form";
@@ -73,20 +74,20 @@ const SupportReportDialog = ({
 					<Card className="bg-slate-50">
 						<div className="flex flex-col gap-4 p-4">
 							<div className="flex justify-center">
-								<img
-									src={reportImage}
-									alt={reportTitle}
-									className="w-full h-24 object-cover rounded-lg"
-								/>
+								{reportImage && reportTitle && (
+									<Image
+										src={reportImage}
+										alt={reportTitle}
+										className="w-full h-24 object-cover rounded-lg"
+									/>
+								)}
 							</div>
 							<div className="flex flex-col gap-2">
 								<h4 className="font-bold">{reportTitle}</h4>
 							</div>
 						</div>
 					</Card>
-					<div>
-						<Separator orientation="horizontal" />
-					</div>
+					<Separator />
 					<SupportDialogContent
 						address={address}
 						isConnected={isConnected}
