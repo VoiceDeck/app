@@ -46,10 +46,9 @@ const useHandleBuyFraction = (
         order.currency, // Be sure to set the allowance for the correct currency
         totalPrice
       );
-      const approveResult = await waitForTransactionReceipt(publicClient, {
+      await waitForTransactionReceipt(publicClient, {
         hash: approveTx.hash as `0x${string}`,
       });
-      // console.log({ approveResult });
     } catch (e) {
       console.error(e);
       setTransactionStatus("Failed");
@@ -61,10 +60,8 @@ const useHandleBuyFraction = (
         takerOrder,
         order.signature
       );
-      console.info("Awaiting buy signature");
       const tx = await call();
       setTransactionHash(tx.hash as Address);
-      console.info("Awaiting confirmation", tx);
       const txnReceipt = await waitForTransactionReceipt(publicClient, {
         hash: tx.hash as `0x${string}`,
       });
