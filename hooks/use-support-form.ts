@@ -1,10 +1,10 @@
 "use client";
+import { getVoiceDeckUrl } from "@/config/endpoint";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Address } from "viem";
 import { z } from "zod";
-import { getVoiceDeckUrl } from "@/config/endpoint";
 import type { useHandleBuyFraction } from "./use-buy-fraction";
 
 interface SupportFormInputs {
@@ -51,29 +51,21 @@ const useSupportForm = (
     if (!address) {
       throw new Error("No address found");
     }
-    try {
-      const txnReceipt = await handleBuyFraction(order, unitsToBuy, address);
-      if (txnReceipt) {
-        console.log("Processing new contribution in CMS");
-        try {
-          await fetch(`${getVoiceDeckUrl()}/api/contributions`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              txId: txnReceipt.transactionHash as `0x${string}`,
-              hypercertId: hypercertId ?? "",
-              amount: unitsToBuy,
-              comment: values.comment,
-            }),
-          });
-        } catch (error) {
-          console.error("Failed to post contribution:", error);
-        }
-      }
-    } catch (e) {
-      console.error(e);
+
+    const txnReceipt = await handleBuyFraction(order, unitsToBuy, address);
+    if (txnReceipt) {
+      await fetch(`${getVoiceDeckUrl()}/api/contributions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          txId: txnReceipt.transactionHash as `0x${string}`,
+          hypercertId: hypercertId ?? "",
+          amount: values.fractionPayment,
+          comment: values.comment,
+        }),
+      });
     }
   };
 
