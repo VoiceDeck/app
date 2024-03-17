@@ -18,8 +18,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { truncateEthereumAddress } from "@/lib/utils";
+import { ConnectButton } from "./connect-button";
 
-export default function ConnectButton() {
+const WalletProfile = () => {
   const { open } = useWeb3Modal();
   const { address, isConnecting, isDisconnected } = useAccount();
   const { data: ensName } = useEnsName({
@@ -31,8 +32,7 @@ export default function ConnectButton() {
     name: normalize(ensName!),
   });
   if (isConnecting) return <div>Connecting…</div>;
-  if (isDisconnected)
-    return <Button onClick={() => open()}>Connect Wallet</Button>;
+  if (isDisconnected) return <ConnectButton />;
 
   return (
     <DropdownMenu>
@@ -79,4 +79,8 @@ export default function ConnectButton() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
+
+WalletProfile.displayName = "WalletProfile";
+
+export { WalletProfile };

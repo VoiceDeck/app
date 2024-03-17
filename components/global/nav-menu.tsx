@@ -1,6 +1,7 @@
-import { NavLinks } from "@/components/global/nav-links";
-import ConnectButton from "../connect-button";
 import Link from "next/link";
+
+import { NavLinks } from "@/components/global/nav-links";
+import { WalletProfile } from "@/components/global/wallet-profile";
 
 const NavMenu = () => {
   return (
@@ -14,7 +15,7 @@ const NavMenu = () => {
         <NavLinks />
 
         <div className="flex gap-2">
-          <ConnectButton />
+          <WalletProfile />
         </div>
       </section>
     </nav>
