@@ -1,4 +1,5 @@
 import { MapPin } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 import {
@@ -42,7 +43,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 				className="w-[250px] md:w-[280px] rounded-3xl bg-vd-beige-100 text-vd-blue-900 hover:scale-105 ease-[cubic-bezier(0.76, 0, 0.24, 1)] transition-transform duration-300 shadow-none hover:shadow-md"
 			>
 				<CardHeader className="p-0">
-					<img
+					<Image
 						src={image}
 						alt={title}
 						className="w-full h-44 overflow-clip object-cover object-center rounded-t-3xl"
@@ -77,7 +78,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 						className="w-full"
 						value={(fundedSoFar / totalCost) * 100}
 					/>
-					{/* <p className="text-xs">${totalCost - fundedSoFar} still needed</p> */}
+					<p className="text-xs">${totalCost - fundedSoFar} needed</p>
 				</CardFooter>
 			</Card>
 		</Link>
