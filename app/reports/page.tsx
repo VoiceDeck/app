@@ -70,7 +70,6 @@ async function getData() {
 
 		return { reports: uniqueReports, numOfContributors };
 	} catch (error) {
-		console.error("Failed to fetch reports:", error);
 		throw new Error("Failed to fetch reports");
 	}
 }

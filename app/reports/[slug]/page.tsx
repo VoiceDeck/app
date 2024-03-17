@@ -14,7 +14,6 @@ const getReportData = async (slug?: string | string[]) => {
 		const reportData = await fetchReportBySlug(slug as string);
 		return reportData;
 	} catch (error) {
-		console.error(`Error fetching report data for slug: ${slug}`, error);
 		throw new Error(`Error fetching report data for slug: ${slug}`);
 	}
 };
