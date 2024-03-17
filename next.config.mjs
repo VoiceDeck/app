@@ -4,6 +4,9 @@ const nextConfig = {
 		config.externals.push("pino-pretty", "lokijs", "encoding");
 		return config;
 	},
+	images: {
+		domains: ["directus.vd-dev.org"],
+	},
 	redirects: async () => {
 		return [
 			{
