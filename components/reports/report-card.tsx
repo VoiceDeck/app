@@ -43,11 +43,14 @@ const ReportCard: React.FC<ReportCardProps> = ({
 				className="w-[250px] md:w-[280px] rounded-3xl bg-vd-beige-100 text-vd-blue-900 hover:scale-105 ease-[cubic-bezier(0.76, 0, 0.24, 1)] transition-transform duration-300 shadow-none hover:shadow-md"
 			>
 				<CardHeader className="p-0">
-					<Image
-						src={image}
-						alt={title}
-						className="w-full h-44 overflow-clip object-cover object-center rounded-t-3xl"
-					/>
+					<div className="relative w-full h-40 overflow-hidden rounded-t-3xl">
+						<Image
+							src={image}
+							alt={title}
+							fill
+							style={{ objectFit: "cover", objectPosition: "center" }}
+						/>
+					</div>
 					<section className="flex flex-col gap-1 px-5 py-2">
 						<CardTitle className="text-lg font-bold leading-tight line-clamp-2">
 							{title}
