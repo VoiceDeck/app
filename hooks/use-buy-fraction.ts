@@ -25,12 +25,10 @@ const useHandleBuyFraction = (
     address?: Address
   ) => {
     if (!publicClient) {
-      console.error("No public client found");
-      return;
+      throw new Error("No public client found");
     }
     if (!order) {
-      console.error("No order found");
-      return;
+      throw new Error("No order found");
     }
 
     const takerOrder = hypercertExhangeClient.createFractionalSaleTakerBid(
