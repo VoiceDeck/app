@@ -12,7 +12,12 @@ export const filterReports = (
         const searchResults = fuse.search(value);
         return searchResults.map((result) => result.item);
       case "state":
-        return filteredReports.filter((report) => value.includes(report.state));
+        const states = filters
+          .filter(([filterKey]) => filterKey === "state")
+          .map(([, filterValue]) => filterValue);
+        return filteredReports.filter((report) =>
+          states.includes(report.state)
+        );
       case "min":
         return filteredReports.filter(
           (report) => report.totalCost - report.fundedSoFar >= parseInt(value)
