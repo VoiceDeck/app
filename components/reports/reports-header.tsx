@@ -54,19 +54,25 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 
 	const SearchBar = useMemo(
 		() => (
-			<div className="flex w-full gap-1">
-				<Input
-					value={searchInput}
-					className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm md:text-base font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
-					placeholder="Search in title, summary"
-					onChange={(e) => setSearchInput(e.target.value)}
-				/>
-				<Button
-					className="rounded-md"
-					onClick={() => executeSearch(searchInput)}
-				>
-					Search
-				</Button>
+			<div className="relative flex-1 max-w-xl">
+				<span className="absolute top-1/2 left-2 transform -translate-y-1/2">
+					<Search className="text-vd-blue-600" />
+				</span>
+
+				<div className="flex w-full gap-1">
+					<Input
+						value={searchInput}
+						className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm md:text-base font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
+						placeholder="Search in title, summary"
+						onChange={(e) => setSearchInput(e.target.value)}
+					/>
+					<Button
+						className="rounded-md"
+						onClick={() => executeSearch(searchInput)}
+					>
+						Search
+					</Button>
+				</div>
 			</div>
 		),
 		[searchInput, executeSearch],
@@ -103,12 +109,8 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 	const MobileViewHeader = useMemo(
 		() => (
 			<section className="flex flex-col gap-2 md:hidden w-full">
-				<div className="relative flex-1">
-					<span className="absolute top-1/2 left-2 transform -translate-y-1/2">
-						<Search className="text-vd-blue-600" />
-					</span>
-					{SearchBar}
-				</div>
+				{SearchBar}
+
 				<div className="flex gap-2">
 					<ReportsFilters
 						isOpen={filterOverlayOpen}
@@ -138,26 +140,25 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 
 	const DesktopViewHeader = useMemo(
 		() => (
-			<section className="gap-2 hidden md:flex w-full">
-				<ReportsFilters
-					isOpen={filterOverlayOpen}
-					setIsOpen={setFilterOverlayOpen}
-					filterOptions={filterOptions}
-				/>
-				<div className="relative flex-1 max-w-xl">
-					<span className="absolute top-1/2 left-2 transform -translate-y-1/2">
-						<Search className="text-vd-blue-600" />
-					</span>
+			<section className="gap-2 hidden md:flex justify-between w-full">
+				<div className="flex w-full gap-3">
+					<ReportsFilters
+						isOpen={filterOverlayOpen}
+						setIsOpen={setFilterOverlayOpen}
+						filterOptions={filterOptions}
+					/>
 					{SearchBar}
 				</div>
-				{SortDropdown}
-				<Button
-					className="text-xs"
-					variant="outline"
-					onClick={() => updateSearchParams([])}
-				>
-					Clear all filters
-				</Button>
+				<div className="flex gap-3">
+					{SortDropdown}
+					<Button
+						className="text-xs"
+						variant="outline"
+						onClick={() => updateSearchParams([])}
+					>
+						Clear all filters
+					</Button>
+				</div>
 			</section>
 		),
 		[
