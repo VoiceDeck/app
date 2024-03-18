@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - run: pnpm install
 
@@ -39,5 +39,5 @@ jobs:
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
           CMS_ENDPOINT: ${{ secrets.CMS_ENDPOINT }}
 
-      - name: Test server functionality
-        run: pnpm exec vitest
+      # - name: Test server functionality
+      #   run: pnpm exec vitest

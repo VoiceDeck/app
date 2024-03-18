@@ -55,15 +55,27 @@ import Link from "next/link";
 // clientLoader.hydrate = true;
 
 async function getData() {
-	const reports = await fetchReports();
-	const numOfContributors = await getNumberOfContributors();
+	try {
+		const reports: Report[] = await fetchReports();
 
-	return { reports, numOfContributors };
+		const uniqueReports = reports.reduce((acc: Report[], report: Report) => {
+			const reportExists = acc.find((r: Report) => r.cmsId === report.cmsId);
+			if (!reportExists) {
+				acc.push(report);
+			}
+			return acc;
+		}, []);
+
+		const numOfContributors = await getNumberOfContributors();
+
+		return { reports: uniqueReports, numOfContributors };
+	} catch (error) {
+		throw new Error("Failed to fetch reports");
+	}
 }
 
 export default async function ReportsPage() {
 	const { reports, numOfContributors } = await getData();
-	const uniqueReports = new Set(reports);
 
 	// This throws an error because we are violating the rules of hooks.
 
