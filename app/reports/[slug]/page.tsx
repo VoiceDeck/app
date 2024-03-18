@@ -3,53 +3,30 @@ import ReportSidebar from "@/components/report-details/report-sidebar";
 import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
+import { fetchReportBySlug } from "@/lib/impact-reports";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import Link from "next/link";
 
-const getReportData = async (slug?: string | string[]) => {
-	const res = await fetch(`http://localhost:3000/api/reports/${slug}`);
-	const data = await res.json();
-	return data;
+const getReportData = async (slug: string) => {
+	try {
+		const response = await fetchReportBySlug(slug);
+		return response;
+	} catch (error) {
+		console.error(`Failed to load impact report: ${error}`);
+		throw new Response("Failed to load impact report", { status: 500 });
+	}
 };
-
-// export const loader: LoaderFunction = async ({ params }) => {
-// 	const slug = params.slug;
-// 	try {
-// 		const response = await fetchReportBySlug(slug as string);
-
-// 		return { report: response };
-// 	} catch (error) {
-// 		console.error(`Failed to load impact report: ${error}`);
-// 		throw new Response("Failed to load impact report", { status: 500 });
-// 	}
-// };
-
-// // Cache reports individually in session storage in the browser for super fast
-// // back/forward/revisits during the session, but will fetch fresh data
-// // from the server if the user closes the tab and comes back later
-// export const clientLoader: ClientLoaderFunction = async ({
-// 	serverLoader,
-// 	params,
-// }) => {
-// 	const cacheKey = `report-${params.slug}`;
-// 	const cache = sessionStorage.getItem(cacheKey);
-// 	if (cache) {
-// 		return { report: JSON.parse(cache) };
-// 	}
-
-// 	const { report } = await serverLoader<{ report: Report }>();
-// 	sessionStorage.setItem(cacheKey, JSON.stringify(report));
-// 	return { report };
-// };
 
 export default async function ReportPage({
 	params,
-}: { params: { slug: string } }) {
+}: {
+	params: { slug: string };
+}) {
 	const { slug } = params;
 	const report = await getReportData(slug);
-	const htmlParsedStory = parse(report.story);
-	// console.log({ report });
+	const htmlParsedStory = report.story ? parse(report.story) : null;
+
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
@@ -96,10 +73,11 @@ export default async function ReportPage({
 							alt="Report illustration"
 							className="rounded-2xl md:h-[420px] md:object-cover md:w-full"
 						/>
-
-						<article className="prose text-vd-blue-900">
-							{htmlParsedStory}
-						</article>
+						{htmlParsedStory && (
+							<article className="prose text-vd-blue-900">
+								{htmlParsedStory}
+							</article>
+						)}
 						{/* <ReportSupportFeed report={report} /> */}
 					</section>
 					<ReportSidebar report={report} />
