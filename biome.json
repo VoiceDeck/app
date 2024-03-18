@@ -14,5 +14,14 @@
       "recommended": true
     },
     "ignore": ["node_modules", ".next", ".vercel"]
+  },
+  "files": {
+    "include": [
+      "app/*",
+      "components/**/*",
+      "hooks/**/*",
+      "lib/**/*",
+      "types/**/*"
+    ]
   }
 }

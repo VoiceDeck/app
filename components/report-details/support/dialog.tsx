@@ -27,7 +27,7 @@ const SupportDialogContent = ({
 }) => {
 	if (!isConnected && !address) {
 		return (
-			<div className="flex flex-col gap-4 p-4">
+			<div className="flex flex-col gap-4 p-3">
 				<div className="flex flex-col gap-4 justify-center items-center">
 					<h4 className="font-bold text-center">
 						Connect your wallet to support this report
@@ -70,16 +70,19 @@ const SupportReportDialog = ({
 				<DialogHeader className="text-xl font-bold">
 					Support this report
 				</DialogHeader>
-				<div className="flex flex-col gap-4 p-4">
+				<div className="flex flex-col gap-4 p-3">
 					<Card className="bg-slate-50">
-						<div className="flex flex-col gap-4 p-4">
+						<div className="flex flex-col gap-4 p-3">
 							<div className="flex justify-center">
 								{reportImage && reportTitle && (
-									<Image
-										src={reportImage}
-										alt={reportTitle}
-										className="w-full h-24 object-cover rounded-lg"
-									/>
+									<div className="relative w-full h-40 overflow-hidden rounded-xl border">
+										<Image
+											src={reportImage}
+											alt={reportTitle}
+											fill
+											style={{ objectFit: "cover", objectPosition: "center" }}
+										/>
+									</div>
 								)}
 							</div>
 							<div className="flex flex-col gap-2">

@@ -1,108 +1,185 @@
-
-import { useMemo } from "react";
-import ReportsFilters from "./reports-filters";
-import { Report } from "@/types";
-import { Badge } from "../ui/badge";
-import { DynamicCategoryIcon } from "../ui/dynamic-category-icon";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+"use client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { useFilters } from "@/contexts/filter";
+import {
+	type createFilterOptions,
+	sortingOptions,
+} from "@/lib/search-filter-utils";
+import type { ISortingOption, Report } from "@/types";
 import { Search } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import ReportsFilters from "./reports-filters";
 
 interface ReportsHeaderProps {
 	reports: Report[];
-	amounts: number[];
+	filterOverlayOpen: boolean;
+	setFilterOverlayOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	filterOptions: ReturnType<typeof createFilterOptions>;
+	activeSort: ISortingOption["value"];
+	setActiveSort: React.Dispatch<React.SetStateAction<ISortingOption["value"]>>;
 }
 
-const ReportsHeader: React.FC<ReportsHeaderProps> = ({ reports, amounts }) => {
-	const uniqueCategories = useMemo(() => {
-		return reports
-			.map((report: Report, index: number) => report.category)
-			.filter(
-				(value: string, index: number, self: string[]) =>
-					self.indexOf(value) === index,
-			);
-	}, [reports]);
+const ReportsHeader: React.FC<ReportsHeaderProps> = ({
+	filterOverlayOpen,
+	setFilterOverlayOpen,
+	filterOptions,
+	activeSort,
+	setActiveSort,
+}) => {
+	const { filters, updateSearchParams } = useFilters();
+	const searchInputValue = filters.find(([key]) => key === "q")?.[1] || "";
+	const [searchInput, setSearchInput] = useState(searchInputValue);
 
-	const uniqueMediaOutlets = useMemo(() => {
-		return reports
-			.map((report: Report, index: number) => report.contributors[0])
-			.filter(
-				(value: string, index: number, self: string[]) =>
-					self.indexOf(value) === index,
-			);
-	}, [reports]);
+	useEffect(() => {
+		setSearchInput(searchInputValue);
+	}, [searchInputValue]);
 
-	// updated to return a type Option[] of {label: state, value: state} objects
-	// needed to pass into MultipleSelector component for State filter
-	const uniqueStates = useMemo(() => {
-		return reports
-			.map((report: Report, index: number) => ({
-				label: report.state,
-				value: report.state,
-			}))
-			.filter(
-				(
-					value: { label: string; value: string },
-					index: number,
-					self: { label: string; value: string }[],
-				) => self.findIndex((t) => t.label === value.label) === index,
-			);
-	}, [reports]);
+	const executeSearch = useCallback(
+		(query: string) => {
+			const updatedFilters = filters.filter(([key]) => key !== "q");
+			if (query) updatedFilters.push(["q", query]);
+			updateSearchParams(updatedFilters);
+		},
+		[filters, updateSearchParams],
+	);
 
-	return (
-		<article className="w-full max-w-screen-xl">
-			<h2 className="text-3xl md:text-4xl font-semibold pb-1 pt-6 md:pt-10">
-				Reports
-			</h2>
-			<p className="text-sm">Find and fund reports that resonate with you.</p>
-			<div className="flex flex-col xl:flex-row xl:justify-between gap-3 w-full py-4">
-				<div className="flex gap-2">
-					{uniqueCategories.map((category: string) => (
-						<Badge
-							key={category}
-							className="flex flex-col md:flex-row items-center gap-1 px-3 py-2 bg-vd-beige-100"
-						>
-							<DynamicCategoryIcon category={category} />
-							<p className="text-xs">{category}</p>
-						</Badge>
-					))}
-				</div>
+	const SearchBar = useMemo(
+		() => (
+			<div className="relative flex-1 max-w-xl">
+				<span className="absolute top-1/2 left-2 transform -translate-y-1/2">
+					<Search className="text-vd-blue-600" />
+				</span>
 
-				<div className="flex flex-1 max-w-[500px] gap-2">
+				<div className="flex w-full gap-1">
 					<Input
-						className="pr-[65px] rounded-r-3xl h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
-						type="search"
-						placeholder="Search in title, description"
+						value={searchInput}
+						className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm md:text-base font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
+						placeholder="Search in title, summary"
+						onChange={(e) => setSearchInput(e.target.value)}
 					/>
-					<Button className="ml-[-65px]">
-						<Search />
+					<Button
+						className="rounded-md"
+						onClick={() => executeSearch(searchInput)}
+					>
+						Search
 					</Button>
 				</div>
-				<div className="flex gap-3">
-					<div>
-						<ReportsFilters
-							outlets={uniqueMediaOutlets}
-							states={uniqueStates}
-							amounts={amounts}
-						/>
-					</div>
-					<div className="w-full min-w-[180px]">
-						<Select>
-							<SelectTrigger>
-								<SelectValue placeholder="Sort by" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="amount-needed">Amount Needed</SelectItem>
-								<SelectItem value="newest-oldest">Newest to Oldest</SelectItem>
-								<SelectItem value="oldest-newest">Oldest to Newest</SelectItem>
-								<SelectItem value="most-contributors">
-									Most Contributors
-								</SelectItem>
-							</SelectContent>
-						</Select>
-					</div>
+			</div>
+		),
+		[searchInput, executeSearch],
+	);
+
+	const SortDropdown = useMemo(
+		() => (
+			<Select name="sort" onValueChange={setActiveSort}>
+				<SelectTrigger className="max-w-[200px] min-w-[170px] md:max-w-[300px]">
+					<SelectValue
+						placeholder={
+							activeSort ? sortingOptions[activeSort].label : "Sort by"
+						}
+					/>
+				</SelectTrigger>
+				<SelectContent>
+					<SelectGroup>
+						{Object.values(sortingOptions).map((option) => (
+							<SelectItem
+								key={option.value}
+								value={option.value}
+								defaultChecked={activeSort === option.value}
+							>
+								{option.label}
+							</SelectItem>
+						))}
+					</SelectGroup>
+				</SelectContent>
+			</Select>
+		),
+		[activeSort, setActiveSort],
+	);
+
+	const MobileViewHeader = useMemo(
+		() => (
+			<section className="flex flex-col gap-2 md:hidden w-full">
+				{SearchBar}
+
+				<div className="flex gap-2">
+					<ReportsFilters
+						isOpen={filterOverlayOpen}
+						setIsOpen={setFilterOverlayOpen}
+						filterOptions={filterOptions}
+					/>
+					{SortDropdown}
+					<Button
+						className="text-xs"
+						variant="outline"
+						onClick={() => updateSearchParams([])}
+					>
+						Clear all
+					</Button>
 				</div>
+			</section>
+		),
+		[
+			filterOverlayOpen,
+			setFilterOverlayOpen,
+			filterOptions,
+			SearchBar,
+			SortDropdown,
+			updateSearchParams,
+		],
+	);
+
+	const DesktopViewHeader = useMemo(
+		() => (
+			<section className="gap-2 hidden md:flex justify-between w-full">
+				<div className="flex w-full gap-3">
+					<ReportsFilters
+						isOpen={filterOverlayOpen}
+						setIsOpen={setFilterOverlayOpen}
+						filterOptions={filterOptions}
+					/>
+					{SearchBar}
+				</div>
+				<div className="flex gap-3">
+					{SortDropdown}
+					<Button
+						className="text-xs"
+						variant="outline"
+						onClick={() => updateSearchParams([])}
+					>
+						Clear all filters
+					</Button>
+				</div>
+			</section>
+		),
+		[
+			filterOverlayOpen,
+			setFilterOverlayOpen,
+			filterOptions,
+			SearchBar,
+			SortDropdown,
+			updateSearchParams,
+		],
+	);
+
+	return (
+		<article className="w-full">
+			<h2 className="text-3xl md:text-4xl font-semibold pb-1">Reports</h2>
+			<p className="text-sm md:text-lg">
+				Find and fund reports that resonate with you.
+			</p>
+			<div className="flex gap-3 w-full py-4">
+				{MobileViewHeader}
+				{DesktopViewHeader}
 			</div>
 		</article>
 	);

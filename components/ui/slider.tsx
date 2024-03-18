@@ -1,7 +1,6 @@
 "use client"
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import * as React from "react";
-import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -10,15 +9,9 @@ const Slider = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
 >(({ className, ...props }, ref) => {
 	const values = props.defaultValue || [0, 100];
-	const [min, setMin] = useState(values[0]);
-	const [max, setMax] = useState(values[1]);
 	return (
 		<SliderPrimitive.Root
 			ref={ref}
-			onValueChange={(e) => {
-				setMin(e[0]);
-				setMax(e[1]);
-			}}
 			className={cn(
 				"relative flex w-full touch-none select-none items-center",
 				className,
@@ -28,11 +21,11 @@ const Slider = React.forwardRef<
 			<SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-vd-blue-200 dark:bg-stone-800">
 				<SliderPrimitive.Range className="absolute h-full bg-vd-blue-900 dark:bg-stone-50" />
 			</SliderPrimitive.Track>
-			<SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-vd-blue-900 bg-white ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-stone-50 dark:bg-stone-950 dark:ring-offset-stone-950 dark:focus-visible:ring-stone-300">
-				<p className="text-[10px] pt-8">${min}</p>
+			<SliderPrimitive.Thumb className="relative block h-5 w-5 rounded-full border-2 border-vd-blue-900 bg-white ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-stone-50 dark:bg-stone-950 dark:ring-offset-stone-950 dark:focus-visible:ring-stone-300">
+				<p className="absolute -left-3 pt-6 text-[10px]">${values[0]}</p>
 			</SliderPrimitive.Thumb>
 			<SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-vd-blue-900 bg-white ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-stone-50 dark:bg-stone-950 dark:ring-offset-stone-950 dark:focus-visible:ring-stone-300">
-				<p className="text-[10px] pt-8">${max}</p>
+				<p className="absolute left-2 pt-6 text-[10px]">${values[1]}</p>
 			</SliderPrimitive.Thumb>
 		</SliderPrimitive.Root>
 	);

@@ -34,7 +34,7 @@ const TransactionStatus = ({
 				{status.icon}
 			</div>
 			<div className="flex flex-col gap-4">
-				<h4 className="font-bold text-lg text-center">{status.title}</h4>
+				<h4 className="font-bold md:text-lg text-center">{status.title}</h4>
 				<p className="text-center">{status.content}</p>
 				{transactionHash && (
 					<Button

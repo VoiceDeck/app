@@ -1,9 +1,6 @@
 import { cn } from "@/lib/utils";
-import { Report } from "@/types";
-import {
-	ExternalLinkIcon,
-	ShieldCheck
-} from "lucide-react";
+import type { Report } from "@/types";
+import { ExternalLinkIcon, ShieldCheck } from "lucide-react";
 import { buttonVariants } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 

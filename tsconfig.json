@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
+		"target": "ESNext",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,9 +19,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+			"@/components/*": ["./components/*"],
+			"@/lib/*": ["./lib/*"],
+			"@/styles/*": ["./styles/*"],
+			"@/types/*": ["./types/*"],
     },
-    // "types": ["vite/client"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

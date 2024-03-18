@@ -161,7 +161,7 @@ export type Contribution = {
   hypercert_id: string;
   sender: Address;
   amount: number;
-  date_created?: string;
+  date_created: string;
   comment?: string;
 };
 
@@ -170,3 +170,9 @@ export type SupportReportInfo = {
   title: Partial<Report>["title"];
   hypercertId: Partial<Report>["hypercertId"];
 };
+
+export interface ISortingOption {
+  label: string;
+  value: string;
+  sortFn: (a: Report, b: Report) => number;
+}

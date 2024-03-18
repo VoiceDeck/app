@@ -1,5 +1,4 @@
 "use client";
-import { getVoiceDeckUrl } from "@/config/endpoint";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -54,7 +53,7 @@ const useSupportForm = (
 
     const txnReceipt = await handleBuyFraction(order, unitsToBuy, address);
     if (txnReceipt) {
-      await fetch(`${getVoiceDeckUrl()}/api/contributions`, {
+      await fetch("/api/contributions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
