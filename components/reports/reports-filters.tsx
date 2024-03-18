@@ -10,7 +10,7 @@ import { useFilters } from "@/contexts/filter";
 import type { createFilterOptions } from "@/lib/search-filter-utils";
 import { cn } from "@/lib/utils";
 import { Filter } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -38,7 +38,11 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 	},
 }) => {
 	const { filters, updateSearchParams } = useFilters();
-	const [localFilters, setLocalFilters] = useState([...filters]);
+	const [localFilters, setLocalFilters] = useState(filters);
+
+	useEffect(() => {
+		setLocalFilters([...filters]);
+	}, [filters]);
 
 	const applyFilters = useCallback(() => {
 		updateSearchParams(localFilters);
@@ -110,7 +114,6 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 
 	return (
 		<div className="flex flex-col gap-8">
-			<Button onClick={applyFilters}>Apply filters</Button>
 			<section>
 				<h2 className="font-medium pb-2">Category</h2>
 				<div className="flex flex-wrap gap-2">
@@ -204,15 +207,26 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 				))}
 			</section>
 			{isMobileFilter && (
-				<DrawerFooter className="flex-col justify-center gap-2 pb-8 w-full">
+				<DrawerFooter className="flex flex-wrap justify-center gap-2">
+					<section className="flex flex-wrap gap-2">
+						<DrawerClose className="flex gap-2 w-full">
+							<Button
+								variant={"secondary"}
+								className="flex-1"
+								onClick={() =>
+									updateSearchParams(filters.filter(([key, _]) => key === "q"))
+								}
+							>
+								Clear filters
+							</Button>
+							<Button className="flex-1" variant={"outline"}>
+								Cancel
+							</Button>
+						</DrawerClose>
+					</section>
 					<DrawerClose>
-						<Button className="px-24 py-4" onClick={applyFilters}>
+						<Button onClick={applyFilters} className="w-full">
 							Apply
-						</Button>
-					</DrawerClose>
-					<DrawerClose>
-						<Button variant={"secondary"} className="px-24 py-4">
-							Cancel
 						</Button>
 					</DrawerClose>
 				</DrawerFooter>
@@ -247,7 +261,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 							<p className="text-sm font-medium">Filters</p>
 						</DrawerTrigger>
 					</div>
-					<DrawerContent className="px-6 pb-3">
+					<DrawerContent className="px-6 py-3">
 						<FilterItems isMobileFilter={true} filterOptions={filterOptions} />
 					</DrawerContent>
 				</Drawer>
