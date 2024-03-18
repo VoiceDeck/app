@@ -50,7 +50,7 @@ export default async function ProfilePage({
 	const history = await getContributionsHistoryData(address);
 
 	return (
-		<main className="container flex-1 grid grid-cols-1 md:grid-cols-3 auto-rows-auto md:gap-4 gap-4 text-vd-blue-900 mb-6">
+		<main className="container grid grid-cols-1 md:grid-cols-3 auto-rows-auto md:gap-4 gap-4 text-vd-blue-900 mb-6 max-w-6xl pb-16 md:pb-0">
 			<header className="md:col-span-3 flex justify-between my-4">
 				<h1 className="text-xl md:text-3xl font-semibold">My Actions</h1>
 				<Link
