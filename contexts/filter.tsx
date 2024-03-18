@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 
 interface FilterContextType {
@@ -12,6 +12,8 @@ interface FilterContextType {
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+	const {replace} = useRouter();
+	const pathname = usePathname();
 	const params = useSearchParams();
 	const paramEntries = Array.from(params.entries());
 	const [filters, setFilters] = useState(paramEntries);
@@ -26,7 +28,7 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 		newFilters.forEach(([key, value]) => {
 			searchParams.append(key, value);
 		});
-		window.history.replaceState({}, '', `?${searchParams}`);
+		replace(`${pathname}?${searchParams}`);
 	}
 
 	useEffect(() => {
