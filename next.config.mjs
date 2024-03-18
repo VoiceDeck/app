@@ -5,7 +5,12 @@ const nextConfig = {
 		return config;
 	},
 	images: {
-		domains: ["directus.vd-dev.org"],
+		remotePatterns: [
+			{
+				hostname: "directus.vd-dev.org",
+				protocol: "https",
+			}
+		]
 	},
 	redirects: async () => {
 		return [

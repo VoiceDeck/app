@@ -1,8 +1,16 @@
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerFooter,
+	DrawerTrigger,
+} from "@/components/ui/drawer";
 import { Slider } from "@/components/ui/slider";
 import { useFilters } from "@/contexts/filter";
 import type { createFilterOptions } from "@/lib/search-filter-utils";
+import { cn } from "@/lib/utils";
 import { Filter } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -15,10 +23,12 @@ interface ReportFiltersProps {
 	filterOptions: ReturnType<typeof createFilterOptions>;
 }
 interface FilterItemsProps {
+	isMobileFilter: boolean;
 	filterOptions: ReturnType<typeof createFilterOptions>;
 }
 
 export const FilterItems: React.FC<FilterItemsProps> = ({
+	isMobileFilter,
 	filterOptions: {
 		uniqueCategories,
 		uniqueOutlets,
@@ -28,99 +38,96 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 	},
 }) => {
 	const { filters, updateSearchParams } = useFilters();
+	const [localFilters, setLocalFilters] = useState([...filters]);
 
-	const handleOutletSelection = (outlet: string) => {
-		const outletExists = filters.some(
-			([key, value]) => key === "outlet" && value === outlet,
-		);
-		const newFilter = filters.filter(([key, _]) => key !== "outlet");
-		if (!outletExists) {
-			newFilter.push(["outlet", outlet]);
-		}
-		updateSearchParams(newFilter);
-	};
+	const applyFilters = useCallback(() => {
+		updateSearchParams(localFilters);
+	}, [localFilters, updateSearchParams]);
 
-	const handleAmountNeededRangeChange = (range: number[]) => {
-		const newFilter = filters.filter(
-			([key, _]) => key !== "min" && key !== "max",
-		);
-		newFilter.push(["min", String(range[0])]);
-		newFilter.push(["max", String(range[1])]);
-		updateSearchParams(newFilter);
-	};
-
-	const handleStateSelection = (state: string) => {
-		let newFilter = filters.filter(([key, _]) => key !== "state");
-
-		if (state !== "remove-all") {
-			const existingStates = new Set(
-				filters
-					.filter(([key, _]) => key === "state")
-					.map(([_, value]) => value),
-			);
-
-			if (existingStates.has(state)) {
-				existingStates.delete(state);
+	const handleStateSelection = useCallback(
+		(state: string) => {
+			if (state === "remove-all") {
+				const filtersWithoutStates = localFilters.filter(
+					([key]) => key !== "state",
+				);
+				setLocalFilters(filtersWithoutStates);
 			} else {
-				existingStates.add(state);
+				const existingStates = new Set(
+					localFilters
+						.filter(([key]) => key === "state")
+						.map(([, value]) => value),
+				);
+				if (existingStates.has(state)) {
+					existingStates.delete(state);
+				} else {
+					existingStates.add(state);
+				}
+				const updatedFilters = localFilters.filter(([key]) => key !== "state");
+				for (const stateValue of existingStates) {
+					updatedFilters.push(["state", stateValue]);
+				}
+				setLocalFilters(updatedFilters);
 			}
+		},
+		[localFilters],
+	);
 
-			newFilter = [
-				...newFilter,
-				...Array.from(existingStates).map(
-					(stateValue) => ["state", stateValue] as [string, string],
-				),
-			];
-		}
+	const selectedCategory = useMemo(
+		() => localFilters.find(([key]) => key === "category")?.[1] || "",
+		[localFilters],
+	);
 
-		updateSearchParams(newFilter);
-	};
+	const handleCategoryChange = useCallback(
+		(category: string) => {
+			const updatedFilters = localFilters.filter(([key]) => key !== "category");
+			if (category !== "") {
+				updatedFilters.push(["category", category]);
+			}
+			setLocalFilters(updatedFilters);
+		},
+		[localFilters],
+	);
 
-	const selectedCategory = filters
-		.filter(([key, _]) => key === "category")
-		.map(([_, value]) => value)
-		.join("");
+	const selectedStates = useMemo(
+		() =>
+			localFilters.filter(([key]) => key === "state").map(([, value]) => value),
+		[localFilters],
+	);
 
-	const handleCategoryChange = (category: string) => {
-		const isSameCategory = selectedCategory === category;
-		const newFilter = filters.filter(([key, _]) => key !== "category");
-		if (category && !isSameCategory) {
-			newFilter.push(["category", category]);
-		}
-		updateSearchParams(newFilter);
-	};
+	const activeMin = useMemo(
+		() =>
+			Number(localFilters.find(([key]) => key === "min")?.[1]) ||
+			minAmountNeeded,
+		[localFilters, minAmountNeeded],
+	);
 
-	const selectedStates = filters
-		.filter(([key, _]) => key === "state")
-		.map(([_, value]) => value);
-
-	const activeMin =
-		Number(filters.find(([key, _]) => key === "min")?.[1]) || minAmountNeeded;
-
-	const activeMax =
-		Number(filters.find(([key, _]) => key === "max")?.[1]) || maxAmountNeeded;
+	const activeMax = useMemo(
+		() =>
+			Number(localFilters.find(([key]) => key === "max")?.[1]) ||
+			maxAmountNeeded,
+		[localFilters, maxAmountNeeded],
+	);
 
 	return (
 		<div className="flex flex-col gap-8">
+			<Button onClick={applyFilters}>Apply filters</Button>
 			<section>
 				<h2 className="font-medium pb-2">Category</h2>
-				<div className="flex gap-2">
-					{uniqueCategories.map(
-						(category: { label: string; value: string }) => (
-							<Badge
-								key={category.value}
-								className={`border-vd-blue-500 rounded-full flex flex-auto flex-col md:flex-row items-center gap-1 px-3 py-2 cursor-pointer ${
-									selectedCategory === category.value
-										? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
-										: ""
-								}`}
-								onClick={() => handleCategoryChange(category.value)}
-							>
-								<DynamicCategoryIcon category={category.value} />
-								<p className="text-xs">{category.label}</p>
-							</Badge>
-						),
-					)}
+				<div className="flex flex-wrap gap-2">
+					{uniqueCategories.map(({ label, value }) => (
+						<Badge
+							key={value}
+							className={`border-vd-blue-500 rounded-full flex flex-auto flex-col md:flex-row items-center gap-1 px-2 py-1 cursor-pointer ${
+								selectedCategory === value
+									? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
+									: ""
+							}`}
+							onClick={() => handleCategoryChange(value)}
+						>
+							<DynamicCategoryIcon category={value} />
+							<p className="text-xs">{label}</p>
+						</Badge>
+					))}
 				</div>
 			</section>
 			<section className="pt-4">
@@ -133,14 +140,29 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 						max={maxAmountNeeded}
 						step={1}
 						minStepsBetweenThumbs={50}
-						onValueChange={(e) => handleAmountNeededRangeChange([e[0], e[1]])}
+						onValueChange={(value) => {
+							const updatedFilters = localFilters.filter(
+								([key]) => key !== "min" && key !== "max",
+							);
+							updatedFilters.push(
+								["min", String(value[0])],
+								["max", String(value[1])],
+							);
+							setLocalFilters(updatedFilters);
+						}}
 					/>
 				</div>
 				<div className="p-5" />
 			</section>
 
 			<section>
-				<h2 className="font-medium pb-2 md:pb-4">State impacted</h2>
+				<p className="font-medium pb-2 text-base">
+					States impacted{" "}
+					<span className="text-sm text-stone-500">
+						{" "}
+						({uniqueStates.length})
+					</span>
+				</p>
 				<StateCombobox
 					states={uniqueStates}
 					handleStateSelection={handleStateSelection}
@@ -148,18 +170,53 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 				/>
 			</section>
 
-			<section>
+			<section className="flex flex-col gap-2">
 				<h2 className="font-medium pb-2 md:pb-4">Media outlet</h2>
-				{uniqueOutlets.map((outlet: { label: string; value: string }) => (
-					<div key={outlet.label} className="flex items-center gap-2 pb-2">
+				{uniqueOutlets.map(({ label, value }) => (
+					<div key={value} className="flex gap-2">
 						<Checkbox
-							className="h-6 w-6 rounded-md border-vd-blue-500 data-[state=checked]:bg-vd-blue-500 data-[state=checked]:text-vd-beige-100"
-							onClick={() => handleOutletSelection(outlet.value)}
+							className={cn("h-6 w-6 rounded-md border-vd-blue-500", {
+								"bg-vd-blue-500 text-vd-beige-100": localFilters.some(
+									([key, val]) => key === "outlet" && val === value,
+								),
+							})}
+							checked={localFilters.some(
+								([key, val]) => key === "outlet" && val === value,
+							)}
+							id={label}
+							name={label}
+							onCheckedChange={() => {
+								const outletExists = localFilters.some(
+									([key, val]) => key === "outlet" && val === value,
+								);
+								const updatedFilters: [string, string][] = outletExists
+									? localFilters.filter(
+											([key, val]) => !(key === "outlet" && val === value),
+									  )
+									: [...localFilters, ["outlet", value] as [string, string]];
+								setLocalFilters(updatedFilters);
+							}}
 						/>
-						<p className="text-sm">{outlet.value}</p>
+						<label htmlFor={label} className="text-sm">
+							{label}
+						</label>
 					</div>
 				))}
 			</section>
+			{isMobileFilter && (
+				<DrawerFooter className="flex-col justify-center gap-2 pb-8 w-full">
+					<DrawerClose>
+						<Button className="px-24 py-4" onClick={applyFilters}>
+							Apply
+						</Button>
+					</DrawerClose>
+					<DrawerClose>
+						<Button variant={"secondary"} className="px-24 py-4">
+							Cancel
+						</Button>
+					</DrawerClose>
+				</DrawerFooter>
+			)}
 		</div>
 	);
 };
@@ -174,7 +231,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 	return (
 		<div>
 			<div className="md:hidden">
-				<Drawer>
+				<Drawer dismissible={false}>
 					<div className="relative">
 						{numFiltersApplied !== 0 && (
 							<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1 h-6 w-6 absolute -right-2 -top-2">
@@ -191,19 +248,11 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						</DrawerTrigger>
 					</div>
 					<DrawerContent className="px-6 pb-3">
-						<FilterItems filterOptions={filterOptions} />
-						{/* <DrawerFooter className="flex-row justify-center gap-2 pb-8">
-							<DrawerClose>
-								<Button
-									className="px-24 py-4"
-								>
-									Apply
-								</Button>
-							</DrawerClose>
-						</DrawerFooter> */}
+						<FilterItems isMobileFilter={true} filterOptions={filterOptions} />
 					</DrawerContent>
 				</Drawer>
 			</div>
+
 			<div className="hidden md:flex">
 				<div className="relative">
 					{numFiltersApplied !== 0 && (
@@ -220,51 +269,6 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 						<p className="text-sm font-medium">Filters</p>
 					</Button>
 				</div>
-
-				{/* KEEPING THIS FOR FALLBACK */}
-				{/* <Dialog>
-					<DialogTrigger
-						className="flex gap-2 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
-						onClick={() => {
-							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
-							setOutletsSelected([]);
-							setStatesSelected([]);
-						}}
-					>
-						<p className="text-sm font-medium text-vd-blue-500">Filters</p>
-						{numFiltersApplied > 0 ? (
-							<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1">
-								{numFiltersApplied}
-							</div>
-						) : (
-							<Filter color="#4B778F" size={16} />
-						)}
-					</DialogTrigger>
-					<DialogContent className="bg-vd-beige-200">
-						<FilterItems
-							outlets={outlets}
-							states={states}
-							statesSelected={statesSelected}
-							minAmountNeeded={minAmountNeeded}
-							maxAmountNeeded={maxAmountNeeded}
-							amountRangeSelected={amountRangeSelected}
-							setAmountRangeSelected={setAmountRangeSelected}
-							setStatesSelected={setStatesSelected}
-							outletsSelected={outletsSelected}
-							setOutletsSelected={setOutletsSelected}
-						/>
-						<DialogFooter className="justify-end gap-2 pb-4">
-							<DialogClose asChild>
-								<Button
-									className="px-24 py-4"
-									onClick={() => handleApplyFilters()}
-								>
-									Apply
-								</Button>
-							</DialogClose>
-						</DialogFooter>
-					</DialogContent>
-				</Dialog> */}
 			</div>
 		</div>
 	);

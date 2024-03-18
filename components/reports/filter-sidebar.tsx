@@ -16,8 +16,7 @@ const SidebarFilter = ({
 	filterOptions,
 }: SidebarFilterProps) => {
 	const { filters, updateSearchParams } = useFilters();
-	const newFilters = filters.filter(([key]) => key === "q");
-
+	const clearedFilters = filters.filter(([key]) => key === "q");
 	return (
 		<aside
 			className={cn(
@@ -31,7 +30,7 @@ const SidebarFilter = ({
 					<button
 						type="button"
 						className="text-vd-blue-700 hover:text-vd-blue-400 hover:underline underline-offset-1"
-						onClick={() => updateSearchParams(newFilters)}
+						onClick={() => updateSearchParams(clearedFilters)}
 					>
 						Clear filters
 					</button>
@@ -48,7 +47,7 @@ const SidebarFilter = ({
 			</header>
 			<div className="p-4" />
 			<section>
-				<FilterItems filterOptions={filterOptions} />
+				<FilterItems isMobileFilter={false} filterOptions={filterOptions} />
 			</section>
 		</aside>
 	);
