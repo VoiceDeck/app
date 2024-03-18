@@ -1,5 +1,12 @@
-'use client'
-import { ArrowUpRight, HeartHandshake, Menu, Newspaper, X } from "lucide-react";
+"use client";
+import {
+	ArrowUpRight,
+	HeartHandshake,
+	Menu,
+	Newspaper,
+	Sparkles,
+	X,
+} from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -26,7 +33,7 @@ const Footer = () => {
 };
 
 const MobileFooter = () => {
-	const {address} = useAccount();
+	const { address } = useAccount();
 	return (
 		<ul className="flex justify-around items-center gap-1 md:hidden">
 			<li>
@@ -63,7 +70,11 @@ const MobileFooter = () => {
 					<DrawerContent>
 						<DrawerHeader>
 							<div className="flex justify-center">
-								<img className="h-10 w-10" src={'/logo.svg'} alt="VoiceDeck Logo" />
+								<img
+									className="h-10 w-10"
+									src={"/logo.svg"}
+									alt="VoiceDeck Logo"
+								/>
 							</div>
 						</DrawerHeader>
 						{externalLinks.map((link) => (
@@ -104,12 +115,21 @@ const DesktopFooter = () => {
 		<div className="hidden md:flex md:container h-32 items-center justify-between">
 			<div className="flex flex-col">
 				<div className="flex items-center">
-					<img className="h-10 w-10" src={'/logo.svg'} alt="VoiceDeck Logo" />
+					<img className="h-10 w-10" src={"/logo.svg"} alt="VoiceDeck Logo" />
 					<h3 className="text-5xl font-semibold">VoiceDeck</h3>
 				</div>
-				<small className="text-base">
+				<div className="flex gap-2">
+					<small className="text-base">
+						Funding platform for collective impact
+					</small>
+					<div className="self-center">
+						<Sparkles color="#973A30" size={18} />
+					</div>
+					<small className="text-base">An open source project</small>
+				</div>
+				{/* <small className="text-base">
 					An Open Source project. A funding platform for the collective impact.
-				</small>
+				</small> */}
 			</div>
 			<ul>
 				{externalLinks.map((link) => (

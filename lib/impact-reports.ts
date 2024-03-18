@@ -1,13 +1,15 @@
+import 'server-only'
+
 import {
-  ClaimsByOwnerQuery,
+  type ClaimsByOwnerQuery,
   HypercertClient,
-  HypercertIndexerInterface,
-  HypercertMetadata,
-  HypercertsStorage,
+  type HypercertIndexerInterface,
+  type HypercertMetadata,
+  type HypercertsStorage,
 } from "@hypercerts-org/sdk";
 import { Mutex } from "async-mutex";
 
-import { Claim, Report } from "@/types";
+import type { Claim, Report } from "@/types";
 import { getCMSReports, getFundedAmountByHCId } from "./directus";
 import { getOrders } from "./marketplace";
 
@@ -95,30 +97,30 @@ export const fetchReports = async (): Promise<Report[]> => {
       );
 
       // here we use feature flag to decide if we want to fetch orders
-			// since orders are not created in the testnet
-			// TODO: remove this when we have a real marketplace orders
-			// if (process.env.ORDER_FETCHING === "on") {
-			// 	// step 3: get orders from marketplace
-			// 	const orders = await getOrders(reports);
-			// 	reports = reports.map((report) => {
-			// 		for (const order of orders) {
-			// 			if (order && order.hypercertId === report.hypercertId) {
-			// 				report.order = order;
-			// 				break;
-			// 			}
-			// 		}
-			// 		// not fully funded reports should have an order
-			// 		if (!report.order && report.fundedSoFar < report.totalCost) {
-			// 			throw new Error(
-			// 				`[server] No order found for hypercert ${report.hypercertId}`,
-			// 			);
-			// 		}
-			// 		return report;
-			// 	});
-			// }
+      // since orders are not created in the testnet
+      // TODO: remove this when we have a real marketplace orders
+      // if (process.env.ORDER_FETCHING === "on") {
+      // 	// step 3: get orders from marketplace
+      // 	const orders = await getOrders(reports);
+      // 	reports = reports.map((report) => {
+      // 		for (const order of orders) {
+      // 			if (order && order.hypercertId === report.hypercertId) {
+      // 				report.order = order;
+      // 				break;
+      // 			}
+      // 		}
+      // 		// not fully funded reports should have an order
+      // 		if (!report.order && report.fundedSoFar < report.totalCost) {
+      // 			throw new Error(
+      // 				`[server] No order found for hypercert ${report.hypercertId}`,
+      // 			);
+      // 		}
+      // 		return report;
+      // 	});
+      // }
 
       console.log(`report order ${JSON.stringify(reports[0].order)}`);
-			console.log(`[server] total fetched reports: ${reports.length}`);
+      console.log(`[server] total fetched reports: ${reports.length}`);
     }
 
     return reports;
@@ -188,6 +190,7 @@ export const getHypercertClient = (): HypercertClient => {
   if (hypercertClient) {
     return hypercertClient;
   }
+
   hypercertClient = new HypercertClient({ chain: { id: 11155111 } }); // Sepolia testnet
 
   return hypercertClient;

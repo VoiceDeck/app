@@ -1,20 +1,20 @@
+import FundingDataWrapper from "@/components/report-details/funding-data-wrapper";
 import FundingProgress from "@/components/report-details/funding-progress";
 import ReportSidebar from "@/components/report-details/report-sidebar";
-import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { fetchReportBySlug } from "@/lib/impact-reports";
+import type { Report } from "@/types";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import Link from "next/link";
 
-const getReportData = async (slug: string) => {
+const getReportData = async (slug?: string | string[]) => {
 	try {
-		const response = await fetchReportBySlug(slug);
-		return response;
+		const reportData = await fetchReportBySlug(slug as string);
+		return reportData;
 	} catch (error) {
-		console.error(`Failed to load impact report: ${error}`);
-		throw new Response("Failed to load impact report", { status: 500 });
+		throw new Error(`Error fetching report data for slug: ${slug}`);
 	}
 };
 
@@ -26,7 +26,7 @@ export default async function ReportPage({
 	const { slug } = params;
 	const report = await getReportData(slug);
 	const htmlParsedStory = report.story ? parse(report.story) : null;
-
+	// console.log({ report });
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
@@ -53,13 +53,21 @@ export default async function ReportPage({
 							<p>{report.state}</p>
 						</Badge>
 					</ul>
-					<div className="fixed bottom-[56px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
-						<FundingProgress
-							totalAmount={report.totalCost}
-							fundedAmount={report.fundedSoFar}
-							reportImage={report.image}
-							reportTitle={report.title}
-						/>
+					<div className="fixed bottom-[72px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
+						<FundingDataWrapper
+							hypercertId={report.hypercertId}
+							totalReportCost={report.totalCost}
+						>
+							<FundingProgress
+								totalAmount={report.totalCost}
+								fundedAmount={report.fundedSoFar}
+								reportInfo={{
+									image: report.image,
+									title: report.title,
+									hypercertId: report.hypercertId,
+								}}
+							/>
+						</FundingDataWrapper>
 					</div>
 				</section>
 				<section className="flex flex-col gap-2 md:flex-row md:gap-12 pt-8">

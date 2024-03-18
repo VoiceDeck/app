@@ -19,7 +19,9 @@ async function getContributionsHistoryData(address: `0x${string}`) {
 			const report = await fetchReportByHCId(contribution.hypercert_id);
 			return {
 				id: contribution.txid,
-				date: new Date(contribution.date_created),
+				date: contribution.date_created
+					? new Date(contribution.date_created)
+					: undefined,
 				amount: contribution.amount,
 				img: {
 					src: report.image,

@@ -1,4 +1,6 @@
 // @ts-nocheck
+import "server-only";
+
 import {
   type DirectusClient,
   type RestClient,
@@ -20,8 +22,8 @@ import {
 } from "viem";
 import { sepolia } from "viem/chains";
 
+import type { CMSContent, Contribution } from "@/types";
 import { updateFundedAmount } from "./impact-reports";
-import { CMSContent, Contribution } from "@/types";
 
 // represents contents retrieved from CMS `reports` collection
 let CMSReports: CMSContent[] | null = null;
@@ -48,7 +50,7 @@ export async function processNewContribution(
   txId: Hash,
   hypercertId: string,
   amount: number,
-  comment?: string,
+  comment?: string
 ) {
   try {
     const client = getDirectusClient();
@@ -92,19 +94,19 @@ export async function processNewContribution(
     }
 
     const contribution = {
-			sender: txReceipt.from,
-			hypercert_id: hypercertId,
-			amount: amount,
-			txid: txId,
-			comment: comment,
-		} as Contribution;
-		// create a contribution record in Directus
-		await createContribution(contribution);
+      sender: getAddress(txReceipt.from),
+      hypercert_id: hypercertId,
+      amount: amount,
+      txid: txId,
+      comment: comment,
+    } as Contribution;
+    // create a contribution record in Directus
+    await createContribution(contribution);
 
     // update the funded amount of the hypercert in server memory
     await updateFundedAmount(hypercertId, amount);
     // add the contribution to the cache
-		updateContribution(hypercertId, contribution);
+    updateContribution(hypercertId, contribution);
   } catch (error) {
     console.error(`[server] failed to process new contribution: ${error}`);
     throw new Error(`[server] failed to process new contribution: ${error}`);
@@ -113,7 +115,7 @@ export async function processNewContribution(
 
 export async function createContribution(contribution: Contribution) {
   const user = {
-    address: getAddress(contribution.sender),
+    address: contribution.sender,
   };
   const client = getDirectusClient();
 
@@ -138,7 +140,9 @@ export async function createContribution(contribution: Contribution) {
     console.log(` - hypercert_id: ${contribution.hypercert_id}`);
     console.log(` - sender: ${contribution.sender}`);
     console.log(` - amount: ${contribution.amount}`);
-    console.log(` - comment exists: ${contribution.comment ? "true" : "false"}`);
+    console.log(
+      ` - comment exists: ${contribution.comment ? "true" : "false"}`
+    );
     await client.request(createItem("contributions", contribution));
     console.log(
       `[Directus] contribution ${contribution.txid} created successfully`
@@ -319,45 +323,45 @@ export const getContributionsByAddress = async (
  * @throws {Error} - Throws an error if fetching contributions fails.
  */
 export const getContributionsByHCId = async (
-	hypercertId: string,
+  hypercertId: string
 ): Promise<Contribution[]> => {
-	const client = getDirectusClient();
+  const client = getDirectusClient();
 
-	// return the contributions from the cache if they exist
-	if (contributionsByHCId[hypercertId]) {
-		console.log(
-			`[Directus] Contributions of hypercert ${hypercertId} already exist, returning from cache`,
-		);
-		return contributionsByHCId[hypercertId];
-	}
+  // return the contributions from the cache if they exist
+  if (contributionsByHCId[hypercertId]) {
+    console.log(
+      `[Directus] Contributions of hypercert ${hypercertId} already exist, returning from cache`
+    );
+    return contributionsByHCId[hypercertId];
+  }
 
-	try {
-		const response = await client.request(
-			readItems("contributions", {
-				filter: {
-					hypercert_id: {
-						_eq: hypercertId,
-					},
-				},
-			}),
-		);
+  try {
+    const response = await client.request(
+      readItems("contributions", {
+        filter: {
+          hypercert_id: {
+            _eq: hypercertId,
+          },
+        },
+      })
+    );
 
-		console.log(
-			`[Directus] Fetched contributions of hypercert ${hypercertId}: ${response.length}`,
-		);
+    console.log(
+      `[Directus] Fetched contributions of hypercert ${hypercertId}: ${response.length}`
+    );
 
-		// cache the contributions
-		contributionsByHCId[hypercertId] = response as Contribution[];
+    // cache the contributions
+    contributionsByHCId[hypercertId] = response as Contribution[];
 
-		return response as Contribution[];
-	} catch (error) {
-		console.error(
-			`[Directus] Failed to fetch contributions by hypercert ID ${hypercertId}: ${error}`,
-		);
-		throw new Error(
-			`[Directus] Failed to fetch contributions by hypercert ID ${hypercertId}: ${error}`,
-		);
-	}
+    return response as Contribution[];
+  } catch (error) {
+    console.error(
+      `[Directus] Failed to fetch contributions by hypercert ID ${hypercertId}: ${error}`
+    );
+    throw new Error(
+      `[Directus] Failed to fetch contributions by hypercert ID ${hypercertId}: ${error}`
+    );
+  }
 };
 
 /**
@@ -368,32 +372,32 @@ export const getContributionsByHCId = async (
  * @throws {Error} - Throws an error if fetching the user fails.
  */
 export const getUserDisplayName = async (address: Address): Promise<string> => {
-	const client = getDirectusClient();
+  const client = getDirectusClient();
 
-	// return the display name from the cache if it exists
-	if (users[address]) {
-		return users[address];
-	}
+  // return the display name from the cache if it exists
+  if (users[address]) {
+    return users[address];
+  }
 
-	try {
-		const response = await client.request(
-			readItem("users", getAddress(address), {
-				fields: ["display_name"],
-			}),
-		);
+  try {
+    const response = await client.request(
+      readItem("users", getAddress(address), {
+        fields: ["display_name"],
+      })
+    );
 
-		// cache the display name
-		users[address] = response.display_name;
+    // cache the display name
+    users[address] = response.display_name;
 
-		return response.display_name;
-	} catch (error) {
-		console.error(
-			`[Directus] Failed to fetch display name of user ${address}: ${error}`,
-		);
-		throw new Error(
-			`[Directus] Failed to fetch display name of user ${address}: ${error}`,
-		);
-	}
+    return response.display_name;
+  } catch (error) {
+    console.error(
+      `[Directus] Failed to fetch display name of user ${address}: ${error}`
+    );
+    throw new Error(
+      `[Directus] Failed to fetch display name of user ${address}: ${error}`
+    );
+  }
 };
 
 /**
@@ -442,14 +446,17 @@ export const getViemClient = (): PublicClient => {
 };
 
 const updateContribution = async (
-	hypercertId: string,
-	contribution: Contribution,
+  hypercertId: string,
+  contribution: Contribution
 ): Promise<void> => {
-	const release = await contributionsMutex.acquire();
+  const release = await contributionsMutex.acquire();
 
-	try {
-		contributionsByHCId[hypercertId].push(contribution);
-	} finally {
-		release();
-	}
+  try {
+    if (!contributionsByHCId[hypercertId]) {
+      contributionsByHCId[hypercertId] = [];
+    }
+    contributionsByHCId[hypercertId].push(contribution);
+  } finally {
+    release();
+  }
 };
