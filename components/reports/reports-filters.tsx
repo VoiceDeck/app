@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
 	Drawer,
 	DrawerClose,
@@ -5,16 +7,13 @@ import {
 	DrawerFooter,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
+import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Slider } from "@/components/ui/slider";
 import { useFilters } from "@/contexts/filter";
 import type { createFilterOptions } from "@/lib/search-filter-utils";
-import { cn } from "@/lib/utils";
 import { Filter } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { DynamicCategoryIcon } from "../ui/dynamic-category-icon";
+import { OutletCombobox } from "./outlet-combobox";
 import { StateCombobox } from "./states-combobox";
 
 interface ReportFiltersProps {
@@ -75,6 +74,33 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 		},
 		[localFilters],
 	);
+	const handleOutletSelection = useCallback(
+		(outlet: string) => {
+			if (outlet === "remove-all") {
+				const filtersWithoutOutlets = localFilters.filter(
+					([key]) => key !== "outlet",
+				);
+				setLocalFilters(filtersWithoutOutlets);
+			} else {
+				const existingOutlets = new Set(
+					localFilters
+						.filter(([key]) => key === "outlet")
+						.map(([, value]) => value),
+				);
+				if (existingOutlets.has(outlet)) {
+					existingOutlets.delete(outlet);
+				} else {
+					existingOutlets.add(outlet);
+				}
+				const updatedFilters = localFilters.filter(([key]) => key !== "outlet");
+				for (const outletValue of existingOutlets) {
+					updatedFilters.push(["outlet", outletValue]);
+				}
+				setLocalFilters(updatedFilters);
+			}
+		},
+		[localFilters],
+	);
 
 	const selectedCategory = useMemo(
 		() => localFilters.find(([key]) => key === "category")?.[1] || "",
@@ -95,6 +121,14 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 	const selectedStates = useMemo(
 		() =>
 			localFilters.filter(([key]) => key === "state").map(([, value]) => value),
+		[localFilters],
+	);
+
+	const selectedOutlets = useMemo(
+		() =>
+			localFilters
+				.filter(([key]) => key === "outlet")
+				.map(([, value]) => value),
 		[localFilters],
 	);
 
@@ -180,36 +214,11 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 
 			<section className="flex flex-col gap-2">
 				<h2 className="font-medium pb-2 md:pb-4">Media outlet</h2>
-				{uniqueOutlets.map(({ label, value }) => (
-					<div key={value} className="flex gap-2">
-						<Checkbox
-							className={cn("h-6 w-6 rounded-md border-vd-blue-500", {
-								"bg-vd-blue-500 text-vd-beige-100": localFilters.some(
-									([key, val]) => key === "outlet" && val === value,
-								),
-							})}
-							checked={localFilters.some(
-								([key, val]) => key === "outlet" && val === value,
-							)}
-							id={label}
-							name={label}
-							onCheckedChange={() => {
-								const outletExists = localFilters.some(
-									([key, val]) => key === "outlet" && val === value,
-								);
-								const updatedFilters: [string, string][] = outletExists
-									? localFilters.filter(
-											([key, val]) => !(key === "outlet" && val === value),
-									  )
-									: [...localFilters, ["outlet", value] as [string, string]];
-								setLocalFilters(updatedFilters);
-							}}
-						/>
-						<label htmlFor={label} className="text-sm">
-							{label}
-						</label>
-					</div>
-				))}
+				<OutletCombobox
+					outlets={uniqueOutlets}
+					selectedOutlets={selectedOutlets}
+					handleOutletSelection={handleOutletSelection}
+				/>
 			</section>
 			{isMobileFilter && (
 				<DrawerFooter className="flex flex-wrap justify-center gap-2">
