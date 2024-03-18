@@ -16,6 +16,7 @@ import {
 } from "@/lib/search-filter-utils";
 import type { ISortingOption, Report } from "@/types";
 import { Search } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
 import ReportsFilters from "./reports-filters";
 
 interface ReportsHeaderProps {
@@ -35,28 +36,43 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 	setActiveSort,
 }) => {
 	const { filters, updateSearchParams } = useFilters();
-	const searchBarInput = filters.find(([key]) => key === "q")?.[1] || "";
 
-	const handleSearch = (searchText: string) => {
+	const [searchBarInput, setSearchBarInput] = useState(
+		filters.find(([key]) => key === "q")?.[1] ?? "",
+	);
+	const searchBarInputRef = useRef(searchBarInput);
+
+	const handleSearch = useCallback(() => {
 		const newFilter = filters.filter(([key]) => key !== "q");
-		if (searchText) {
-			newFilter.push(["q", searchText]);
+		if (searchBarInput) {
+			newFilter.push(["q", searchBarInputRef.current]);
 		}
 		updateSearchParams(newFilter);
-	};
+	}, [filters, updateSearchParams, searchBarInput]);
 
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newValue = e.target.value;
+		setSearchBarInput(newValue);
+		searchBarInputRef.current = newValue;
+	};
 	const SearchInput = () => (
-		<Input
-			value={searchBarInput}
-			className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
-			placeholder={"Search in title, summary"}
-			onChange={(e) => handleSearch(e.target.value)}
-		/>
+		<div className="flex">
+			<Input
+				type="text"
+				value={searchBarInput}
+				className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2 flex-grow"
+				placeholder={"Search in title, summary"}
+				onChange={handleInputChange}
+			/>
+			<Button onClick={handleSearch} className="ml-2">
+				Search
+			</Button>
+		</div>
 	);
 
-	const renderSelectSort = (triggerClass: string) => (
+	const SelectSort = () => (
 		<Select name="sort" onValueChange={setActiveSort}>
-			<SelectTrigger className={triggerClass}>
+			<SelectTrigger className="max-w-[300px] min-w-[170px]">
 				<SelectValue
 					placeholder={
 						activeSort ? sortingOptions[activeSort].label : "Sort by"
@@ -93,7 +109,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 					setIsOpen={setFilterOverlayOpen}
 					filterOptions={filterOptions}
 				/>
-				{renderSelectSort("max-w-[300px] min-w-[170px]")}
+				<SelectSort />
 				<Button
 					className="text-xs"
 					variant={"outline"}
@@ -118,7 +134,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 				</span>
 				<SearchInput />
 			</div>
-			{renderSelectSort("max-w-[200px] min-w-[170px]")}
+			<SelectSort />
 			<Button
 				className="text-xs"
 				variant={"outline"}

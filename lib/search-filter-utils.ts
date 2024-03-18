@@ -29,10 +29,15 @@ export const filterReports = (
       case "category":
         return filteredReports.filter((report) => report.category === value);
       case "outlet":
+        const outlets = filters
+          .filter(([filterKey]) => filterKey === "outlet")
+          .map(([, filterValue]) => decodeURIComponent(filterValue));
         return filteredReports.filter((report) => {
           if (!report.contributors.length) return false;
-          return (
-            value === report.contributors[0].split(" ").join("").toLowerCase()
+          return outlets.some((outlet) =>
+            report.contributors
+              .map((contributor) => contributor.toLowerCase())
+              .includes(outlet)
           );
         });
       default:
@@ -53,10 +58,11 @@ export const createFilterOptions = (reports: Report[]) => {
     );
 
   const uniqueOutlets = reports
-    .filter((report: Report) => report.contributors[0]?.length > 0)
-    .map((report: Report, index: number) => ({
-      label: report.contributors[0],
-      value: report.contributors[0].split(" ").join("").toLowerCase(),
+    .flatMap((report: Report) => report.contributors)
+    .filter((contributor) => contributor.length > 0)
+    .map((contributor: string) => ({
+      label: contributor,
+      value: encodeURIComponent(contributor).toLowerCase(),
     }))
     .filter(
       ({ value }, index, self) =>
