@@ -114,6 +114,11 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 
 	return (
 		<div className="flex flex-col gap-8">
+			{!isMobileFilter && (
+				<Button onClick={applyFilters} className="w-full">
+					Apply filters
+				</Button>
+			)}
 			<section>
 				<h2 className="font-medium pb-2">Category</h2>
 				<div className="flex flex-wrap gap-2">

@@ -54,14 +54,17 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 
 	const SearchBar = useMemo(
 		() => (
-			<div className="flex">
+			<div className="flex w-full gap-1">
 				<Input
 					value={searchInput}
-					className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-[16px] font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
+					className="pl-10 h-10 border-vd-blue-500 bg-vd-beige-100 py-2 text-sm md:text-base font-medium placeholder:text-vd-blue-500/60 ring-offset-white focus-visible:ring-offset-2 focus-visible:ring-vd-blue-400 focus-visible:ring-2"
 					placeholder="Search in title, summary"
 					onChange={(e) => setSearchInput(e.target.value)}
 				/>
-				<Button className="ml-2" onClick={() => executeSearch(searchInput)}>
+				<Button
+					className="rounded-md"
+					onClick={() => executeSearch(searchInput)}
+				>
 					Search
 				</Button>
 			</div>
@@ -118,7 +121,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 						variant="outline"
 						onClick={() => updateSearchParams([])}
 					>
-						Clear all filters
+						Clear all
 					</Button>
 				</div>
 			</section>
