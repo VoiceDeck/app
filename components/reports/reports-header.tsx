@@ -16,7 +16,7 @@ import {
 } from "@/lib/search-filter-utils";
 import type { ISortingOption, Report } from "@/types";
 import { Search } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ReportsFilters from "./reports-filters";
 
 interface ReportsHeaderProps {
@@ -36,9 +36,12 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 	setActiveSort,
 }) => {
 	const { filters, updateSearchParams } = useFilters();
-	const [searchInput, setSearchInput] = useState(
-		filters.find(([key]) => key === "q")?.[1] || "",
-	);
+	const searchInputValue = filters.find(([key]) => key === "q")?.[1] || "";
+	const [searchInput, setSearchInput] = useState(searchInputValue);
+
+	useEffect(() => {
+		setSearchInput(searchInputValue);
+	}, [searchInputValue]);
 
 	const executeSearch = useCallback(
 		(query: string) => {
