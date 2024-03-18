@@ -169,7 +169,15 @@ export const getCMSReports = async (): Promise<CMSContent[]> => {
       console.log(`[Directus] Existing CMS contents: ${CMSReports.length}`);
     } else {
       console.log("[Directus] Fetching CMS contents from remote");
-      const response = await client.request(readItems("reports"));
+      const response = await client.request(
+        readItems('reports', {
+          filter: {
+            status: {
+              _eq: 'published',
+            }
+          },
+        })
+      );
       CMSReports = response as CMSContent[];
       console.log("[Directus] fetched CMS contents: ", CMSReports.length);
     }

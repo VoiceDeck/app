@@ -1,6 +1,6 @@
 "use client";
 
-import React, { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 

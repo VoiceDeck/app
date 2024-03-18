@@ -19,6 +19,7 @@
     "@hypercerts-org/marketplace-sdk": "^0.0.23",
     "@hypercerts-org/sdk": "^1.4.3",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
+    "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",

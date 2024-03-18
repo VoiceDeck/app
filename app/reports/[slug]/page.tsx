@@ -20,11 +20,13 @@ const getReportData = async (slug?: string | string[]) => {
 
 export default async function ReportPage({
 	params,
-}: { params: { slug: string } }) {
+}: {
+	params: { slug: string };
+}) {
 	const { slug } = params;
-	const report: Report = await getReportData(slug);
-	const htmlParsedStory = parse(report.story ?? "");
-
+	const report = await getReportData(slug);
+	const htmlParsedStory = report.story ? parse(report.story) : null;
+	// console.log({ report });
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
@@ -79,10 +81,11 @@ export default async function ReportPage({
 							alt="Report illustration"
 							className="rounded-2xl md:h-[420px] md:object-cover md:w-full"
 						/>
-
-						<article className="prose text-vd-blue-900">
-							{htmlParsedStory}
-						</article>
+						{htmlParsedStory && (
+							<article className="prose text-vd-blue-900">
+								{htmlParsedStory}
+							</article>
+						)}
 						{/* <ReportSupportFeed report={report} /> */}
 					</section>
 					<ReportSidebar report={report} />
