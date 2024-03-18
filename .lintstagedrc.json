@@ -1,3 +1,8 @@
 {
-  "./app/**/*": ["biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true"]
+  "./app/**/*": [
+    "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true"
+  ],
+  "./components/**/*": [
+    "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true"
+  ]
 }

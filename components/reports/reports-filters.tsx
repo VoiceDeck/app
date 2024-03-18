@@ -1,10 +1,5 @@
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogFooter,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
 	Drawer,
 	DrawerClose,
@@ -12,242 +7,296 @@ import {
 	DrawerFooter,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import MultipleSelector, {
-	type Option,
-} from "@/components/ui/multiple-selector";
-import { Separator } from "@/components/ui/separator";
+import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "../ui/checkbox";
+import { useFilters } from "@/contexts/filter";
+import type { createFilterOptions } from "@/lib/search-filter-utils";
 import { Filter } from "lucide-react";
-import { Button } from "../ui/button";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { OutletCombobox } from "./outlet-combobox";
+import { StateCombobox } from "./states-combobox";
 
 interface ReportFiltersProps {
-  searchParams: URLSearchParams;
-  setSearchParams: React.Dispatch<React.SetStateAction<URLSearchParams>>;
-	outlets: string[];
-	states: Option[];
-	amounts: number[];
-	numFiltersApplied: number;
-	setNumFiltersApplied: React.Dispatch<React.SetStateAction<number>>;
+	isOpen: boolean;
+	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	filterOptions: ReturnType<typeof createFilterOptions>;
 }
 interface FilterItemsProps {
-	outlets: string[];
-	states: Option[];
-	minAmountNeeded: number;
-	maxAmountNeeded: number;
-	amountRangeSelected: number[];
-	setAmountRangeSelected: React.Dispatch<React.SetStateAction<number[]>>;
-	setStatesSelected: React.Dispatch<React.SetStateAction<string[]>>;
-	outletsSelected: string[];
-	setOutletsSelected: React.Dispatch<React.SetStateAction<string[]>>;
+	isMobileFilter: boolean;
+	filterOptions: ReturnType<typeof createFilterOptions>;
 }
 
-const FilterItems: React.FC<FilterItemsProps> = ({
-	outlets,
-	states,
-	minAmountNeeded,
-	maxAmountNeeded,
-	amountRangeSelected,
-	setAmountRangeSelected,
-	setStatesSelected,
-	outletsSelected,
-	setOutletsSelected,
+export const FilterItems: React.FC<FilterItemsProps> = ({
+	isMobileFilter,
+	filterOptions: {
+		uniqueCategories,
+		uniqueOutlets,
+		uniqueStates,
+		minAmountNeeded,
+		maxAmountNeeded,
+	},
 }) => {
-	const handleCheckboxClick = (outlet: string) => {
-		if (outletsSelected.includes(outlet)) {
-			setOutletsSelected(outletsSelected.filter((o) => o !== outlet));
-			return;
-		}
-		setOutletsSelected([...outletsSelected, outlet]);
-	};
+	const { filters, updateSearchParams } = useFilters();
+	const [localFilters, setLocalFilters] = useState(filters);
+
+	useEffect(() => {
+		setLocalFilters([...filters]);
+	}, [filters]);
+
+	const applyFilters = useCallback(() => {
+		updateSearchParams(localFilters);
+	}, [localFilters, updateSearchParams]);
+
+	const handleStateSelection = useCallback(
+		(state: string) => {
+			if (state === "remove-all") {
+				const filtersWithoutStates = localFilters.filter(
+					([key]) => key !== "state",
+				);
+				setLocalFilters(filtersWithoutStates);
+			} else {
+				const existingStates = new Set(
+					localFilters
+						.filter(([key]) => key === "state")
+						.map(([, value]) => value),
+				);
+				if (existingStates.has(state)) {
+					existingStates.delete(state);
+				} else {
+					existingStates.add(state);
+				}
+				const updatedFilters = localFilters.filter(([key]) => key !== "state");
+				for (const stateValue of existingStates) {
+					updatedFilters.push(["state", stateValue]);
+				}
+				setLocalFilters(updatedFilters);
+			}
+		},
+		[localFilters],
+	);
+	const handleOutletSelection = useCallback(
+		(outlet: string) => {
+			if (outlet === "remove-all") {
+				const filtersWithoutOutlets = localFilters.filter(
+					([key]) => key !== "outlet",
+				);
+				setLocalFilters(filtersWithoutOutlets);
+			} else {
+				const existingOutlets = new Set(
+					localFilters
+						.filter(([key]) => key === "outlet")
+						.map(([, value]) => value),
+				);
+				if (existingOutlets.has(outlet)) {
+					existingOutlets.delete(outlet);
+				} else {
+					existingOutlets.add(outlet);
+				}
+				const updatedFilters = localFilters.filter(([key]) => key !== "outlet");
+				for (const outletValue of existingOutlets) {
+					updatedFilters.push(["outlet", outletValue]);
+				}
+				setLocalFilters(updatedFilters);
+			}
+		},
+		[localFilters],
+	);
+
+	const selectedCategory = useMemo(
+		() => localFilters.find(([key]) => key === "category")?.[1] || "",
+		[localFilters],
+	);
+
+	const handleCategoryChange = useCallback(
+		(category: string) => {
+			const updatedFilters = localFilters.filter(([key]) => key !== "category");
+			if (category !== "") {
+				updatedFilters.push(["category", category]);
+			}
+			setLocalFilters(updatedFilters);
+		},
+		[localFilters],
+	);
+
+	const selectedStates = useMemo(
+		() =>
+			localFilters.filter(([key]) => key === "state").map(([, value]) => value),
+		[localFilters],
+	);
+
+	const selectedOutlets = useMemo(
+		() =>
+			localFilters
+				.filter(([key]) => key === "outlet")
+				.map(([, value]) => value),
+		[localFilters],
+	);
+
+	const activeMin = useMemo(
+		() =>
+			Number(localFilters.find(([key]) => key === "min")?.[1]) ||
+			minAmountNeeded,
+		[localFilters, minAmountNeeded],
+	);
+
+	const activeMax = useMemo(
+		() =>
+			Number(localFilters.find(([key]) => key === "max")?.[1]) ||
+			maxAmountNeeded,
+		[localFilters, maxAmountNeeded],
+	);
 
 	return (
-		<div className="p-6">
-			<h2 className="px-6 font-medium">Amount needed to complete funding</h2>
-			<div className="px-6 pt-4 pb-8">
-				<Slider
-					defaultValue={[amountRangeSelected[0], amountRangeSelected[1]]}
-					min={minAmountNeeded}
-					max={maxAmountNeeded}
-					step={1}
-					minStepsBetweenThumbs={50}
-					onValueChange={(e) => setAmountRangeSelected([e[0], e[1]])}
+		<div className="flex flex-col gap-8">
+			{!isMobileFilter && (
+				<Button onClick={applyFilters} className="w-full">
+					Apply filters
+				</Button>
+			)}
+			<section>
+				<h2 className="font-medium pb-2">Category</h2>
+				<div className="flex flex-wrap gap-2">
+					{uniqueCategories.map(({ label, value }) => (
+						<Badge
+							key={value}
+							className={`border-vd-blue-500 rounded-full flex flex-auto flex-col md:flex-row items-center gap-1 px-2 py-1 cursor-pointer ${
+								selectedCategory === value
+									? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
+									: ""
+							}`}
+							onClick={() => handleCategoryChange(value)}
+						>
+							<DynamicCategoryIcon category={value} />
+							<p className="text-xs">{label}</p>
+						</Badge>
+					))}
+				</div>
+			</section>
+			<section className="pt-4">
+				<h2 className="font-medium">Amount needed to complete funding</h2>
+				<div className="p-2" />
+				<div className="w-full px-4">
+					<Slider
+						defaultValue={[activeMin, activeMax]}
+						min={minAmountNeeded}
+						max={maxAmountNeeded}
+						step={1}
+						minStepsBetweenThumbs={50}
+						onValueChange={(value) => {
+							const updatedFilters = localFilters.filter(
+								([key]) => key !== "min" && key !== "max",
+							);
+							updatedFilters.push(
+								["min", String(value[0])],
+								["max", String(value[1])],
+							);
+							setLocalFilters(updatedFilters);
+						}}
+					/>
+				</div>
+				<div className="p-5" />
+			</section>
+
+			<section>
+				<p className="font-medium pb-2 text-base">
+					States impacted{" "}
+					<span className="text-sm text-stone-500">
+						{" "}
+						({uniqueStates.length})
+					</span>
+				</p>
+				<StateCombobox
+					states={uniqueStates}
+					handleStateSelection={handleStateSelection}
+					selectedStates={selectedStates}
 				/>
-			</div>
-			<Separator className="bg-vd-blue-500 my-10" />
-			<div className="px-6">
-				<h2 className="font-medium pb-2 md:pb-4">State impacted</h2>
-				<MultipleSelector
-					defaultOptions={states}
-					placeholder="Choose states"
-					hidePlaceholderWhenSelected
-					emptyIndicator={
-						<p className="text-center text-sm leading-10 text-gray-600 dark:text-gray-400">
-							no results found.
-						</p>
-					}
-					onChange={(options: Option[]) =>
-						setStatesSelected(options.map(({ value }) => value))
-					}
+			</section>
+
+			<section className="flex flex-col gap-2">
+				<h2 className="font-medium pb-2 md:pb-4">Media outlet</h2>
+				<OutletCombobox
+					outlets={uniqueOutlets}
+					selectedOutlets={selectedOutlets}
+					handleOutletSelection={handleOutletSelection}
 				/>
-			</div>
-			<Separator className="bg-vd-blue-500 my-10" />
-			<div className="px-6">
-				<h2 className="font-medium pb-2 md:pb-4">Story from media outlet</h2>
-				{outlets.map((outlet: string) => (
-					<div key={outlet} className="flex items-center gap-2 pb-2">
-						<Checkbox
-							className="h-6 w-6 rounded-md border-vd-blue-500 data-[state=checked]:bg-vd-blue-500 data-[state=checked]:text-vd-beige-100"
-							onClick={() => handleCheckboxClick(outlet)}
-						/>
-						<p className="text-sm">{outlet}</p>
-					</div>
-				))}
-			</div>
+			</section>
+			{isMobileFilter && (
+				<DrawerFooter className="flex flex-wrap justify-center gap-2">
+					<section className="flex flex-wrap gap-2">
+						<DrawerClose className="flex gap-2 w-full">
+							<Button
+								variant={"secondary"}
+								className="flex-1"
+								onClick={() =>
+									updateSearchParams(filters.filter(([key, _]) => key === "q"))
+								}
+							>
+								Clear filters
+							</Button>
+							<Button className="flex-1" variant={"outline"}>
+								Cancel
+							</Button>
+						</DrawerClose>
+					</section>
+					<DrawerClose>
+						<Button onClick={applyFilters} className="w-full">
+							Apply
+						</Button>
+					</DrawerClose>
+				</DrawerFooter>
+			)}
 		</div>
 	);
 };
 
 const ReportsFilters: React.FC<ReportFiltersProps> = ({
-  searchParams,
-  setSearchParams,
-	outlets,
-	states,
-	amounts,
-	numFiltersApplied,
-	setNumFiltersApplied,
+	isOpen,
+	setIsOpen,
+	filterOptions,
 }) => {
-  const router = useRouter();
-	const amountsNeeded = amounts.map((amount) => 1000 - amount);
-	const minAmountNeeded = Math.min(...amountsNeeded);
-	const maxAmountNeeded = Math.max(...amountsNeeded);
-	const [amountRangeSelected, setAmountRangeSelected] = useState([
-		minAmountNeeded,
-		maxAmountNeeded,
-	]);
-	const [statesSelected, setStatesSelected] = useState<string[]>([]);
-	const [outletsSelected, setOutletsSelected] = useState<string[]>([]);
-
-	const handleApplyFilters = () => {
-		let filtersApplied = 1;
-		searchParams.delete("min");
-		searchParams.delete("max");
-		searchParams.append("min", String(amountRangeSelected[0]));
-		searchParams.append("max", String(amountRangeSelected[1]));
-		if (outletsSelected.length) {
-			filtersApplied++;
-			if (searchParams.has("outlet")) {
-				searchParams.delete("outlet");
-			}
-			for (let i = 0; i < outletsSelected.length; i++) {
-				searchParams.append("outlet", outletsSelected[i]);
-			}
-		}
-		if (statesSelected.length) {
-			filtersApplied++;
-			if (searchParams.has("state")) {
-				searchParams.delete("state");
-			}
-			for (let i = 0; i < statesSelected.length; i++) {
-				searchParams.append("state", statesSelected[i]);
-			}
-		}
-		setNumFiltersApplied(filtersApplied);
-		setSearchParams(searchParams);
-    router.push(`reports/?${searchParams.toString()}`, {scroll: false})
-	};
+	const { filters, numFiltersApplied } = useFilters();
 
 	return (
 		<div>
 			<div className="md:hidden">
-				<Drawer>
-					<DrawerTrigger
-						className="flex gap-2 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
-						onClick={() => {
-							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
-							setOutletsSelected([]);
-							setStatesSelected([]);
-						}}
-					>
-						<p className="text-sm font-medium text-vd-blue-500">Filters</p>
-						{numFiltersApplied ? (
-							<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1">
+				<Drawer dismissible={false}>
+					<div className="relative">
+						{numFiltersApplied !== 0 && (
+							<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1 h-6 w-6 absolute -right-2 -top-2">
 								{numFiltersApplied}
 							</div>
-						) : (
-							<Filter color="#4B778F" size={16} />
 						)}
-					</DrawerTrigger>
-					<DrawerContent className="">
-						<FilterItems
-							outlets={outlets}
-							states={states}
-							minAmountNeeded={minAmountNeeded}
-							maxAmountNeeded={maxAmountNeeded}
-							amountRangeSelected={amountRangeSelected}
-							setAmountRangeSelected={setAmountRangeSelected}
-							setStatesSelected={setStatesSelected}
-							outletsSelected={outletsSelected}
-							setOutletsSelected={setOutletsSelected}
-						/>
-						<DrawerFooter className="flex-row justify-center gap-2 pb-8">
-							<DrawerClose>
-								<Button
-									className="px-24 py-4"
-									onClick={() => handleApplyFilters()}
-								>
-									Apply
-								</Button>
-							</DrawerClose>
-						</DrawerFooter>
+						<DrawerTrigger
+							className="flex gap-2 h-10 rounded-md border-input justify-between
+							items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2
+							text-vd-blue-500 hover:text-vd-blue-100 overflow-visible"
+						>
+							<Filter size={16} />
+							<p className="text-sm font-medium">Filters</p>
+						</DrawerTrigger>
+					</div>
+					<DrawerContent className="px-6 py-3">
+						<FilterItems isMobileFilter={true} filterOptions={filterOptions} />
 					</DrawerContent>
 				</Drawer>
 			</div>
+
 			<div className="hidden md:flex">
-				<Dialog>
-					<DialogTrigger
-						className="flex gap-2 h-10 w-full rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2"
-						onClick={() => {
-							setAmountRangeSelected([minAmountNeeded, maxAmountNeeded]);
-							setOutletsSelected([]);
-							setStatesSelected([]);
-						}}
+				<div className="relative">
+					{numFiltersApplied !== 0 && (
+						<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1 h-6 w-6 absolute -right-2 -top-2">
+							{numFiltersApplied}
+						</div>
+					)}
+
+					<Button
+						className="flex gap-2 h-10 rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2 text-vd-blue-500 hover:text-vd-blue-100 overflow-visible"
+						onClick={() => setIsOpen(!isOpen)}
 					>
-						<p className="text-sm font-medium text-vd-blue-500">Filters</p>
-						{numFiltersApplied > 0 ? (
-							<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1">
-								{numFiltersApplied}
-							</div>
-						) : (
-							<Filter color="#4B778F" size={16} />
-						)}
-					</DialogTrigger>
-					<DialogContent className="bg-vd-beige-200">
-						<FilterItems
-							outlets={outlets}
-							states={states}
-							minAmountNeeded={minAmountNeeded}
-							maxAmountNeeded={maxAmountNeeded}
-							amountRangeSelected={amountRangeSelected}
-							setAmountRangeSelected={setAmountRangeSelected}
-							setStatesSelected={setStatesSelected}
-							outletsSelected={outletsSelected}
-							setOutletsSelected={setOutletsSelected}
-						/>
-						<DialogFooter className="justify-end gap-2 pb-4">
-							<DialogClose asChild>
-								<Button
-									className="px-24 py-4"
-									onClick={() => handleApplyFilters()}
-								>
-									Apply
-								</Button>
-							</DialogClose>
-						</DialogFooter>
-					</DialogContent>
-				</Dialog>
+						<Filter size={16} />
+						<p className="text-sm font-medium">Filters</p>
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
