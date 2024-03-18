@@ -1,4 +1,4 @@
-import { Address, Hash } from "viem";
+import type { Address, Hash } from "viem";
 
 /**
  * Defines the structure of an Impact Report.
@@ -163,6 +163,12 @@ export type Contribution = {
   amount: number;
   date_created: string;
   comment?: string;
+};
+
+export type SupportReportInfo = {
+  image: Partial<Report>["image"];
+  title: Partial<Report>["title"];
+  hypercertId: Partial<Report>["hypercertId"];
 };
 
 export interface ISortingOption {

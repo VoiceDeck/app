@@ -1,8 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
-  "files": {
-    "include": ["app/*", "components/**/*"]
-  },
+  "$schema": "https://biomejs.dev/schemas/1.6.0/schema.json",
   "organizeImports": {
     "enabled": true
   },
@@ -15,6 +12,16 @@
     "enabled": true,
     "rules": {
       "recommended": true
-    }
+    },
+    "ignore": ["node_modules", ".next", ".vercel"]
+  },
+  "files": {
+    "include": [
+      "app/*",
+      "components/**/*",
+      "hooks/**/*",
+      "lib/**/*",
+      "types/**/*"
+    ]
   }
 }
