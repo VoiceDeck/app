@@ -1,7 +1,6 @@
 import 'server-only'
 
 import {
-  type ClaimsByOwnerQuery,
   HypercertClient,
   type HypercertIndexerInterface,
   type HypercertMetadata,
@@ -9,9 +8,11 @@ import {
 } from "@hypercerts-org/sdk";
 import { Mutex } from "async-mutex";
 
-import type { Claim, Report } from "@/types";
+import { Report } from "@/types";
 import { getCMSReports, getFundedAmountByHCId } from "./directus";
 import { getOrders } from "./marketplace";
+
+import { dummyFractions } from "./constants";
 
 let reports: Report[] | null = null;
 const reportsMutex = new Mutex();
@@ -39,16 +40,17 @@ export const fetchReports = async (): Promise<Report[]> => {
       console.log(
         `[server] Fetching reports from remote using owner address: ${ownerAddress}`
       );
-      const claims = await getHypercertClaims(
+      const fractions = await getFractionsByOwner(
         ownerAddress,
         getHypercertClient().indexer
       );
 
+
       reports = await Promise.all(
-        claims.map(async (claim, index) => {
+        fractions.map(async (fraction: any) => {
           // step 1: get metadata from IPFS
           const metadata = await getHypercertMetadata(
-            claim.uri as string,
+            fraction.claim.uri as string,
             getHypercertClient().storage
           );
 
@@ -62,8 +64,12 @@ export const fetchReports = async (): Promise<Report[]> => {
             );
           }
 
+          // TODO: remove this workaround when the safe minting app is fixed
+          const workaroundTokenId = dummyFractions[fraction.claim.id as keyof typeof dummyFractions];
+
           return {
-            hypercertId: claim.id,
+            hypercertId: fraction.claim.id,
+            tokenID: workaroundTokenId.tokenID,
             title: metadata.name,
             summary: metadata.description,
             image: metadata.image,
@@ -91,7 +97,7 @@ export const fetchReports = async (): Promise<Report[]> => {
             dateUpdated: cmsReport.date_updated,
             byline: cmsReport.byline,
             totalCost: Number(cmsReport.total_cost),
-            fundedSoFar: await getFundedAmountByHCId(claim.id),
+            fundedSoFar: await getFundedAmountByHCId(fraction.claim.id),
           } as Report;
         })
       );
@@ -99,28 +105,27 @@ export const fetchReports = async (): Promise<Report[]> => {
       // here we use feature flag to decide if we want to fetch orders
       // since orders are not created in the testnet
       // TODO: remove this when we have a real marketplace orders
-      // if (process.env.ORDER_FETCHING === "on") {
-      // 	// step 3: get orders from marketplace
-      // 	const orders = await getOrders(reports);
-      // 	reports = reports.map((report) => {
-      // 		for (const order of orders) {
-      // 			if (order && order.hypercertId === report.hypercertId) {
-      // 				report.order = order;
-      // 				break;
-      // 			}
-      // 		}
-      // 		// not fully funded reports should have an order
-      // 		if (!report.order && report.fundedSoFar < report.totalCost) {
-      // 			throw new Error(
-      // 				`[server] No order found for hypercert ${report.hypercertId}`,
-      // 			);
-      // 		}
-      // 		return report;
-      // 	});
-      // }
+      if (process.env.NEXT_ORDER_FETCHING === "on") {
+      	// step 3: get orders from marketplace
+      	const orders = await getOrders(reports);
+      	reports = reports.map((report) => {
+      		for (const order of orders) {
+      			// if (order && order.hypercertId === report.hypercertId) {
+            if (order) {
+      				report.order = order;
+      			}
+      		}
+      		// not fully funded reports should have an order
+      		if (!report.order && report.fundedSoFar < report.totalCost) {
+      			throw new Error(
+      				`[server] No order found for hypercert ${report.hypercertId}`,
+      			);
+      		}
+      		return report;
+      	});
+      }
 
-      console.log(`report order ${JSON.stringify(reports[0].order)}`);
-      console.log(`[server] total fetched reports: ${reports.length}`);
+			console.log(`[server] total fetched reports: ${reports.length}`);
     }
 
     return reports;
@@ -197,26 +202,22 @@ export const getHypercertClient = (): HypercertClient => {
 };
 
 /**
- * Fetches the claims owned by the specified address from the Hypercert indexer.
+ * Fetches the fractions owned by the specified address from the Hypercert indexer.
  * @param ownerAddress - The address of the owner of the claims.
  * @param indexer - An instance of HypercertIndexer to retrieve claims from the [Graph](https://thegraph.com/docs/en/)
- * @returns A promise that resolves to an array of claims.
+ * @returns A promise that resolves to an array of fractions.
  * @throws Will throw an error if the owner address is not set or the claims cannot be fetched.
  */
-export const getHypercertClaims = async (
+export const getFractionsByOwner = async (
   ownerAddress: string,
   indexer: HypercertIndexerInterface
-): Promise<Claim[]> => {
-  let claims: Claim[] | null;
-
+): Promise<any> => {
   console.log(`[Hypercerts] Fetching claims owned by ${ownerAddress}`);
   try {
     // see graphql query: https://github.com/hypercerts-org/hypercerts/blob/d7f5fee/sdk/src/indexer/queries/claims.graphql#L1-L11
-    const response = await indexer.claimsByOwner(ownerAddress as string);
-    claims = (response as ClaimsByOwnerQuery).claims as Claim[];
-    console.log(`[Hypercerts] Fetched claims: ${claims ? claims.length : 0}`);
-
-    return claims;
+    const response = await indexer.fractionsByOwner(ownerAddress as string);
+    
+    return response?.claimTokens || [];
   } catch (error) {
     console.error(
       `[Hypercerts] Failed to fetch claims owned by ${ownerAddress}: ${error}`

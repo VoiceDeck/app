@@ -30,6 +30,8 @@ import { sepolia } from "viem/chains";
 import { useAccount, usePublicClient } from "wagmi";
 import TransactionStatus from "./transaction-status";
 
+import { dummyFractions } from "@/lib/constants";
+
 interface SupportReportFormProps {
 	drawerContainer: HTMLDivElement | null;
 	hypercertId: Partial<Report>["hypercertId"];
@@ -85,13 +87,34 @@ async function getOrdersForReport(
 	}
 
 	try {
-		const { data: orders } = await hypercertClient.api.fetchOrdersByHypercertId(
-			{
-				hypercertId,
-				chainId,
-			},
-		);
-		return orders;
+		let result: unknown;
+		if (process.env.NEXT_PUBLIC_ORDER_WORKAROUND === "on") {
+			const workaroundTokenId =
+				dummyFractions[hypercertId as keyof typeof dummyFractions];
+			console.log(`workaroundTokenId: ${workaroundTokenId.tokenID}`);
+			const { data: orders } = await hypercertClient.api.fetchOrders({
+				claimTokenIds: [workaroundTokenId.tokenID],
+			});
+
+			result = orders;
+		} else if (process.env.ORDER_FETCHING !== "on") {
+			const { data: orders } =
+				await hypercertClient.api.fetchOrdersByHypercertId({
+					hypercertId:
+						"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
+					chainId,
+				});
+			result = orders;
+		} else if (process.env.ORDER_FETCHING === "on") {
+			const { data: orders } =
+				await hypercertClient.api.fetchOrdersByHypercertId({
+					hypercertId,
+					chainId,
+				});
+			result = orders;
+		}
+
+		return result;
 	} catch (error) {
 		console.error("[Fetching orders] - Error fetching orders", error);
 		return [];
@@ -109,7 +132,7 @@ const SupportReportForm = ({
 	const { dollarAmountNeeded, pricePerUnit } = useFunding();
 
 	const HCExchangeClient = new HypercertExchangeClient(
-		chainId ?? sepolia.id,
+		sepolia.id,
 		// @ts-ignore
 		provider,
 		signer,
@@ -124,20 +147,21 @@ const SupportReportForm = ({
 		data: orders,
 	} = useQuery({
 		queryKey: ["ordersFromHypercert"],
-		queryFn: () =>
-			getOrdersForReport(
-				HCExchangeClient,
-				// TODO: Replace with actual hypercert ID
-				"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
-				// "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-67375908650345815765748172271490105868288",
-				chainId,
-			),
+		queryFn: () => getOrdersForReport(HCExchangeClient, hypercertId, chainId),
 	});
 
+	let order: unknown;
+	if (process.env.NEXT_PUBLIC_ORDER_WORKAROUND === "on") {
+		// @ts-ignore
+		order = orders?.[1];
+	} else {
+		// @ts-ignore
+		order = orders?.[5];
+	}
 	const { form, onSubmit, isProcessing } = useSupportForm(
 		Number(dollarAmountNeeded),
 		pricePerUnit,
-		orders?.[5],
+		order,
 		handleBuyFraction,
 		address,
 		hypercertId,

@@ -18,8 +18,8 @@ dependencies:
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.51.1)
   '@hypercerts-org/marketplace-sdk':
-    specifier: ^0.0.23
-    version: 0.0.23(ethers@6.11.1)(react@18.2.0)(typescript@5.4.2)(zod@3.22.4)
+    specifier: 0.0.24
+    version: 0.0.24(ethers@6.11.1)(react@18.2.0)(typescript@5.4.2)(zod@3.22.4)
   '@hypercerts-org/sdk':
     specifier: ^1.4.3
     version: 1.4.3(react@18.2.0)(typescript@5.4.2)(zod@3.22.4)
@@ -2368,8 +2368,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@hypercerts-org/marketplace-sdk@0.0.23(ethers@6.11.1)(react@18.2.0)(typescript@5.4.2)(zod@3.22.4):
-    resolution: {integrity: sha512-9I7F/waSMxUtvzjzaaEM/2YOpR2y54jdCjTLQutFr5sr8TbqRqIvFpJ4emLB4ri6DadLgHDFGrQCHqSL31jKxw==}
+  /@hypercerts-org/marketplace-sdk@0.0.24(ethers@6.11.1)(react@18.2.0)(typescript@5.4.2)(zod@3.22.4):
+    resolution: {integrity: sha512-5lRVcClMAKlpkdM/XgCs8QFPD5DaHz3pfu1rgw5hObQabZjEILWPV7BSoQNIxWuER8oa94DlSYyVNlCKuWgczw==}
     engines: {node: '>= 16.15.1 <= 20.x'}
     peerDependencies:
       ethers: ^6.6.2

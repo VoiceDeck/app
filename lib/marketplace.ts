@@ -25,23 +25,24 @@ const signer = new ethers.Wallet(
  * @param hypercertId The hypercert ID.
  * @returns A promise that resolves to the order.
  */
-export async function fetchOrder(hypercertId: string): Promise<Order | null> {
-  const hypercertExchangeClient = getHypercertExchangeClient();
+export async function fetchOrder(tokenId: string): Promise<Order | null> {
+	const hypercertExchangeClient = getHypercertExchangeClient();
 
-  const response = await hypercertExchangeClient.api.fetchOrdersByHypercertId({
-    hypercertId:
-      "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
-    chainId: sepolia.id,
-  });
-
+  console.log(`[server] fetching order of tokenId ${tokenId}`);
+	const response = await hypercertExchangeClient.api.fetchOrders(
+    {
+      claimTokenIds: [tokenId],
+    }
+  );
+	
   if (response.data && response.data.length > 0) {
     if (response.data.length > 1) {
       console.warn(
-        `[server] ${response.data.length} orders found for hypercert ${hypercertId}`
+        `[server] ${response.data.length} orders found for hypercert ${tokenId}`
       );
     }
     // Assuming there is only one item per order for the VoiceDeck use case
-    return { hypercertId, ...response.data[3] } as Order;
+    return response.data[0] as Order;
   }
   return null;
 }
@@ -53,22 +54,25 @@ export async function fetchOrder(hypercertId: string): Promise<Order | null> {
  */
 export async function getOrders(reports: Report[]): Promise<(Order | null)[]> {
   try {
-    // if (orders) {
-    // 	console.log(
-    // 		"[server] Hypercert orders already exist, no need to fetch from remote",
-    // 	);
-    // 	console.log(`[server] existing Hypercert orders: ${orders.length}`);
-    // } else {
+    if (orders) {
+    	console.log(
+    		"[server] Hypercert orders already exist, no need to fetch from remote",
+    	);
+    	console.log(`[server] existing Hypercert orders: ${orders.length}`);
+    } else {
     // fetch only orders for reports that are not fully funded
     orders = await Promise.all(
       reports.map((report) =>
         report.fundedSoFar < report.totalCost
-          ? fetchOrder(report.hypercertId)
+          ? fetchOrder(report.tokenID)
           : null
       )
     );
-    console.log(`[server] fetched orders: ${orders.length}`);
-    // }
+
+    const nonNullOrders = orders.filter(order => order !== null);
+    console.log(`[server] fetched orders: ${nonNullOrders.length}`);
+    }
+
     return orders;
   } catch (error) {
     console.error(`[server] Failed to fetch orders: ${error}`);

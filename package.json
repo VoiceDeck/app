@@ -16,7 +16,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@fontsource-variable/plus-jakarta-sans": "^5.0.20",
     "@hookform/resolvers": "^3.3.4",
-    "@hypercerts-org/marketplace-sdk": "^0.0.23",
+    "@hypercerts-org/marketplace-sdk": "0.0.24",
     "@hypercerts-org/sdk": "^1.4.3",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.4",

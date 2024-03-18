@@ -5,6 +5,7 @@ import type { Address, Hash } from "viem";
  *
  * @interface Report
  * @property {string} hypercertId - Claim id of hypercert.
+ * @property {string} tokenID - Token id of hypercert.
  * @property {string} title - Title of the report.
  * @property {string} summary - Brief summary of the report.
  * @property {string} image - the image representing the report.
@@ -30,18 +31,19 @@ import type { Address, Hash } from "viem";
  * @property {number} fundedSoFar - Amount funded so far.
  */
 export interface Report {
-  // properties for hypercert minting
-  hypercertId: string;
-  title: string;
-  summary: string;
-  image: string;
-  originalReportUrl: string;
-  state: string;
-  category: string;
-  workTimeframe: string;
-  impactScope: string;
-  impactTimeframe: string;
-  contributors: string[];
+	// properties for hypercert minting
+	hypercertId: string;
+	tokenID: string;
+	title: string;
+	summary: string;
+	image: string;
+	originalReportUrl: string;
+	state: string;
+	category: string;
+	workTimeframe: string;
+	impactScope: string;
+	impactTimeframe: string;
+	contributors: string[];
 
   // properties stored in CMS
   cmsId: string;
