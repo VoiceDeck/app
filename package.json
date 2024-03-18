@@ -9,7 +9,7 @@
     "lint": "biome check --apply ./app",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint:ci": "biome ci ./app",
-    "prepare": "husky"
+    "prepare": "node .husky/install.mjs"
   },
   "dependencies": {
     "@directus/sdk": "^15.0.2",
