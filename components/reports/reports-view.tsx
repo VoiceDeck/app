@@ -21,7 +21,7 @@ import {
 } from "@/lib/search-filter-utils";
 import type { ISortingOption, Report } from "@/types";
 import Fuse from "fuse.js";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { SidebarFilter } from "./filter-sidebar";
 
 interface IPageData {
@@ -33,37 +33,46 @@ export function ReportsView({ reports }: IPageData) {
 	const [activeSortOption, setActiveSortOption] = useState(
 		sortingOptions.createdNewestFirst.value,
 	);
-	let filteredReports = reports;
+	let filteredReports = useMemo(() => reports, [reports]);
 
 	const filterOptions = useMemo(() => {
 		return createFilterOptions(reports);
 	}, [reports]);
 
-	const fuseOptions = {
-		minMatchCharLength: 3,
-		threshold: 0.5,
-		ignoreDistance: true,
-		findAllMatches: true,
-		keys: ["title", "summary"],
-	};
+	const fuseOptions = useMemo(
+		() => ({
+			minMatchCharLength: 3,
+			threshold: 0.5,
+			ignoreDistance: true,
+			findAllMatches: true,
+			keys: ["title", "summary"],
+		}),
+		[],
+	);
 
-	const fuse = new Fuse(reports, fuseOptions);
+	const fuse = useMemo(
+		() => new Fuse(reports, fuseOptions),
+		[reports, fuseOptions],
+	);
 	if (filters.length > 0) {
 		filteredReports = filterReports(reports, filters, fuse);
 	}
 
-	const sortReports = (
-		reports: Report[],
-		sortOption: ISortingOption["value"],
-	) => {
-		const sortFn = sortingOptions[sortOption]?.sortFn;
-		if (sortFn) {
-			return [...reports].sort(sortFn);
-		}
-		return reports;
-	};
+	const sortReports = useCallback(
+		(reports: Report[], sortOption: ISortingOption["value"]) => {
+			const sortFn = sortingOptions[sortOption]?.sortFn;
+			if (sortFn) {
+				return [...reports].sort(sortFn);
+			}
+			return reports;
+		},
+		[],
+	);
 
-	filteredReports = sortReports(filteredReports, activeSortOption);
+	filteredReports = useMemo(
+		() => sortReports(filteredReports, activeSortOption),
+		[filteredReports, activeSortOption, sortReports],
+	);
 
 	const {
 		currentPage,
@@ -72,10 +81,14 @@ export function ReportsView({ reports }: IPageData) {
 		maxPage,
 		pageNumbers,
 		needsPagination,
-		// TODO: Reset reports per page to 10
 	} = usePagination<Report>(filteredReports, 5);
 
 	const [filterOpen, setFilterOpen] = useState(false);
+
+	const clearFiltersAndSearch = useCallback(
+		() => updateSearchParams([]),
+		[updateSearchParams],
+	);
 
 	return (
 		<section className="flex border-t border-t-stone-300">
@@ -125,7 +138,7 @@ export function ReportsView({ reports }: IPageData) {
 								<p className="text-vd-beige-600">
 									Please remove some of your filters and try again.
 								</p>
-								<Button className="mt-4" onClick={() => updateSearchParams([])}>
+								<Button className="mt-4" onClick={clearFiltersAndSearch}>
 									Clear filters and search
 								</Button>
 							</div>
