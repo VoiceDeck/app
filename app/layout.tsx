@@ -28,7 +28,11 @@ export default function RootLayout({
 	const initialState = cookieToInitialState(config, headers().get("cookie"));
 	return (
 		<html lang="en">
-			<body className={cn("min-h-screen bg-background font-sans antialiased")}>
+			<body
+				className={cn(
+					"min-h-screen bg-background font-sans antialiased flex flex-col",
+				)}
+			>
 				<WagmiContextProvider initialState={initialState}>
 					<NavMenu />
 					{children}

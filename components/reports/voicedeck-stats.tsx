@@ -1,3 +1,6 @@
+import type { Report } from "@/types";
+import { useMemo } from "react";
+
 interface StatContainerProps {
 	icon: string;
 	heading: string;
@@ -31,15 +34,28 @@ const StatContainer: React.FC<StatContainerProps> = ({
 
 interface VoicedeckStatsProps {
 	numOfContributors: number;
-	sumOfContributions: number;
-	numOfContributions: number;
+	reports: Report[];
 }
 
 const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 	numOfContributors,
-	sumOfContributions,
-	numOfContributions,
+	reports,
 }) => {
+	const contributionAmounts = useMemo(() => {
+		const allAmounts = reports.map(
+			(report: Report, index: number) => report.fundedSoFar || 0,
+		);
+		const sumOfAmounts = allAmounts.reduce((a: number, b: number) => a + b, 0);
+		const fullyFunded = allAmounts.filter((amount: number) => amount === 1000);
+		return {
+			amounts: allAmounts,
+			sumOfContributions: sumOfAmounts,
+			numOfContributions: fullyFunded.length || 0,
+		};
+	}, [reports]);
+
+	const { sumOfContributions, numOfContributions } = contributionAmounts;
+
 	return (
 		<section className="flex flex-col lg:flex-row w-full gap-3 max-w-screen-xl">
 			<StatContainer

@@ -2,6 +2,7 @@ import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 
 import { cookieStorage, createStorage } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
+import { getVoiceDeckUrl } from "./endpoint";
 
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
@@ -12,7 +13,7 @@ if (!projectId) throw new Error("Project ID is not defined");
 const metadata = {
   name: "VoiceDeck",
   description: "Funding for Indian journalists",
-  url: "https://app.voicedeck.org", // origin must match your domain & subdomain
+  url: getVoiceDeckUrl(), // origin must match your domain & subdomain
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
