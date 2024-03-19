@@ -25,13 +25,13 @@ const SideBar = () => {
 						Your Action Matters
 					</CardTitle>
 					<CardDescription className={cn("text-center")}>
-						There are 21 action reports that haven't completed their funding
-						requests yet!
+						There are many more impact reports that haven't completed their
+						funding requests yet!
 					</CardDescription>
 				</CardHeader>
 				<CardContent className={cn("flex justify-center")}>
 					<Link
-						href="/my-actions/record"
+						href="/reports"
 						className={cn(buttonVariants({ variant: "default", size: "lg" }))}
 					>
 						Explore
@@ -51,9 +51,9 @@ const SideBar = () => {
 						Become a Local Advocate
 					</CardTitle>
 					<CardDescription className={cn("text-center")}>
-						Cares about your community? By verifying your Indian citizenship,
-						you will be able access feature like evaluation, voting features on
-						the platform.
+						Care about your community? When you verify your identity with
+						Aadhaar, you will be able to access impact evaluation and voting
+						features on the VoiceDeck platform.
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -67,7 +67,8 @@ const SideBar = () => {
 						>
 							Verify now
 						</Link>
-						<Link
+						{/* info copy can be added when anon aadhaar is implemented */}
+						{/* <Link
 							href="/my-actions/record"
 							className={cn(
 								buttonVariants({ variant: "ghost", size: "lg" }),
@@ -75,7 +76,7 @@ const SideBar = () => {
 							)}
 						>
 							Learn more
-						</Link>
+						</Link> */}
 					</div>
 				</CardContent>
 			</Card>
