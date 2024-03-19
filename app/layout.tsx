@@ -1,8 +1,6 @@
 import { cn } from "@/lib/utils";
-// Supports weights 200-800
 import "@fontsource-variable/plus-jakarta-sans";
 import type { Metadata } from "next";
-// import { Plus_Jakarta_Sans } from "next/font/google";
 import "vaul/dist/index.css";
 import "./globals.css";
 
@@ -35,7 +33,7 @@ export default function RootLayout({
 			>
 				<WagmiContextProvider initialState={initialState}>
 					<NavMenu />
-					{children}
+					<div className="flex-1">{children}</div>
 					<Footer />
 				</WagmiContextProvider>
 			</body>
