@@ -25,7 +25,7 @@ import { useAccount } from "wagmi";
 
 const Footer = () => {
 	return (
-		<footer className="fixed inset-x-0 bottom-0 bg-vd-beige-200 text-center items-center py-2 md:static">
+		<footer className="fixed inset-x-0 bottom-0 bg-vd-beige-200 text-center items-center py-2">
 			<MobileFooter />
 			<DesktopFooter />
 		</footer>
