@@ -16,7 +16,7 @@ export interface HistoryData {
 }
 
 // TODO: Replace mockData with actual data from the API,
-const History = ({ history }: { history: HistoryData[] | [] }) => {
+const History = ({ history }: { history: HistoryData[] }) => {
 	const renderHistoryCards = () => {
 		return history.map((data) => (
 			<HistoryCard
