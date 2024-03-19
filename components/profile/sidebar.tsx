@@ -67,16 +67,18 @@ const SideBar = () => {
 						>
 							Verify now
 						</Link>
-						{/* info copy can be added when anon aadhaar is implemented */}
-						{/* <Link
-							href="/my-actions/record"
+						{/* TODO: add anchor to faq link */}
+						<a
+							href="https://voicedeck.org/faq/"
+							target="_blank"
+							rel="noopener noreferrer"
 							className={cn(
 								buttonVariants({ variant: "ghost", size: "lg" }),
 								"w-full",
 							)}
 						>
 							Learn more
-						</Link> */}
+						</a>
 					</div>
 				</CardContent>
 			</Card>
