@@ -5,14 +5,12 @@ import { getContributionsByAddress } from "@/lib/directus";
 import { fetchReportByHCId } from "@/lib/impact-reports";
 import { cn } from "@/lib/utils";
 
-import History, { type HistoryData } from "@/components/my-actions/history";
-import { SideBar } from "@/components/my-actions/sidebar";
-import { Summary } from "@/components/my-actions/summary";
+import History, { type HistoryData } from "@/components/profile/history";
+import { SideBar } from "@/components/profile/sidebar";
+import { Summary } from "@/components/profile/summary";
 import { buttonVariants } from "@/components/ui/button";
 
 async function getContributionsHistoryData(address: `0x${string}`) {
-	// The return value is *not* serialized
-	// You can return Date, Map, Set, etc.
 	try {
 		const contributions = await getContributionsByAddress(address);
 		const historyPromises = contributions.map(async (contribution) => {
@@ -35,10 +33,31 @@ async function getContributionsHistoryData(address: `0x${string}`) {
 		});
 
 		const history = await Promise.all(historyPromises);
-		return history;
+		let totalAmount = 0;
+		let reportCount = 0;
+		const categoryCounts: { [key: string]: number } = {}; // Object to hold category counts
+
+		for (const entry of history) {
+			totalAmount += entry.amount;
+			reportCount += 1;
+
+			if (categoryCounts[entry.category]) {
+				categoryCounts[entry.category] += 1;
+			} else {
+				categoryCounts[entry.category] = 1;
+			}
+		}
+
+		// Returning history, categoryCounts, and totalAmount directly
+		return { history, categoryCounts, totalAmount, reportCount };
 	} catch (error) {
 		console.error(`Failed to load reports contributed by ${address}: ${error}`);
-		return [];
+		return {
+			history: [],
+			categoryCounts: {},
+			totalAmount: 0,
+			reportCount: 0,
+		};
 	}
 }
 
@@ -47,8 +66,12 @@ export default async function ProfilePage({
 }: {
 	params: { address: `0x${string}` };
 }) {
-	const history = await getContributionsHistoryData(address);
-
+	const {
+		history = [],
+		categoryCounts = {},
+		totalAmount = 0,
+		reportCount = 0,
+	} = await getContributionsHistoryData(address);
 	return (
 		<main className="container grid grid-cols-1 md:grid-cols-3 auto-rows-auto md:gap-4 gap-4 text-vd-blue-900 mb-6 max-w-6xl pb-16 md:pb-0">
 			<header className="md:col-span-3 flex justify-between my-4">
@@ -61,7 +84,11 @@ export default async function ProfilePage({
 					<Settings2 className="ml-2 h-4 w-4 mt-1" />
 				</Link>
 			</header>
-			<Summary />
+			<Summary
+				totalAmount={totalAmount}
+				reportCount={reportCount}
+				categoryCounts={categoryCounts}
+			/>
 			<SideBar />
 			<History history={history || []} />
 		</main>
