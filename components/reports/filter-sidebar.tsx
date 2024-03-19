@@ -28,6 +28,7 @@ const SidebarFilter = ({
 			className={cn(
 				"w-[380px] p-5 bg-vd-beige-100 border-r border-r-stone-300 transition-[margin-left] ease-[cubic-bezier(0.65, 0, 0.35, 1)] duration-700 h-full",
 				isOpen ? "ml-0" : "ml-[-380px]",
+				"min-[2560px]:ml-0",
 			)}
 		>
 			<header className="flex justify-between">
@@ -35,18 +36,28 @@ const SidebarFilter = ({
 				<section className="flex gap-4">
 					<button
 						type="button"
-						className="text-vd-blue-700 hover:text-vd-blue-400 hover:underline underline-offset-1"
+						className="text-vd-blue-700 hover:text-vd-blue-400 hover:underline underline-offset-1 min-[2560px]:hidden"
 						onClick={handleClearFilters}
 					>
 						Clear filters
 					</button>
-					<Separator orientation="vertical" className="bg-vd-blue-400" />
+					<button
+						type="button"
+						className="hidden text-vd-blue-700 hover:text-vd-blue-400 hover:underline underline-offset-1 min-[2560px]:block"
+						onClick={() => updateSearchParams(clearedFilters)}
+					>
+						Clear filters
+					</button>
+					<Separator
+						orientation="vertical"
+						className="bg-vd-blue-400 min-[2560px]:hidden"
+					/>
 					<button
 						type="button"
 						onClick={() => setIsOpen(false)}
 						title="Close sidebar"
 						aria-label="Close sidebar"
-						className="hover:-translate-x-1 transition-transform ease-in-out duration-300 text-vd-blue-600"
+						className="hover:-translate-x-1 transition-transform ease-in-out duration-300 text-vd-blue-600 min-[2560px]:hidden"
 					>
 						Close
 					</button>

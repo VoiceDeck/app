@@ -91,7 +91,10 @@ export function ReportsView({ reports }: IPageData) {
 	);
 
 	return (
-		<section className="flex border-t border-t-stone-300" id="discover">
+		<section
+			className="flex border-t border-t-stone-300 min-[2560px]:w-screen-2xl min-[2560px]:mx-auto"
+			id="discover"
+		>
 			<div className="hidden md:block">
 				<SidebarFilter
 					isOpen={filterOpen}

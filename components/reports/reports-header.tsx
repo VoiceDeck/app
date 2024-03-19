@@ -141,7 +141,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 	const DesktopViewHeader = useMemo(
 		() => (
 			<section className="gap-2 hidden md:flex justify-between w-full">
-				<div className="flex w-full gap-3">
+				<div className="flex w-full gap-3 min-[2560px]:gap-0">
 					<ReportsFilters
 						isOpen={filterOverlayOpen}
 						setIsOpen={setFilterOverlayOpen}
