@@ -7,7 +7,7 @@ const nextConfig = {
 	images: {
 		remotePatterns: [
 			{
-				hostname: "directus.vd-dev.org",
+				hostname: "directus.voicedeck.org",
 				protocol: "https",
 			}
 		]
