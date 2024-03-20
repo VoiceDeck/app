@@ -31,7 +31,7 @@ export default async function ReportsPage() {
 					<h1 className="text-3xl lg:text-5xl 2xl:text-7xl font-bold text-left max-w-screen-md 2xl:max-w-screen-lg">
 						{siteConfig.title}
 					</h1>
-					<p className="text-lg 2xl:text-2xl font-medium text-left py-6 max-w-screen-md 2xl:max-w-screen-lg 2xl:tracking-wide">
+					<p className="text-lg 2xl:text-2xl font-medium text-left py-6 max-w-screen-md 2xl:max-w-screen-lg">
 						{siteConfig.description}
 					</p>
 				</header>
