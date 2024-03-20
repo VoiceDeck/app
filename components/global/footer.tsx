@@ -26,7 +26,10 @@ const Footer = () => {
 
 const MobileFooter = () => {
 	return (
-		<nav aria-label="Mobile Footer Navigation" className="py-2 px-8 w-full">
+		<nav
+			aria-label="Mobile Footer Navigation"
+			className="pb-4 pt-2 px-8 w-full"
+		>
 			<ul className="flex justify-between items-center gap-1 md:hidden">
 				<li>
 					<Link
