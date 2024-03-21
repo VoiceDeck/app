@@ -67,26 +67,28 @@ const SupportReportDialog = ({
 				ref={(el) => setDrawerContainer(el)}
 				className="overflow-clip"
 			>
-				<DialogHeader className="text-xl font-bold">
+				<DialogHeader className="text-2xl font-bold">
 					Support this report
 				</DialogHeader>
 				<div className="flex flex-col gap-4 p-3">
 					<Card className="bg-slate-50">
-						<div className="flex flex-col gap-4 p-3">
-							<div className="flex justify-center">
-								{reportImage && reportTitle && (
-									<div className="relative w-full h-40 overflow-hidden rounded-xl border">
-										<Image
-											src={reportImage}
-											alt={reportTitle}
-											fill
-											style={{ objectFit: "cover", objectPosition: "center" }}
-										/>
-									</div>
-								)}
-							</div>
+						<div className="flex items-center gap-4 p-2">
+							{/* <div className="flex justify-center"> */}
+							{reportImage && reportTitle && (
+								<div className="relative w-24 h-16 overflow-hidden rounded-md border">
+									<Image
+										src={reportImage}
+										alt={reportTitle}
+										fill
+										style={{ objectFit: "cover", objectPosition: "center" }}
+									/>
+								</div>
+							)}
+							{/* </div> */}
 							<div className="flex flex-col gap-2">
-								<h4 className="font-bold">{reportTitle}</h4>
+								<h4 className="font-bold text-base line-clamp-2">
+									{reportTitle}
+								</h4>
 							</div>
 						</div>
 					</Card>
