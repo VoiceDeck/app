@@ -3,7 +3,7 @@ import {
 	GlassWater,
 	Heart,
 	Lightbulb,
-	LucideIcon,
+	type LucideIcon,
 	MapPin,
 	Salad,
 } from "lucide-react";

@@ -1,11 +1,11 @@
 "use client";
 import { cn } from "@/lib/utils";
 
+import { buttonVariants } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type React from "react";
-import { buttonVariants } from "../ui/button";
+import type { ReactNode } from "react";
 
 export const NavLink = ({
 	href,
@@ -14,7 +14,7 @@ export const NavLink = ({
 	className,
 }: {
 	href: string;
-	children: React.ReactNode;
+	children: ReactNode;
 	isActive: boolean;
 	className?: string;
 }) => {

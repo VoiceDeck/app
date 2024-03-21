@@ -1,6 +1,5 @@
-import { ISortingOption, Report } from "@/types";
+import type { ISortingOption, Report } from "@/types";
 import type Fuse from "fuse.js";
-
 export const filterReports = (
   reports: Report[],
   filters: [string, string][],
@@ -8,38 +7,42 @@ export const filterReports = (
 ) => {
   return filters.reduce((filteredReports, [key, value]) => {
     switch (key) {
-      case "q":
+      case "q": {
         const searchResults = fuse.search(value);
         return searchResults.map((result) => result.item);
-      case "state":
+      }
+      case "state": {
         const states = filters
           .filter(([filterKey]) => filterKey === "state")
           .map(([, filterValue]) => filterValue);
         return filteredReports.filter((report) =>
           states.includes(report.state)
         );
+      }
       case "min":
         return filteredReports.filter(
-          (report) => report.totalCost - report.fundedSoFar >= parseInt(value)
+          (report) =>
+            report.totalCost - report.fundedSoFar >= Number.parseInt(value, 10)
         );
       case "max":
         return filteredReports.filter(
-          (report) => report.totalCost - report.fundedSoFar <= parseInt(value)
+          (report) =>
+            report.totalCost - report.fundedSoFar <= Number.parseInt(value, 10)
         );
       case "category":
         return filteredReports.filter((report) => report.category === value);
-      case "outlet":
+      case "outlet": {
         const outlets = filters
           .filter(([filterKey]) => filterKey === "outlet")
-          .map(([, filterValue]) => decodeURIComponent(filterValue));
+          .map(([, filterValue]) =>
+            decodeURIComponent(filterValue).toLowerCase()
+          );
         return filteredReports.filter((report) => {
           if (!report.contributors.length) return false;
-          return outlets.some((outlet) =>
-            report.contributors
-              .map((contributor) => contributor.toLowerCase())
-              .includes(outlet)
-          );
+          const outletName = report.contributors[0].toLowerCase();
+          return outlets.includes(outletName);
         });
+      }
       default:
         return filteredReports;
     }
@@ -58,11 +61,11 @@ export const createFilterOptions = (reports: Report[]) => {
     );
 
   const uniqueOutlets = reports
-    .flatMap((report: Report) => report.contributors)
-    .filter((contributor) => contributor.length > 0)
-    .map((contributor: string) => ({
-      label: contributor,
-      value: encodeURIComponent(contributor).toLowerCase(),
+    .map((report: Report) => report.contributors[0])
+    .filter((outlet) => outlet && outlet.length > 0)
+    .map((outlet: string) => ({
+      label: outlet,
+      value: encodeURIComponent(outlet).toLowerCase(),
     }))
     .filter(
       ({ value }, index, self) =>

@@ -27,11 +27,11 @@ export default async function ReportsPage() {
 	return (
 		<main className="flex flex-col gap-4 pb-[60px] md:pb-0">
 			<section className="flex flex-col items-center p-4 md:p-8 gap-4">
-				<header className="w-full flex flex-col justify-end bg-[url('/hero_img.jpg')] bg-cover bg-center max-w-screen-xl h-[520px] text-vd-beige-100 rounded-3xl p-4 md:p-8">
-					<h1 className="text-3xl md:text-6xl font-bold text-left max-w-screen-md">
+				<header className="w-full flex flex-col justify-end bg-[url('/hero_img.jpg')] bg-cover bg-center max-w-screen-xl min-[2560px]:max-w-screen-2xl h-[420px] 2xl:h-[520px] min-[2560px]:h-[720px] text-vd-beige-100 rounded-3xl p-4 md:p-8 2xl:p-16">
+					<h1 className="text-3xl lg:text-5xl 2xl:text-7xl font-bold text-left max-w-screen-md 2xl:max-w-screen-lg">
 						{siteConfig.title}
 					</h1>
-					<p className="text-lg font-medium text-left py-6 max-w-screen-md">
+					<p className="text-lg 2xl:text-2xl font-medium text-left py-6 max-w-screen-md 2xl:max-w-screen-lg">
 						{siteConfig.description}
 					</p>
 				</header>
