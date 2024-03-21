@@ -67,9 +67,8 @@ const SideBar = () => {
 						>
 							Verify now
 						</Link>
-						{/* TODO: add anchor to faq link */}
 						<a
-							href="https://voicedeck.org/faq/"
+							href="https://voicedeck.org/faq#anonaadhaar"
 							target="_blank"
 							rel="noopener noreferrer"
 							className={cn(
