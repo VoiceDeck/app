@@ -73,7 +73,7 @@ export default async function ReportPage({
 							<p>{report.state}</p>
 						</Badge>
 					</ul>
-					<div className="fixed bottom-[72px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
+					<div className="fixed bottom-[96px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
 						<FundingDataWrapper
 							hypercertId={report.hypercertId}
 							totalReportCost={report.totalCost}

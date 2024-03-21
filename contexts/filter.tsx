@@ -28,7 +28,7 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 		newFilters.forEach(([key, value]) => {
 			searchParams.append(key, value);
 		});
-		replace(`${pathname}?${searchParams}`);
+		replace(`${pathname}?${searchParams}`, {scroll: false});
 	}
 
 	useEffect(() => {

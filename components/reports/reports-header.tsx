@@ -141,7 +141,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 	const DesktopViewHeader = useMemo(
 		() => (
 			<section className="gap-2 hidden md:flex justify-between w-full">
-				<div className="flex w-full gap-3">
+				<div className="flex w-full gap-3 min-[2560px]:gap-0">
 					<ReportsFilters
 						isOpen={filterOverlayOpen}
 						setIsOpen={setFilterOverlayOpen}
@@ -173,7 +173,7 @@ const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 
 	return (
 		<article className="w-full">
-			<h2 className="text-3xl md:text-4xl font-semibold pb-1">Reports</h2>
+			<h2 className="text-2xl md:text-4xl font-semibold pb-1">Reports</h2>
 			<p className="text-sm md:text-lg">
 				Find and fund reports that resonate with you.
 			</p>
