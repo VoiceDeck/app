@@ -297,10 +297,11 @@ const SupportReportForm = ({
 								</FormItem>
 							)}
 						/> */}
-						<Alert className="bg-vd-beige-100">
-							<AlertTitle className="font-semibold">Please note</AlertTitle>
+						<Alert className="bg-stone-50">
+							{/* <AlertTitle className="font-semibold">Please note</AlertTitle> */}
 							<AlertDescription>
-								You will need WETH on the Sepolia testnet.
+								You will need WETH on the Sepolia testnet. Get some ETH from the
+								faucet then wrap it to WETH.
 							</AlertDescription>
 							<AlertDescription className="flex gap-2 py-1">
 								<p className="font-semibold">Links:</p>
@@ -319,11 +320,14 @@ const SupportReportForm = ({
 									rel="noreferrer"
 									className="underline"
 								>
-									ETH to WETH
+									ETH Wrapper
 								</a>
 							</AlertDescription>
 							<div className="p-2" />
-							<Button className="w-full py-6 flex gap-2" type="submit">
+							<Button
+								className="w-full py-6 flex gap-2 rounded-md"
+								type="submit"
+							>
 								<Wallet2 />
 								Send from wallet
 							</Button>
