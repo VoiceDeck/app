@@ -1,11 +1,11 @@
 "use client";
 import { cn } from "@/lib/utils";
 
+import { buttonVariants } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { buttonVariants } from "../ui/button";
 
 export const NavLink = ({
 	href,
@@ -46,7 +46,7 @@ const NavLinks = () => {
 			</li>
 			<li>
 				<a
-					href="http://about-example.com"
+					href="https://voicedeck.org/"
 					target="_blank"
 					rel="noopener noreferrer"
 					className={cn(buttonVariants({ variant: "link" }), "font-semibold")}
@@ -79,7 +79,7 @@ const NavLinks = () => {
 			</li>
 			<li>
 				<a
-					href="http://faqs-example.com"
+					href="https://voicedeck.org/faq/"
 					target="_blank"
 					rel="noopener noreferrer"
 					className={cn(buttonVariants({ variant: "link" }), "font-semibold")}

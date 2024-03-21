@@ -52,12 +52,26 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 				</ul>
 				<a
 					href={`https://testnet.hypercerts.org/app/view#claimId=${report.hypercertId}`}
+					target="_blank"
+					rel="noopener noreferrer"
 					className={cn(
 						buttonVariants({ variant: "link" }),
 						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",
 					)}
 				>
 					<p>View Hypercert</p>
+					<ExternalLinkIcon size={18} />
+				</a>
+				<a
+					href="https://voicedeck.org/faq#hypercert"
+					target="_blank"
+					rel="noopener noreferrer"
+					className={cn(
+						buttonVariants({ variant: "link" }),
+						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",
+					)}
+				>
+					<p>What is a Hypercert?</p>
 					<ExternalLinkIcon size={18} />
 				</a>
 			</CardContent>
@@ -109,6 +123,8 @@ const EvaluationDetails = ({ report }: { report: Partial<Report> }) => {
 				</ul>
 				<a
 					href={report.originalReportUrl}
+					target="_blank"
+					rel="noopener noreferrer"
 					className={cn(
 						buttonVariants({ variant: "link" }),
 						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",
@@ -145,9 +161,10 @@ const BCRatio = ({ report }: { report: Partial<Report> }) => {
 				<h5 className="text-5xl font-bold tracking-tighter">
 					{report.bcRatio || "N/A"}
 				</h5>
-				{/* TODO: @thebeyondr Add correct link to learn more */}
 				<a
-					href={report.originalReportUrl}
+					href="https://voicedeck.org/faq#bcratio"
+					target="_blank"
+					rel="noopener noreferrer"
 					className={cn(
 						buttonVariants({ variant: "link" }),
 						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",

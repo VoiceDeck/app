@@ -22,16 +22,16 @@ const SideBar = () => {
 						className="mx-auto px-6 w-40 h-auto my-2"
 					/>
 					<CardTitle className={cn("text-center")}>
-						Your Action Matters
+						Your actions matter
 					</CardTitle>
 					<CardDescription className={cn("text-center")}>
-						There are 21 action reports that haven't completed their funding
-						requests yet!
+						There are many more impact reports that haven't completed their
+						funding requests yet!
 					</CardDescription>
 				</CardHeader>
 				<CardContent className={cn("flex justify-center")}>
 					<Link
-						href="/my-actions/record"
+						href="/reports"
 						className={cn(buttonVariants({ variant: "default", size: "lg" }))}
 					>
 						Explore
@@ -48,12 +48,12 @@ const SideBar = () => {
 						className="mx-auto px-6 w-40 h-auto my-4"
 					/>
 					<CardTitle className={cn("text-center")}>
-						Become a Local Advocate
+						Become a local advocate
 					</CardTitle>
 					<CardDescription className={cn("text-center")}>
-						Cares about your community? By verifying your Indian citizenship,
-						you will be able access feature like evaluation, voting features on
-						the platform.
+						Care about your community? When you verify your identity with
+						Aadhaar, you will be able to access impact evaluation and voting
+						features on the VoiceDeck platform.
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -67,15 +67,17 @@ const SideBar = () => {
 						>
 							Verify now
 						</Link>
-						<Link
-							href="/my-actions/record"
+						<a
+							href="https://voicedeck.org/faq#anonaadhaar"
+							target="_blank"
+							rel="noopener noreferrer"
 							className={cn(
 								buttonVariants({ variant: "ghost", size: "lg" }),
 								"w-full",
 							)}
 						>
 							Learn more
-						</Link>
+						</a>
 					</div>
 				</CardContent>
 			</Card>
