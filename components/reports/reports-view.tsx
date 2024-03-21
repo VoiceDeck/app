@@ -34,6 +34,7 @@ export function ReportsView({ reports }: IPageData) {
 		sortingOptions.createdNewestFirst.value,
 	);
 	let filteredReports = useMemo(() => reports, [reports]);
+	const itemsPerPage = 10;
 
 	const filterOptions = useMemo(() => {
 		return createFilterOptions(reports);
@@ -81,7 +82,7 @@ export function ReportsView({ reports }: IPageData) {
 		maxPage,
 		pageNumbers,
 		needsPagination,
-	} = usePagination<Report>(filteredReports, 5);
+	} = usePagination<Report>(filteredReports, itemsPerPage);
 
 	const [filterOpen, setFilterOpen] = useState(false);
 
@@ -111,6 +112,13 @@ export function ReportsView({ reports }: IPageData) {
 					activeSort={activeSortOption}
 					setActiveSort={setActiveSortOption}
 				/>
+				<div className="pb-3">
+					Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
+					{currentPage * itemsPerPage > filteredReports.length
+						? filteredReports.length
+						: currentPage * itemsPerPage}{" "}
+					of {filteredReports.length} results
+				</div>
 				<div className="flex gap-3 sm:gap-5 flex-wrap justify-center md:justify-start">
 					{pageTransactions.length ? (
 						pageTransactions.map((report: Report) => (
