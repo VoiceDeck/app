@@ -64,8 +64,14 @@ const WalletProfile = ({
 					"relative w-10 h-10 rounded-full overflow-hidden ring-[1.5px] ring-vd-beige-300 focus:outline-none focus:ring-2 focus:ring-vd-beige-400",
 				)}
 			>
-				<Avatar className="h-10 w-10">
-					{ensAvatar && <AvatarImage src={ensAvatar} alt="ENS Avatar" />}
+				<Avatar className="h-10 w-10 bg-stone-50">
+					{ensAvatar && (
+						<AvatarImage
+							src={ensAvatar}
+							alt="ENS Avatar"
+							className="object-center object-cover"
+						/>
+					)}
 					<AvatarFallback>
 						<VenetianMaskIcon />
 					</AvatarFallback>
