@@ -1,3 +1,4 @@
+import { useGetCurrentERC20Allowance } from "@/hooks/use-get-current-erc20-allowance";
 import type { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { useState } from "react";
 import type { Address } from "viem";
@@ -20,6 +21,7 @@ const useHandleBuyFraction = (
   const [transactionStatus, setTransactionStatus] =
     useState<keyof typeof TransactionStatuses>("Pending");
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
+  const currentAllowance = useGetCurrentERC20Allowance();
 
   const handleBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -46,13 +48,15 @@ const useHandleBuyFraction = (
     try {
       setTransactionStatus("Approval");
       const totalPrice = BigInt(order.price) * BigInt(amount);
-      const approveTx = await hypercertExhangeClient.approveErc20(
-        order.currency, // Be sure to set the allowance for the correct currency
-        totalPrice
-      );
-      await waitForTransactionReceipt(publicClient, {
-        hash: approveTx.hash as `0x${string}`,
-      });
+      if (currentAllowance < totalPrice) {
+        const approveTx = await hypercertExhangeClient.approveErc20(
+          order.currency, // Be sure to set the allowance for the correct currency
+          totalPrice
+        );
+        await waitForTransactionReceipt(publicClient, {
+          hash: approveTx.hash as `0x${string}`,
+        });
+      }
     } catch (e) {
       console.error(e);
       setTransactionStatus("Failed");
