@@ -3,7 +3,6 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 import Link from "next/link";
 import { normalize } from "viem/ens";
 import { useAccount, useEnsAvatar, useEnsName } from "wagmi";
-import { mainnet } from "wagmi/chains";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -18,6 +17,7 @@ import {
 import { cn, truncateEthereumAddress } from "@/lib/utils";
 import { Loader2, VenetianMaskIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { mainnet } from "viem/chains";
 import { ConnectButton } from "./connect-button";
 
 const WalletProfile = ({
