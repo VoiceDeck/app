@@ -22,7 +22,9 @@ const useHandleBuyFraction = (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     order: any,
     amount: number,
-    address?: Address
+    address: Address,
+    hypercertId: string | undefined,
+    comment: string | undefined,
   ) => {
     if (!publicClient) {
       throw new Error("No public client found");
@@ -35,7 +37,7 @@ const useHandleBuyFraction = (
       order,
       address,
       amount,
-      order.price
+      order.price,
     );
 
     try {
@@ -60,7 +62,22 @@ const useHandleBuyFraction = (
         takerOrder,
         order.signature
       );
+
       const tx = await call();
+
+      fetch("/api/contributions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          txId: tx.hash as `0x${string}`,
+          hypercertId: hypercertId,
+          amount: amount,
+          comment: comment,
+        }),
+      });
+
       setTransactionHash(tx.hash as Address);
       const txnReceipt = await waitForTransactionReceipt(publicClient, {
         hash: tx.hash as `0x${string}`,
