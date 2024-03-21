@@ -3,7 +3,6 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 import Link from "next/link";
 import { normalize } from "viem/ens";
 import { useAccount, useEnsAvatar, useEnsName } from "wagmi";
-import { mainnet } from "wagmi/chains";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -18,6 +17,7 @@ import {
 import { cn, truncateEthereumAddress } from "@/lib/utils";
 import { Loader2, VenetianMaskIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { mainnet } from "viem/chains";
 import { ConnectButton } from "./connect-button";
 
 const WalletProfile = ({
@@ -64,8 +64,14 @@ const WalletProfile = ({
 					"relative w-10 h-10 rounded-full overflow-hidden ring-[1.5px] ring-vd-beige-300 focus:outline-none focus:ring-2 focus:ring-vd-beige-400",
 				)}
 			>
-				<Avatar className="h-10 w-10">
-					{ensAvatar && <AvatarImage src={ensAvatar} alt="ENS Avatar" />}
+				<Avatar className="h-10 w-10 bg-stone-50">
+					{ensAvatar && (
+						<AvatarImage
+							src={ensAvatar}
+							alt="ENS Avatar"
+							className="object-center object-cover"
+						/>
+					)}
 					<AvatarFallback>
 						<VenetianMaskIcon />
 					</AvatarFallback>

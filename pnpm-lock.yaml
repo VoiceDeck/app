@@ -17,6 +17,9 @@ dependencies:
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.51.1)
+  '@hypercerts-org/contracts':
+    specifier: ^1.1.2
+    version: 1.1.2(typescript@5.4.2)
   '@hypercerts-org/marketplace-sdk':
     specifier: ^0.0.23
     version: 0.0.23(ethers@6.11.1)(react@18.2.0)(typescript@5.4.2)(zod@3.22.4)
