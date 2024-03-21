@@ -2,7 +2,7 @@
 import { useFunding } from "@/contexts/funding-context";
 import type { SupportReportInfo } from "@/types";
 import { Progress } from "../ui/progress";
-import { SupportReportDialog } from "./support/dialog";
+import { SupportReport } from "./support/dialog";
 
 interface FundingProgressProps {
 	totalAmount: number;
@@ -39,7 +39,7 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 				<Progress value={percentProgress} />
 			</div>
 			<div className="p-[2px]" />
-			<SupportReportDialog
+			<SupportReport
 				image={reportInfo.image}
 				title={reportInfo.title}
 				hypercertId={reportInfo.hypercertId}
