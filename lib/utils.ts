@@ -36,3 +36,7 @@ export const truncateEthereumAddress = (
   }
   return `${address.substring(0, length + 2)}...${address.substring(address.length - length)}`;
 };
+
+export const isNotNull = <T>(value: T | null): value is T => {
+  return value !== null;
+};

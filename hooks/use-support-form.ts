@@ -51,21 +51,7 @@ const useSupportForm = (
       throw new Error("No address found");
     }
 
-    const txnReceipt = await handleBuyFraction(order, unitsToBuy, address);
-    if (txnReceipt) {
-      await fetch("/api/contributions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          txId: txnReceipt.transactionHash as `0x${string}`,
-          hypercertId: hypercertId ?? "",
-          amount: values.fractionPayment,
-          comment: values.comment,
-        }),
-      });
-    }
+    await handleBuyFraction(order, unitsToBuy, address, hypercertId, values.comment);
   };
 
   return { form, isProcessing, onSubmit };
