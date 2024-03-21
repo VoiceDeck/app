@@ -5,6 +5,9 @@ import { waitForTransactionReceipt } from "viem/actions";
 import type { UsePublicClientReturnType } from "wagmi";
 
 export enum TransactionStatuses {
+  PreparingOrder = "preparingOrder",
+  Approval = "approval",
+  SignForBuy = "signForBuy",
   Pending = "pending",
   Confirmed = "confirmed",
   Failed = "failed",
@@ -24,7 +27,7 @@ const useHandleBuyFraction = (
     amount: number,
     address: Address,
     hypercertId: string | undefined,
-    comment: string | undefined,
+    comment: string | undefined
   ) => {
     if (!publicClient) {
       throw new Error("No public client found");
@@ -37,12 +40,11 @@ const useHandleBuyFraction = (
       order,
       address,
       amount,
-      order.price,
+      order.price
     );
 
     try {
-      // Set approval for exchange to spend funds
-      // setStep("Setting approval");
+      setTransactionStatus("Approval");
       const totalPrice = BigInt(order.price) * BigInt(amount);
       const approveTx = await hypercertExhangeClient.approveErc20(
         order.currency, // Be sure to set the allowance for the correct currency
@@ -57,12 +59,13 @@ const useHandleBuyFraction = (
     }
 
     try {
+      setTransactionStatus("PreparingOrder");
       const { call } = hypercertExhangeClient.executeOrder(
         order,
         takerOrder,
         order.signature
       );
-
+      setTransactionStatus("SignForBuy");
       const tx = await call();
 
       fetch("/api/contributions", {
@@ -79,6 +82,7 @@ const useHandleBuyFraction = (
       });
 
       setTransactionHash(tx.hash as Address);
+      setTransactionStatus("Pending");
       const txnReceipt = await waitForTransactionReceipt(publicClient, {
         hash: tx.hash as `0x${string}`,
       });

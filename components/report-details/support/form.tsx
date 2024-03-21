@@ -44,11 +44,30 @@ const transactionStatusContent: Record<
 		label: keyof typeof TransactionStatuses;
 	}
 > = {
+	PreparingOrder: {
+		label: "PreparingOrder",
+		icon: <Loader2 size={36} />,
+		title: "Preparing your order..",
+		content: "We're preparing your order to be processed..",
+	},
+	SignForBuy: {
+		label: "SignForBuy",
+		icon: <Loader2 size={36} />,
+		title: "Waiting for your signature..",
+		content: "Please sign for your order to be processed..",
+	},
+	Approval: {
+		label: "Approval",
+		icon: <Loader2 size={36} />,
+		title: "Waiting for your approval..",
+		content:
+			"We're asking for your permission to spend funds from your wallet..",
+	},
 	Pending: {
 		label: "Pending",
 		icon: <Loader2 size={36} />,
-		title: "Just a moment! We're working on it.",
-		content: "We're connecting to your wallet to process the transaction.",
+		title: "Processing..",
+		content: "We're processing your transaction on-chain..",
 	},
 	Failed: {
 		label: "Failed",
@@ -142,6 +161,19 @@ const SupportReportForm = ({
 		address,
 		hypercertId,
 	);
+
+	if (orderError || orders?.length === 0) {
+		return (
+			<div className="flex flex-col gap-4 p-3">
+				<div className="flex flex-col gap-4 justify-center items-center">
+					<h4 className="font-bold text-center">
+						We could't find an order for this report. Please send the link to
+						this report to the team!
+					</h4>
+				</div>
+			</div>
+		);
+	}
 
 	if (!isConnected && !address) {
 		return (
