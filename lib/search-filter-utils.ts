@@ -115,11 +115,13 @@ export const sortingOptions: Record<string, ISortingOption> = {
   amountNeededAsc: {
     label: "$ to $$$ needed",
     value: "amountNeededAsc",
-    sortFn: (a: Report, b: Report) => a.totalCost - b.totalCost,
+    sortFn: (a: Report, b: Report) =>
+      a.totalCost - a.fundedSoFar - (b.totalCost - b.fundedSoFar),
   },
   amountNeededDesc: {
     label: "$$$ to $ needed",
     value: "amountNeededDesc",
-    sortFn: (a: Report, b: Report) => b.totalCost - a.totalCost,
+    sortFn: (a: Report, b: Report) =>
+      b.totalCost - b.fundedSoFar - (a.totalCost - a.fundedSoFar),
   },
 };
