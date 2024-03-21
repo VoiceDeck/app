@@ -103,7 +103,7 @@ export function ReportsView({ reports }: IPageData) {
 					filterOptions={filterOptions}
 				/>
 			</div>
-			<section className={"flex-1 py-6 px-3 md:px-8"}>
+			<section className={"flex-1 py-6 md:py-8 px-3 md:px-8"}>
 				<ReportsHeader
 					reports={reports}
 					filterOverlayOpen={filterOpen}

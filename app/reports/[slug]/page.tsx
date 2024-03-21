@@ -48,7 +48,7 @@ export default async function ReportPage({
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
-			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[256px] md:pb-2 md:max-w-[1200px] md:mx-auto">
+			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[256px] md:pb-8 md:max-w-[1200px] md:mx-auto">
 				<section className="flex flex-col flex-1 gap-4">
 					<Link href={"/reports"} className="group flex space-x-1 items-center">
 						<ChevronLeft
