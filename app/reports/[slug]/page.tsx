@@ -1,8 +1,11 @@
 import FundingDataWrapper from "@/components/report-details/funding-data-wrapper";
 import FundingProgress from "@/components/report-details/funding-progress";
 import ReportSidebar from "@/components/report-details/report-sidebar";
+import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
+import { Separator } from "@/components/ui/separator";
+import { getContributionsByHCId } from "@/lib/directus";
 import { fetchReportBySlug } from "@/lib/impact-reports";
 import type { Report } from "@/types";
 import parse from "html-react-parser";
@@ -18,6 +21,20 @@ const getReportData = async (slug?: string | string[]) => {
 	}
 };
 
+const getContributionsByHypercertId = async (
+	hypercertId: Partial<Report>["hypercertId"],
+) => {
+	if (!hypercertId) return null;
+	try {
+		const contributionsData = await getContributionsByHCId(hypercertId);
+		return contributionsData || [];
+	} catch (error) {
+		throw new Error(
+			`Error fetching contributions for hypercertId: ${hypercertId}`,
+		);
+	}
+};
+
 export default async function ReportPage({
 	params,
 }: {
@@ -25,12 +42,13 @@ export default async function ReportPage({
 }) {
 	const { slug } = params;
 	const report = await getReportData(slug);
+	const contributions = await getContributionsByHypercertId(report.hypercertId);
 	const htmlParsedStory = report.story ? parse(report.story) : null;
 	// console.log({ report });
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
-			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[192px] md:pb-2 md:max-w-[1200px] md:mx-auto">
+			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[210px] md:pb-2 md:max-w-[1200px] md:mx-auto">
 				<section className="flex flex-col flex-1 gap-4">
 					<Link href={"/reports"} className="group flex space-x-1 items-center">
 						<ChevronLeft
@@ -42,7 +60,9 @@ export default async function ReportPage({
 						</p>
 					</Link>
 
-					<h1 className="font-bold text-3xl tracking-tight">{report.title}</h1>
+					<h1 className="font-bold text-2xl md:text-3xl tracking-tight">
+						{report.title}
+					</h1>
 					<ul className="flex flex-wrap gap-1 space-x-3 items-center">
 						<Badge>
 							<DynamicCategoryIcon category={report.category} />
@@ -86,10 +106,18 @@ export default async function ReportPage({
 								{htmlParsedStory}
 							</article>
 						)}
-						{/* <ReportSupportFeed report={report} /> */}
 					</section>
-					<ReportSidebar report={report} />
+					<div>
+						<Separator className="block md:hidden my-6 md:my-0 bg-stone-300" />
+						<ReportSidebar report={report} />
+					</div>
 				</section>
+				{contributions && (
+					<div>
+						<Separator className="block md:hidden my-6 bg-stone-300" />
+						<ReportSupportFeed contributions={contributions} />
+					</div>
+				)}
 			</div>
 		</main>
 	);
