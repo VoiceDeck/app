@@ -1,7 +1,7 @@
 "use client";
 import { ConnectButton } from "@/components/global/connect-button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -25,7 +25,13 @@ import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, CheckCircle, Loader2, Wallet2 } from "lucide-react";
+import {
+	AlertTriangle,
+	ArrowUpRight,
+	CheckCircle,
+	Loader2,
+	Wallet2,
+} from "lucide-react";
 import { sepolia } from "viem/chains";
 import { useAccount, usePublicClient } from "wagmi";
 import TransactionStatus from "./transaction-status";
@@ -303,24 +309,44 @@ const SupportReportForm = ({
 								You will need WETH on the Sepolia testnet. Get some ETH from the
 								faucet then wrap it to WETH.
 							</AlertDescription>
-							<AlertDescription className="flex gap-2 py-1">
+							<AlertDescription className="flex gap-2 items-center py-1">
 								<p className="font-semibold">Links:</p>
 								<a
 									href="https://www.alchemy.com/faucets/ethereum-sepolia"
 									target="_blank"
-									rel="noreferrer"
-									className="underline"
+									rel="noopener noreferrer"
+									className={cn(
+										buttonVariants({ variant: "link" }),
+										"text-sm flex justify-between items-center group",
+									)}
+									aria-label="Open Sepolia Faucet in a new tab"
 								>
 									Sepolia Faucet
+									<span className="sr-only">(opens in a new tab)</span>
+									<ArrowUpRight
+										size={16}
+										className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+										aria-hidden="true"
+									/>
 								</a>
 								<p className="text-stone-400">|</p>
 								<a
 									href="https://weth.altlayer.io/transfer"
 									target="_blank"
-									rel="noreferrer"
-									className="underline"
+									rel="noopener noreferrer"
+									className={cn(
+										buttonVariants({ variant: "link" }),
+										"text-sm flex justify-between items-center group",
+									)}
+									aria-label="Open AltLayer's ETH Wrapper in a new tab"
 								>
 									ETH Wrapper
+									<span className="sr-only">(opens in a new tab)</span>
+									<ArrowUpRight
+										size={16}
+										className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+										aria-hidden="true"
+									/>
 								</a>
 							</AlertDescription>
 							<div className="p-2" />
