@@ -37,7 +37,6 @@ import { useAccount, usePublicClient } from "wagmi";
 import TransactionStatus from "./transaction-status";
 
 interface SupportReportFormProps {
-	drawerContainer: HTMLDivElement | null;
 	hypercertId: Partial<Report>["hypercertId"];
 }
 
@@ -123,10 +122,7 @@ async function getOrdersForReport(
 	}
 }
 
-const SupportReportForm = ({
-	drawerContainer,
-	hypercertId,
-}: SupportReportFormProps) => {
+const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 	const { address, isConnected, chainId } = useAccount();
 	const provider = useEthersProvider({ chainId });
 	const signer = useEthersSigner({ chainId });
@@ -310,7 +306,7 @@ const SupportReportForm = ({
 								faucet then wrap it to WETH.
 							</AlertDescription>
 							<AlertDescription className="flex gap-2 items-center py-1">
-								<p className="font-semibold">Links:</p>
+								<p className="hidden md:block font-semibold">Links:</p>
 								<a
 									href="https://www.alchemy.com/faucets/ethereum-sepolia"
 									target="_blank"

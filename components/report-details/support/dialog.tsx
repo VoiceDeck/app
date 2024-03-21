@@ -7,15 +7,10 @@ import {
 	DialogHeader,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-	Drawer,
-	DrawerContent,
-	DrawerHeader,
-	DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import type { Report, SupportReportInfo } from "@/types";
+import type { SupportReportInfo } from "@/types";
 import Image from "next/image";
 import { useState } from "react";
 import { useAccount } from "wagmi";
@@ -29,13 +24,11 @@ interface SupportDrawerDialogProps extends SupportReportInfo {
 const SupportContent = ({
 	address,
 	isConnected,
-	drawerContainer,
 	hypercertId,
 }: {
 	address: `0x${string}` | undefined;
 	isConnected: boolean;
-	drawerContainer: HTMLDivElement | null;
-	hypercertId: Partial<Report>["hypercertId"];
+	hypercertId: SupportReportInfo["hypercertId"];
 }) => {
 	if (!isConnected && !address) {
 		return (
@@ -49,132 +42,75 @@ const SupportContent = ({
 			</div>
 		);
 	}
-	return (
-		<SupportReportForm
-			drawerContainer={drawerContainer}
-			hypercertId={hypercertId}
-		/>
-	);
+	return <SupportReportForm hypercertId={hypercertId} />;
 };
 
-const SupportReportDialog = ({
+const ReportSupportUI = ({
 	image: reportImage,
 	title: reportTitle,
 	hypercertId,
 	open,
 	setOpen,
-}: SupportDrawerDialogProps) => {
-	const [drawerContainer, setDrawerContainer] = useState<HTMLDivElement | null>(
-		null,
-	);
-
+	UIComponent,
+	ContentComponent,
+	HeaderComponent,
+}: SupportDrawerDialogProps & {
+	UIComponent: React.ElementType;
+	ContentComponent: React.ElementType;
+	HeaderComponent: React.ElementType;
+}) => {
 	const { address, isConnected } = useAccount();
 
-	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger asChild>
-				<Button size={"lg"} variant={"default"}>
-					Support this report
-				</Button>
-			</DialogTrigger>
-			<DialogContent
-				ref={(el) => setDrawerContainer(el)}
-				className="overflow-clip"
-			>
-				<DialogHeader className="text-2xl font-bold">
-					Support this report
-				</DialogHeader>
-				<div className="flex flex-col gap-4 p-3">
-					<Card className="bg-slate-50">
-						<div className="flex items-center gap-4 p-2">
-							{/* <div className="flex justify-center"> */}
-							{reportImage && reportTitle && (
-								<div className="relative w-24 h-16 overflow-hidden rounded-md border">
-									<Image
-										src={reportImage}
-										alt={reportTitle}
-										fill
-										style={{ objectFit: "cover", objectPosition: "center" }}
-									/>
-								</div>
-							)}
-							<div className="flex flex-col gap-2">
-								<h4 className="font-bold text-base line-clamp-2">
-									{reportTitle}
-								</h4>
+	const commonProps = {
+		open,
+		onOpenChange: setOpen,
+		trigger: (
+			<Button size={"lg"} variant={"default"}>
+				Support this report
+			</Button>
+		),
+		header: "Support this report",
+		content: (
+			<div className="flex flex-col gap-3">
+				<Card className="bg-slate-50">
+					<div className="flex items-center gap-4 p-2">
+						{reportImage && reportTitle && (
+							<div className="relative w-24 h-16 overflow-hidden rounded-md border">
+								<Image
+									src={reportImage}
+									alt={reportTitle}
+									fill
+									style={{ objectFit: "cover", objectPosition: "center" }}
+								/>
 							</div>
+						)}
+						<div className="flex flex-col gap-2">
+							<h4 className="font-bold text-base line-clamp-2">
+								{reportTitle}
+							</h4>
 						</div>
-					</Card>
-					<Separator />
-					<SupportContent
-						address={address}
-						isConnected={isConnected}
-						drawerContainer={drawerContainer}
-						hypercertId={hypercertId}
-					/>
-				</div>
-			</DialogContent>
-		</Dialog>
-	);
-};
-
-const SupportReportDrawer = ({
-	image: reportImage,
-	title: reportTitle,
-	hypercertId,
-	open,
-	setOpen,
-}: SupportDrawerDialogProps) => {
-	const [drawerContainer, setDrawerContainer] = useState<HTMLDivElement | null>(
-		null,
-	);
-
-	const { address, isConnected } = useAccount();
+					</div>
+				</Card>
+				<Separator />
+				<SupportContent
+					address={address}
+					isConnected={isConnected}
+					hypercertId={hypercertId}
+				/>
+			</div>
+		),
+	};
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
-			<DrawerTrigger asChild>
-				<Button size={"lg"} variant={"default"}>
-					Support this report
-				</Button>
-			</DrawerTrigger>
-			<DrawerContent
-				ref={(el) => setDrawerContainer(el)}
-				className="overflow-clip bg-vd-beige-100"
-			>
-				<DrawerHeader className="text-2xl font-bold">
-					Support this report
-				</DrawerHeader>
-				<div className="flex flex-col gap-4 p-3">
-					<Card className="bg-slate-50">
-						<div className="flex items-center gap-4 p-2">
-							{reportImage && reportTitle && (
-								<div className="relative w-24 h-16 overflow-hidden rounded-md border">
-									<Image
-										src={reportImage}
-										alt={reportTitle}
-										fill
-										style={{ objectFit: "cover", objectPosition: "center" }}
-									/>
-								</div>
-							)}
-							<div className="flex flex-col gap-2">
-								<h4 className="font-bold text-base line-clamp-2">
-									{reportTitle}
-								</h4>
-							</div>
-						</div>
-					</Card>
-					<Separator />
-					<SupportContent
-						address={address}
-						isConnected={isConnected}
-						drawerContainer={drawerContainer}
-						hypercertId={hypercertId}
-					/>
-				</div>
-			</DrawerContent>
-		</Drawer>
+		<UIComponent open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>{commonProps.trigger}</DialogTrigger>
+			<ContentComponent>
+				<HeaderComponent>
+					<h3 className="font-bold text-lg">{commonProps.header}</h3>
+				</HeaderComponent>
+				{commonProps.content}
+			</ContentComponent>
+		</UIComponent>
 	);
 };
 
@@ -186,25 +122,33 @@ const SupportReport = ({
 	const [open, setOpen] = useState(false);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 
+	const props = {
+		image: reportImage,
+		title: reportTitle,
+		hypercertId,
+		open,
+		setOpen,
+	};
+
 	if (isDesktop) {
 		return (
-			<SupportReportDialog
-				image={reportImage}
-				title={reportTitle}
-				hypercertId={hypercertId}
-				open={open}
-				setOpen={setOpen}
+			<ReportSupportUI
+				{...props}
+				UIComponent={Dialog}
+				ContentComponent={DialogContent}
+				HeaderComponent={DialogHeader}
 			/>
 		);
 	}
 
 	return (
-		<SupportReportDrawer
-			image={reportImage}
-			title={reportTitle}
-			hypercertId={hypercertId}
-			open={open}
-			setOpen={setOpen}
+		<ReportSupportUI
+			{...props}
+			UIComponent={Drawer}
+			ContentComponent={(props) => (
+				<DrawerContent {...props} className="bg-vd-beige-100 p-3" />
+			)}
+			HeaderComponent={DrawerHeader}
 		/>
 	);
 };
