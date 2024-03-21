@@ -1,5 +1,6 @@
 "use client";
 import { ConnectButton } from "@/components/global/connect-button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -11,7 +12,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useFunding } from "@/contexts/funding-context";
 import {
@@ -261,7 +261,7 @@ const SupportReportForm = ({
 								</FormItem>
 							)}
 						/>
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="hideName"
 							render={({ field }) => (
@@ -278,17 +278,14 @@ const SupportReportForm = ({
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
-						<FormField
+						/> */}
+						{/* <FormField
 							control={form.control}
 							name="hideAmount"
 							render={({ field }) => (
 								<FormItem className="flex flex-row items-center justify-between">
 									<div className="space-y-0.5">
 										<FormLabel>Hide the amount from the donation</FormLabel>
-										{/* <FormDescription>
-										Choose whether to hide the amount from the donation.
-									</FormDescription> */}
 									</div>
 									<FormControl>
 										<Switch
@@ -299,11 +296,38 @@ const SupportReportForm = ({
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
-						<Button className="w-full py-6 flex gap-2" type="submit">
-							<Wallet2 />
-							Send from wallet
-						</Button>
+						/> */}
+						<Alert className="bg-vd-beige-100">
+							<AlertTitle className="font-semibold">Please note</AlertTitle>
+							<AlertDescription>
+								You will need WETH on the Sepolia testnet.
+							</AlertDescription>
+							<AlertDescription className="flex gap-2 py-1">
+								<p className="font-semibold">Links:</p>
+								<a
+									href="https://www.alchemy.com/faucets/ethereum-sepolia"
+									target="_blank"
+									rel="noreferrer"
+									className="underline"
+								>
+									Sepolia Faucet
+								</a>
+								<p className="text-stone-400">|</p>
+								<a
+									href="https://weth.altlayer.io/transfer"
+									target="_blank"
+									rel="noreferrer"
+									className="underline"
+								>
+									ETH to WETH
+								</a>
+							</AlertDescription>
+							<div className="p-2" />
+							<Button className="w-full py-6 flex gap-2" type="submit">
+								<Wallet2 />
+								Send from wallet
+							</Button>
+						</Alert>
 					</form>
 				</Form>
 			)}
