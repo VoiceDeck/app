@@ -40,7 +40,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 		<Link href={`/reports/${slug}`} passHref>
 			<Card
 				key={hypercertId}
-				className="w-[250px] md:w-[280px] rounded-3xl bg-vd-beige-100 text-vd-blue-900 hover:scale-105 ease-[cubic-bezier(0.76, 0, 0.24, 1)] transition-transform duration-300 shadow-none hover:shadow-md"
+				className="w-full sm:w-[250px] md:w-[280px] rounded-3xl bg-vd-beige-100 text-vd-blue-900 hover:scale-105 ease-[cubic-bezier(0.76, 0, 0.24, 1)] transition-transform duration-300 shadow-none hover:shadow-md"
 			>
 				<CardHeader className="p-0">
 					<div className="relative w-full h-40 overflow-hidden rounded-t-3xl">
