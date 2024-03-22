@@ -59,16 +59,31 @@ export async function getOrders(reports: Report[]): Promise<(Order | null)[]> {
     	);
     	console.log(`[server] existing Hypercert orders: ${orders.length}`);
     } else {
-    // fetch only orders for reports that are not fully funded
+
+      // TODO: remove this when we don't need dummy order
+    if (process.env.DEPLOY_ENV === "production") {
+      // fetch only orders for reports that are not fully funded
+      orders = await Promise.all(
+        reports.map((report) =>
+          report.fundedSoFar < report.totalCost
+            ? fetchOrder(report.hypercertId)
+            : null
+        )
+      );
+      console.log(`[server] fetched orders: ${orders.length}`);
+    } else {
+      // fetch only orders for reports that are not fully funded
     orders = await Promise.all(
       reports.map((report) =>
         report.fundedSoFar < report.totalCost
-          ? fetchOrder(report.hypercertId)
+          ? fetchOrder("0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896")
           : null
       )
     );
-    console.log(`[server] fetched orders: ${orders.length}`);
+    console.log(`[server] fetched orders: ${orders.filter(order => order !== null).length}`);
     }
+    }
+    
     return orders;
   } catch (error) {
     console.error(`[server] Failed to fetch orders: ${error}`);

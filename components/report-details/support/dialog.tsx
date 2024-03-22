@@ -42,7 +42,17 @@ const SupportContent = ({
 			</div>
 		);
 	}
-	return <SupportReportForm hypercertId={hypercertId} />;
+	// TODO: remove this when we don't need dummy order
+	if (process.env.DEPLOY_ENV === "production") {
+		return <SupportReportForm hypercertId={hypercertId} />;
+	}
+	return (
+		<SupportReportForm
+			hypercertId={
+				"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896"
+			}
+		/>
+	);
 };
 
 const ReportSupportUI = ({

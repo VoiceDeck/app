@@ -7,7 +7,7 @@ const nextConfig = {
 	images: {
 		remotePatterns: [
 			{
-				hostname: "directus.voicedeck.org",
+				hostname: process.env.DEPLOY_ENV === "production" ? "directus.voicedeck.org" : "directus.vd-dev.org",
 				protocol: "https",
 			}
 		]

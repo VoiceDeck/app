@@ -151,7 +151,8 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 	const { form, onSubmit, isProcessing } = useSupportForm(
 		Number(dollarAmountNeeded),
 		pricePerUnit,
-		orders?.[0],
+		// TODO: remove this when we don't need dummy order
+		process.env.DEPLOY_ENV === "production" ? orders?.[0] : orders?.[5],
 		handleBuyFraction,
 		address,
 		hypercertId,

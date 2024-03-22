@@ -6,7 +6,7 @@ import type { Address } from "viem";
 import { z } from "zod";
 import type { useHandleBuyFraction } from "./use-buy-fraction";
 
-interface SupportFormInputs {
+export interface SupportFormInputs {
   fractionPayment: number;
   comment: string;
   hideName: boolean;
