@@ -60,15 +60,15 @@ export default async function ReportPage({
 						</p>
 					</Link>
 
-					<h1 className="font-bold text-2xl md:text-3xl tracking-tight">
+					<h1 className="font-bold text-3xl md:text-4xl tracking-tight">
 						{report.title}
 					</h1>
 					<ul className="flex flex-wrap gap-1 space-x-3 items-center">
-						<Badge>
+						<Badge className="hover:bg-vd-beige-200 pointer-events-none">
 							<DynamicCategoryIcon category={report.category} />
 							<p>{report.category}</p>
 						</Badge>
-						<Badge>
+						<Badge className="hover:bg-vd-beige-200 pointer-events-none">
 							<MapPin color="#C14E41" strokeWidth={1} size={18} />
 							<p>{report.state}</p>
 						</Badge>
