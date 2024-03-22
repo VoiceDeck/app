@@ -12,6 +12,7 @@ import { Mutex } from "async-mutex";
 import type { Claim, Report } from "@/types";
 import { getCMSReports, getFundedAmountByHCId } from "./directus";
 import { getOrders } from "./marketplace";
+import { delay } from './utils';
 
 let reports: Report[] | null = null;
 const reportsMutex = new Mutex();
@@ -47,6 +48,10 @@ export const fetchReports = async (): Promise<Report[]> => {
       reports = await Promise.all(
         claims.map(async (claim, index) => {
           // step 1: get metadata from IPFS
+
+          // a delay based on the index to spread out the requests
+          await delay(index * 100);
+
           const metadata = await getHypercertMetadata(
             claim.uri as string,
             getHypercertClient().storage
