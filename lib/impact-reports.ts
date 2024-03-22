@@ -103,6 +103,9 @@ export const fetchReports = async (): Promise<Report[]> => {
 
       	// step 3: get orders from marketplace
       	const orders = await getOrders(reports);
+
+        // TODO: remove this when we don't need dummy order
+        if (process.env.DEPLOY_ENV === "production") {
       	reports = reports.map((report) => {
       		for (const order of orders) {
       			if (order && order.hypercertId === report.hypercertId) {
@@ -118,8 +121,23 @@ export const fetchReports = async (): Promise<Report[]> => {
       		}
       		return report;
       	});
-
-      console.log(`report order ${JSON.stringify(reports[0].order)}`);
+      } else {
+        reports = reports.map((report) => {
+      		for (const order of orders) {
+      			if (order) {
+      				report.order = order;
+      				break;
+      			}
+      		}
+      		// not fully funded reports should have an order
+      		if (!report.order && report.fundedSoFar < report.totalCost) {
+      			throw new Error(
+      				`[server] No order found for hypercert ${report.hypercertId}`,
+      			);
+      		}
+      		return report;
+      	});
+      }
       console.log(`[server] total fetched reports: ${reports.length}`);
     }
 
