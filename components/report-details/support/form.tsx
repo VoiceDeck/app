@@ -145,20 +145,13 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 		data: orders,
 	} = useQuery({
 		queryKey: ["ordersFromHypercert"],
-		queryFn: () =>
-			getOrdersForReport(
-				HCExchangeClient,
-				// TODO: Replace with actual hypercert ID
-				"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
-				// "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-67375908650345815765748172271490105868288",
-				chainId,
-			),
+		queryFn: () => getOrdersForReport(HCExchangeClient, hypercertId, chainId),
 	});
 
 	const { form, onSubmit, isProcessing } = useSupportForm(
 		Number(dollarAmountNeeded),
 		pricePerUnit,
-		orders?.[5],
+		orders?.[0],
 		handleBuyFraction,
 		address,
 		hypercertId,
