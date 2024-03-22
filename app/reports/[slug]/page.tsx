@@ -10,7 +10,12 @@ import { fetchReportBySlug } from "@/lib/impact-reports";
 import type { Report } from "@/types";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+interface ReportPageProps {
+	params: { slug: string };
+}
 
 const getReportData = async (slug?: string | string[]) => {
 	try {
@@ -35,11 +40,23 @@ const getContributionsByHypercertId = async (
 	}
 };
 
-export default async function ReportPage({
+export async function generateMetadata({
 	params,
-}: {
-	params: { slug: string };
-}) {
+}: ReportPageProps): Promise<Metadata> {
+	const report = await getReportData(params.slug);
+	const metadata: Metadata = {
+		title: report.title,
+		description: report.summary,
+		openGraph: {
+			title: report.title,
+			description: report.summary,
+			images: report.image ? [{ url: report.image }] : [],
+		},
+	};
+	return metadata;
+}
+
+export default async function ReportPage({ params }: ReportPageProps) {
 	const { slug } = params;
 	const report = await getReportData(slug);
 	const contributions = await getContributionsByHypercertId(report.hypercertId);
