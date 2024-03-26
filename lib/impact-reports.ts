@@ -197,10 +197,35 @@ export const getHypercertClaims = async (
 return claims;
 };
 
+export const fetchNewReports = async () => {
+  if (!process.env.HC_OWNER_ADDRESS) {
+    throw new Error("[server] Owner address environment variable is not set");
+  }
+
+  const ownerAddress = process.env.HC_OWNER_ADDRESS;
+  const response = await getHypercertClient().indexer.claimsByOwner(ownerAddress);
+  const newClaims = (response as ClaimsByOwnerQuery).claims as Claim[];
+
+  console.log(`[server] update new reports if there are new claims`);
+  if (claims && newClaims.length === claims.length) {
+    console.log(`[server] no new claims, no need to update reports`);
+    return;
+  }
+
+  if (!claims || newClaims.length > claims.length) {
+    console.log(`[server] claims in the cache are outdated, updating reports`);
+    claims = newClaims;
+
+    await updateReports();
+  }
+}
+
 const updateReports = async () : Promise<Report[]> => {
   if (!claims) {
     throw new Error(`[server] Claims are not fetched yet, please fetch claims first.`);
   }
+  
+  const fromCMS = await getCMSReports();
 
   const existingReportIds = reports ? reports.map(report => report.hypercertId) : [];
   
@@ -217,7 +242,7 @@ const updateReports = async () : Promise<Report[]> => {
     );
 
     // step 2: get offchain data from CMS
-    const fromCMS = await getCMSReports();
+    
     const cmsReport = fromCMS.find(
       (cmsReport) => cmsReport.title === metadata.name
     );
@@ -258,7 +283,7 @@ const updateReports = async () : Promise<Report[]> => {
   const reportsToUpdate = await Promise.all(reportsToUpdatePromises);
 
   if (reportsToUpdate.length > 0) {
-    console.log(`[server] Found ${reportsToUpdate.length} new or updated claims. Updating reports...`);
+    console.log(`[server] Found ${reportsToUpdate.length} new. Updating reports...`);
     reports = [...(reports || []), ...reportsToUpdate];
     console.log(`[server] Reports updated. Total reports: ${reports.length}`);
   } else {
