@@ -1,8 +1,6 @@
 import { cn } from "@/lib/utils";
-// Supports weights 200-800
 import "@fontsource-variable/plus-jakarta-sans";
 import type { Metadata } from "next";
-// import { Plus_Jakarta_Sans } from "next/font/google";
 import "vaul/dist/index.css";
 import "./globals.css";
 
@@ -16,8 +14,28 @@ import { WagmiContextProvider } from "@/contexts/wagmi";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-	title: siteConfig.title,
+	title: { default: siteConfig.name, template: "%s | VoiceDeck" },
 	description: siteConfig.description,
+	icons: [
+		{ rel: "shortcut icon", url: "/favicon.ico", type: "image/x-icon" },
+		{ rel: "icon", url: "/favicon-16x16.png", sizes: "16x16" },
+		{ rel: "icon", url: "/favicon-32x32.png", sizes: "32x32" },
+		{ rel: "icon", url: "/favicon-192x192.png", sizes: "192x192" },
+		{ rel: "icon", url: "/favicon-512x512.png", sizes: "512x512" },
+	],
+	openGraph: {
+		title: { default: "VoiceDeck", template: "%s | VoiceDeck" },
+		description: siteConfig.description,
+		type: "website",
+		images: [{ url: "/opengraph-image.png", alt: "VoiceDeck" }],
+	},
+	twitter: {
+		card: "summary_large_image",
+		site: "@voicedeck",
+		title: { default: "VoiceDeck", template: "%s | VoiceDeck" },
+		description: siteConfig.description,
+		images: [{ url: "/opengraph-image.png", alt: "VoiceDeck" }],
+	},
 };
 
 export default function RootLayout({
@@ -35,7 +53,7 @@ export default function RootLayout({
 			>
 				<WagmiContextProvider initialState={initialState}>
 					<NavMenu />
-					{children}
+					<div className="flex-1">{children}</div>
 					<Footer />
 				</WagmiContextProvider>
 			</body>

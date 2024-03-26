@@ -40,3 +40,5 @@ export const truncateEthereumAddress = (
 export const isNotNull = <T>(value: T | null): value is T => {
   return value !== null;
 };
+
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

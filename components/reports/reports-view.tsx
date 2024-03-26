@@ -34,6 +34,7 @@ export function ReportsView({ reports }: IPageData) {
 		sortingOptions.createdNewestFirst.value,
 	);
 	let filteredReports = useMemo(() => reports, [reports]);
+	const itemsPerPage = 10;
 
 	const filterOptions = useMemo(() => {
 		return createFilterOptions(reports);
@@ -81,7 +82,7 @@ export function ReportsView({ reports }: IPageData) {
 		maxPage,
 		pageNumbers,
 		needsPagination,
-	} = usePagination<Report>(filteredReports, 5);
+	} = usePagination<Report>(filteredReports, itemsPerPage);
 
 	const [filterOpen, setFilterOpen] = useState(false);
 
@@ -91,7 +92,10 @@ export function ReportsView({ reports }: IPageData) {
 	);
 
 	return (
-		<section className="flex border-t border-t-stone-300" id="discover">
+		<section
+			className="flex border-t border-t-stone-300 min-[2560px]:w-screen-2xl min-[2560px]:mx-auto"
+			id="discover"
+		>
 			<div className="hidden md:block">
 				<SidebarFilter
 					isOpen={filterOpen}
@@ -99,7 +103,7 @@ export function ReportsView({ reports }: IPageData) {
 					filterOptions={filterOptions}
 				/>
 			</div>
-			<section className={"flex-1 py-6 px-3 md:px-8"}>
+			<section className={"flex-1 py-6 md:py-8 px-3 md:px-8"}>
 				<ReportsHeader
 					reports={reports}
 					filterOverlayOpen={filterOpen}
@@ -108,6 +112,15 @@ export function ReportsView({ reports }: IPageData) {
 					activeSort={activeSortOption}
 					setActiveSort={setActiveSortOption}
 				/>
+				{filteredReports.length > 0 && (
+					<div className="pb-3">
+						Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
+						{currentPage * itemsPerPage > filteredReports.length
+							? filteredReports.length
+							: currentPage * itemsPerPage}{" "}
+						of {filteredReports.length} results
+					</div>
+				)}
 				<div className="flex gap-3 sm:gap-5 flex-wrap justify-center md:justify-start">
 					{pageTransactions.length ? (
 						pageTransactions.map((report: Report) => (

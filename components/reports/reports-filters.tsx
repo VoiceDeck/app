@@ -281,7 +281,7 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 				</Drawer>
 			</div>
 
-			<div className="hidden md:flex">
+			<div className="hidden md:flex min-[2560px]:hidden">
 				<div className="relative">
 					{numFiltersApplied !== 0 && (
 						<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1 h-6 w-6 absolute -right-2 -top-2">

@@ -12,6 +12,7 @@ import { Mutex } from "async-mutex";
 import type { Claim, Report } from "@/types";
 import { getCMSReports, getFundedAmountByHCId } from "./directus";
 import { getOrders } from "./marketplace";
+import { delay } from './utils';
 
 let reports: Report[] | null = null;
 const reportsMutex = new Mutex();
@@ -47,6 +48,10 @@ export const fetchReports = async (): Promise<Report[]> => {
       reports = await Promise.all(
         claims.map(async (claim, index) => {
           // step 1: get metadata from IPFS
+
+          // a delay based on the index to spread out the requests
+          await delay(index * 100);
+
           const metadata = await getHypercertMetadata(
             claim.uri as string,
             getHypercertClient().storage
@@ -96,30 +101,43 @@ export const fetchReports = async (): Promise<Report[]> => {
         })
       );
 
-      // here we use feature flag to decide if we want to fetch orders
-      // since orders are not created in the testnet
-      // TODO: remove this when we have a real marketplace orders
-      // if (process.env.ORDER_FETCHING === "on") {
-      // 	// step 3: get orders from marketplace
-      // 	const orders = await getOrders(reports);
-      // 	reports = reports.map((report) => {
-      // 		for (const order of orders) {
-      // 			if (order && order.hypercertId === report.hypercertId) {
-      // 				report.order = order;
-      // 				break;
-      // 			}
-      // 		}
-      // 		// not fully funded reports should have an order
-      // 		if (!report.order && report.fundedSoFar < report.totalCost) {
-      // 			throw new Error(
-      // 				`[server] No order found for hypercert ${report.hypercertId}`,
-      // 			);
-      // 		}
-      // 		return report;
-      // 	});
-      // }
+      	// step 3: get orders from marketplace
+      	const orders = await getOrders(reports);
 
-      console.log(`report order ${JSON.stringify(reports[0].order)}`);
+        // TODO: remove this when we don't need dummy order
+        if (process.env.DEPLOY_ENV === "production") {
+      	reports = reports.map((report) => {
+      		for (const order of orders) {
+      			if (order && order.hypercertId === report.hypercertId) {
+      				report.order = order;
+      				break;
+      			}
+      		}
+      		// not fully funded reports should have an order
+      		if (!report.order && report.fundedSoFar < report.totalCost) {
+      			throw new Error(
+      				`[server] No order found for hypercert ${report.hypercertId}`,
+      			);
+      		}
+      		return report;
+      	});
+      } else {
+        reports = reports.map((report) => {
+      		for (const order of orders) {
+      			if (order) {
+      				report.order = order;
+      				break;
+      			}
+      		}
+      		// not fully funded reports should have an order
+      		if (!report.order && report.fundedSoFar < report.totalCost) {
+      			throw new Error(
+      				`[server] No order found for hypercert ${report.hypercertId}`,
+      			);
+      		}
+      		return report;
+      	});
+      }
       console.log(`[server] total fetched reports: ${reports.length}`);
     }
 

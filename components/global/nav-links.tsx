@@ -1,11 +1,11 @@
 "use client";
 import { cn } from "@/lib/utils";
 
+import { buttonVariants } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type React from "react";
-import { buttonVariants } from "../ui/button";
+import type { ReactNode } from "react";
 
 export const NavLink = ({
 	href,
@@ -14,7 +14,7 @@ export const NavLink = ({
 	className,
 }: {
 	href: string;
-	children: React.ReactNode;
+	children: ReactNode;
 	isActive: boolean;
 	className?: string;
 }) => {
@@ -40,7 +40,7 @@ const NavLinks = () => {
 	return (
 		<ul className="hidden md:flex gap-1">
 			<li>
-				<NavLink href="/" isActive={isActive("/reports")}>
+				<NavLink href="/reports" isActive={isActive("/reports")}>
 					Reports
 				</NavLink>
 			</li>
@@ -49,44 +49,35 @@ const NavLinks = () => {
 					href="https://voicedeck.org/"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={cn(buttonVariants({ variant: "link" }), "font-semibold")}
+					className={cn(
+						buttonVariants({ variant: "link" }),
+						"font-semibold group",
+					)}
 				>
-					About
-					<div className="p-0.5" />
-					<ArrowUpRight size={18} />
+					<span>About</span>
+					<ArrowUpRight
+						size={18}
+						className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+						aria-hidden="true"
+					/>
 				</a>
-				{/* TODO: I believe that About and FAQs are external Links. If they are different Routes use below. Confirm in Design Review */}
-				{/* <NavLink
-          to="/about"
-          className={({ isActive }) =>
-            cn(
-              buttonVariants({ variant: "link" }),
-              "rounded-md",
-              isActive ? "bg-vd-beige-300 dark:bg-vd-beige-100" : undefined,
-            )
-          }
-        >
-          {({ isActive }) =>
-            isActive ? (
-              "About"
-            ) : (
-              <>
-                About <ArrowUpRight />
-              </>
-            )
-          }
-        </NavLink> */}
 			</li>
 			<li>
 				<a
 					href="https://voicedeck.org/faq/"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={cn(buttonVariants({ variant: "link" }), "font-semibold")}
+					className={cn(
+						buttonVariants({ variant: "link" }),
+						"font-semibold group",
+					)}
 				>
-					FAQs
-					<div className="p-0.5" />
-					<ArrowUpRight size={18} />
+					<span>FAQs</span>
+					<ArrowUpRight
+						size={18}
+						className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+						aria-hidden="true"
+					/>
 				</a>
 			</li>
 		</ul>

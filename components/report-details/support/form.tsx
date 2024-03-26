@@ -1,6 +1,7 @@
 "use client";
 import { ConnectButton } from "@/components/global/connect-button";
-import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -11,7 +12,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useFunding } from "@/contexts/funding-context";
 import {
@@ -25,13 +25,18 @@ import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, CheckCircle, Loader2, Wallet2 } from "lucide-react";
+import {
+	AlertTriangle,
+	ArrowUpRight,
+	CheckCircle,
+	Loader2,
+	Wallet2,
+} from "lucide-react";
 import { sepolia } from "viem/chains";
 import { useAccount, usePublicClient } from "wagmi";
 import TransactionStatus from "./transaction-status";
 
 interface SupportReportFormProps {
-	drawerContainer: HTMLDivElement | null;
 	hypercertId: Partial<Report>["hypercertId"];
 }
 
@@ -44,11 +49,30 @@ const transactionStatusContent: Record<
 		label: keyof typeof TransactionStatuses;
 	}
 > = {
+	PreparingOrder: {
+		label: "PreparingOrder",
+		icon: <Loader2 size={36} />,
+		title: "Preparing your order..",
+		content: "We're preparing your order to be processed..",
+	},
+	SignForBuy: {
+		label: "SignForBuy",
+		icon: <Loader2 size={36} />,
+		title: "Waiting for your signature..",
+		content: "Please sign for your order to be processed..",
+	},
+	Approval: {
+		label: "Approval",
+		icon: <Loader2 size={36} />,
+		title: "Waiting for your approval..",
+		content:
+			"We're asking for your permission to spend funds from your wallet..",
+	},
 	Pending: {
 		label: "Pending",
 		icon: <Loader2 size={36} />,
-		title: "Just a moment! We're working on it.",
-		content: "We're connecting to your wallet to process the transaction.",
+		title: "Processing..",
+		content: "We're processing your transaction on-chain..",
 	},
 	Failed: {
 		label: "Failed",
@@ -98,10 +122,7 @@ async function getOrdersForReport(
 	}
 }
 
-const SupportReportForm = ({
-	drawerContainer,
-	hypercertId,
-}: SupportReportFormProps) => {
+const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 	const { address, isConnected, chainId } = useAccount();
 	const provider = useEthersProvider({ chainId });
 	const signer = useEthersSigner({ chainId });
@@ -124,24 +145,31 @@ const SupportReportForm = ({
 		data: orders,
 	} = useQuery({
 		queryKey: ["ordersFromHypercert"],
-		queryFn: () =>
-			getOrdersForReport(
-				HCExchangeClient,
-				// TODO: Replace with actual hypercert ID
-				"0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
-				// "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-67375908650345815765748172271490105868288",
-				chainId,
-			),
+		queryFn: () => getOrdersForReport(HCExchangeClient, hypercertId, chainId),
 	});
 
 	const { form, onSubmit, isProcessing } = useSupportForm(
 		Number(dollarAmountNeeded),
 		pricePerUnit,
-		orders?.[5],
+		// TODO: remove this when we don't need dummy order
+		process.env.DEPLOY_ENV === "production" ? orders?.[0] : orders?.[5],
 		handleBuyFraction,
 		address,
 		hypercertId,
 	);
+
+	if (orderError || orders?.length === 0) {
+		return (
+			<div className="flex flex-col gap-4 p-3">
+				<div className="flex flex-col gap-4 justify-center items-center">
+					<h4 className="font-bold text-center">
+						We could't find an order for this report. Please send the link to
+						this report to the team!
+					</h4>
+				</div>
+			</div>
+		);
+	}
 
 	if (!isConnected && !address) {
 		return (
@@ -229,7 +257,7 @@ const SupportReportForm = ({
 								</FormItem>
 							)}
 						/>
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="hideName"
 							render={({ field }) => (
@@ -246,17 +274,14 @@ const SupportReportForm = ({
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
-						<FormField
+						/> */}
+						{/* <FormField
 							control={form.control}
 							name="hideAmount"
 							render={({ field }) => (
 								<FormItem className="flex flex-row items-center justify-between">
 									<div className="space-y-0.5">
 										<FormLabel>Hide the amount from the donation</FormLabel>
-										{/* <FormDescription>
-										Choose whether to hide the amount from the donation.
-									</FormDescription> */}
 									</div>
 									<FormControl>
 										<Switch
@@ -267,11 +292,62 @@ const SupportReportForm = ({
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
-						<Button className="w-full py-6 flex gap-2" type="submit">
-							<Wallet2 />
-							Send from wallet
-						</Button>
+						/> */}
+						<Alert className="bg-stone-50">
+							{/* <AlertTitle className="font-semibold">Please note</AlertTitle> */}
+							<AlertDescription>
+								You will need WETH on the Sepolia testnet. Get some ETH from the
+								faucet then wrap it to WETH.
+							</AlertDescription>
+							<AlertDescription className="flex gap-2 items-center py-1">
+								<p className="hidden md:block font-semibold">Links:</p>
+								<a
+									href="https://www.alchemy.com/faucets/ethereum-sepolia"
+									target="_blank"
+									rel="noopener noreferrer"
+									className={cn(
+										buttonVariants({ variant: "link" }),
+										"text-sm flex justify-between items-center group",
+									)}
+									aria-label="Open Sepolia Faucet in a new tab"
+								>
+									Sepolia Faucet
+									<span className="sr-only">(opens in a new tab)</span>
+									<ArrowUpRight
+										size={16}
+										className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+										aria-hidden="true"
+									/>
+								</a>
+								<p className="text-stone-400">|</p>
+								<a
+									href="https://weth.altlayer.io/transfer"
+									target="_blank"
+									rel="noopener noreferrer"
+									className={cn(
+										buttonVariants({ variant: "link" }),
+										"text-sm flex justify-between items-center group",
+									)}
+									aria-label="Open AltLayer's ETH Wrapper in a new tab"
+								>
+									ETH Wrapper
+									<span className="sr-only">(opens in a new tab)</span>
+									<ArrowUpRight
+										size={16}
+										className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+										aria-hidden="true"
+									/>
+								</a>
+							</AlertDescription>
+							<div className="p-2" />
+							<Button
+								className="w-full py-6 flex gap-2 rounded-md"
+								type="submit"
+							>
+								<Wallet2 />
+								Send from wallet
+							</Button>
+						</Alert>
 					</form>
 				</Form>
 			)}

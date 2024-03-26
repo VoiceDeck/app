@@ -1,8 +1,8 @@
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
-import { ExternalLinkIcon, ShieldCheck } from "lucide-react";
-import { buttonVariants } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { ArrowUpRight, ShieldCheck } from "lucide-react";
 
 const ImpactDetails = ({ report }: { report: Report }) => {
 	const details = [
@@ -52,13 +52,35 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 				</ul>
 				<a
 					href={`https://testnet.hypercerts.org/app/view#claimId=${report.hypercertId}`}
+					target="_blank"
+					rel="noopener noreferrer"
 					className={cn(
 						buttonVariants({ variant: "link" }),
-						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",
+						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-1 group",
 					)}
 				>
-					<p>View Hypercert</p>
-					<ExternalLinkIcon size={18} />
+					<span>View Hypercert</span>
+					<ArrowUpRight
+						size={18}
+						className="opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+						aria-hidden="true"
+					/>
+				</a>
+				<a
+					href="https://voicedeck.org/faq#hypercert"
+					target="_blank"
+					rel="noopener noreferrer"
+					className={cn(
+						buttonVariants({ variant: "link" }),
+						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-1 group",
+					)}
+				>
+					<span>What is a Hypercert?</span>
+					<ArrowUpRight
+						size={18}
+						className="opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+						aria-hidden="true"
+					/>
 				</a>
 			</CardContent>
 		</Card>
@@ -109,13 +131,19 @@ const EvaluationDetails = ({ report }: { report: Partial<Report> }) => {
 				</ul>
 				<a
 					href={report.originalReportUrl}
+					target="_blank"
+					rel="noopener noreferrer"
 					className={cn(
 						buttonVariants({ variant: "link" }),
-						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",
+						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-1 group",
 					)}
 				>
-					<p>View original report</p>
-					<ExternalLinkIcon size={18} />
+					<span>View original report</span>
+					<ArrowUpRight
+						size={18}
+						className="opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+						aria-hidden="true"
+					/>
 				</a>
 			</CardContent>
 		</Card>
@@ -145,22 +173,26 @@ const BCRatio = ({ report }: { report: Partial<Report> }) => {
 				<h5 className="text-5xl font-bold tracking-tighter">
 					{report.bcRatio || "N/A"}
 				</h5>
-				{/* TODO: @thebeyondr Add correct link to learn more */}
 				<a
-					href={report.originalReportUrl}
+					href="https://voicedeck.org/faq#bcratio"
+					target="_blank"
+					rel="noopener noreferrer"
 					className={cn(
 						buttonVariants({ variant: "link" }),
-						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-2",
+						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-1 group",
 					)}
 				>
 					<p>Learn more</p>
-					<ExternalLinkIcon size={18} />
+					<ArrowUpRight
+						size={18}
+						className="opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+						aria-hidden="true"
+					/>
 				</a>
 			</CardContent>
 		</Card>
 	);
 };
-// TODO: @thebeyondr - Refactor cards to use the same skeleton
 const ReportSidebar = ({ report }: { report: Report }) => {
 	return (
 		<aside className="flex flex-col gap-4">

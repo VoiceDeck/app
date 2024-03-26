@@ -45,7 +45,8 @@ const UserInfo = () => {
 						className="mb-0"
 						type="displayName"
 						placeholder={ensName ? ensName : "Voice Deck"}
-						disabled={ensName ? true : false}
+						// disabled={ensName ? true : false}
+						disabled={true}
 					/>
 					<small className="text-xs">
 						We'll use your ENS name if you have one or you can set your own in
