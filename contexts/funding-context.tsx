@@ -5,12 +5,12 @@ import { type ReactNode, createContext, useContext } from "react";
 
 // Define the shape of the context
 interface FundingContextType {
-	genesisFraction: ClaimToken;
+	genesisFraction?: ClaimToken;
 	hypercertClaim: Claim;
 	pricePerUnit: number;
 	totalUnits: number;
 	totalAmount: number;
-	unitsRemaining: number;
+	// unitsRemaining: number;
 	percentProgress: number;
 	minUnitAmount: number;
 	dollarAmountNeeded: string;

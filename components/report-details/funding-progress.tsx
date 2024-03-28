@@ -14,8 +14,8 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 	totalAmount,
 	reportInfo,
 }) => {
-	const { percentProgress, dollarAmountNeeded, genesisFraction } = useFunding();
-	const isFullyFunded = genesisFraction.units === 0;
+	const { percentProgress, dollarAmountNeeded } = useFunding();
+	const isFullyFunded = dollarAmountNeeded === "0.00";
 
 	return (
 		<section className="px-3 py-4 flex flex-col space-y-2 md:flex-row md:space-x-4 md:justify-between bg-slate-50/80 backdrop-blur-md rounded-t-xl md:rounded-b-xl shadow-md max-w-3xl">

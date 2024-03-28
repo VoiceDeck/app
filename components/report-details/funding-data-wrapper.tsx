@@ -44,17 +44,15 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 				Loading funding data...
 			</section>
 		);
-	// if (error) return <div>Error loading data</div>;
 
-	if (!genesisFraction || !hypercertClaim) {
+	if (!hypercertClaim) {
 		return <div>Missing data for calculations</div>;
 	}
 
 	const totalUnits = hypercertClaim.totalUnits;
 	const pricePerUnit = totalAmount / Number(totalUnits);
-	const unitsRemaining = genesisFraction.units;
 	const percentProgress =
-		((totalUnits - genesisFraction.units) / totalUnits) * 100;
+		((totalAmount - (fundedAmount || 0)) / totalAmount) * 100;
 	const minUnitAmount = 1 / pricePerUnit;
 	const dollarAmountNeeded = (totalAmount - (fundedAmount || 0)).toFixed(2);
 
@@ -66,7 +64,7 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 				pricePerUnit,
 				totalUnits,
 				totalAmount,
-				unitsRemaining,
+				// unitsRemaining,
 				percentProgress,
 				minUnitAmount,
 				dollarAmountNeeded,
