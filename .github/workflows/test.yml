@@ -31,12 +31,8 @@ jobs:
 
       - run: pnpm build
         env:
-          HC_OWNER_ADDRESS: ${{ secrets.HC_OWNER_ADDRESS }}
           NEXT_PUBLIC_WC_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WC_PROJECT_ID }}
-          INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
-          INFURA_SEPOLIA_RPC_URL: ${{ secrets.INFURA_SEPOLIA_RPC_URL }}
-          INFURA_MAINNET_RPC_URL: ${{ secrets.INFURA_MAINNET_RPC_URL }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          HC_OWNER_ADDRESS: ${{ secrets.HC_OWNER_ADDRESS }}
           CMS_ENDPOINT: ${{ secrets.CMS_ENDPOINT }}
 
       # - name: Test server functionality
