@@ -1,3 +1,8 @@
+"use client";
+
+import { LogInWithAnonAadhaar, useAnonAadhaar } from "@anon-aadhaar/react";
+import { useEffect } from "react";
+
 import { buttonVariants } from "@/components/ui/button";
 import {
 	Card,
@@ -10,6 +15,12 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 const SideBar = () => {
+	const [anonAadhaar] = useAnonAadhaar();
+
+	useEffect(() => {
+		console.log("Anon Aadhaar status: ", anonAadhaar.status);
+	}, [anonAadhaar]);
+
 	return (
 		<section className="flex flex-col gap-4 md:col-span-1 md:row-span-2">
 			<Card
@@ -81,6 +92,10 @@ const SideBar = () => {
 					</div>
 				</CardContent>
 			</Card>
+			<div>
+				<LogInWithAnonAadhaar />
+				<p>{anonAadhaar?.status}</p>
+			</div>
 		</section>
 	);
 };
