@@ -51,8 +51,7 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 
 	const totalUnits = hypercertClaim.totalUnits;
 	const pricePerUnit = totalAmount / Number(totalUnits);
-	const percentProgress =
-		((totalAmount - (fundedAmount || 0)) / totalAmount) * 100;
+	const percentProgress = ((fundedAmount || 0) / totalAmount) * 100;
 	const minUnitAmount = 1 / pricePerUnit;
 	const dollarAmountNeeded = (totalAmount - (fundedAmount || 0)).toFixed(2);
 
