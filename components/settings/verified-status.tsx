@@ -1,29 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-dropdown-menu";
 import React from "react";
 
-import { useDisconnect } from "wagmi";
-
 const VerifiedStatus = () => {
-	const { disconnect } = useDisconnect();
 	return (
 		<>
-			<div className="flex justify-between">
-				<p>
-					Status: <span>Not yet verified.</span>
-				</p>
-				<Button className="md:min-w-48">Verify Now</Button>
-			</div>
-			<Separator />
-			<div className="flex md:block">
-				<Button
-					className="md:min-w-40"
-					size="lg"
-					variant="outline"
-					onClick={() => disconnect()}
-				>
-					Log out
+			<div className="flex flex-col md:flex-row justify-between md:items-center">
+				<Button className="md:min-w-48" disabled>
+					Verification coming soon...
 				</Button>
 			</div>
 		</>
