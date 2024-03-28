@@ -43,7 +43,7 @@ const SupportContent = ({
 		);
 	}
 	// TODO: remove this when we don't need dummy order
-	if (process.env.DEPLOY_ENV === "production") {
+	if (process.env.NEXT_PUBLIC_DEPLOY_ENV === "production") {
 		return <SupportReportForm hypercertId={hypercertId} />;
 	}
 	return (

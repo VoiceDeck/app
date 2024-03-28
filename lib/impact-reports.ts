@@ -105,7 +105,7 @@ export const fetchReports = async (): Promise<Report[]> => {
       	const orders = await getOrders(reports);
 
         // TODO: remove this when we don't need dummy order
-        if (process.env.DEPLOY_ENV === "production") {
+        if (process.env.NEXT_PUBLIC_DEPLOY_ENV === "production") {
       	reports = reports.map((report) => {
       		for (const order of orders) {
       			if (order && order.hypercertId === report.hypercertId) {

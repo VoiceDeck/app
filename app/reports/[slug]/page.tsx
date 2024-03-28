@@ -93,7 +93,8 @@ export default async function ReportPage({ params }: ReportPageProps) {
 					<div className="fixed bottom-[96px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
 						<FundingDataWrapper
 							hypercertId={report.hypercertId}
-							totalReportCost={report.totalCost}
+							totalAmount={report.totalCost}
+							fundedAmount={report.fundedSoFar}
 						>
 							<FundingProgress
 								totalAmount={report.totalCost}
