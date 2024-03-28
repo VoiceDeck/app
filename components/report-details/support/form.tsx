@@ -86,7 +86,7 @@ const transactionStatusContent: Record<
 		icon: <CheckCircle size={36} />,
 		title: "Thank you! We got your support.",
 		content:
-			"Your transaction was successful. We're grateful for your contribution!",
+			"Your transaction was successful. We're grateful for your contribution! It might take a few minutes to show up on the report.",
 	},
 };
 
@@ -252,7 +252,7 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 											rows={3}
 											placeholder="Leave a message with your donation"
 											{...field}
-											className="w-full px-4 py-2 border rounded-lg resize-none"
+											className="w-full px-4 py-2 border rounded-lg resize-none bg-stone-100"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -298,41 +298,21 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 						<Alert className="bg-stone-50">
 							{/* <AlertTitle className="font-semibold">Please note</AlertTitle> */}
 							<AlertDescription>
-								You will need WETH on the Sepolia testnet. Get some ETH from the
-								faucet then wrap it to WETH.
+								You will need ETH on the Sepolia testnet. You can get some from
+								the link below.
 							</AlertDescription>
 							<AlertDescription className="flex gap-2 items-center py-1">
-								<p className="hidden md:block font-semibold">Links:</p>
 								<a
 									href="https://www.alchemy.com/faucets/ethereum-sepolia"
 									target="_blank"
 									rel="noopener noreferrer"
 									className={cn(
 										buttonVariants({ variant: "link" }),
-										"text-sm flex justify-between items-center group",
+										"flex justify-between items-center group p-0",
 									)}
 									aria-label="Open Sepolia Faucet in a new tab"
 								>
 									Sepolia Faucet
-									<span className="sr-only">(opens in a new tab)</span>
-									<ArrowUpRight
-										size={16}
-										className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
-										aria-hidden="true"
-									/>
-								</a>
-								<p className="text-stone-400">|</p>
-								<a
-									href="https://weth.altlayer.io/transfer"
-									target="_blank"
-									rel="noopener noreferrer"
-									className={cn(
-										buttonVariants({ variant: "link" }),
-										"text-sm flex justify-between items-center group",
-									)}
-									aria-label="Open AltLayer's ETH Wrapper in a new tab"
-								>
-									ETH Wrapper
 									<span className="sr-only">(opens in a new tab)</span>
 									<ArrowUpRight
 										size={16}
