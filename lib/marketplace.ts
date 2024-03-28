@@ -61,7 +61,7 @@ export async function getOrders(reports: Report[]): Promise<(Order | null)[]> {
     } else {
 
       // TODO: remove this when we don't need dummy order
-    if (process.env.DEPLOY_ENV === "production") {
+    if (process.env.NEXT_PUBLIC_DEPLOY_ENV === "production") {
       // fetch only orders for reports that are not fully funded
       orders = await Promise.all(
         reports.map((report) =>
