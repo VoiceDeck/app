@@ -6,6 +6,7 @@ import {
   type RestClient,
   createDirectus,
   createItem,
+  deleteItem,
   readItem,
   readItems,
   rest,
@@ -47,6 +48,7 @@ const contributionsMutex = new Mutex();
  * @param comment The comment of the contributor to the contribution.
  */
 export async function processNewContribution(
+  sender: Address,
   txId: Hash,
   hypercertId: string,
   amount: number,
@@ -56,7 +58,6 @@ export async function processNewContribution(
     const client = getDirectusClient();
 
     // check if the transaction is already processed
-    // TODO: This is failing build @baumstern
     const response = await client.request(
       readItems("contributions", {
         fields: ["txid"],
@@ -68,33 +69,8 @@ export async function processNewContribution(
       })
     );
 
-    // if the transaction is already processed, do not create a contribution
-    if (response.length > 0) {
-      console.log(
-        `[Directus] tx ${txId} already processed, skipping contribution creation in Directus`
-      );
-      return;
-    }
-
-    // wait for the transaction to be included in a block
-    console.log(
-      `[Viem] waiting for tx ${txId} to be included in a block . . .`
-    );
-    const txReceipt = await getViemClient().waitForTransactionReceipt({
-      hash: txId,
-    });
-    console.log(`[Viem] tx ${txId} included in block ${txReceipt.blockNumber}`);
-
-    // if the transaction is reverted, do not create a contribution
-    if (txReceipt.status === "reverted") {
-      console.log(
-        `[Viem] tx ${txId} reverted, skipping contribution creation in Directus`
-      );
-      return;
-    }
-
     const contribution = {
-      sender: getAddress(txReceipt.from),
+      sender: getAddress(sender),
       hypercert_id: hypercertId,
       amount: amount,
       txid: txId,
@@ -150,6 +126,23 @@ export async function createContribution(contribution: Contribution) {
   } catch (error) {
     console.error("[Directus] failed to create contribution: ", error);
     throw new Error(`[Directus] failed to create contribution: ${error}`);
+  }
+}
+
+export async function removeContribution(txid: Hash) {
+
+  const client = getDirectusClient();
+
+  try {
+    console.log(`[Directus] remove contribution of tx ${txid} . . .`);
+
+    await client.request(deleteItem("contributions", txid));
+    console.log(
+      `[Directus] contribution of tx ${txid} removed successfully`
+    );
+  } catch (error) {
+    console.error("[Directus] failed to remove contribution: ", error);
+    throw new Error(`[Directus] failed to remove contribution: ${error}`);
   }
 }
 
@@ -436,10 +429,10 @@ export const getViemClient = (): PublicClient => {
   if (viemClient) {
     return viemClient;
   }
-
+  
   viemClient = createPublicClient({
     chain: sepolia,
-    transport: http(),
+    transport: http(process.env.JSON_RPC_ENDPOINT ? process.env.JSON_RPC_ENDPOINT : undefined),
   });
 
   return viemClient;
