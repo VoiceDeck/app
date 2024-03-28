@@ -15,7 +15,7 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 	reportInfo,
 }) => {
 	const { percentProgress, dollarAmountNeeded } = useFunding();
-	const isFullyFunded = percentProgress === 100;
+	const isFullyFunded = percentProgress >= 100;
 
 	return (
 		<section className="px-3 py-4 flex flex-col space-y-2 md:flex-row md:space-x-4 md:justify-between bg-slate-50/80 backdrop-blur-md rounded-t-xl md:rounded-b-xl shadow-md max-w-3xl">
@@ -39,11 +39,17 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 				<Progress value={percentProgress} />
 			</div>
 			<div className="p-[2px]" />
-			<SupportReport
-				image={reportInfo.image}
-				title={reportInfo.title}
-				hypercertId={reportInfo.hypercertId}
-			/>
+			{isFullyFunded ? (
+				<div>
+					<p className="text-lg font-semibold text-vd-blue-900">Funded!</p>
+				</div>
+			) : (
+				<SupportReport
+					image={reportInfo.image}
+					title={reportInfo.title}
+					hypercertId={reportInfo.hypercertId}
+				/>
+			)}
 		</section>
 	);
 };

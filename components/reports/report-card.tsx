@@ -81,7 +81,11 @@ const ReportCard: React.FC<ReportCardProps> = ({
 						className="w-full"
 						value={(fundedSoFar / totalCost) * 100}
 					/>
-					<p className="text-xs">${totalCost - fundedSoFar} needed</p>
+					<p className="text-xs">
+						{fundedSoFar === totalCost
+							? "Funded!"
+							: `${totalCost - fundedSoFar} needed`}
+					</p>
 				</CardFooter>
 			</Card>
 		</Link>
