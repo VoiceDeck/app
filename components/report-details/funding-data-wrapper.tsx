@@ -7,18 +7,20 @@ import { Loader2 } from "lucide-react";
 interface FundingDataWrapperProps {
 	hypercertId: Partial<Report>["hypercertId"];
 	children: React.ReactNode;
-	totalReportCost: Partial<Report>["totalCost"];
+	totalAmount: Partial<Report>["totalCost"];
+	fundedAmount: Partial<Report>["fundedSoFar"];
 }
 
 const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
-	totalReportCost,
 	hypercertId,
+	totalAmount,
+	fundedAmount,
 	children,
 }: FundingDataWrapperProps) => {
 	if (!hypercertId) {
 		return <div>No hypercertId found </div>;
 	}
-	if (!totalReportCost) {
+	if (!totalAmount) {
 		return <div>No total cost found</div>;
 	}
 
@@ -49,12 +51,12 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 	}
 
 	const totalUnits = hypercertClaim.totalUnits;
-	const pricePerUnit = totalReportCost / Number(totalUnits);
+	const pricePerUnit = totalAmount / Number(totalUnits);
 	const unitsRemaining = genesisFraction.units;
 	const percentProgress =
 		((totalUnits - genesisFraction.units) / totalUnits) * 100;
 	const minUnitAmount = 1 / pricePerUnit;
-	const dollarAmountNeeded = (pricePerUnit * genesisFraction.units).toFixed(2);
+	const dollarAmountNeeded = (totalAmount - (fundedAmount || 0)).toFixed(2);
 
 	return (
 		<FundingProvider
@@ -63,7 +65,7 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 				hypercertClaim,
 				pricePerUnit,
 				totalUnits,
-				totalReportCost,
+				totalAmount,
 				unitsRemaining,
 				percentProgress,
 				minUnitAmount,
