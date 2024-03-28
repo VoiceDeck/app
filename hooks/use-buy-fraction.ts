@@ -26,10 +26,11 @@ const useHandleBuyFraction = (
   const handleBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     order: any,
-    amount: number,
+    amount: bigint,
     address: Address,
     hypercertId: string | undefined,
-    comment: string | undefined
+    comment: string | undefined,
+    amountInDollars: number
   ) => {
     if (!publicClient) {
       throw new Error("No public client found");
@@ -38,6 +39,12 @@ const useHandleBuyFraction = (
       throw new Error("No order found");
     }
 
+    // if I enter 1 USD to buy in the UI, the amount will be 1000000000000000n
+    // amount: 1000000000000000n (10^15)
+    // pricePerUnit: 1
+    console.log({ order, amount, address, hypercertId, comment });
+    // print order.price
+    console.log(order.price);
     const takerOrder = hypercertExhangeClient.createFractionalSaleTakerBid(
       order,
       address,
@@ -46,32 +53,19 @@ const useHandleBuyFraction = (
     );
 
     try {
-      setTransactionStatus("Approval");
-      const totalPrice = BigInt(order.price) * BigInt(amount);
-      if (currentAllowance < totalPrice) {
-        const approveTx = await hypercertExhangeClient.approveErc20(
-          order.currency, // Be sure to set the allowance for the correct currency
-          totalPrice
-        );
-        await waitForTransactionReceipt(publicClient, {
-          hash: approveTx.hash as `0x${string}`,
-        });
-      }
-    } catch (e) {
-      console.error(e);
-      setTransactionStatus("Failed");
-    }
-
-    try {
       setTransactionStatus("PreparingOrder");
       const { call } = hypercertExhangeClient.executeOrder(
         order,
         takerOrder,
         order.signature
       );
-      setTransactionStatus("SignForBuy");
-      const tx = await call();
 
+      setTransactionStatus("SignForBuy");
+      const myAmount = BigInt(order.price) * amount;
+      console.log(`myAmount: ${myAmount}`);
+      const tx = await call({ value: myAmount });
+
+      console.log(`amountInDollars: ${amountInDollars}`);
       fetch("/api/contributions", {
         method: "POST",
         headers: {
@@ -80,7 +74,7 @@ const useHandleBuyFraction = (
         body: JSON.stringify({
           txId: tx.hash as `0x${string}`,
           hypercertId: hypercertId,
-          amount: amount,
+          amount: amountInDollars,
           comment: comment,
         }),
       });

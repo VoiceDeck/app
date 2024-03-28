@@ -152,7 +152,9 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 		Number(dollarAmountNeeded),
 		pricePerUnit,
 		// TODO: remove this when we don't need dummy order
-		process.env.DEPLOY_ENV === "production" ? orders?.[0] : orders?.[5],
+		process.env.NEXT_PUBLIC_DEPLOY_ENV === "production"
+			? orders?.[0]
+			: orders?.[5],
 		handleBuyFraction,
 		address,
 		hypercertId,

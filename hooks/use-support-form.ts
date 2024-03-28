@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Address } from "viem";
 import { z } from "zod";
+
 import type { useHandleBuyFraction } from "./use-buy-fraction";
 
 export interface SupportFormInputs {
@@ -51,7 +52,7 @@ const useSupportForm = (
       throw new Error("No address found");
     }
 
-    await handleBuyFraction(order, unitsToBuy, address, hypercertId, values.comment);
+    await handleBuyFraction(order, BigInt(Math.trunc(unitsToBuy)), address, hypercertId, values.comment, values.fractionPayment);
   };
 
   return { form, isProcessing, onSubmit };

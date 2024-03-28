@@ -93,7 +93,7 @@ export function ReportsView({ reports }: IPageData) {
 
 	return (
 		<section
-			className="flex border-t border-t-stone-300 min-[2560px]:w-screen-2xl min-[2560px]:mx-auto"
+			className="flex border-t border-t-stone-300 min-[2560px]:w-[64vw] min-[2560px]:grid min-[2560px]:mx-auto min-[2560px]:grid-cols-[380px_1fr]"
 			id="discover"
 		>
 			<div className="hidden md:block">

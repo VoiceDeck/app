@@ -9,7 +9,7 @@ interface FundingContextType {
 	hypercertClaim: Claim;
 	pricePerUnit: number;
 	totalUnits: number;
-	totalReportCost: number;
+	totalAmount: number;
 	unitsRemaining: number;
 	percentProgress: number;
 	minUnitAmount: number;

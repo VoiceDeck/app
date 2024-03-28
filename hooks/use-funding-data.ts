@@ -10,7 +10,6 @@ type UseFetchFundingDataReturnType = {
   hypercertClaimQuery: UseQueryResult<Record<"claim", Claim>>;
 };
 
-// TODO: Use actual hypercert ID
 export const useFetchFundingData = (
   hypercertId: Partial<Report>["hypercertId"]
 ): UseFetchFundingDataReturnType => {
@@ -27,9 +26,7 @@ export const useFetchFundingData = (
       queryKey: ["hypercerts", "fractions", "id", hypercertId],
       queryFn: () =>
         indexer.fractionsByClaim(
-          // hypercertId
-          // TODO: Use actual hypercert ID
-          "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896"
+          hypercertId as string
         ),
     });
 
@@ -38,10 +35,7 @@ export const useFetchFundingData = (
       queryKey: ["hypercerts", "claim", "id", hypercertId],
       queryFn: () =>
         indexer.claimById(
-          // hypercertId
-          // TODO: Use actual hypercert ID
-          // "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-67375908650345815765748172271490105868288"
-          "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896"
+          hypercertId as string
         ),
     });
 
