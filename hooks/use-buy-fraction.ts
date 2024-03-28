@@ -30,7 +30,7 @@ const useHandleBuyFraction = (
     address: Address,
     hypercertId: string | undefined,
     comment: string | undefined,
-    amountInDollor: number
+    amountInDollars: number
   ) => {
     if (!publicClient) {
       throw new Error("No public client found");
@@ -39,7 +39,6 @@ const useHandleBuyFraction = (
       throw new Error("No order found");
     }
 
-    
     // if I enter 1 USD to buy in the UI, the amount will be 1000000000000000n
     // amount: 1000000000000000n (10^15)
     // pricePerUnit: 1
@@ -53,7 +52,6 @@ const useHandleBuyFraction = (
       order.price
     );
 
-    
     try {
       setTransactionStatus("PreparingOrder");
       const { call } = hypercertExhangeClient.executeOrder(
@@ -62,13 +60,12 @@ const useHandleBuyFraction = (
         order.signature
       );
 
-
       setTransactionStatus("SignForBuy");
       const myAmount = BigInt(order.price) * amount;
       console.log(`myAmount: ${myAmount}`);
-      const tx = await call({value: myAmount});
+      const tx = await call({ value: myAmount });
 
-      console.log(`amountInDollor: ${amountInDollor}`)
+      console.log(`amountInDollars: ${amountInDollars}`);
       fetch("/api/contributions", {
         method: "POST",
         headers: {
@@ -77,7 +74,7 @@ const useHandleBuyFraction = (
         body: JSON.stringify({
           txId: tx.hash as `0x${string}`,
           hypercertId: hypercertId,
-          amount: amountInDollor,
+          amount: amountInDollars,
           comment: comment,
         }),
       });
