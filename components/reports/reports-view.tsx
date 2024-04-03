@@ -34,7 +34,7 @@ export function ReportsView({ reports }: IPageData) {
 		sortingOptions.createdNewestFirst.value,
 	);
 	let filteredReports = useMemo(() => reports, [reports]);
-	const itemsPerPage = 10;
+	const itemsPerPage = 4;
 
 	const filterOptions = useMemo(() => {
 		return createFilterOptions(reports);
@@ -169,28 +169,22 @@ export function ReportsView({ reports }: IPageData) {
 									}
 								/>
 							</PaginationItem>
-							{pageNumbers
-								.filter((pageNum) =>
-									[currentPage - 1, currentPage, currentPage + 1].includes(
-										pageNum,
-									),
-								)
-								.map((pageNum, index) => (
-									<PaginationItem
-										onClick={() => loadPage(pageNum)}
-										className="hover:cursor-pointer"
-										key={`page-${pageNum}`}
-									>
-										<PaginationLink isActive={currentPage === pageNum}>
-											{pageNum}
-										</PaginationLink>
-									</PaginationItem>
-								))}
-							{maxPage > 3 && (
+							{pageNumbers.map((pageNum, index) => (
+								<PaginationItem
+									onClick={() => loadPage(pageNum)}
+									className="hover:cursor-pointer"
+									key={`page-${pageNum}`}
+								>
+									<PaginationLink isActive={currentPage === pageNum}>
+										{pageNum}
+									</PaginationLink>
+								</PaginationItem>
+							))}
+							{maxPage > 3 && currentPage < maxPage - 1 ? (
 								<PaginationItem>
 									<PaginationEllipsis />
 								</PaginationItem>
-							)}
+							) : null}
 							<PaginationItem className="hover:cursor-pointer">
 								<PaginationNext
 									onClick={() =>
