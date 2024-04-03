@@ -1,4 +1,3 @@
-import { useGetCurrentERC20Allowance } from "@/hooks/use-get-current-erc20-allowance";
 import type { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { useState } from "react";
 import type { Address } from "viem";
