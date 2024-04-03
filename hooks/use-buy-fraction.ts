@@ -21,7 +21,6 @@ const useHandleBuyFraction = (
   const [transactionStatus, setTransactionStatus] =
     useState<keyof typeof TransactionStatuses>("Pending");
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
-  const currentAllowance = useGetCurrentERC20Allowance();
 
   const handleBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
