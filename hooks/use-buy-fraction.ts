@@ -39,11 +39,7 @@ const useHandleBuyFraction = (
       throw new Error("No order found");
     }
 
-    // if I enter 1 USD to buy in the UI, the amount will be 1000000000000000n
-    // amount: 1000000000000000n (10^15)
-    // pricePerUnit: 1
     console.log({ order, amount, address, hypercertId, comment });
-    // print order.price
     console.log(order.price);
     const takerOrder = hypercertExhangeClient.createFractionalSaleTakerBid(
       order,
@@ -72,6 +68,7 @@ const useHandleBuyFraction = (
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          sender: address,
           txId: tx.hash as `0x${string}`,
           hypercertId: hypercertId,
           amount: amountInDollars,

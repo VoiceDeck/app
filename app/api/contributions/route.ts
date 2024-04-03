@@ -3,14 +3,15 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 	try {
-		const { txId, hypercertId, amount, comment } = await req.json();
-		if (!txId || !hypercertId || !amount) {
+		const { sender, txId, hypercertId, amount, comment } = await req.json();
+		if (!sender || !txId || !hypercertId || !amount) {
 			return NextResponse.json(
 				{ error: "Missing required fields" },
 				{ status: 400 },
 			);
 		}
 		const result = await processNewContribution(
+			sender,
 			txId,
 			hypercertId,
 			amount,
