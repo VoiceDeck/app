@@ -6,12 +6,12 @@ import { waitForTransactionReceipt } from "viem/actions";
 import type { UsePublicClientReturnType } from "wagmi";
 
 export enum TransactionStatuses {
-  PreparingOrder = "preparingOrder",
-  Approval = "approval",
-  SignForBuy = "signForBuy",
-  Pending = "pending",
-  Confirmed = "confirmed",
-  Failed = "failed",
+  PreparingOrder = 0,
+  Approval = 1,
+  SignForBuy = 2,
+  Pending = 3,
+  Confirmed = 4,
+  Failed = 5,
 }
 
 const useHandleBuyFraction = (
