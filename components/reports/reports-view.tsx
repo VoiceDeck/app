@@ -14,11 +14,13 @@ import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
 import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import {
 	createFilterOptions,
 	filterReports,
 	sortingOptions,
 } from "@/lib/search-filter-utils";
+import { cn } from "@/lib/utils";
 import type { ISortingOption, Report } from "@/types";
 import Fuse from "fuse.js";
 import { useCallback, useMemo, useState } from "react";
@@ -30,11 +32,13 @@ interface IPageData {
 
 export function ReportsView({ reports }: IPageData) {
 	const { filters, updateSearchParams } = useFilters();
+	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [activeSortOption, setActiveSortOption] = useState(
 		sortingOptions.createdNewestFirst.value,
 	);
 	let filteredReports = useMemo(() => reports, [reports]);
-	const itemsPerPage = 10;
+	const itemsPerPage = 5;
+	const maxPagesInPagination = isDesktop ? 5 : 3;
 
 	const filterOptions = useMemo(() => {
 		return createFilterOptions(reports);
@@ -160,46 +164,111 @@ export function ReportsView({ reports }: IPageData) {
 				</div>
 
 				{needsPagination && (
-					<Pagination className="pt-6">
-						<PaginationContent>
-							<PaginationItem className="hover:cursor-pointer">
-								<PaginationPrevious
-									onClick={() =>
-										currentPage > 1 ? loadPage(currentPage - 1) : null
-									}
-								/>
-							</PaginationItem>
-							{pageNumbers
-								.filter((pageNum) =>
-									[currentPage - 1, currentPage, currentPage + 1].includes(
-										pageNum,
-									),
-								)
-								.map((pageNum, index) => (
-									<PaginationItem
-										onClick={() => loadPage(pageNum)}
-										className="hover:cursor-pointer"
-										key={`page-${pageNum}`}
-									>
-										<PaginationLink isActive={currentPage === pageNum}>
-											{pageNum}
-										</PaginationLink>
-									</PaginationItem>
-								))}
-							{maxPage > 3 && (
-								<PaginationItem>
-									<PaginationEllipsis />
+					<section className="flex flex-col justify-center items-center">
+						<Pagination className="pt-6">
+							<PaginationContent>
+								<PaginationItem className="hover:cursor-pointer">
+									<PaginationPrevious
+										onClick={() =>
+											currentPage > 1 ? loadPage(currentPage - 1) : null
+										}
+										className={cn(
+											currentPage === 1
+												? "cursor-not-allowed opacity-50 hover:bg-initial focus:bg-none"
+												: "",
+										)}
+									/>
 								</PaginationItem>
-							)}
-							<PaginationItem className="hover:cursor-pointer">
-								<PaginationNext
-									onClick={() =>
-										currentPage < maxPage ? loadPage(currentPage + 1) : null
-									}
-								/>
-							</PaginationItem>
-						</PaginationContent>
-					</Pagination>
+								{currentPage > maxPagesInPagination - 1 && (
+									<PaginationItem>
+										<PaginationEllipsis />
+									</PaginationItem>
+								)}
+								{pageNumbers.length > maxPagesInPagination &&
+									isDesktop &&
+									pageNumbers
+										.filter((pageNum) =>
+											[
+												currentPage - 2,
+												currentPage - 1,
+												currentPage,
+												currentPage + 1,
+												currentPage + 2,
+											].includes(pageNum),
+										)
+										.map((pageNum, index) => (
+											<PaginationItem
+												onClick={() => loadPage(pageNum)}
+												className="hover:cursor-pointer"
+												key={`page-${pageNum}`}
+											>
+												<PaginationLink isActive={currentPage === pageNum}>
+													{pageNum}
+												</PaginationLink>
+											</PaginationItem>
+										))}
+								{pageNumbers.length > maxPagesInPagination &&
+									!isDesktop &&
+									pageNumbers
+										.filter((pageNum) =>
+											[currentPage - 1, currentPage, currentPage + 1].includes(
+												pageNum,
+											),
+										)
+										.map((pageNum, index) => (
+											<PaginationItem
+												onClick={() => loadPage(pageNum)}
+												className="hover:cursor-pointer"
+												key={`page-${pageNum}`}
+											>
+												<PaginationLink isActive={currentPage === pageNum}>
+													{pageNum}
+												</PaginationLink>
+											</PaginationItem>
+										))}
+
+								{pageNumbers.length < maxPagesInPagination &&
+									pageNumbers.map((pageNum, index) => (
+										<PaginationItem
+											onClick={() => loadPage(pageNum)}
+											className="hover:cursor-pointer"
+											key={`page-${pageNum}`}
+										>
+											<PaginationLink isActive={currentPage === pageNum}>
+												{pageNum}
+											</PaginationLink>
+										</PaginationItem>
+									))}
+								{currentPage > maxPagesInPagination &&
+									currentPage + (isDesktop ? 2 : 1) < maxPage && (
+										<PaginationItem>
+											<PaginationEllipsis className="opacity-70" />
+										</PaginationItem>
+									)}
+								<PaginationItem className="hover:cursor-pointer">
+									<PaginationNext
+										className={cn(
+											maxPage === currentPage
+												? "cursor-not-allowed opacity-50 hover:bg-initial focus:bg-none"
+												: "",
+										)}
+										onClick={() =>
+											currentPage < maxPage ? loadPage(currentPage + 1) : null
+										}
+									/>
+								</PaginationItem>
+							</PaginationContent>
+						</Pagination>
+						{filteredReports.length > 0 && (
+							<div className="py-2 text-sm opacity-75 uppercase tracking-wide">
+								Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
+								{currentPage * itemsPerPage > filteredReports.length
+									? filteredReports.length
+									: currentPage * itemsPerPage}{" "}
+								of {filteredReports.length} results
+							</div>
+						)}
+					</section>
 				)}
 			</section>
 		</section>
