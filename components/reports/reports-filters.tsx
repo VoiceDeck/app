@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Drawer,
 	DrawerClose,
@@ -11,6 +11,7 @@ import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Slider } from "@/components/ui/slider";
 import { useFilters } from "@/contexts/filter";
 import type { createFilterOptions } from "@/lib/search-filter-utils";
+import { cn } from "@/lib/utils";
 import { Filter } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { OutletCombobox } from "./outlet-combobox";
@@ -223,25 +224,27 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 			{isMobileFilter && (
 				<DrawerFooter className="flex flex-wrap justify-center gap-2">
 					<section className="flex flex-wrap gap-2">
-						<DrawerClose className="flex gap-2 w-full">
-							<Button
-								variant={"secondary"}
-								className="flex-1"
+						<div className="flex gap-2 w-full">
+							<DrawerClose
+								className={cn(
+									buttonVariants({ variant: "secondary" }),
+									"flex-1",
+								)}
 								onClick={() =>
 									updateSearchParams(filters.filter(([key, _]) => key === "q"))
 								}
 							>
 								Clear filters
-							</Button>
-							<Button className="flex-1" variant={"outline"}>
+							</DrawerClose>
+							<DrawerClose
+								className={cn(buttonVariants({ variant: "outline" }), "flex-1")}
+							>
 								Cancel
-							</Button>
-						</DrawerClose>
+							</DrawerClose>
+						</div>
 					</section>
-					<DrawerClose>
-						<Button onClick={applyFilters} className="w-full">
-							Apply
-						</Button>
+					<DrawerClose onClick={applyFilters} className="w-full">
+						Apply
 					</DrawerClose>
 				</DrawerFooter>
 			)}
