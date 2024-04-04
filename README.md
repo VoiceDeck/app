@@ -11,11 +11,49 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
 - Examine report details, impact assessment, funding status
 - Anonymously prove Indian citizenship
 - Contribute funds with embedded crypto wallet
-- Track contribution activity and metrics
+- Track personal contribution activity and metrics
 
-## Run Locally
 
-### Clone the repository
+## Tech Stack
+
+- [TypeScript](https://www.typescriptlang.org/) programming language
+- [Next.js](https://nextjs.org/) full-stack framework
+- [TailwindCSS](https://tailwindcss.com/) css framework
+- [shadcn/ui](https://ui.shadcn.com/) ui components
+- [Directus](https://directus.io/) headless CMS / no-code data platform
+- [Hypercerts](https://hypercerts.org/) tokenized impact certification
+- [AnonAadhaar](https://github.com/anon-aadhaar) privacy-preserving identity verification
+- [ethers.js](https://docs.ethers.org/v6/) Ethereum API library
+- [viem](https://viem.sh/) TypeScript interface for Ethereum 
+- [Wagmi](https://wagmi.sh/) interface for Ethereum
+- [WalletConnect](https://walletconnect.com/) crypto wallet connector
+- [Biome](https://biomejs.dev/) formatter/linter
+
+
+We recommend [direnv](https://direnv.net/) for managing your environment variables
+
+## Getting Started
+
+### Prerequisites
+
+Node.js: this project requires installation of Node.js 18.17 or later. [Next Documentation](https://nextjs.org/docs/getting-started/installation)
+
+Ethereum Sepolia: The Hypercert Marketplace is currently deployed on Sepolia Testnet. To interact with Voicedeck's impact Hypercerts, you'll need to connect to Sepolia Testnet and obtain SepoliaETH from a [testnet token faucet](https://faucetlink.to/sepolia).
+
+### Network Configuration
+
+| Parameter                     | Value                                     |
+| ----------------------------- | ----------------------------------------- |
+| Network Name                  | `Sepolia test network`                              |
+| RPC URL                       | `https://sepolia.infura.io`             |
+| Chain ID                      | `11155111`                                |
+| Currency Symbol               | `SepoliaETH`                                     |
+| Block Explorer URL (Optional) | `https://sepolia.etherscan.io/` |
+
+
+### Run Locally
+
+#### Clone the repository
 
 ```bash
   git clone git@github.com:VoiceDeck/app.git
@@ -33,79 +71,21 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
   pnpm dev
 ```
 
-## Tech Stack
-
-- [Remix](https://remix.run/) + [Vite](https://vitejs.dev/)
-- [Million.js](https://million.dev/)
-- [TailwindCSS](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com/) components
-- [Victory](https://formidable.com/open-source/victory/) charts
-- [Biome](https://biomejs.dev/) formatter/linter
-
-We recommend [direnv](https://direnv.net/) for managing your environment variables
-
-## Server Design
-
-### Endpoint Details
-
-`/impact-reports`
-
-- **Returns**: An array of `Report` objects.
-- **Purpose**: To provide impact reports to the UI.
-- **Implementation Details**: Uses `fetchReports()` from `server/impactReportHelpers.ts`.
-
-### Server Functions
-
-Located in `app/server/impactReportHelpers.ts`:
-
-- `fetchReports`: Function to retrieve reports, including interaction with Hypercerts.
-
-### Data Models
-
-- **Impact Report**: The report or stories that have been published previously and verified to actually produce an impact.
-- **Hypercert**: A token representing a claim of impactful work, which is fractionable and transferable, conforming to the ERC-1155 standard for semi-fungible tokens.
-- **Hypercert Metadata**: A set of data associated with a Hypercert, detailing the scope of work, contributors, impact, and rights, stored on IPFS.
-
-### Separation of Concerns
-
-The `/impact-reports` endpoint is responsible for serving impact reports. The implementation details of how the server retrieves data from Hypercert are abstracted away and managed within the `app/server/impactReportHelpers.ts` file.
-
-## Getting Started
-
-### Prerequisites
-
-Node.js: Before anything else, Remix.run requires that you have either a Active or Maintenance version of Node.js installed. [Remix Documentation](https://remix.run/docs/en/main/other-api/node)
-
-Optimism Sepolia: Intuition is currently deployed on Optimism Sepolia Testnet. To interact with the Intuition API, you'll need to connect to the [Optimism Sepolia Testnet](https://docs.optimism.io/chain/networks).
-
-### Network Configuration
-
-| Parameter                     | Value                                     |
-| ----------------------------- | ----------------------------------------- |
-| Network Name                  | `OP Sepolia`                              |
-| RPC URL                       | `https://sepolia.optimism.io`             |
-| Chain ID                      | `11155420`                                |
-| Currency Symbol               | `ETH`                                     |
-| Block Explorer URL (Optional) | `https://sepolia-optimistic.etherscan.io` |
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app+/_index.tsx`. The page auto-updates as you edit the file.
-
-## Shadcn
-
-Shadcn provides beautifully designed components that you can copy and paste into your apps and enables you to bootstrap them via cli ([Shadcn Documentation](https://ui.shadcn.com/)). It 5x's your productivity and allows you to focus on what matters most, your business logic + features. Even better, we have set up the config for you so you can use it out of the box 🤝.
-
-Example Usage:
-
-```bash
-npx shadcn-ui@latest add form
-```
+You can start editing the page by modifying `app/reports/page.tsx`.
 
 ## Helpful References
 
-- [Remix.run Documentation](https://remix.run/)
-- [Vite Documentation](https://vitejs.dev/)
-- [Remix-Auth Documentation](https://github.com/sergiodxa/remix-auth)
-- [WalletConnect Documentation](https://docs.walletconnect.com/)
-- [Alchemy Documentation](https://docs.alchemy.com/)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/) TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
+- [Next.js Documentation](https://next.org/docs/) Next.js is a React framework for building full-stack web applications. You use React Components to build user interfaces, and Next.js for additional features and optimizations.
+Under the hood, Next.js also abstracts and automatically configures tooling needed for React, like bundling, compiling, and more. This allows focus on building the application instead of spending time with configuration.
+- [Tailwind Documentation](https://tailwindcss.com/docs/installation) Tailwind CSS is a utility-first CSS framework for rapidly building modern websites without ever leaving your HTML. A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
+- [Shadcn Documentation](https://ui.shadcn.com/docs) Shadcn provides beautifully designed components that you can copy and paste into your apps and enables you to bootstrap them via cli. It 5x's productivity and allows focus on what matters most, business logic + features.
+- [Directus Documentation](https://docs.directus.io/getting-started/introduction.html) Directus is an Open Data Platform built to democratize the database. It provides everyone on the team, regardless of technical skill, equal access to data and digital file asset management, for any data model or project. Directus enables you to perform CRUD operations, create users, assign roles with fully configurable permissions, build complex and granular queries, configure event-driven webhooks and task automation.
+- [Hypercerts Documentation](https://hypercerts.org/docs/) Hypercerts create this interoperability by serving as a single, open, shared, decentralized database for impact funding mechanisms. A single hypercert is a semi-fungible token that accounts for work that is supposed to be impactful and whose ownership is fractionizable and transferable (under specific conditions). Hypercerts do not impose any specific funding mechanisms but provide baseline invariant guarantees such that claims will not be forgotten as different mechanisms come into and out of fashion. This is also why hypercerts are especially useful for any retrospective funding mechanisms – funding can be applied to claims of the past.
+- [Anon Aadhaar Documentation](https://anon-aadhaar-documentation.vercel.app/docs/intro) Anon Aadhaar is a zero-knowledge protocol designed to enable Aadhaar citizens to prove their possession of an Aadhaar document issued and signed by the government. This process ensures anonymity by utilizing the Aadhaar secure QR code, presents on e-Aadhaar and Aadhaar print-letter, preserving the confidentiality of the Aadhaar number.
+- [ethers.js Documentation](https://docs.ethers.org/v6/) The ethers.js library aims to be a complete and compact library for interacting with the Ethereum Blockchain and its ecosystem. It is often used to create decentralized applications (dapps), wallets (such as MetaMask and Tally) and other tools and simple scripts that require reading and writing to the blockchain.
+- [viem](https://viem.sh/docs/introduction) Viem is a TypeScript Interface for Ethereum that provides low-level stateless primitives for interacting with Ethereum. It delivers a great developer experience through modular and composable APIs, comprehensive documentation, and automatic type safety and inference.
+- [WalletConnect Documentation](https://docs.walletconnect.com/) The Web3Modal SDK allows you to easily connect your Web3 app with wallets. It provides a simple and intuitive interface for requesting actions such as signing transactions and interacting with smart contracts on the blockchain.
+
