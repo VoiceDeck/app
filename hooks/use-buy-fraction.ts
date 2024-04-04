@@ -1,4 +1,3 @@
-import { useGetCurrentERC20Allowance } from "@/hooks/use-get-current-erc20-allowance";
 import type { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { useState } from "react";
 import type { Address } from "viem";
@@ -6,12 +5,12 @@ import { waitForTransactionReceipt } from "viem/actions";
 import type { UsePublicClientReturnType } from "wagmi";
 
 export enum TransactionStatuses {
-  PreparingOrder = "preparingOrder",
-  Approval = "approval",
-  SignForBuy = "signForBuy",
-  Pending = "pending",
-  Confirmed = "confirmed",
-  Failed = "failed",
+  PreparingOrder = 0,
+  Approval = 1,
+  SignForBuy = 2,
+  Pending = 3,
+  Confirmed = 4,
+  Failed = 5,
 }
 
 const useHandleBuyFraction = (
@@ -21,7 +20,6 @@ const useHandleBuyFraction = (
   const [transactionStatus, setTransactionStatus] =
     useState<keyof typeof TransactionStatuses>("Pending");
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
-  const currentAllowance = useGetCurrentERC20Allowance();
 
   const handleBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
