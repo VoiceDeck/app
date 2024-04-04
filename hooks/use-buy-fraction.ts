@@ -59,10 +59,10 @@ const useHandleBuyFraction = (
 
       setTransactionStatus("SignForBuy");
       const myAmount = BigInt(order.price) * amount;
-      console.log(`myAmount: ${myAmount}`);
+      // console.log(`myAmount: ${myAmount}`);
       const tx = await call({ value: myAmount });
 
-      console.log(`amountInDollars: ${amountInDollars}`);
+      // console.log(`amountInDollars: ${amountInDollars}`);
       fetch("/api/contributions", {
         method: "POST",
         headers: {
@@ -87,7 +87,7 @@ const useHandleBuyFraction = (
       return txnReceipt;
     } catch (e) {
       const error = e as EthersError;
-      console.error(error);
+      // console.error(error);
       if (error.code === "INSUFFICIENT_FUNDS") {
         setTransactionStatus("InsufficientFunds");
         return;
