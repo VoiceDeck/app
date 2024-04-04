@@ -159,7 +159,7 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 					{uniqueCategories.map(({ label, value }) => (
 						<Badge
 							key={value}
-							className={`border-vd-blue-500 rounded-full flex flex-auto flex-col md:flex-row items-center gap-1 px-2 py-1 cursor-pointer ${
+							className={`border-vd-blue-500 rounded-2xl flex flex-auto flex-col items-center gap-1 px-2 py-3 cursor-pointer ${
 								selectedCategory === value
 									? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
 									: ""

@@ -168,7 +168,7 @@ const MobileFeed = ({ contributions }: { contributions: Contribution[] }) => {
 const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 	return (
 		<ol
-			className="border-l border-neutral-300 dark:border-neutral-500 hidden md:block"
+			className="border-l border-stone-300 dark:border-stone-500 hidden md:block"
 			aria-label="Contributions list"
 		>
 			{contributions.map((contribution) => (
@@ -182,7 +182,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 						aria-labelledby="contributor-info"
 					>
 						<span
-							className="-ml-[5px] mr-3 h-[9px] w-[9px] rounded-full bg-neutral-300 dark:bg-neutral-500"
+							className="-ml-[5px] mr-3 h-[9px] w-[9px] rounded-full bg-stone-300 dark:bg-stone-500"
 							aria-hidden="true"
 						/>
 						<div className="flex items-center gap-2" id="contributor-info">
@@ -202,7 +202,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 							)}
 							<DotIcon className="text-stone-400" aria-hidden="true" />
 							<p
-								className="text-sm text-neutral-500 dark:text-neutral-300"
+								className="text-sm text-stone-500 dark:text-stone-300"
 								aria-label={`Contribution date: ${transformDate(
 									contribution.date_created,
 								)}`}
@@ -214,7 +214,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 					{contribution.comment && (
 						<div className="mb-6 ml-4 mt-2">
 							<p
-								className="mb-3 text-neutral-500 dark:text-neutral-300"
+								className="mb-3 text-stone-500 dark:text-stone-300"
 								role="article"
 								aria-label="Contribution comment"
 							>
@@ -251,7 +251,7 @@ const ReportSupportFeed = ({
 				<h3 className="text-2xl font-semibold py-4" id="support-feed-title">
 					Support Feed
 				</h3>
-				<p className="text-neutral-500 dark:text-neutral-300">
+				<p className="text-stone-500 dark:text-stone-300">
 					Nothing to show yet. Be the first to support this cause!
 				</p>
 			</section>
