@@ -18,7 +18,6 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
 
 - [TypeScript](https://www.typescriptlang.org/) programming language
 - [Next.js](https://nextjs.org/) full-stack framework
-- [React](https://react.dev/) frontend library
 - [TailwindCSS](https://tailwindcss.com/) css framework
 - [shadcn/ui](https://ui.shadcn.com/) ui components
 - [Directus](https://directus.io/) headless CMS / no-code data platform
@@ -32,32 +31,6 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
 
 
 We recommend [direnv](https://direnv.net/) for managing your environment variables
-
-## Data Models
-
-- **Impact Report**: A report or story that has been previously published and verified to have produced an impact.
-- **Hypercert**: A token representing a claim of impactful work, which is fractionable and transferable. Conforms to the [ERC-1155](https://ethereum.org/en/developers/docs/standards/tokens/erc-1155/) standard for semi-fungible tokens.
-- **Hypercert Metadata**: A set of data associated with a Hypercert, stored on [IPFS](https://ipfs.tech/). Details the scope of work, contributors, verified impact, and ownership rights.
-
-## Server Design
-
-### Endpoint Details
-
-`/impact-reports`
-
-- **Returns**: An array of `Report` objects.
-- **Purpose**: To provide impact reports to the UI.
-- **Implementation Details**: Uses `fetchReports()` from `lib/impact-reports.ts`.
-
-### Server Functions
-
-Located in `app/server/impactReportHelpers.ts`:
-
-- `fetchReports`: Function to retrieve reports, including interaction with Hypercerts.
-
-### Separation of Concerns
-
-The `/impact-reports` endpoint is responsible for serving impact reports. The implementation details of how the server retrieves data from Hypercert are abstracted away and managed within the `app/server/impactReportHelpers.ts` file.
 
 ## Getting Started
 
@@ -107,7 +80,6 @@ You can start editing the page by modifying `app/reports/page.tsx`.
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/) TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
 - [Next.js Documentation](https://next.org/docs/) Next.js is a React framework for building full-stack web applications. You use React Components to build user interfaces, and Next.js for additional features and optimizations.
 Under the hood, Next.js also abstracts and automatically configures tooling needed for React, like bundling, compiling, and more. This allows focus on building the application instead of spending time with configuration.
-- [React Documentation](https://react.dev/reference/react/) React apps are made out of components. A component is a piece of the UI (user interface) that has its own logic and appearance. A component can be as small as a button, or as large as an entire page. React components are JavaScript functions that return markup.
 - [Tailwind Documentation](https://tailwindcss.com/docs/installation) Tailwind CSS is a utility-first CSS framework for rapidly building modern websites without ever leaving your HTML. A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
 - [Shadcn Documentation](https://ui.shadcn.com/docs) Shadcn provides beautifully designed components that you can copy and paste into your apps and enables you to bootstrap them via cli. It 5x's productivity and allows focus on what matters most, business logic + features.
 - [Directus Documentation](https://docs.directus.io/getting-started/introduction.html) Directus is an Open Data Platform built to democratize the database. It provides everyone on the team, regardless of technical skill, equal access to data and digital file asset management, for any data model or project. Directus enables you to perform CRUD operations, create users, assign roles with fully configurable permissions, build complex and granular queries, configure event-driven webhooks and task automation.
