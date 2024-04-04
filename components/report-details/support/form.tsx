@@ -76,7 +76,7 @@ const transactionStatusContent: Record<
 	},
 	Failed: {
 		label: "Failed",
-		icon: <AlertTriangle size={36} />,
+		icon: <AlertTriangle size={36} className="text-red-500" />,
 		title: "Sorry! There was an issue.",
 		content:
 			"We ran into a problem while processing the transaction. Could you try again?",
@@ -87,6 +87,18 @@ const transactionStatusContent: Record<
 		title: "Thank you! We got your support.",
 		content:
 			"Your transaction was successful. We're grateful for your contribution! It might take a few minutes to show up on the report.",
+	},
+	InsufficientFunds: {
+		label: "InsufficientFunds",
+		icon: <AlertTriangle size={36} className="text-red-500" />,
+		title: "Check your funds",
+		content: "Make sure you've got enough ETH to complete the transaction",
+	},
+	ActionRejected: {
+		label: "ActionRejected",
+		icon: <AlertTriangle size={36} className="text-red-500" />,
+		title: "Transaction rejected",
+		content: "You rejected the transaction. Please try again.",
 	},
 };
 
