@@ -72,7 +72,6 @@ export function ReportsView({ reports }: IPageData) {
 		currentPageItems: pageTransactions,
 		loadPage,
 		maxPage,
-		pageNumbers,
 		needsPagination,
 	} = usePagination<Report>(filteredReports, itemsPerPage);
 
@@ -155,7 +154,6 @@ export function ReportsView({ reports }: IPageData) {
 						currentPage={currentPage}
 						maxPage={maxPage}
 						loadPage={loadPage}
-						pageNumbers={pageNumbers}
 					/>
 					<ShowingDisplay
 						currentPage={currentPage}

@@ -70,7 +70,6 @@ interface IVDPaginator {
 	currentPage: number;
 	maxPage: number;
 	loadPage: (pageNum: number) => void;
-	pageNumbers: number[];
 }
 
 const VDPaginator = ({
@@ -78,7 +77,6 @@ const VDPaginator = ({
 	currentPage,
 	maxPage,
 	loadPage,
-	pageNumbers,
 }: IVDPaginator) => {
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const maxPagesInPagination = isDesktop ? 7 : 3;

@@ -142,7 +142,6 @@ const ReportSupportFeed = ({
 		currentPageItems: pageContributions,
 		loadPage,
 		maxPage,
-		pageNumbers,
 		needsPagination,
 	} = usePagination<Contribution>(contributionsBySupportDate, itemsPerPage);
 
@@ -179,7 +178,6 @@ const ReportSupportFeed = ({
 							currentPage={currentPage}
 							maxPage={maxPage}
 							loadPage={loadPage}
-							pageNumbers={pageNumbers}
 						/>
 						<ShowingDisplay
 							currentPage={currentPage}

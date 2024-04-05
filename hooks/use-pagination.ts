@@ -31,11 +31,6 @@ export const usePagination = <GT>(items: GT[], itemsPerPage: number) => {
     () => items.length > itemsPerPage,
     [items.length, itemsPerPage]
   );
-  const pageNumbers = useMemo(
-    () => Array.from({ length: maxPage }, (_, i) => i + 1),
-    [maxPage]
-  );
-
   // no 'useMemo' for these, we need to recalculate to render correct reports
   // when filter/sort options are updated
   const start = (currentPage - 1) * itemsPerPage;
@@ -65,6 +60,5 @@ export const usePagination = <GT>(items: GT[], itemsPerPage: number) => {
     loadPage,
     maxPage,
     needsPagination,
-    pageNumbers,
   };
 };
