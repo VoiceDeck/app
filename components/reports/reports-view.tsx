@@ -148,19 +148,21 @@ export function ReportsView({ reports }: IPageData) {
 						</section>
 					)}
 				</div>
-				<section className="flex flex-col justify-center items-center gap-2">
-					<VDPaginator
-						needsPagination={needsPagination}
-						currentPage={currentPage}
-						maxPage={maxPage}
-						loadPage={loadPage}
-					/>
-					<ShowingDisplay
-						currentPage={currentPage}
-						totalItemAmount={filteredReports.length}
-						itemsPerPage={itemsPerPage}
-					/>
-				</section>
+				{needsPagination && (
+					<section className="flex flex-col justify-center items-center gap-2">
+						<VDPaginator
+							needsPagination={needsPagination}
+							currentPage={currentPage}
+							maxPage={maxPage}
+							loadPage={loadPage}
+						/>
+						<ShowingDisplay
+							currentPage={currentPage}
+							totalItemAmount={filteredReports.length}
+							itemsPerPage={itemsPerPage}
+						/>
+					</section>
+				)}
 			</section>
 		</section>
 	);
