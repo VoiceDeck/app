@@ -23,13 +23,39 @@ const ShowingDisplay = ({
 	itemsPerPage,
 }: IShowingDisplay) => {
 	return (
-		<p>
+		<p className="text-sm md:text-base">
 			Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
 			{currentPage * itemsPerPage > reportsSize
 				? reportsSize
 				: currentPage * itemsPerPage}{" "}
 			of {reportsSize} items
 		</p>
+	);
+};
+
+const calculatePaginationRange = (
+	currentPage: number,
+	maxPage: number,
+	maxPagesInPagination: number,
+) => {
+	// Ensure we don't exceed the maxPage limit
+	const totalPages = Math.min(maxPage, maxPagesInPagination);
+
+	// Calculate the start page
+	let startPage = Math.max(currentPage - Math.floor(totalPages / 2), 1);
+	let endPage = startPage + totalPages - 1;
+
+	// Adjust if endPage goes beyond maxPage
+	if (endPage > maxPage) {
+		endPage = maxPage;
+		// Adjust startPage to ensure we always show the same number of pages
+		startPage = Math.max(1, endPage - totalPages + 1);
+	}
+
+	// Generate the range of page numbers
+	return Array.from(
+		{ length: endPage - startPage + 1 },
+		(_, index) => startPage + index,
 	);
 };
 
@@ -54,13 +80,10 @@ const VDPaginator = ({
 		return null;
 	}
 
-	//  Get the page numbers to display in the pagination, and try to keep the current page in the middle
-	const pagesInPagination = pageNumbers.slice(
-		Math.max(0, currentPage - 1 - Math.floor(maxPagesInPagination / 2)),
-		Math.min(
-			pageNumbers.length,
-			currentPage - 1 + Math.ceil(maxPagesInPagination / 2),
-		),
+	const pagesInPagination = calculatePaginationRange(
+		currentPage,
+		maxPage,
+		maxPagesInPagination,
 	);
 
 	return (
