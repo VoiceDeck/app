@@ -13,22 +13,28 @@ import { cn } from "@/lib/utils";
 
 interface IShowingDisplay {
 	currentPage: number;
-	reportsSize: number;
+	totalItemAmount: number;
 	itemsPerPage: number;
 }
 
 const ShowingDisplay = ({
 	currentPage,
-	reportsSize,
+	totalItemAmount,
 	itemsPerPage,
 }: IShowingDisplay) => {
+	if (totalItemAmount === 0) {
+		return null;
+	}
+	if (totalItemAmount === 1) {
+		return <p className="text-sm md:text-base">Showing 1 item</p>;
+	}
 	return (
 		<p className="text-sm md:text-base">
 			Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
-			{currentPage * itemsPerPage > reportsSize
-				? reportsSize
+			{currentPage * itemsPerPage > totalItemAmount
+				? totalItemAmount
 				: currentPage * itemsPerPage}{" "}
-			of {reportsSize} items
+			of {totalItemAmount} items
 		</p>
 	);
 };

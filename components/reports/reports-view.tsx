@@ -107,7 +107,7 @@ export function ReportsView({ reports }: IPageData) {
 				{filteredReports.length > 0 && (
 					<ShowingDisplay
 						currentPage={currentPage}
-						reportsSize={filteredReports.length}
+						totalItemAmount={filteredReports.length}
 						itemsPerPage={itemsPerPage}
 					/>
 				)}
@@ -159,7 +159,7 @@ export function ReportsView({ reports }: IPageData) {
 					/>
 					<ShowingDisplay
 						currentPage={currentPage}
-						reportsSize={filteredReports.length}
+						totalItemAmount={filteredReports.length}
 						itemsPerPage={itemsPerPage}
 					/>
 				</section>

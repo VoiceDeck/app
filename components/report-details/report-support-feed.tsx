@@ -164,7 +164,7 @@ const ReportSupportFeed = ({
 			<h3 className="text-2xl font-semibold py-4">Support Feed</h3>
 			<ShowingDisplay
 				currentPage={currentPage}
-				reportsSize={contributionsBySupportDate.length}
+				totalItemAmount={contributionsBySupportDate.length}
 				itemsPerPage={itemsPerPage}
 			/>
 
@@ -183,7 +183,7 @@ const ReportSupportFeed = ({
 						/>
 						<ShowingDisplay
 							currentPage={currentPage}
-							reportsSize={contributionsBySupportDate.length}
+							totalItemAmount={contributionsBySupportDate.length}
 							itemsPerPage={itemsPerPage}
 						/>
 					</section>
