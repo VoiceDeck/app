@@ -37,8 +37,7 @@ export function ReportsView({ reports }: IPageData) {
 		sortingOptions.createdNewestFirst.value,
 	);
 	let filteredReports = useMemo(() => reports, [reports]);
-	const itemsPerPage = 5;
-	const maxPagesInPagination = isDesktop ? 5 : 3;
+	const itemsPerPage = 4;
 
 	const filterOptions = useMemo(() => {
 		return createFilterOptions(reports);
@@ -179,82 +178,37 @@ export function ReportsView({ reports }: IPageData) {
 										)}
 									/>
 								</PaginationItem>
-								{currentPage > maxPagesInPagination - 1 && (
+								{/* {currentPage > maxPagesInPagination - 1 && (
+									<PaginationItem>
+										<PaginationEllipsis />
+									</PaginationItem>
+								)} */}
+								{pageNumbers.map((pageNum, index) => (
+									<PaginationItem
+										onClick={() => loadPage(pageNum)}
+										className="hover:cursor-pointer"
+										key={`page-${pageNum}`}
+									>
+										<PaginationLink isActive={currentPage === pageNum}>
+											{pageNum}
+										</PaginationLink>
+									</PaginationItem>
+								))}
+								{maxPage > 3 && currentPage < maxPage - 1 && (
 									<PaginationItem>
 										<PaginationEllipsis />
 									</PaginationItem>
 								)}
-								{pageNumbers.length > maxPagesInPagination &&
-									isDesktop &&
-									pageNumbers
-										.filter((pageNum) =>
-											[
-												currentPage - 2,
-												currentPage - 1,
-												currentPage,
-												currentPage + 1,
-												currentPage + 2,
-											].includes(pageNum),
-										)
-										.map((pageNum, index) => (
-											<PaginationItem
-												onClick={() => loadPage(pageNum)}
-												className="hover:cursor-pointer"
-												key={`page-${pageNum}`}
-											>
-												<PaginationLink isActive={currentPage === pageNum}>
-													{pageNum}
-												</PaginationLink>
-											</PaginationItem>
-										))}
-								{pageNumbers.length > maxPagesInPagination &&
-									!isDesktop &&
-									pageNumbers
-										.filter((pageNum) =>
-											[currentPage - 1, currentPage, currentPage + 1].includes(
-												pageNum,
-											),
-										)
-										.map((pageNum, index) => (
-											<PaginationItem
-												onClick={() => loadPage(pageNum)}
-												className="hover:cursor-pointer"
-												key={`page-${pageNum}`}
-											>
-												<PaginationLink isActive={currentPage === pageNum}>
-													{pageNum}
-												</PaginationLink>
-											</PaginationItem>
-										))}
-
-								{pageNumbers.length < maxPagesInPagination &&
-									pageNumbers.map((pageNum, index) => (
-										<PaginationItem
-											onClick={() => loadPage(pageNum)}
-											className="hover:cursor-pointer"
-											key={`page-${pageNum}`}
-										>
-											<PaginationLink isActive={currentPage === pageNum}>
-												{pageNum}
-											</PaginationLink>
-										</PaginationItem>
-									))}
-								{currentPage > maxPagesInPagination &&
-									currentPage + (isDesktop ? 2 : 1) < maxPage && (
-										<PaginationItem>
-											<PaginationEllipsis className="opacity-70" />
-										</PaginationItem>
-									)}
 								<PaginationItem className="hover:cursor-pointer">
 									<PaginationNext
-										className={cn(
-											maxPage === currentPage
-												? "cursor-not-allowed opacity-50 hover:bg-initial focus:bg-none"
-												: "",
-										)}
 										onClick={() =>
 											currentPage < maxPage ? loadPage(currentPage + 1) : null
 										}
+										className={cn(
+											currentPage === maxPage
+												? "cursor-not-allowed opacity-50 hover:bg-initial focus:bg-none"
+												: "",
+										)}
 									/>
 								</PaginationItem>
 							</PaginationContent>

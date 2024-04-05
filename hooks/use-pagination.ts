@@ -31,18 +31,12 @@ export const usePagination = <GT,>(items: GT[], itemsPerPage: number) => {
 		() => items.length > itemsPerPage,
 		[items.length, itemsPerPage],
 	);
-	const pageNumbers = useMemo(
-		() => Array.from({ length: maxPage }, (_, i) => i + 1),
-		[maxPage],
-	);
+	const pageNumbers = useMemo(() => {
+      const range = Array.from({ length: 3 }, (_, i) => currentPage + i);
+      return currentPage === 1 ? range : currentPage === maxPage ? range.map(num => num - 2) : range.map(num => num - 1);
+  }, [maxPage, currentPage]);
 
-	// const currentPageItems = useMemo(() => {
-	// 	const start = (currentPage - 1) * itemsPerPage;
-	// 	const end = start + itemsPerPage;
-	// 	return needsPagination ? items.slice(start, end) : items;
-	// }, [currentPage, items, itemsPerPage, needsPagination]);
-
-	// removing these from useMemo(), need recalculation to render correct reports
+	// no 'useMemo' for these, we need to recalculate to render correct reports
 	// when filter/sort options are updated
 	const start = (currentPage - 1) * itemsPerPage;
 	const end = start + itemsPerPage;
