@@ -28,7 +28,7 @@ const ShowingDisplay = ({
 			{currentPage * itemsPerPage > reportsSize
 				? reportsSize
 				: currentPage * itemsPerPage}{" "}
-			of {reportsSize} results
+			of {reportsSize} items
 		</p>
 	);
 };
@@ -49,7 +49,7 @@ const VDPaginator = ({
 	pageNumbers,
 }: IVDPaginator) => {
 	const isDesktop = useMediaQuery("(min-width: 768px)");
-	const maxPagesInPagination = isDesktop ? 9 : 5;
+	const maxPagesInPagination = isDesktop ? 7 : 3;
 	if (!needsPagination) {
 		return null;
 	}
