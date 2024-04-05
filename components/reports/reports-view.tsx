@@ -5,7 +5,6 @@ import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
 import { Button } from "@/components/ui/button";
-import { useMediaQuery } from "@/hooks/use-media-query";
 import {
 	createFilterOptions,
 	filterReports,
@@ -23,12 +22,11 @@ interface IPageData {
 
 export function ReportsView({ reports }: IPageData) {
 	const { filters, updateSearchParams } = useFilters();
-	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [activeSortOption, setActiveSortOption] = useState(
 		sortingOptions.createdNewestFirst.value,
 	);
 	let filteredReports = useMemo(() => reports, [reports]);
-	const itemsPerPage = 4;
+	const itemsPerPage = 10;
 
 	const filterOptions = useMemo(() => {
 		return createFilterOptions(reports);
@@ -113,6 +111,7 @@ export function ReportsView({ reports }: IPageData) {
 						itemsPerPage={itemsPerPage}
 					/>
 				)}
+				<div className="p-3" />
 				<div className="flex gap-3 sm:gap-5 flex-wrap justify-center md:justify-start">
 					{pageTransactions.length ? (
 						pageTransactions.map((report: Report) => (
