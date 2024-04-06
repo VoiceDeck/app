@@ -40,8 +40,6 @@ const useHandleBuyFraction = (
       throw new Error("No order found");
     }
 
-    console.log({ order, amount, address, hypercertId, comment });
-    console.log(order.price);
     const takerOrder = hypercertExhangeClient.createFractionalSaleTakerBid(
       order,
       address,
@@ -59,10 +57,8 @@ const useHandleBuyFraction = (
 
       setTransactionStatus("SignForBuy");
       const myAmount = BigInt(order.price) * amount;
-      // console.log(`myAmount: ${myAmount}`);
       const tx = await call({ value: myAmount });
 
-      // console.log(`amountInDollars: ${amountInDollars}`);
       fetch("/api/contributions", {
         method: "POST",
         headers: {
@@ -82,12 +78,10 @@ const useHandleBuyFraction = (
       const txnReceipt = await waitForTransactionReceipt(publicClient, {
         hash: tx.hash as `0x${string}`,
       });
-      console.log({ txnReceipt });
       setTransactionStatus("Confirmed");
       return txnReceipt;
     } catch (e) {
       const error = e as EthersError;
-      // console.error(error);
       if (error.code === "INSUFFICIENT_FUNDS") {
         setTransactionStatus("InsufficientFunds");
         return;
