@@ -29,10 +29,10 @@ const TransactionStatus = ({
 			<div
 				className={cn("flex justify-center", {
 					"animate-spin":
-						status.label !== "Confirmed" &&
-						status.label !== "Failed" &&
-						status.label !== "InsufficientFunds" &&
-						status.label !== "ActionRejected",
+						!(status.label === "Confirmed" ||
+						status.label === "Failed" ||
+						status.label === "InsufficientFunds" ||
+						status.label === "ActionRejected"),
 				})}
 			>
 				{status.icon}
