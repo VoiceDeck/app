@@ -60,7 +60,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 						</CardDescription>
 					</section>
 				</CardHeader>
-				<CardContent className="flex gap-2 px-5 py-2">
+				<CardContent className="flex gap-1 px-4 py-2 w-full">
 					<Badge
 						variant="secondary"
 						className="font-normal hover:bg-vd-beige-200 pointer-events-none"
@@ -70,10 +70,11 @@ const ReportCard: React.FC<ReportCardProps> = ({
 					</Badge>
 					<Badge
 						variant="secondary"
-						className="font-normal hover:bg-vd-beige-200 pointer-events-none"
+						className="*:font-normal hover:bg-vd-beige-200 pointer-events-none overflow-clip text-ellipsis"
+						title={state}
 					>
 						<MapPin color="#C14E41" strokeWidth={1} size={18} />
-						<p>{state}</p>
+						<p className="text-nowrap line-clamp-1">{state}</p>
 					</Badge>
 				</CardContent>
 				<CardFooter className="flex-col justify-center gap-2 p-3">

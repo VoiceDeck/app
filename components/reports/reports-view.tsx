@@ -1,28 +1,19 @@
 "use client";
 import ReportCard from "@/components/reports/report-card";
 import ReportsHeader from "@/components/reports/reports-header";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
 import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { Button } from "@/components/ui/button";
 import {
 	createFilterOptions,
 	filterReports,
 	sortingOptions,
 } from "@/lib/search-filter-utils";
-import { cn } from "@/lib/utils";
 import type { ISortingOption, Report } from "@/types";
 import Fuse from "fuse.js";
 import { useCallback, useMemo, useState } from "react";
+import { ShowingDisplay, VDPaginator } from "../global/vd-paginator";
 import { SidebarFilter } from "./filter-sidebar";
 
 interface IPageData {
@@ -31,12 +22,11 @@ interface IPageData {
 
 export function ReportsView({ reports }: IPageData) {
 	const { filters, updateSearchParams } = useFilters();
-	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [activeSortOption, setActiveSortOption] = useState(
 		sortingOptions.createdNewestFirst.value,
 	);
 	let filteredReports = useMemo(() => reports, [reports]);
-	const itemsPerPage = 4;
+	const itemsPerPage = 10;
 
 	const filterOptions = useMemo(() => {
 		return createFilterOptions(reports);
@@ -82,7 +72,6 @@ export function ReportsView({ reports }: IPageData) {
 		currentPageItems: pageTransactions,
 		loadPage,
 		maxPage,
-		pageNumbers,
 		needsPagination,
 	} = usePagination<Report>(filteredReports, itemsPerPage);
 
@@ -117,10 +106,11 @@ export function ReportsView({ reports }: IPageData) {
 				{filteredReports.length > 0 && (
 					<ShowingDisplay
 						currentPage={currentPage}
-						reportsSize={filteredReports.length}
+						totalItemAmount={filteredReports.length}
 						itemsPerPage={itemsPerPage}
 					/>
 				)}
+				<div className="p-3" />
 				<div className="flex gap-3 sm:gap-5 flex-wrap justify-center md:justify-start">
 					{pageTransactions.length ? (
 						pageTransactions.map((report: Report) => (
@@ -158,119 +148,22 @@ export function ReportsView({ reports }: IPageData) {
 						</section>
 					)}
 				</div>
-				<section className="flex flex-col justify-center items-center gap-2">
-					<ReportPaginator
-						needsPagination={needsPagination}
-						currentPage={currentPage}
-						maxPage={maxPage}
-						loadPage={loadPage}
-						pageNumbers={pageNumbers}
-					/>
-					<ShowingDisplay
-						currentPage={currentPage}
-						reportsSize={filteredReports.length}
-						itemsPerPage={itemsPerPage}
-					/>
-				</section>
+				{needsPagination && (
+					<section className="flex flex-col justify-center items-center gap-2">
+						<VDPaginator
+							needsPagination={needsPagination}
+							currentPage={currentPage}
+							maxPage={maxPage}
+							loadPage={loadPage}
+						/>
+						<ShowingDisplay
+							currentPage={currentPage}
+							totalItemAmount={filteredReports.length}
+							itemsPerPage={itemsPerPage}
+						/>
+					</section>
+				)}
 			</section>
 		</section>
 	);
 }
-
-interface IShowingDisplay {
-	currentPage: number;
-	reportsSize: number;
-	itemsPerPage: number;
-}
-
-const ShowingDisplay = ({
-	currentPage,
-	reportsSize,
-	itemsPerPage,
-}: IShowingDisplay) => {
-	return (
-		<p>
-			Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
-			{currentPage * itemsPerPage > reportsSize
-				? reportsSize
-				: currentPage * itemsPerPage}{" "}
-			of {reportsSize} results
-		</p>
-	);
-};
-
-interface IReportPaginator {
-	needsPagination: boolean;
-	currentPage: number;
-	maxPage: number;
-	loadPage: (pageNum: number) => void;
-	pageNumbers: number[];
-}
-
-const ReportPaginator = ({
-	needsPagination,
-	currentPage,
-	maxPage,
-	loadPage,
-	pageNumbers,
-}: IReportPaginator) => {
-	const isDesktop = useMediaQuery("(min-width: 768px)");
-	const maxPagesInPagination = isDesktop ? 9 : 5;
-	if (!needsPagination) {
-		return null;
-	}
-
-	//  Get the page numbers to display in the pagination, and try to keep the current page in the middle
-	const pagesInPagination = pageNumbers.slice(
-		Math.max(0, currentPage - 1 - Math.floor(maxPagesInPagination / 2)),
-		Math.min(
-			pageNumbers.length,
-			currentPage - 1 + Math.ceil(maxPagesInPagination / 2),
-		),
-	);
-
-	return (
-		<Pagination className="pt-6">
-			<PaginationContent>
-				<PaginationItem className="hover:cursor-pointer">
-					<PaginationPrevious
-						onClick={() => (currentPage > 1 ? loadPage(currentPage - 1) : null)}
-						className={cn(
-							buttonVariants({ variant: "secondary", size: "sm" }),
-							"bg-vd-beige-300 hover:bg-vd-beige-400",
-							currentPage === 1
-								? "cursor-not-allowed opacity-50 hover:bg-initial focus:bg-none"
-								: "",
-						)}
-					/>
-				</PaginationItem>
-
-				{pagesInPagination.map((pageNum, index) => (
-					<PaginationItem
-						onClick={() => loadPage(pageNum)}
-						className="hover:cursor-pointer"
-						key={`page-${pageNum}`}
-					>
-						<PaginationLink isActive={currentPage === pageNum}>
-							{pageNum}
-						</PaginationLink>
-					</PaginationItem>
-				))}
-				<PaginationItem className="hover:cursor-pointer">
-					<PaginationNext
-						onClick={() =>
-							currentPage < maxPage ? loadPage(currentPage + 1) : null
-						}
-						className={cn(
-							buttonVariants({ variant: "secondary", size: "sm" }),
-							"bg-vd-beige-300 hover:bg-vd-beige-400",
-							currentPage === maxPage
-								? "cursor-not-allowed opacity-50 hover:bg-initial focus:bg-none"
-								: "",
-						)}
-					/>
-				</PaginationItem>
-			</PaginationContent>
-		</Pagination>
-	);
-};
