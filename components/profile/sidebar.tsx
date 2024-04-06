@@ -1,3 +1,8 @@
+"use client"
+
+import { AnonAadhaarProvider, LogInWithAnonAadhaar, useAnonAadhaar, AnonAadhaarProof } from "@anon-aadhaar/react";
+import { useEffect } from "react";
+
 import { buttonVariants } from "@/components/ui/button";
 import {
 	Card,
@@ -8,8 +13,15 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 const SideBar = () => {
+  const [anonAadhaar] = useAnonAadhaar();
+
+	useEffect(() => {
+		console.log("Anon Aadhaar status: ", anonAadhaar.status);
+	}, [anonAadhaar]);
+
 	return (
 		<section className="flex flex-col gap-4 md:col-span-1 md:row-span-2">
 			<Card
@@ -38,6 +50,7 @@ const SideBar = () => {
 					</Link>
 				</CardContent>
 			</Card>
+
 			<Card
 				className={cn("bg-vd-beige-300 rounded-3xl shadow-none border-none")}
 			>
@@ -56,17 +69,20 @@ const SideBar = () => {
 						features on the VoiceDeck platform.
 					</CardDescription>
 				</CardHeader>
-				<CardContent>
-					<div className="flex flex-col gap-2 w-full px-2">
-						<Link
-							href="/my-actions/record"
-							className={cn(
-								buttonVariants({ variant: "default", size: "lg" }),
-								"w-full",
-							)}
-						>
-							Verify now
-						</Link>
+				<CardContent>   
+					<div className="flex flex-col gap-2 w-full items-center">
+            <AnonAadhaarProvider _useTestAadhaar={true}>
+              {anonAadhaar?.status !== "logged-in" && 
+                <LogInWithAnonAadhaar />
+              }
+              {anonAadhaar?.status === "logged-in" && (
+                <>
+                  <p>✅ Proof is valid</p>
+                  <AnonAadhaarProof code={JSON.stringify(anonAadhaar.pcd, null, 2)} />
+                  <p>thank you for verifying your identity with AnonAadhaar!</p>
+                </>
+              )}
+            </AnonAadhaarProvider>
 						<a
 							href="https://voicedeck.org/faq#anonaadhaar"
 							target="_blank"
@@ -77,10 +93,16 @@ const SideBar = () => {
 							)}
 						>
 							Learn more
+              <ArrowUpRight
+                size={18}
+                className="opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+                aria-hidden="true"
+              />
 						</a>
 					</div>
 				</CardContent>
 			</Card>
+      
 		</section>
 	);
 };
