@@ -1,90 +1,98 @@
 import type { ISortingOption, Report } from "@/types";
 import type Fuse from "fuse.js";
+
 export const filterReports = (
   reports: Report[],
   filters: [string, string][],
   fuse: Fuse<Report>
 ) => {
-  return filters.reduce((filteredReports, [key, value]) => {
-    switch (key) {
-      case "q": {
-        const searchResults = fuse.search(value);
-        return searchResults.map((result) => result.item);
-      }
-      case "state": {
-        const states = filters
-          .filter(([filterKey]) => filterKey === "state")
-          .map(([, filterValue]) => filterValue);
-        return filteredReports.filter((report) =>
-          states.includes(report.state)
-        );
-      }
-      case "min":
-        return filteredReports.filter(
-          (report) =>
-            report.totalCost - report.fundedSoFar >= Number.parseInt(value, 10)
-        );
-      case "max":
-        return filteredReports.filter(
-          (report) =>
-            report.totalCost - report.fundedSoFar <= Number.parseInt(value, 10)
-        );
-      case "category":
-        return filteredReports.filter((report) => report.category === value);
-      case "outlet": {
-        const outlets = filters
-          .filter(([filterKey]) => filterKey === "outlet")
-          .map(([, filterValue]) =>
-            decodeURIComponent(filterValue).toLowerCase()
-          );
-        return filteredReports.filter((report) => {
-          if (!report.contributors.length) return false;
-          const outletName = report.contributors[0].toLowerCase();
-          return outlets.includes(outletName);
-        });
-      }
-      default:
-        return filteredReports;
+  // search first
+  let searchedReports = reports;
+  const searchQuery = filters.find(([filterKey]) => filterKey === "q")?.[1];
+  if (searchQuery) {
+    const searchResults = fuse.search(searchQuery);
+    searchedReports = searchResults.map((result) => result.item);
+  }
+
+  // pre-process filters
+  const statesSet = new Set(
+    filters
+      .filter(([filterKey]) => filterKey === "state")
+      .map(([, filterValue]) => filterValue)
+  );
+  const outletsSet = new Set(
+    filters
+      .filter(([filterKey]) => filterKey === "outlet")
+      .map(([, filterValue]) => decodeURIComponent(filterValue).toLowerCase())
+  );
+
+  const minAmountFromFilter = filters.find(
+    ([filterKey]) => filterKey === "min"
+  )?.[1];
+  const maxAmountFromFilter = filters.find(
+    ([filterKey]) => filterKey === "max"
+  )?.[1];
+  const minAmount = minAmountFromFilter
+    ? Number.parseInt(minAmountFromFilter, 10)
+    : null;
+  const maxAmount = maxAmountFromFilter
+    ? Number.parseInt(maxAmountFromFilter, 10)
+    : null;
+
+  return searchedReports.filter((report) => {
+    const remainingCost = report.totalCost - report.fundedSoFar;
+    // check state filter
+    if (statesSet.size > 0 && !statesSet.has(report.state)) return false;
+    // check outlet filter
+    if (outletsSet.size > 0 && report.contributors.length) {
+      const outletName = report.contributors[0].toLowerCase();
+      if (!outletName || !outletsSet.has(outletName)) return false;
     }
-  }, reports);
+    // check category
+    if (
+      filters.some(
+        ([key, value]) => key === "category" && report.category !== value
+      )
+    ) {
+      return false;
+    }
+
+    // check min and max amount filter
+    if (minAmount !== null && remainingCost < minAmount) return false;
+    if (maxAmount !== null && remainingCost > maxAmount) return false;
+
+    return true;
+  });
 };
 
 export const createFilterOptions = (reports: Report[]) => {
-  const uniqueCategories = reports
-    .map((report: Report, index: number) => ({
+  const uniqueCategoriesMap = new Map();
+  const uniqueOutletsMap = new Map();
+  const uniqueStatesMap = new Map();
+  const amountsNeeded = [];
+
+  for (let i = 0; i < reports.length; i++) {
+    const report = reports[i];
+    uniqueCategoriesMap.set(report.category, {
       label: report.category,
       value: report.category,
-    }))
-    .filter(
-      ({ value }, index, self) =>
-        index === self.findIndex((obj) => obj.value === value)
-    );
-
-  const uniqueOutlets = reports
-    .map((report: Report) => report.contributors[0])
-    .filter((outlet) => outlet && outlet.length > 0)
-    .map((outlet: string) => ({
-      label: outlet,
-      value: encodeURIComponent(outlet).toLowerCase(),
-    }))
-    .filter(
-      ({ value }, index, self) =>
-        index === self.findIndex((obj) => obj.value === value)
-    );
-
-  const uniqueStates = reports
-    .map((report: Report, index: number) => ({
+    });
+    if (report.contributors[0] && report.contributors[0].length > 0) {
+      uniqueOutletsMap.set(report.contributors[0].toLowerCase(), {
+        label: report.contributors[0],
+        value: encodeURIComponent(report.contributors[0]).toLowerCase(),
+      });
+    }
+    uniqueStatesMap.set(report.state, {
       label: report.state,
       value: report.state,
-    }))
-    .filter(
-      ({ value }, index, self) =>
-        index === self.findIndex((obj) => obj.value === value)
-    );
+    });
+    amountsNeeded.push(report.totalCost - report.fundedSoFar || 0);
+  }
 
-  const amountsNeeded = reports.map(
-    (report: Report) => report.totalCost - report.fundedSoFar || 0
-  );
+  const uniqueCategories = Array.from(uniqueCategoriesMap.values());
+  const uniqueOutlets = Array.from(uniqueOutletsMap.values());
+  const uniqueStates = Array.from(uniqueStatesMap.values());
   const minAmountNeeded = Math.min(...amountsNeeded);
   const maxAmountNeeded = Math.max(...amountsNeeded);
 

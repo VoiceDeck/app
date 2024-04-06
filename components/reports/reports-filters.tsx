@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Drawer,
 	DrawerClose,
@@ -11,6 +11,7 @@ import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Slider } from "@/components/ui/slider";
 import { useFilters } from "@/contexts/filter";
 import type { createFilterOptions } from "@/lib/search-filter-utils";
+import { cn } from "@/lib/utils";
 import { Filter } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { OutletCombobox } from "./outlet-combobox";
@@ -159,7 +160,7 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 					{uniqueCategories.map(({ label, value }) => (
 						<Badge
 							key={value}
-							className={`border-vd-blue-500 rounded-full flex flex-auto flex-col md:flex-row items-center gap-1 px-2 py-1 cursor-pointer ${
+							className={`border-vd-blue-500 rounded-2xl flex flex-auto flex-col items-center gap-1 px-2 py-3 cursor-pointer ${
 								selectedCategory === value
 									? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
 									: ""
@@ -223,25 +224,30 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 			{isMobileFilter && (
 				<DrawerFooter className="flex flex-wrap justify-center gap-2">
 					<section className="flex flex-wrap gap-2">
-						<DrawerClose className="flex gap-2 w-full">
-							<Button
-								variant={"secondary"}
-								className="flex-1"
+						<div className="flex gap-2 w-full">
+							<DrawerClose
+								className={cn(
+									buttonVariants({ variant: "secondary" }),
+									"flex-1",
+								)}
 								onClick={() =>
 									updateSearchParams(filters.filter(([key, _]) => key === "q"))
 								}
 							>
 								Clear filters
-							</Button>
-							<Button className="flex-1" variant={"outline"}>
+							</DrawerClose>
+							<DrawerClose
+								className={cn(buttonVariants({ variant: "outline" }), "flex-1")}
+							>
 								Cancel
-							</Button>
-						</DrawerClose>
+							</DrawerClose>
+						</div>
 					</section>
-					<DrawerClose>
-						<Button onClick={applyFilters} className="w-full">
-							Apply
-						</Button>
+					<DrawerClose
+						onClick={applyFilters}
+						className={cn(buttonVariants({ variant: "default" }), "w-full")}
+					>
+						Apply
 					</DrawerClose>
 				</DrawerFooter>
 			)}

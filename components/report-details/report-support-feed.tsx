@@ -1,111 +1,10 @@
 "use client";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
+import { ShowingDisplay, VDPaginator } from "@/components/global/vd-paginator";
+
 import { usePagination } from "@/hooks/use-pagination";
 import { truncateEthereumAddress } from "@/lib/utils";
 import type { Contribution } from "@/types";
 import { DotIcon } from "lucide-react";
-
-// const sampleContributions: Contribution[] = [
-// 	{
-// 		txid: "0x123",
-// 		hypercert_id: "0xabc",
-// 		amount: 100,
-// 		date_created: "2024-01-31T23:55:45.417Z",
-// 		sender: "0x3fD3A5699c3F3b2FB91688F8CD573eF4f8c4EbDA",
-// 		comment:
-// 			"This was important for my family lived in the village, thank you for your work.",
-// 	},
-// 	{
-// 		txid: "0x456",
-// 		hypercert_id: "0xdef",
-// 		amount: 45,
-// 		date_created: "2024-03-16T23:55:45.417Z",
-// 		sender: "0xBeB6fdF4efAd81b6328b68c8aBbF2aC3aB774781",
-// 		comment: "Awesome work! Looking forward to more",
-// 	},
-// 	{
-// 		txid: "0x789",
-// 		hypercert_id: "0xghi",
-// 		amount: 63,
-// 		date_created: "2024-01-31T23:55:45.417Z",
-// 		sender: "0x6AaF6C2DA9F3A9C2C13835B5FfE104bC8D042F3B",
-// 		comment: "Would give more but this is all I got right now",
-// 	},
-// 	{
-// 		txid: "0x101112",
-// 		hypercert_id: "0xjkl",
-// 		amount: 120,
-// 		date_created: "2024-02-14T23:55:45.417Z",
-// 		sender: "0x8eB0452cEBCfBf5BbE6c1aD24f2Ba2D29B0B04C5",
-// 		comment:
-// 			"The FitnessGram™ Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly, but gets faster each minute after you hear this signal. [beep] A single lap should be completed each time you hear this sound. [ding] Remember to run in a straight line, and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark, get ready, start. ",
-// 	},
-// 	{
-// 		txid: "0x131415",
-// 		hypercert_id: "0xmn0",
-// 		amount: 75,
-// 		date_created: "2024-04-25T23:55:45.417Z",
-// 		sender: "0x7e5F4552091A69125d5DfCb7b8C2659029395Bdf",
-// 		comment: "Glad to support this cause, every little helps! ",
-// 	},
-// 	{
-// 		txid: "0x161718",
-// 		hypercert_id: "0xpqr",
-// 		amount: 90,
-// 		date_created: "2024-05-30T23:55:45.417Z",
-// 		sender: "0x2F4B8fF5E0F6e200B9Cf57244A8058AeF0Dd3F4F",
-// 		comment: "Hope this contribution helps.",
-// 	},
-// 	{
-// 		txid: "0x192021",
-// 		hypercert_id: "0xstu",
-// 		amount: 150,
-// 		date_created: "2024-06-15T23:55:45.417Z",
-// 		sender: "0xDbC941fEc34e8965EbC4A25452ae7519d6BDa193",
-// 		comment:
-// 			"The FitnessGram™ Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly, but gets faster each minute after you hear this signal. [beep] A single lap should be completed each time you hear this sound. [ding] Remember to run in a straight line, and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark, get ready, start.",
-// 	},
-// 	{
-// 		txid: "0x222324",
-// 		hypercert_id: "0xvwx",
-// 		amount: 200,
-// 		date_created: "2024-06-15T23:55:45.417Z",
-// 		sender: "0x0A1e4D0B5c71B955c0a5993023fc48bA6E380496",
-// 		comment: "",
-// 	},
-// 	{
-// 		txid: "0x252627",
-// 		hypercert_id: "0xyz",
-// 		amount: 250,
-// 		date_created: "2024-07-20T12:34:56.789Z",
-// 		sender: "0x4B0897b0513fdC7C2E18C307e4fC813a76a204Ae",
-// 		comment: "Keep up the great work!",
-// 	},
-// 	{
-// 		txid: "0x282930",
-// 		hypercert_id: "0xabc1",
-// 		amount: 175,
-// 		date_created: "2024-08-05T08:30:00.123Z",
-// 		sender: "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4",
-// 		comment: "Happy to help for a good cause.",
-// 	},
-// 	{
-// 		txid: "0x313233",
-// 		hypercert_id: "0xdef2",
-// 		amount: 300,
-// 		date_created: "2024-09-15T17:45:30.456Z",
-// 		sender: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835CB2",
-// 		comment: "Inspiring initiative, proud to support!",
-// 	},
-// ];
 
 const transformDate = (timestamp: string) =>
 	new Date(timestamp).toLocaleDateString("en-US", {
@@ -168,7 +67,7 @@ const MobileFeed = ({ contributions }: { contributions: Contribution[] }) => {
 const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 	return (
 		<ol
-			className="border-l border-neutral-300 dark:border-neutral-500 hidden md:block"
+			className="border-l border-stone-300 dark:border-stone-500 hidden md:block"
 			aria-label="Contributions list"
 		>
 			{contributions.map((contribution) => (
@@ -182,7 +81,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 						aria-labelledby="contributor-info"
 					>
 						<span
-							className="-ml-[5px] mr-3 h-[9px] w-[9px] rounded-full bg-neutral-300 dark:bg-neutral-500"
+							className="-ml-[5px] mr-3 h-[9px] w-[9px] rounded-full bg-stone-300 dark:bg-stone-500"
 							aria-hidden="true"
 						/>
 						<div className="flex items-center gap-2" id="contributor-info">
@@ -202,7 +101,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 							)}
 							<DotIcon className="text-stone-400" aria-hidden="true" />
 							<p
-								className="text-sm text-neutral-500 dark:text-neutral-300"
+								className="text-sm text-stone-500 dark:text-stone-300"
 								aria-label={`Contribution date: ${transformDate(
 									contribution.date_created,
 								)}`}
@@ -214,7 +113,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 					{contribution.comment && (
 						<div className="mb-6 ml-4 mt-2">
 							<p
-								className="mb-3 text-neutral-500 dark:text-neutral-300"
+								className="mb-3 text-stone-500 dark:text-stone-300"
 								role="article"
 								aria-label="Contribution comment"
 							>
@@ -236,14 +135,15 @@ const ReportSupportFeed = ({
 			new Date(b.date_created).getTime() - new Date(a.date_created).getTime(),
 	);
 
+	const itemsPerPage = 8;
+
 	const {
 		currentPage,
 		currentPageItems: pageContributions,
 		loadPage,
 		maxPage,
-		pageNumbers,
 		needsPagination,
-	} = usePagination<Contribution>(contributionsBySupportDate, 8);
+	} = usePagination<Contribution>(contributionsBySupportDate, itemsPerPage);
 
 	if (!contributionsBySupportDate || !contributionsBySupportDate.length) {
 		return (
@@ -251,7 +151,7 @@ const ReportSupportFeed = ({
 				<h3 className="text-2xl font-semibold py-4" id="support-feed-title">
 					Support Feed
 				</h3>
-				<p className="text-neutral-500 dark:text-neutral-300">
+				<p className="text-stone-500 dark:text-stone-300">
 					Nothing to show yet. Be the first to support this cause!
 				</p>
 			</section>
@@ -260,53 +160,31 @@ const ReportSupportFeed = ({
 
 	return (
 		<section>
-			<h3 className="text-2xl font-semibold py-4">
-				Support Feed
-				<span className="text-base ml-2">
-					({contributionsBySupportDate.length})
-				</span>
-			</h3>
+			<h3 className="text-2xl font-semibold py-4">Support Feed</h3>
+			<ShowingDisplay
+				currentPage={currentPage}
+				totalItemAmount={contributionsBySupportDate.length}
+				itemsPerPage={itemsPerPage}
+			/>
 
-			<section>
+			<section className="pt-3">
 				<MobileFeed contributions={pageContributions} />
 				<DesktopFeed contributions={pageContributions} />
 
-				{/* Pagination */}
 				{needsPagination && (
-					<Pagination>
-						<PaginationContent>
-							<PaginationItem className="hover:cursor-pointer">
-								<PaginationPrevious
-									onClick={() =>
-										currentPage > 1 ? loadPage(currentPage - 1) : null
-									}
-								/>
-							</PaginationItem>
-							{pageNumbers.map((pageNum, index) => (
-								<PaginationItem
-									onClick={() => loadPage(pageNum)}
-									className="hover:cursor-pointer"
-									key={`page-${pageNum}`}
-								>
-									<PaginationLink isActive={currentPage === pageNum}>
-										{pageNum}
-									</PaginationLink>
-								</PaginationItem>
-							))}
-							{maxPage > 4 && (
-								<PaginationItem>
-									<PaginationEllipsis />
-								</PaginationItem>
-							)}
-							<PaginationItem className="hover:cursor-pointer">
-								<PaginationNext
-									onClick={() =>
-										currentPage < maxPage ? loadPage(currentPage + 1) : null
-									}
-								/>
-							</PaginationItem>
-						</PaginationContent>
-					</Pagination>
+					<section className="flex flex-col items-center gap-2 pt-4">
+						<VDPaginator
+							needsPagination={needsPagination}
+							currentPage={currentPage}
+							maxPage={maxPage}
+							loadPage={loadPage}
+						/>
+						<ShowingDisplay
+							currentPage={currentPage}
+							totalItemAmount={contributionsBySupportDate.length}
+							itemsPerPage={itemsPerPage}
+						/>
+					</section>
 				)}
 			</section>
 		</section>

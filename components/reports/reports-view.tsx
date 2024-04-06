@@ -1,15 +1,6 @@
 "use client";
 import ReportCard from "@/components/reports/report-card";
 import ReportsHeader from "@/components/reports/reports-header";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
 import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
@@ -22,6 +13,7 @@ import {
 import type { ISortingOption, Report } from "@/types";
 import Fuse from "fuse.js";
 import { useCallback, useMemo, useState } from "react";
+import { ShowingDisplay, VDPaginator } from "../global/vd-paginator";
 import { SidebarFilter } from "./filter-sidebar";
 
 interface IPageData {
@@ -80,7 +72,6 @@ export function ReportsView({ reports }: IPageData) {
 		currentPageItems: pageTransactions,
 		loadPage,
 		maxPage,
-		pageNumbers,
 		needsPagination,
 	} = usePagination<Report>(filteredReports, itemsPerPage);
 
@@ -113,14 +104,13 @@ export function ReportsView({ reports }: IPageData) {
 					setActiveSort={setActiveSortOption}
 				/>
 				{filteredReports.length > 0 && (
-					<div className="pb-3">
-						Showing {(currentPage - 1) * itemsPerPage + 1} -{" "}
-						{currentPage * itemsPerPage > filteredReports.length
-							? filteredReports.length
-							: currentPage * itemsPerPage}{" "}
-						of {filteredReports.length} results
-					</div>
+					<ShowingDisplay
+						currentPage={currentPage}
+						totalItemAmount={filteredReports.length}
+						itemsPerPage={itemsPerPage}
+					/>
 				)}
+				<div className="p-3" />
 				<div className="flex gap-3 sm:gap-5 flex-wrap justify-center md:justify-start">
 					{pageTransactions.length ? (
 						pageTransactions.map((report: Report) => (
@@ -158,48 +148,20 @@ export function ReportsView({ reports }: IPageData) {
 						</section>
 					)}
 				</div>
-
 				{needsPagination && (
-					<Pagination className="pt-6">
-						<PaginationContent>
-							<PaginationItem className="hover:cursor-pointer">
-								<PaginationPrevious
-									onClick={() =>
-										currentPage > 1 ? loadPage(currentPage - 1) : null
-									}
-								/>
-							</PaginationItem>
-							{pageNumbers
-								.filter((pageNum) =>
-									[currentPage - 1, currentPage, currentPage + 1].includes(
-										pageNum,
-									),
-								)
-								.map((pageNum, index) => (
-									<PaginationItem
-										onClick={() => loadPage(pageNum)}
-										className="hover:cursor-pointer"
-										key={`page-${pageNum}`}
-									>
-										<PaginationLink isActive={currentPage === pageNum}>
-											{pageNum}
-										</PaginationLink>
-									</PaginationItem>
-								))}
-							{maxPage > 3 && (
-								<PaginationItem>
-									<PaginationEllipsis />
-								</PaginationItem>
-							)}
-							<PaginationItem className="hover:cursor-pointer">
-								<PaginationNext
-									onClick={() =>
-										currentPage < maxPage ? loadPage(currentPage + 1) : null
-									}
-								/>
-							</PaginationItem>
-						</PaginationContent>
-					</Pagination>
+					<section className="flex flex-col justify-center items-center gap-2">
+						<VDPaginator
+							needsPagination={needsPagination}
+							currentPage={currentPage}
+							maxPage={maxPage}
+							loadPage={loadPage}
+						/>
+						<ShowingDisplay
+							currentPage={currentPage}
+							totalItemAmount={filteredReports.length}
+							itemsPerPage={itemsPerPage}
+						/>
+					</section>
 				)}
 			</section>
 		</section>

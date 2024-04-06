@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 /**
@@ -17,60 +17,48 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
  *
  * @template GT - The generic type parameter allows for the use of this hook with any type of item array.
  */
-export const usePagination = <GT,>(items: GT[], itemsPerPage: number) => {
-	const [currentPage, setCurrentPage] = useState(1);
-	const currentPageRef = useRef(currentPage);
-	currentPageRef.current = currentPage;
+export const usePagination = <GT>(items: GT[], itemsPerPage: number) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const currentPageRef = useRef(currentPage);
+  currentPageRef.current = currentPage;
 
-	// `useMemo` because we don't want to recalculate these values on every render
-	const maxPage = useMemo(
-		() => Math.ceil(items.length / itemsPerPage),
-		[items.length, itemsPerPage],
-	);
-	const needsPagination = useMemo(
-		() => items.length > itemsPerPage,
-		[items.length, itemsPerPage],
-	);
-	const pageNumbers = useMemo(
-		() => Array.from({ length: maxPage }, (_, i) => i + 1),
-		[maxPage],
-	);
+  // `useMemo` because we don't want to recalculate these values on every render
+  const maxPage = useMemo(
+    () => Math.ceil(items.length / itemsPerPage),
+    [items.length, itemsPerPage]
+  );
+  const needsPagination = useMemo(
+    () => items.length > itemsPerPage,
+    [items.length, itemsPerPage]
+  );
+  // no 'useMemo' for these, we need to recalculate to render correct reports
+  // when filter/sort options are updated
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const currentPageItems = needsPagination ? items.slice(start, end) : items;
 
-	// const currentPageItems = useMemo(() => {
-	// 	const start = (currentPage - 1) * itemsPerPage;
-	// 	const end = start + itemsPerPage;
-	// 	return needsPagination ? items.slice(start, end) : items;
-	// }, [currentPage, items, itemsPerPage, needsPagination]);
+  // 'useCallback' because we don't want to recreate this function on every render
+  const loadPage = useCallback(
+    (pageNumber: number) => {
+      if (!needsPagination || pageNumber < 1 || pageNumber > maxPage) return;
+      setCurrentPage(pageNumber);
+    },
+    [needsPagination, maxPage]
+  );
 
-	// removing these from useMemo(), need recalculation to render correct reports
-	// when filter/sort options are updated
-	const start = (currentPage - 1) * itemsPerPage;
-	const end = start + itemsPerPage;
-	const currentPageItems = needsPagination ? items.slice(start, end) : items;
+  // Use an effect to update the current page if needed based on the ref
+  useEffect(() => {
+    const currentPage = currentPageRef.current;
+    if (!needsPagination || currentPage < 1 || currentPage > maxPage) {
+      setCurrentPage(1);
+    }
+  }, [maxPage, needsPagination]);
 
-	// 'useCallback' because we don't want to recreate this function on every render
-	const loadPage = useCallback(
-		(pageNumber: number) => {
-			if (!needsPagination || pageNumber < 1 || pageNumber > maxPage) return;
-			setCurrentPage(pageNumber);
-		},
-		[needsPagination, maxPage],
-	);
-
-	// Use an effect to update the current page if needed based on the ref
-	useEffect(() => {
-		const currentPage = currentPageRef.current;
-		if (!needsPagination || currentPage < 1 || currentPage > maxPage) {
-			setCurrentPage(1);
-		}
-	}, [maxPage, needsPagination]);
-
-	return {
-		currentPage,
-		currentPageItems,
-		loadPage,
-		maxPage,
-		needsPagination,
-		pageNumbers,
-	};
+  return {
+    currentPage,
+    currentPageItems,
+    loadPage,
+    maxPage,
+    needsPagination,
+  };
 };

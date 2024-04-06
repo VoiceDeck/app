@@ -74,6 +74,7 @@ export async function processNewContribution(
       hypercert_id: hypercertId,
       amount: amount,
       txid: txId,
+      date_created: new Date().toISOString(),
       comment: comment,
     } as Contribution;
     // create a contribution record in Directus

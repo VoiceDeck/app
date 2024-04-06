@@ -1,17 +1,19 @@
-import { useGetCurrentERC20Allowance } from "@/hooks/use-get-current-erc20-allowance";
 import type { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
+import type { EthersError } from "ethers";
 import { useState } from "react";
 import type { Address } from "viem";
 import { waitForTransactionReceipt } from "viem/actions";
 import type { UsePublicClientReturnType } from "wagmi";
 
 export enum TransactionStatuses {
-  PreparingOrder = "preparingOrder",
-  Approval = "approval",
-  SignForBuy = "signForBuy",
-  Pending = "pending",
-  Confirmed = "confirmed",
-  Failed = "failed",
+  PreparingOrder = 0,
+  Approval = 1,
+  SignForBuy = 2,
+  Pending = 3,
+  Confirmed = 4,
+  Failed = 5,
+  InsufficientFunds = 6,
+  ActionRejected = 7,
 }
 
 const useHandleBuyFraction = (
@@ -21,7 +23,6 @@ const useHandleBuyFraction = (
   const [transactionStatus, setTransactionStatus] =
     useState<keyof typeof TransactionStatuses>("Pending");
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
-  const currentAllowance = useGetCurrentERC20Allowance();
 
   const handleBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -39,8 +40,6 @@ const useHandleBuyFraction = (
       throw new Error("No order found");
     }
 
-    console.log({ order, amount, address, hypercertId, comment });
-    console.log(order.price);
     const takerOrder = hypercertExhangeClient.createFractionalSaleTakerBid(
       order,
       address,
@@ -58,10 +57,8 @@ const useHandleBuyFraction = (
 
       setTransactionStatus("SignForBuy");
       const myAmount = BigInt(order.price) * amount;
-      console.log(`myAmount: ${myAmount}`);
       const tx = await call({ value: myAmount });
 
-      console.log(`amountInDollars: ${amountInDollars}`);
       fetch("/api/contributions", {
         method: "POST",
         headers: {
@@ -81,12 +78,20 @@ const useHandleBuyFraction = (
       const txnReceipt = await waitForTransactionReceipt(publicClient, {
         hash: tx.hash as `0x${string}`,
       });
-      console.log({ txnReceipt });
       setTransactionStatus("Confirmed");
       return txnReceipt;
     } catch (e) {
-      console.error(e);
-      setTransactionStatus("Failed");
+      const error = e as EthersError;
+      if (error.code === "INSUFFICIENT_FUNDS") {
+        setTransactionStatus("InsufficientFunds");
+        return;
+      }
+      if (error.code === "ACTION_REJECTED") {
+        setTransactionStatus("ActionRejected");
+        return;
+      }
+      setTransactionStatus("Failed"); // generic fail error
+      return;
     }
   };
 
