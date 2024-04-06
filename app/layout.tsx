@@ -53,9 +53,9 @@ export default function RootLayout({
 				)}
 			>
 				<WagmiContextProvider initialState={initialState}>
-					<NavMenu />
-					<div className="flex-1">{children}</div>
-					<Footer />
+          <NavMenu />
+          <div className="flex-1">{children}</div>
+          <Footer />
 				</WagmiContextProvider>
 			</body>
 		</html>
