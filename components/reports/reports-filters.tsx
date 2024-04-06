@@ -243,7 +243,10 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 							</DrawerClose>
 						</div>
 					</section>
-					<DrawerClose onClick={applyFilters} className="w-full">
+					<DrawerClose
+						onClick={applyFilters}
+						className={cn(buttonVariants({ variant: "default" }), "w-full")}
+					>
 						Apply
 					</DrawerClose>
 				</DrawerFooter>
