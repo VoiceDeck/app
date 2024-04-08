@@ -1,6 +1,11 @@
-"use client"
+"use client";
 
-import { AnonAadhaarProvider, LogInWithAnonAadhaar, useAnonAadhaar, AnonAadhaarProof } from "@anon-aadhaar/react";
+import {
+	AnonAadhaarProof,
+	AnonAadhaarProvider,
+	LogInWithAnonAadhaar,
+	useAnonAadhaar,
+} from "@anon-aadhaar/react";
 import { useEffect } from "react";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -11,12 +16,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { ArrowUpRight, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 
 const SideBar = () => {
-  const [anonAadhaar] = useAnonAadhaar();
+	const [anonAadhaar] = useAnonAadhaar();
 
 	useEffect(() => {
 		console.log("Anon Aadhaar status: ", anonAadhaar.status);
@@ -73,18 +78,17 @@ const SideBar = () => {
 				</CardHeader>
 				<CardContent>
 					<div className="flex flex-col gap-2 w-full items-center">
-            <AnonAadhaarProvider _useTestAadhaar={true}>
-              {anonAadhaar?.status !== "logged-in" &&
-                <LogInWithAnonAadhaar />
-              }
-              {anonAadhaar?.status === "logged-in" && (
-                <>
-                  <p>✅ Proof is valid</p>
-                  <AnonAadhaarProof code={JSON.stringify(anonAadhaar.pcd, null, 2)} />
-                  <p>thank you for verifying your identity with AnonAadhaar!</p>
-                </>
-              )}
-            </AnonAadhaarProvider>
+						<AnonAadhaarProvider _useTestAadhaar={true}>
+							{anonAadhaar?.status !== "logged-in" && (
+								<LogInWithAnonAadhaar nullifierSeed={226169764947124} />
+							)}
+							{anonAadhaar?.status === "logged-in" && (
+								<>
+									<p>✅ Proof is valid</p>
+									<p>thank you for verifying your identity with AnonAadhaar!</p>
+								</>
+							)}
+						</AnonAadhaarProvider>
 						<a
 							href="https://voicedeck.org/faq#anonaadhaar"
 							target="_blank"
@@ -95,16 +99,15 @@ const SideBar = () => {
 							)}
 						>
 							Learn more
-              <ArrowUpRight
-                size={18}
-                className="opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
-                aria-hidden="true"
-              />
+							<ArrowUpRight
+								size={18}
+								className="opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+								aria-hidden="true"
+							/>
 						</a>
 					</div>
 				</CardContent>
 			</Card>
-
 		</section>
 	);
 };
