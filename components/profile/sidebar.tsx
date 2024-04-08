@@ -43,14 +43,6 @@ const AnonAadhaarCard = () => {
 				<div className="flex flex-col gap-2 w-full px-2">
 					<div className="flex flex-col gap-1 justify-center items-center w-full">
 						<LogInWithAnonAadhaar nullifierSeed={893772993} />
-						{/* {anonAadhaar.status === "logged-in" && (
-                  <Alert className="flex justify-center w-full gap-1 bg-stone-100">
-                    <CheckCircle2 size={24} className="text-green-600" />
-                    <p className="text-center text-vd-blue-900">
-                      Thanks for being an advocate
-                    </p>
-                  </Alert>
-                )} */}
 					</div>
 					<a
 						href="https://voicedeck.org/faq#anonaadhaar"
