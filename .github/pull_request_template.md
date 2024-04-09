@@ -16,4 +16,4 @@ Before making your PR, please check the following:
 
 - [ ] Critical lint errors are resolved
 - [ ] App runs locally
-- [ ] App builds locally (run the `bun build` and resolve any errors before the PR when possible)
+- [ ] App builds locally (run the `bun run build` and resolve any errors before the PR when possible)
