@@ -1,4 +1,4 @@
-name: Tests
+name: Build
 
 on:
   push:
@@ -17,27 +17,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: 8
+          bun-version: 'latest'
 
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
 
-      - run: pnpm install
+      - run: bun install --frozen-lockfile
 
-      - run: pnpm build
+      - run: bun build
         env:
           HC_OWNER_ADDRESS: ${{ secrets.HC_OWNER_ADDRESS }}
           NEXT_PUBLIC_WC_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WC_PROJECT_ID }}
-          INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
-          INFURA_SEPOLIA_RPC_URL: ${{ secrets.INFURA_SEPOLIA_RPC_URL }}
-          INFURA_MAINNET_RPC_URL: ${{ secrets.INFURA_MAINNET_RPC_URL }}
-          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
           CMS_ENDPOINT: ${{ secrets.CMS_ENDPOINT }}
-
-      # - name: Test server functionality
-      #   run: pnpm exec vitest
