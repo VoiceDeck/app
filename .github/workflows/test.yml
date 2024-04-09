@@ -28,6 +28,9 @@ jobs:
           node-version: 20
 
       - run: bun install --frozen-lockfile
+        continue-on-error: true
+
+      - run: bun install --frozen-lockfile
 
       - run: bun build
         env:
