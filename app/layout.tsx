@@ -14,6 +14,7 @@ import { WagmiContextProvider } from "@/contexts/wagmi";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
+	metadataBase: new URL("https://app.voicedeck.org/"),
 	title: { default: siteConfig.name, template: "%s | VoiceDeck" },
 	description: siteConfig.description,
 	icons: [
