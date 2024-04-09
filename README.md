@@ -62,13 +62,13 @@ Ethereum Sepolia: The Hypercert Marketplace is currently deployed on Sepolia Tes
 #### Install dependencies
 
 ```bash
-  cd app && pnpm install
+  cd app && bun install
 ```
 
 #### Start the server
 
 ```bash
-  pnpm dev
+  bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
