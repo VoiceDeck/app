@@ -32,11 +32,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Build
+      - name: Build (1/2)
         run: bun install --frozen-lockfile
         continue-on-error: true
 
-      - name: Build
+      - name: Build (2/2)
         run: bun install --frozen-lockfile
 
       - name: ${{ matrix.command }}
