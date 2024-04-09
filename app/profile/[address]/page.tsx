@@ -36,20 +36,16 @@ async function getContributionsHistoryData(address: `0x${string}`) {
 				};
 			},
 		);
-
 		const historyResults = await Promise.all(historyPromises);
 		const history = historyResults.filter(isNotNull);
-
 		let totalAmount = 0;
 		const categoryCounts: { [key: string]: number } = {};
 		const reportCount = history.length;
-
 		for (const entry of history) {
 			totalAmount += entry.amount;
 			categoryCounts[entry.category] =
 				(categoryCounts[entry.category] || 0) + 1;
 		}
-
 		// Returning history, categoryCounts, and totalAmount directly
 		return { history, categoryCounts, totalAmount, reportCount };
 	} catch (error) {
@@ -73,6 +69,7 @@ export default async function ProfilePage({
 		totalAmount = 0,
 		reportCount = 0,
 	} = await getContributionsHistoryData(address);
+
 	return (
 		<main className="p-4 md:px-6 xl:px-0 md:py-8 md:max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 auto-rows-auto md:gap-4 gap-4 text-vd-blue-900 mb-6 max-w-6xl pb-16 md:pb-0">
 			<header className="md:col-span-3 flex justify-between my-4">
