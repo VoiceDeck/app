@@ -22,18 +22,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: 8
+          bun-version: 'latest'
 
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
 
-      - name: Build
-        run: pnpm install
+      - name: Build (1/2)
+        run: bun install --frozen-lockfile
+        continue-on-error: true
+
+      - name: Build (2/2)
+        run: bun install --frozen-lockfile
 
       - name: ${{ matrix.command }}
-        run: pnpm run ${{ matrix.command }}
+        run: bun run ${{ matrix.command }}

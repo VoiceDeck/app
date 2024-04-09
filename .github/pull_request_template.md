@@ -1,7 +1,3 @@
-## Linear Ticket
-
-Add the link to the Linear ticket here.
-
 ## Overview
 
 Overview of the changes in the PR.
@@ -19,5 +15,4 @@ Considering adding a screenshot or screencapture of the changes.
 Before making your PR, please check the following:
 
 - [ ] Critical lint errors are resolved
-- [ ] App runs locally
-- [ ] App builds locally (run the `npm build` and resolve any errors before the PR when possible)
+- [ ] App runs locally- [ ] App builds locally (run the `bun build` and resolve any errors before the PR when possible)

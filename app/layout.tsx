@@ -15,6 +15,7 @@ import { headers } from "next/headers";
 import Script from "next/script";
 
 export const metadata: Metadata = {
+	metadataBase: new URL("https://app.voicedeck.org/"),
 	title: { default: siteConfig.name, template: "%s | VoiceDeck" },
 	description: siteConfig.description,
 	icons: [
