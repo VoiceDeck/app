@@ -12,6 +12,7 @@ import {
 } from "@/lib/search-filter-utils";
 import type { ISortingOption, Report } from "@/types";
 import Fuse from "fuse.js";
+import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import { ShowingDisplay, VDPaginator } from "../global/vd-paginator";
 import { SidebarFilter } from "./filter-sidebar";
@@ -130,11 +131,14 @@ export function ReportsView({ reports }: IPageData) {
 					) : (
 						<section className="w-full flex justify-center items-center py-6">
 							<div className="flex flex-col items-center text-center pb-24 md:pb-10">
-								<img
-									className="h-20 w-20"
-									src="/reports_not_found.svg"
-									alt="flower illustration"
-								/>
+								<div className="h-20 w-20">
+									<Image
+										src="/reports_not_found.svg"
+										alt="flower illustration"
+										height={20}
+										width={20}
+									/>
+								</div>
 								<p className="text-lg font-bold text-vd-beige-600">
 									We couldn't find any reports matching your search or filter.
 								</p>
