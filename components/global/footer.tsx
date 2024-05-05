@@ -1,5 +1,6 @@
 "use client";
 import { ArrowUpRight, Menu, Newspaper, X } from "lucide-react";
+import Image from "next/image";
 
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/drawer";
 import { externalLinks } from "@/config/site";
 import { cn } from "@/lib/utils";
+import Logo from "@/public/logo.svg";
 import Link from "next/link";
 import { WalletProfile } from "./wallet-profile";
 
@@ -58,9 +60,11 @@ const MobileFooter = () => {
 						<DrawerContent>
 							<DrawerHeader>
 								<div className="flex justify-center">
-									<img
+									<Image
 										className="h-10 w-10"
-										src={"/logo.svg"}
+										height={20}
+										width={20}
+										src={Logo}
 										alt="VoiceDeck Logo"
 									/>
 								</div>
