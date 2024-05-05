@@ -7,8 +7,6 @@ import { fetchReports } from "@/lib/impact-reports";
 import type { Report } from "@/types";
 import Image from "next/image";
 
-import hero from "@/public/hero_img.webp";
-
 export default async function ReportsPage() {
 	let uniqueReports: Report[];
 	let numOfContributors: number;
@@ -33,9 +31,8 @@ export default async function ReportsPage() {
 				<header className="relative overflow-hidden w-full flex flex-col justify-end max-w-screen-xl min-[2560px]:max-w-screen-2xl h-[420px] 2xl:h-[520px] min-[2560px]:h-[720px] text-vd-beige-100 rounded-3xl p-4 md:p-8 2xl:p-16">
 					<Image
 						className="object-cover bg-center -z-10"
-						src={hero}
+						src={"/hero_img.webp"}
 						alt="Hero Image"
-						placeholder="blur"
 						fill
 						priority
 					/>

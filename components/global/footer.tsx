@@ -1,6 +1,7 @@
 "use client";
 import { ArrowUpRight, Menu, Newspaper, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -13,8 +14,6 @@ import {
 } from "@/components/ui/drawer";
 import { externalLinks } from "@/config/site";
 import { cn } from "@/lib/utils";
-import Logo from "@/public/logo.svg";
-import Link from "next/link";
 import { WalletProfile } from "./wallet-profile";
 
 const Footer = () => {
@@ -64,7 +63,7 @@ const MobileFooter = () => {
 										className="h-10 w-10"
 										height={20}
 										width={20}
-										src={Logo}
+										src={"/logo.svg"}
 										alt="VoiceDeck Logo"
 									/>
 								</div>
