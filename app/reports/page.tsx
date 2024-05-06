@@ -55,12 +55,10 @@ export default async function ReportsPage() {
 					<ReportsView reports={uniqueReports} />
 				</FilterProvider>
 			) : (
-				<section className="flex flex-col items-center w-full pt-6 pb-24 md:pb-6">
-					<img
-						className="h-18 w-full md:w-96"
-						src="/history-bg.svg"
-						alt="circular pattern"
-					/>
+				<section className="flex flex-col gap-4 items-center w-full pt-6 pb-24 md:pb-6">
+					<div className="relative h-20 md:h-40 w-full">
+						<Image fill src="/history-bg.svg" alt="circular pattern" />
+					</div>
 					<div className="text-vd-beige-600 text-xl font-bold text-center">
 						<p>Sorry, something went wrong.</p>
 						<p>Reports cannot be displayed right now.</p>
