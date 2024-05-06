@@ -48,6 +48,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 							className="object-cover bg-center"
 							src={image}
 							alt={title}
+							sizes="(min-width: 780px) 278px, (min-width: 640px) 248px, (min-width: 420px) calc(100vw - 26px), calc(20vw + 294px)"
 							fill
 						/>
 					</div>

@@ -38,6 +38,7 @@ export default async function ReportsPage() {
 						src={hero}
 						alt="Hero Image"
 						placeholder="blur"
+						sizes="(min-width: 2560px) 1536px, (min-width: 1400px) 1280px, 93.7vw"
 						fill
 						priority
 					/>
