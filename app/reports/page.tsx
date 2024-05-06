@@ -1,3 +1,8 @@
+import Image from "next/image";
+
+import hero from "@/assets/hero_img.webp";
+import noReportsImage from "@/assets/history-bg.svg";
+
 import { ReportsView } from "@/components/reports/reports-view";
 import VoicedeckStats from "@/components/reports/voicedeck-stats";
 import { siteConfig } from "@/config/site";
@@ -5,7 +10,6 @@ import { FilterProvider } from "@/contexts/filter";
 import { getNumberOfContributors } from "@/lib/directus";
 import { fetchReports } from "@/lib/impact-reports";
 import type { Report } from "@/types";
-import Image from "next/image";
 
 export default async function ReportsPage() {
 	let uniqueReports: Report[];
@@ -31,8 +35,9 @@ export default async function ReportsPage() {
 				<header className="relative overflow-hidden w-full flex flex-col justify-end max-w-screen-xl min-[2560px]:max-w-screen-2xl h-[420px] 2xl:h-[520px] min-[2560px]:h-[720px] text-vd-beige-100 rounded-3xl p-4 md:p-8 2xl:p-16">
 					<Image
 						className="object-cover bg-center -z-10"
-						src={"/hero_img.webp"}
+						src={hero}
 						alt="Hero Image"
+						placeholder="blur"
 						fill
 						priority
 					/>
@@ -57,7 +62,7 @@ export default async function ReportsPage() {
 			) : (
 				<section className="flex flex-col gap-4 items-center w-full pt-6 pb-24 md:pb-6">
 					<div className="relative h-20 md:h-40 w-full">
-						<Image fill src="/history-bg.svg" alt="circular pattern" />
+						<Image fill src={noReportsImage} alt="circular pattern" />
 					</div>
 					<div className="text-vd-beige-600 text-xl font-bold text-center">
 						<p>Sorry, something went wrong.</p>
