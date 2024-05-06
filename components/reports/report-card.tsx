@@ -45,10 +45,11 @@ const ReportCard: React.FC<ReportCardProps> = ({
 				<CardHeader className="p-0">
 					<div className="relative w-full h-40 overflow-hidden rounded-t-3xl">
 						<Image
+							className="object-cover bg-center"
 							src={image}
 							alt={title}
+							sizes="(min-width: 780px) 278px, (min-width: 640px) 248px, (min-width: 420px) calc(100vw - 26px), calc(20vw + 294px)"
 							fill
-							style={{ objectFit: "cover", objectPosition: "center" }}
 						/>
 					</div>
 					<section className="flex flex-col gap-1 px-5 py-2">

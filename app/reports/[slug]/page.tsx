@@ -11,6 +11,7 @@ import type { Report } from "@/types";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 interface ReportPageProps {
@@ -114,11 +115,14 @@ export default async function ReportPage({ params }: ReportPageProps) {
 							<h3 className="font-bold text-2xl pb-3">Summary</h3>
 							<p className="text-wrap leading-relaxed">{report.summary}</p>
 						</div>
-						<img
-							src={report.image}
-							alt="Report illustration"
-							className="rounded-2xl md:h-[420px] md:object-cover md:w-full"
-						/>
+						<div className="relative rounded-2xl md:h-[420px] h-[358px] w-full overflow-hidden">
+							<Image
+								src={report.image}
+								alt="Report illustration"
+								className="-z-10 object-cover bg-center"
+								fill
+							/>
+						</div>
 						{htmlParsedStory && (
 							<article className="prose text-vd-blue-900">
 								{htmlParsedStory}

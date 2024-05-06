@@ -1,5 +1,7 @@
 "use client";
 import { ArrowUpRight, Menu, Newspaper, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -12,7 +14,6 @@ import {
 } from "@/components/ui/drawer";
 import { externalLinks } from "@/config/site";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { WalletProfile } from "./wallet-profile";
 
 const Footer = () => {
@@ -58,8 +59,10 @@ const MobileFooter = () => {
 						<DrawerContent>
 							<DrawerHeader>
 								<div className="flex justify-center">
-									<img
+									<Image
 										className="h-10 w-10"
+										height={20}
+										width={20}
 										src={"/logo.svg"}
 										alt="VoiceDeck Logo"
 									/>
@@ -106,7 +109,13 @@ const DesktopFooter = () => {
 		<div className="hidden md:flex md:container h-32 items-center justify-between">
 			<div className="flex flex-col">
 				<Link href={"/reports"} passHref className="flex items-center gap-2">
-					<img className="h-8 w-8" src={"/logo.svg"} alt="VoiceDeck Logo" />
+					<Image
+						className="h-8 w-8"
+						height={8}
+						width={8}
+						src={"/logo.svg"}
+						alt="VoiceDeck Logo"
+					/>
 					<h3 className="text-2xl font-bold tracking-tight">VoiceDeck</h3>
 				</Link>
 				<p className="text-base font-medium pt-2">
