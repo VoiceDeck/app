@@ -12,7 +12,6 @@
     "prepare": "node .husky/install.mjs"
   },
   "dependencies": {
-    "@anon-aadhaar/react": "^2.0.2",
     "@directus/sdk": "^15.0.2",
     "@ethersproject/providers": "^5.7.2",
     "@fontsource-variable/plus-jakarta-sans": "^5.0.20",

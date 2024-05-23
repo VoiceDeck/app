@@ -2,3 +2,5 @@
 
 # Prevent the package manager from installing the grpc package, which we do not use. See more details in https://github.com/VoiceDeck/app/issues/95#issuecomment-2104509962
 peer = false
+
+# This file should be able to be removed as we are not using adon-addhar in ZuDeck
