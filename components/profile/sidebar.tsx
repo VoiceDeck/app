@@ -8,7 +8,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, HeartPulse } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 // TODO: Remove as this is not used
@@ -65,11 +66,10 @@ const SideBar = () => {
 		<section className="flex flex-col gap-4 md:col-span-1 md:row-span-2">
 			<Card className="rounded-3xl bg-vd-beige-100 shadow-none border-none">
 				<CardHeader>
-					<img
-						src="/water.svg"
-						alt="water in a crystal ball"
-						className="mx-auto px-6 w-40 h-auto my-2"
-					/>
+					<div className="mx-auto px-6 w-40 h-auto my-2">
+						<HeartPulse className="h-28 w-28" />
+						{/* <Image src="/water.svg" alt="water in a crystal ball" fill /> */}
+					</div>
 					<CardTitle className="text-center text-lg md:text-xl">
 						Your support matters
 					</CardTitle>
