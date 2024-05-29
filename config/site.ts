@@ -14,7 +14,7 @@ export const siteConfig: SiteConfig = {
   name: "VoiceDeck",
   title: "From individual actions to collective impact",
   description:
-    "Empower Journalism for Change: Support Critical Reporting in India. Your contributions fuel our mission to spotlight essential stories, sustain quality journalism, and enhance investigative reporting with significant impact.",
+    "A month-long gathering for people building the future",
   localeDefault: "en",
   links: {
     discord: "https://discord.gg/EUUupE3J",
