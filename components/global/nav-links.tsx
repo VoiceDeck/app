@@ -41,26 +41,13 @@ const NavLinks = () => {
 		<ul className="hidden md:flex gap-1">
 			<li>
 				<NavLink href="/reports" isActive={isActive("/reports")}>
-					Reports
+					Browse
 				</NavLink>
 			</li>
 			<li>
-				<a
-					href="https://voicedeck.org/"
-					target="_blank"
-					rel="noopener noreferrer"
-					className={cn(
-						buttonVariants({ variant: "link" }),
-						"font-semibold group",
-					)}
-				>
-					<span>About</span>
-					<ArrowUpRight
-						size={18}
-						className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
-						aria-hidden="true"
-					/>
-				</a>
+				<NavLink href="/submit" isActive={isActive("/submit")}>
+					Submit
+				</NavLink>
 			</li>
 			<li>
 				<a

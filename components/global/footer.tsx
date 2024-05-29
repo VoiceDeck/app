@@ -118,9 +118,7 @@ const DesktopFooter = () => {
 					/>
 					<h3 className="text-2xl font-bold tracking-tight">VoiceDeck</h3>
 				</Link>
-				<p className="text-base font-medium pt-2">
-					An open source funding platform for collective impact
-				</p>
+				<p className="text-base font-medium pt-2">Fund and reward impact</p>
 			</div>
 			<ul className="flex space-x-2">
 				{externalLinks.map(({ url, title }) => (
