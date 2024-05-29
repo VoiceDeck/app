@@ -197,8 +197,8 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 				</div>
 				<div className="p-5" />
 			</section>
-
-			<section>
+			{/* TODO: Remove these filter from logic. Saving for reference  */}
+			{/* <section>
 				<p className="font-medium pb-2 text-base">
 					States impacted{" "}
 					<span className="text-sm text-stone-500">
@@ -211,16 +211,16 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 					handleStateSelection={handleStateSelection}
 					selectedStates={selectedStates}
 				/>
-			</section>
+			</section> */}
 
-			<section className="flex flex-col gap-2">
+			{/* <section className="flex flex-col gap-2">
 				<h2 className="font-medium pb-2 md:pb-4">Media outlet</h2>
 				<OutletCombobox
 					outlets={uniqueOutlets}
 					selectedOutlets={selectedOutlets}
 					handleOutletSelection={handleOutletSelection}
 				/>
-			</section>
+			</section> */}
 			{isMobileFilter && (
 				<DrawerFooter className="flex flex-wrap justify-center gap-2">
 					<section className="flex flex-wrap gap-2">

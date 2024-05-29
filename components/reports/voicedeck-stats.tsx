@@ -1,26 +1,34 @@
 import type { Report } from "@/types";
+import {
+	HandCoins,
+	HandHeart,
+	HeartHandshake,
+	type LucideIcon,
+	PiggyBank,
+} from "lucide-react";
 import { useMemo } from "react";
 
 interface StatContainerProps {
-	icon: string;
+	Icon: LucideIcon;
 	heading: string;
 	data: number;
 	currency?: string;
 }
 
 const StatContainer: React.FC<StatContainerProps> = ({
-	icon,
+	Icon,
 	heading,
 	data,
 	currency,
 }) => {
 	return (
 		<div className="flex flex-auto items-center gap-5 lg:w-[33%] rounded-3xl bg-vd-blue-200 py-4 pl-5 pr-2">
-			<img
+			{/* <img
 				className="h-16 w-16"
 				src={`/${icon}.svg`}
 				alt={`${icon} illustration`}
-			/>
+			/> */}
+			<Icon size={64} className="text-vd-blue-600" />
 			<div className="flex flex-col gap-1">
 				<p className="text-base font-medium">{heading}</p>
 				<p className="text-3xl md:text-3xl font-bold">
@@ -67,20 +75,20 @@ const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 		<section className="flex flex-col lg:flex-row w-full gap-3 max-w-screen-xl">
 			<StatContainer
 				key="flower"
-				icon="flower"
+				Icon={HeartHandshake}
 				heading="Total supporters"
 				data={numOfContributors}
 			/>
 			<StatContainer
 				key="elephant"
-				icon="elephant"
+				Icon={HandCoins}
 				heading="Total support received"
 				data={totalContributions}
 				currency="USD"
 			/>
 			<StatContainer
 				key="candle"
-				icon="candle"
+				Icon={PiggyBank}
 				heading="# of contributions fully funded"
 				data={fundedReports}
 			/>

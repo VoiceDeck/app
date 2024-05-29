@@ -40,7 +40,7 @@ const MobileFooter = () => {
 					>
 						<div className="flex flex-col jusify-center items-center">
 							<Newspaper aria-hidden="true" focusable="false" />
-							<span className="text-xs">Reports</span>
+							<span className="text-xs">Hypercerts</span>
 						</div>
 					</Link>
 				</li>
@@ -60,11 +60,11 @@ const MobileFooter = () => {
 							<DrawerHeader>
 								<div className="flex justify-center">
 									<Image
-										className="h-10 w-10"
-										height={20}
-										width={20}
-										src={"/logo.svg"}
-										alt="VoiceDeck Logo"
+										className="h-6 w-auto md:h-8 md:w-auto"
+										src="/Hypercerts-logo-horisontal.svg"
+										alt="Hypercerts Logo"
+										width={250}
+										height={100}
 									/>
 								</div>
 							</DrawerHeader>
@@ -110,13 +110,12 @@ const DesktopFooter = () => {
 			<div className="flex flex-col">
 				<Link href={"/reports"} passHref className="flex items-center gap-2">
 					<Image
-						className="h-8 w-8"
-						height={8}
-						width={8}
-						src={"/logo.svg"}
-						alt="VoiceDeck Logo"
+						className="h-6 w-auto md:h-8 md:w-auto"
+						src="/Hypercerts-logo-horisontal.svg"
+						alt="Hypercerts Logo"
+						width={250}
+						height={100}
 					/>
-					<h3 className="text-2xl font-bold tracking-tight">VoiceDeck</h3>
 				</Link>
 				<p className="text-base font-medium pt-2">Fund and reward impact</p>
 			</div>
