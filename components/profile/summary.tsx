@@ -37,7 +37,7 @@ const Summary = ({
 				>
 					<CardHeader>
 						<CardTitle className={cn("text-sm font-normal")}>
-							My Contribution
+							My Support
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
@@ -51,7 +51,7 @@ const Summary = ({
 				>
 					<CardHeader>
 						<CardTitle className={cn("text-sm font-normal")}>
-							# of reports I contributed
+							# of Hypercerts I own
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
@@ -64,31 +64,12 @@ const Summary = ({
 			>
 				<CardHeader>
 					<CardTitle className={cn("text-sm font-normal")}>
-						Issues I care about:
+						Categories of my Hypercerts:
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					{/* TODO: Populate data dynamically based on user */}
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-						{/* {Object.entries(iconComponents).map(([icon, Icon]) => {
-              // Don't render Map Icon for Location
-              if (icon === "Location") {
-                return;
-              }
-              return (
-                <Badge
-                  key={icon}
-                  variant="secondary"
-                  className={cn("rounded-3xl w-full justify-between px-5 py-3")}
-                >
-                  <div className="flex gap-1 items-center">
-                    <Icon className="text-vd-orange-400 stroke-[1.5] size-4" />
-                    <p className="font-normal text-vd-blue-900">{icon}</p>
-                  </div>
-                  <data>{}</data>
-                </Badge>
-              );
-            })} */}
 						{Object.entries(iconComponents).map(([icon, Icon]) => {
 							// Skip rendering the "Location" icon
 							if (icon === "Location") {

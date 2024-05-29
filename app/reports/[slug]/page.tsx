@@ -74,7 +74,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 							className="text-vd-blue-400 group-hover:-translate-x-2 transition-transform duration-300 ease-in-out"
 						/>
 						<p className="font-semibold text-sm uppercase text-vd-blue-500 tracking-wider">
-							All Reports
+							All contributions
 						</p>
 					</Link>
 

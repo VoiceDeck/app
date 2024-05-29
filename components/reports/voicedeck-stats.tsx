@@ -81,7 +81,7 @@ const VoicedeckStats: React.FC<VoicedeckStatsProps> = ({
 			<StatContainer
 				key="candle"
 				icon="candle"
-				heading="# of reports fully funded"
+				heading="# of contributions fully funded"
 				data={fundedReports}
 			/>
 		</section>

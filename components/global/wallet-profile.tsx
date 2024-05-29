@@ -15,7 +15,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn, truncateEthereumAddress } from "@/lib/utils";
-import { Loader2, VenetianMaskIcon } from "lucide-react";
+import { Loader2, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { mainnet } from "viem/chains";
 import { ConnectButton } from "./connect-button";
@@ -73,7 +73,7 @@ const WalletProfile = ({
 						/>
 					)}
 					<AvatarFallback>
-						<VenetianMaskIcon />
+						<UserRound />
 					</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>

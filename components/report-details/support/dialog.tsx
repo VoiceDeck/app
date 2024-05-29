@@ -35,7 +35,7 @@ const SupportContent = ({
 			<div className="flex flex-col gap-4 p-3">
 				<div className="flex flex-col gap-4 justify-center items-center">
 					<h4 className="font-bold text-center">
-						Connect your wallet to support this report
+						Connect your wallet to support this contribution
 					</h4>
 					<ConnectButton />
 				</div>
@@ -76,10 +76,10 @@ const ReportSupportUI = ({
 		onOpenChange: setOpen,
 		trigger: (
 			<Button size={"lg"} variant={"default"}>
-				Support this report
+				Support this contribution
 			</Button>
 		),
-		header: "Support this report",
+		header: "Support this contribution",
 		content: (
 			<div className="flex flex-col gap-3">
 				<Card className="bg-slate-50">

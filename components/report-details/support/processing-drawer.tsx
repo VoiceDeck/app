@@ -13,7 +13,7 @@ export default function SupportProcessingDrawer({
 		<Drawer.Root dismissible={false}>
 			<Drawer.Trigger asChild>
 				<Button size={"lg"} variant={"default"} type="submit">
-					Support this report
+					Support this contribution
 				</Button>
 			</Drawer.Trigger>
 			<Drawer.Portal container={container}>

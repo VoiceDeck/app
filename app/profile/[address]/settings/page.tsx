@@ -27,7 +27,7 @@ export default function SettingsPage({
 				<h1 className="text-3xl md:text-4xl font-semibold">Settings</h1>
 			</header>
 			<UserInfo />
-			<VerifiedCitizen />
+			{/* <VerifiedCitizen /> */}
 		</main>
 	);
 }

@@ -73,7 +73,7 @@ export default async function ProfilePage({
 	return (
 		<main className="p-4 md:px-6 xl:px-0 md:py-8 md:max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 auto-rows-auto md:gap-4 gap-4 text-vd-blue-900 mb-6 max-w-6xl pb-16 md:pb-0">
 			<header className="md:col-span-3 flex justify-between my-4">
-				<h1 className="text-xl md:text-3xl font-semibold">My Actions</h1>
+				<h1 className="text-xl md:text-3xl font-semibold">My Hypercerts</h1>
 				<Link
 					href={`/profile/${address}/settings`}
 					className={cn(buttonVariants({ variant: "link" }))}

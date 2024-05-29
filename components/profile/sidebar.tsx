@@ -71,11 +71,10 @@ const SideBar = () => {
 						className="mx-auto px-6 w-40 h-auto my-2"
 					/>
 					<CardTitle className="text-center text-lg md:text-xl">
-						Your actions matter
+						Your support matters
 					</CardTitle>
 					<CardDescription className="text-center md:text-base">
-						Exciting news! Numerous impactful projects are still on their
-						journey to reach their funding targets!
+						There are more impactful contributions that you can support!
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="flex justify-center">

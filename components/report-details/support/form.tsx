@@ -86,7 +86,7 @@ const transactionStatusContent: Record<
 		icon: <CheckCircle size={36} />,
 		title: "Thank you! We got your support.",
 		content:
-			"Your transaction was successful. We're grateful for your contribution! It might take a few minutes to show up on the report.",
+			"Your transaction was successful. We're grateful for your contribution! It might take a few minutes to show up on the website.",
 	},
 	InsufficientFunds: {
 		label: "InsufficientFunds",
