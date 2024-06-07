@@ -33,8 +33,8 @@ const SupportContent = ({
 	if (!isConnected && !address) {
 		return (
 			<div className="flex flex-col gap-4 p-3">
-				<div className="flex flex-col gap-4 justify-center items-center">
-					<h4 className="font-bold text-center">
+				<div className="flex flex-col items-center justify-center gap-4">
+					<h4 className="text-center font-bold">
 						Connect your wallet to support this contribution
 					</h4>
 					<ConnectButton />
@@ -85,7 +85,7 @@ const ReportSupportUI = ({
 				<Card className="bg-slate-50">
 					<div className="flex items-center gap-4 p-2">
 						{reportImage && reportTitle && (
-							<div className="relative w-24 h-16 overflow-hidden rounded-md border">
+							<div className="relative h-16 w-24 overflow-hidden rounded-md border">
 								<Image
 									src={reportImage}
 									alt={reportTitle}
@@ -95,7 +95,7 @@ const ReportSupportUI = ({
 							</div>
 						)}
 						<div className="flex flex-col gap-2">
-							<h4 className="font-bold text-base line-clamp-2">
+							<h4 className="line-clamp-2 font-bold text-base">
 								{reportTitle}
 							</h4>
 						</div>

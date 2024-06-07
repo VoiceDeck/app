@@ -1,27 +1,31 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.6.0/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
-  "formatter": {
-    "enabled": true,
-    "indentWidth": 2,
-    "indentStyle": "tab"
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true
-    },
-    "ignore": ["node_modules", ".next", ".vercel"]
-  },
-  "files": {
-    "include": [
-      "app/*",
-      "components/**/*",
-      "hooks/**/*",
-      "lib/**/*",
-      "types/**/*"
-    ]
-  }
+	"$schema": "https://biomejs.dev/schemas/1.6.0/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"formatter": {
+		"enabled": true,
+		"indentWidth": 2,
+		"indentStyle": "tab"
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"nursery": {
+				"useSortedClasses":"error"
+			}
+		},
+		"ignore": ["node_modules", ".next", ".vercel"]
+	},
+	"files": {
+		"include": [
+			"app/*",
+			"components/**/*",
+			"hooks/**/*",
+			"lib/**/*",
+			"types/**/*",
+			"utils/**/*"
+		]
+	}
 }

@@ -17,6 +17,10 @@ const nextConfig = {
         hostname: "directus.voicedeck.org",
         protocol: "https",
       },
+      {
+        hostname: "clipground.com",
+        protocol: "https",
+      }
     ],
   },
   // redirects: async () => {

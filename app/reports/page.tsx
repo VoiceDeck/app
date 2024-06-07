@@ -32,10 +32,10 @@ export default async function ReportsPage() {
 
 	return (
 		<main className="flex flex-col gap-4 pb-[64px] md:pb-0">
-			<section className="flex flex-col items-center p-4 md:p-8 gap-4">
-				<header className="relative overflow-hidden w-full flex flex-col gap-4 justify-end max-w-screen-xl min-[2560px]:max-w-screen-2xl h-[420px] 2xl:h-[520px] min-[2560px]:h-[720px] text-vd-beige-100 rounded-3xl p-4 md:p-8 2xl:p-16">
+			<section className="flex flex-col items-center gap-4 p-4 md:p-8">
+				<header className="relative flex h-[420px] w-full max-w-screen-xl flex-col justify-end gap-4 overflow-hidden rounded-3xl p-4 text-vd-beige-100 2xl:h-[520px] min-[2560px]:h-[720px] min-[2560px]:max-w-screen-2xl 2xl:p-16 md:p-8">
 					<Image
-						className="object-cover bg-center -z-10 opacity-60"
+						className="-z-10 bg-center object-cover opacity-60"
 						src={hero}
 						alt="Hero Image"
 						placeholder="blur"
@@ -53,7 +53,7 @@ export default async function ReportsPage() {
 					{/* <h1 className="text-3xl lg:text-5xl 2xl:text-7xl font-bold text-left max-w-screen-md 2xl:max-w-screen-lg">
 						{siteConfig.title}
 					</h1> */}
-					<p className="self-center text-2xl text-black 2xl:text-4xl font-semibold text-left py-6 max-w-screen-md 2xl:max-w-screen-lg">
+					<p className="max-w-screen-md self-center py-6 text-left font-semibold text-2xl text-black 2xl:max-w-screen-lg 2xl:text-4xl">
 						{siteConfig.description}
 					</p>
 				</header>
@@ -65,14 +65,14 @@ export default async function ReportsPage() {
 
 			{uniqueReports.length ? (
 				<FilterProvider>
-					<ReportsView reports={uniqueReports} />
+					<ReportsView hypercerts={[]} reports={uniqueReports} />
 				</FilterProvider>
 			) : (
-				<section className="flex flex-col gap-4 items-center w-full pt-6 pb-24 md:pb-6">
-					<div className="relative h-20 md:h-40 w-full">
+				<section className="flex w-full flex-col items-center gap-4 pt-6 pb-24 md:pb-6">
+					<div className="relative h-20 w-full md:h-40">
 						<Image fill src={noReportsImage} alt="circular pattern" />
 					</div>
-					<div className="text-vd-beige-600 text-xl font-bold text-center">
+					<div className="text-center font-bold text-vd-beige-600 text-xl">
 						<p>Sorry, something went wrong.</p>
 						<p>Reports cannot be displayed right now.</p>
 					</div>
