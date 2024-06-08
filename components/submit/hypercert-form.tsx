@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -35,6 +36,11 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import {
+	type HypercertMetadata,
+	formatHypercertData,
+} from "@hypercerts-org/sdk";
+import { Badge } from "../ui/badge";
 
 const HypercertMintSchema = z.object({
 	title: z
@@ -47,12 +53,18 @@ const HypercertMintSchema = z.object({
 			message: "Description is required and must be at least 10 characters",
 		})
 		.max(500, { message: "Description must be less than 500 characters" }),
+	link: z.string().url({ message: "Link must be a valid URL" }),
+	cardImage: z.string().url("Card image not generated"),
 	logo: z.string().url({ message: "Logo Image must be a valid URL" }),
 	banner: z
 		.string()
 		.url({ message: "Background Banner Image must be a valid URL" }),
-	link: z.string().url({ message: "Link must be a valid URL" }),
-	workScope: z.enum(["Edge City", "Edge Esmeralda"]),
+	tags: z
+		.string()
+		.refine((val) => val.split(",").every((tag) => tag.trim() !== ""), {
+			message:
+				"Tags must must not be empty, Multiple tags must be separated by commas",
+		}),
 	projectDates: z
 		.object(
 			{
@@ -69,19 +81,22 @@ const HypercertMintSchema = z.object({
 		}),
 	workStartDate: z.date().default(new Date("2024-06-02")),
 	workEndDate: z.date().default(new Date("2024-06-30")),
-	listOfContributors: z.string().refine(
-		(value) => {
-			// Split the string by ', ' to get individual addresses
-			const addresses = value.split(", ");
+	contributors: z
+		.string()
+		.refine(
+			(value) => {
+				// Split the string by ', ' to get individual addresses
+				const addresses = value.split(", ").map((addr) => addr.trim());
 
-			// Check if each address matches the Ethereum address pattern
-			return addresses.every((address) => isValidEthereumAddress(address));
-		},
-		{
-			message:
-				"Each value must be a valid Ethereum address separated by a comma and a space.",
-		},
-	), // We'll handle the CSV validation in the form submission
+				// Check if each address matches the Ethereum address pattern
+				return addresses.every((address) => isValidEthereumAddress(address));
+			},
+			{
+				message:
+					"Each value must be a valid Ethereum address separated by a comma and a space.",
+			},
+		)
+		.transform((value) => value.split(",").map((addr) => addr.trim())),
 	acceptTerms: z.boolean(),
 	confirmContributorsPermission: z.boolean(),
 });
@@ -97,22 +112,60 @@ const HypercertForm = () => {
 			description: "",
 			logo: "",
 			link: "",
-			workScope: "Edge Esmeralda",
+			tags: "",
 			projectDates: {
 				from: new Date("2024-06-02"),
 				to: new Date("2024-06-30"),
 			},
 			workStartDate: new Date("2024-06-02"),
 			workEndDate: new Date("2024-06-30"),
-			listOfContributors: "",
 			acceptTerms: false,
 			confirmContributorsPermission: false,
 		},
 		mode: "onChange",
 	});
 
-	const onSubmit = (data: MintingFormValues) => {
-		console.log(data);
+	const [badges, setBadges] = useState(["Edge Esmeralda", "Edge City"]);
+
+	const tags = form.watch("tags") || "";
+
+	useEffect(() => {
+		if (tags) {
+			const tagArray = tags
+				.split(",")
+				.map((tag) => tag.trim())
+				.filter((tag) => tag !== "");
+			setBadges(["Edge Esmeralda", "Edge City", ...tagArray]);
+		} else {
+			setBadges(["Edge Esmeralda", "Edge City"]);
+		}
+	}, [tags]);
+
+	const onSubmit = (values: MintingFormValues) => {
+		const metadata: HypercertMetadata = {
+			name: values.title,
+			description: values.description,
+			image: values.cardImage,
+			external_url: values.link,
+		};
+
+		const formattedMetadata = formatHypercertData({
+			...metadata,
+			version: "2.0",
+			properties: [],
+			impactScope: ["all"],
+			excludedImpactScope: [],
+			workScope: badges,
+			excludedWorkScope: [],
+			rights: ["Public Display"],
+			excludedRights: [],
+			workTimeframeStart: values.projectDates.from.getTime() / 1000,
+			workTimeframeEnd: values.projectDates.to.getTime() / 1000,
+			impactTimeframeStart: values.projectDates.from.getTime() / 1000,
+			impactTimeframeEnd: values.projectDates.to.getTime() / 1000,
+			contributors: values.contributors,
+		});
+		console.log({ formattedMetadata });
 	};
 
 	return (
@@ -202,8 +255,19 @@ const HypercertForm = () => {
 				<h3 className="text-2xl">Hypercert Fields</h3>
 				<FormField
 					control={form.control}
-					name="workScope"
+					name="tags"
 					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Work Scope</FormLabel>
+							<FormControl>
+								<Textarea
+									className="bg-inherit"
+									placeholder="Hypercerts, Impact, ..."
+									{...field}
+								/>
+							</FormControl>
+							{/* <FormMessage />
+					</FormItem>
 						<FormItem>
 							<FormLabel>Work Scope</FormLabel>
 							<Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -216,8 +280,25 @@ const HypercertForm = () => {
 									<SelectItem value="Edge Esmeralda">Edge Esmeralda</SelectItem>
 									<SelectItem value="Edge City">Edge City</SelectItem>
 								</SelectContent>
-							</Select>
+							</Select> */}
 							<FormMessage />
+							<div className="flex flex-wrap gap-0.5">
+								{badges.map((tag) => (
+									<Badge key={tag} variant="secondary">
+										{tag}
+									</Badge>
+								))}
+							</div>
+							{/* {field.value &&
+								field.value.filter((tag: string) => tag !== "").length > 0 && (
+									<div className="flex flex-wrap gap-0.5">
+										{field?.value?.map((tag: string) => (
+											<Badge key={tag} variant="secondary">
+												{tag}
+											</Badge>
+										))}
+									</div>
+								)} */}
 						</FormItem>
 					)}
 				/>
@@ -364,7 +445,7 @@ const HypercertForm = () => {
 				</div>
 				<FormField
 					control={form.control}
-					name="listOfContributors"
+					name="contributors"
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>List of Contributors to the Work</FormLabel>
