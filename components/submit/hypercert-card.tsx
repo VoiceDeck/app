@@ -1,13 +1,14 @@
+import { format } from "date-fns";
 import { Sparkle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { forwardRef } from "react";
-
 export interface HypercertCardProps {
 	title?: string;
 	description?: string;
 	banner?: string;
 	logo?: string;
+	dateRange?: string;
 	displayOnly?: boolean;
 	hypercertId?: string;
 }
@@ -23,6 +24,7 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 			title = defaultValues.title,
 			description = defaultValues.description,
 			banner,
+			dateRange,
 			logo,
 			hypercertId,
 			displayOnly = false,
@@ -65,14 +67,12 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 				</section>
 				<section className="h-full rounded-t-xl border-black border-t-[1.5px] bg-white px-3 pt-8 pb-3">
 					<h5
-						className="line-clamp-1 text-ellipsis font-medium text-lg text-slate-800 tracking-tight"
+						className="line-clamp-1 text-ellipsis font-semibold text-base text-slate-800 tracking-tight"
 						title={title}
 					>
 						{title}
 					</h5>
-					<p className="line-clamp-3 overflow-ellipsis text-pretty text-slate-500 text-sm leading-tight tracking-normal">
-						{description}
-					</p>
+					<p className="text-slate-600 text-xs">{dateRange}</p>
 				</section>
 			</article>
 		);
@@ -80,7 +80,7 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 			<CardContent />
 		) : (
 			<Link
-				href={hypercertId ? `/hypercerts/${hypercertId}` : "#"}
+				href={hypercertId ? `/hypercert/${hypercertId}` : "#"}
 				passHref
 				className="hover:-translate-y-1 w-max transition-transform duration-200 ease-[cubic-bezier(.44,.95,.63,.96)]"
 			>
