@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { exportAsImage } from "@/lib/exportToImage";
 import {
 	type HypercertMetadata,
 	formatHypercertData,
@@ -53,7 +54,6 @@ const HypercertMintSchema = z.object({
 		})
 		.max(500, { message: "Description must be less than 500 characters" }),
 	link: z.string().url({ message: "Link must be a valid URL" }),
-	cardImage: z.string().url("Card image not generated"),
 	logo: z.string().url({ message: "Logo Image must be a valid URL" }),
 	banner: z
 		.string()
@@ -65,18 +65,13 @@ const HypercertMintSchema = z.object({
 				"Tags must must not be empty, Multiple tags must be separated by commas",
 		}),
 	projectDates: z
-		.object(
-			{
-				from: z.date(),
-				to: z.date(),
-			},
-			{
-				required_error: "Please select a date range",
-			},
-		)
-		.refine((data) => data.from <= data.to, {
-			path: ["projectDates"],
-			message: "From date must be before to date",
+		.object({
+			workStartDate: z.date(),
+			workEndDate: z.date(),
+		})
+		.refine((data) => data.workStartDate <= data.workEndDate, {
+			message: "workStartDate should not be later than workEndDate",
+			path: ["workStartDate"],
 		}),
 	contributors: z
 		.string()
@@ -122,8 +117,8 @@ const HypercertForm = () => {
 			link: "",
 			tags: "",
 			projectDates: {
-				from: new Date("2024-06-02"),
-				to: new Date("2024-06-30"),
+				workStartDate: new Date(2024, 5, 2),
+				workEndDate: new Date(2024, 5, 30),
 			},
 			contact: "",
 			acceptTerms: false,
@@ -132,6 +127,8 @@ const HypercertForm = () => {
 		mode: "onChange",
 	});
 
+	console.log(form.formState.errors);
+	const imageRef = useRef<HTMLDivElement | null>(null);
 	const [badges, setBadges] = useState(["Edge Esmeralda", "Edge City"]);
 
 	const tags = form.watch("tags") || "";
@@ -148,12 +145,19 @@ const HypercertForm = () => {
 		}
 	}, [tags]);
 
-	const onSubmit = (values: MintingFormValues) => {
+	const onSubmit = async (values: MintingFormValues) => {
+		console.log(form.formState.errors);
 		console.log("Submit");
+		const image = await exportAsImage(imageRef);
+		if (!image) {
+			// throw Error with toast for user
+			return;
+		}
+
 		const metadata: HypercertMetadata = {
 			name: values.title,
 			description: values.description,
-			image: values.cardImage,
+			image: image,
 			external_url: values.link,
 		};
 
@@ -167,10 +171,10 @@ const HypercertForm = () => {
 			excludedWorkScope: [],
 			rights: ["Public Display"],
 			excludedRights: [],
-			workTimeframeStart: values.projectDates.from.getTime() / 1000,
-			workTimeframeEnd: values.projectDates.to.getTime() / 1000,
-			impactTimeframeStart: values.projectDates.from.getTime() / 1000,
-			impactTimeframeEnd: values.projectDates.to.getTime() / 1000,
+			workTimeframeStart: values.projectDates.workStartDate.getTime() / 1000,
+			workTimeframeEnd: values.projectDates.workEndDate.getTime() / 1000,
+			impactTimeframeStart: values.projectDates.workStartDate.getTime() / 1000,
+			impactTimeframeEnd: values.projectDates.workEndDate.getTime() / 1000,
 			contributors: values.contributors,
 		});
 		console.log({ formattedMetadata });
@@ -288,64 +292,90 @@ const HypercertForm = () => {
 									</FormItem>
 								)}
 							/>
-							<FormField
-								control={form.control}
-								name="projectDates"
-								render={({ field }) => (
-									<FormItem className="flex flex-col gap-1">
-										<FormLabel>Project start and end date</FormLabel>
-										<Popover>
-											<PopoverTrigger asChild>
-												<FormControl>
-													<Button
-														variant={"outline"}
-														className={cn(
-															"w-full rounded-sm border-input pl-3 text-left font-normal",
-															!field.value && "text-muted-foreground",
-														)}
-													>
-														{field.value.from ? (
-															field.value.to ? (
-																<>
-																	{format(field.value.from, "LLL dd, y")}{" "}
-																	&mdash; {format(field.value.to, "LLL dd, y")}
-																</>
+							<div className="flex flex-col gap-2 md:flex-row">
+								<FormField
+									control={form.control}
+									name="projectDates.workStartDate"
+									render={({ field }) => (
+										<FormItem className="flex w-full flex-col">
+											<FormLabel>Work Start Date</FormLabel>
+											<Popover>
+												<PopoverTrigger asChild>
+													<FormControl>
+														<Button
+															variant={"outline"}
+															className={cn(
+																"w-full rounded-sm border-input pl-3 text-left font-normal",
+																!field.value && "text-muted-foreground",
+															)}
+														>
+															{field.value ? (
+																format(field.value, "PPP")
 															) : (
-																format(field.value.from, "LLL dd, y")
-															)
-														) : (
-															<span>Pick a date</span>
-														)}
-														<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-													</Button>
-												</FormControl>
-											</PopoverTrigger>
-											<PopoverContent className="w-auto p-0" align="start">
-												<Calendar
-													mode="range"
-													selected={{
-														// biome-ignore lint/style/noNonNullAssertion: <explanation>
-														from: field.value.from!,
-														to: field.value.to,
-													}}
-													defaultMonth={field.value.from}
-													onSelect={(selectedDates) => {
-														field.onChange(selectedDates);
-														field.onBlur();
-													}}
-													disabled={(date) => date < new Date("1900-01-01")}
-													initialFocus
-												/>
-											</PopoverContent>
-										</Popover>
-										<FormDescription>
-											The start and end date of the work considered in the
-											hypercert
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+																<span>Pick a date</span>
+															)}
+															<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+														</Button>
+													</FormControl>
+												</PopoverTrigger>
+												<PopoverContent className="w-auto p-0" align="start">
+													<Calendar
+														mode="single"
+														selected={field.value}
+														onSelect={field.onChange}
+														disabled={(date) =>
+															date > form.watch("projectDates.workEndDate")
+														}
+														initialFocus
+													/>
+												</PopoverContent>
+											</Popover>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="projectDates.workEndDate"
+									render={({ field }) => (
+										<FormItem className="flex w-full flex-col">
+											<FormLabel>Work End Date</FormLabel>
+											<Popover>
+												<PopoverTrigger asChild>
+													<FormControl>
+														<Button
+															variant={"outline"}
+															className={cn(
+																"w-full rounded-sm border-input pl-3 text-left font-normal",
+																!field.value && "text-muted-foreground",
+															)}
+														>
+															{field.value ? (
+																format(field.value, "PPP")
+															) : (
+																<span>Pick a date</span>
+															)}
+															<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+														</Button>
+													</FormControl>
+												</PopoverTrigger>
+												<PopoverContent className="w-auto p-0" align="start">
+													<Calendar
+														mode="single"
+														selected={field.value}
+														onSelect={field.onChange}
+														disabled={(date) =>
+															date < form.watch("projectDates.workStartDate")
+														}
+														initialFocus
+													/>
+												</PopoverContent>
+											</Popover>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
 							<FormField
 								control={form.control}
 								name="contributors"
@@ -433,13 +463,18 @@ const HypercertForm = () => {
 							</Button>
 						</CardContent>
 					</Card>
-					<HypercertCard
-						title={form.getValues().title || undefined}
-						description={form.getValues().description || undefined}
-						banner={form.getValues().banner || undefined}
-						logo={form.getValues().logo || undefined}
-						displayOnly={true}
-					/>
+					<div>
+						<HypercertCard
+							title={form.getValues().title || undefined}
+							description={form.getValues().description || undefined}
+							banner={form.getValues().banner || undefined}
+							logo={form.getValues().logo || undefined}
+							workStartDate={form.getValues().projectDates.workStartDate}
+							workEndDate={form.getValues().projectDates.workEndDate}
+							displayOnly={true}
+							ref={imageRef}
+						/>
+					</div>
 				</div>
 			</form>
 		</Form>
