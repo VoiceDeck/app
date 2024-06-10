@@ -15,22 +15,22 @@ import { fetchHypercerts } from "@/utils/supabase/hypercerts";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function ReportsPage() {
-	let uniqueReports: Report[];
-	let numOfContributors: number;
-	try {
-		const reports: Report[] = await fetchReports();
-		uniqueReports = reports.reduce((acc, report) => {
-			const reportExists = acc.find((r) => r.cmsId === report.cmsId);
-			if (!reportExists) {
-				acc.push(report);
-			}
-			return acc;
-		}, [] as Report[]);
-		numOfContributors = await getNumberOfContributors();
-	} catch (error) {
-		console.error("Failed to fetch reports:", error);
-		throw new Error("Failed to fetch reports");
-	}
+	// let uniqueReports: Report[];
+	// let numOfContributors: number;
+	// try {
+	// 	const reports: Report[] = await fetchReports();
+	// 	uniqueReports = reports.reduce((acc, report) => {
+	// 		const reportExists = acc.find((r) => r.cmsId === report.cmsId);
+	// 		if (!reportExists) {
+	// 			acc.push(report);
+	// 		}
+	// 		return acc;
+	// 	}, [] as Report[]);
+	// 	numOfContributors = await getNumberOfContributors();
+	// } catch (error) {
+	// 	console.error("Failed to fetch reports:", error);
+	// 	throw new Error("Failed to fetch reports");
+	// }
 
 	const { data, error } = await fetchHypercerts();
 	console.log("SUPABASE TEST", data);
@@ -71,7 +71,8 @@ export default async function ReportsPage() {
 
 	// console.log("SUPABASE TEST", hypercerts);
 	// console.log("SUPABASE Error", error);
-
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	const uniqueReports: string | any[] = [];
 	return (
 		<main className="flex flex-col gap-4 pb-[64px] md:pb-0">
 			<section className="flex flex-col items-center gap-4 p-4 md:p-8">
@@ -99,15 +100,15 @@ export default async function ReportsPage() {
 						{siteConfig.description}
 					</p>
 				</header>
-				<VoicedeckStats
+				{/* <VoicedeckStats
 					numOfContributors={numOfContributors}
 					reports={uniqueReports}
-				/>
+				/> */}
 			</section>
 
-			{uniqueReports.length ? (
+			{data.length ? (
 				<FilterProvider>
-					<ReportsView hypercerts={data} reports={uniqueReports} />
+					<ReportsView hypercerts={data} />
 				</FilterProvider>
 			) : (
 				<section className="flex w-full flex-col items-center gap-4 pt-6 pb-24 md:pb-6">

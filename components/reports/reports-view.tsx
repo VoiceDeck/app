@@ -18,21 +18,21 @@ import { ShowingDisplay, VDPaginator } from "../global/vd-paginator";
 import { SidebarFilter } from "./filter-sidebar";
 
 interface IPageData {
-	reports: Report[];
 	hypercerts: HypercertData[];
 }
 
-export function ReportsView({ reports, hypercerts }: IPageData) {
+export function ReportsView({ hypercerts }: IPageData) {
 	const { filters, updateSearchParams } = useFilters();
-	const [activeSortOption, setActiveSortOption] = useState(
-		sortingOptions.createdNewestFirst.value,
-	);
-	let filteredReports = useMemo(() => reports, [reports]);
+	// ! Commented out while migrating to HypercertData
+	// const [activeSortOption, setActiveSortOption] = useState(
+	// 	sortingOptions.createdNewestFirst.value,
+	// );
+	let filteredReports = useMemo(() => hypercerts, [hypercerts]);
 	const itemsPerPage = 10;
 
 	const filterOptions = useMemo(() => {
-		return createFilterOptions(reports);
-	}, [reports]);
+		return createFilterOptions(hypercerts);
+	}, [hypercerts]);
 
 	const fuseOptions = useMemo(
 		() => ({
@@ -46,15 +46,15 @@ export function ReportsView({ reports, hypercerts }: IPageData) {
 	);
 
 	const fuse = useMemo(
-		() => new Fuse(reports, fuseOptions),
-		[reports, fuseOptions],
+		() => new Fuse(hypercerts, fuseOptions),
+		[hypercerts, fuseOptions],
 	);
 	if (filters.length > 0) {
-		filteredReports = filterReports(reports, filters, fuse);
+		filteredReports = filterReports(hypercerts, filters, fuse);
 	}
 
 	const sortReports = useCallback(
-		(reports: Report[], sortOption: ISortingOption["value"]) => {
+		(reports: HypercertData[], sortOption: ISortingOption["value"]) => {
 			const sortFn = sortingOptions[sortOption]?.sortFn;
 			if (sortFn) {
 				return [...reports].sort(sortFn);
@@ -64,10 +64,11 @@ export function ReportsView({ reports, hypercerts }: IPageData) {
 		[],
 	);
 
-	filteredReports = useMemo(
-		() => sortReports(filteredReports, activeSortOption),
-		[filteredReports, activeSortOption, sortReports],
-	);
+	// ! Commented out while migrating to HypercertData
+	// filteredReports = useMemo(
+	// 	() => sortReports(filteredReports, activeSortOption),
+	// 	[filteredReports, activeSortOption, sortReports],
+	// );
 
 	const {
 		currentPage,
@@ -75,7 +76,7 @@ export function ReportsView({ reports, hypercerts }: IPageData) {
 		loadPage,
 		maxPage,
 		needsPagination,
-	} = usePagination<Report>(filteredReports, itemsPerPage);
+	} = usePagination<HypercertData>(filteredReports, itemsPerPage);
 
 	const [filterOpen, setFilterOpen] = useState(false);
 
@@ -114,31 +115,31 @@ export function ReportsView({ reports, hypercerts }: IPageData) {
 				)}
 				<div className="p-3" />
 				<div className="flex flex-wrap justify-center gap-3 md:justify-start sm:gap-5">
-					{hypercerts.map((hypercert) => (
+					{/* {pageTransactions.map((report: Report) => (
 						<ReportCard
-							key={hypercert.id}
-							slug={hypercert.id}
-							hypercertId={hypercert.id}
-							image={hypercert.metadata.image}
-							title={hypercert.metadata.name}
-							summary={hypercert.metadata.description}
-							// totalCost={hypercert.total_cost}
-							// fundedSoFar={hypercert.value}
+							key={report.hypercertId}
+							slug={report.slug}
+							hypercertId={report.hypercertId}
+							image={report.image}
+							title={report.title}
+							summary={report.summary}
+							category={report.category}
+							state={report.state}
+							totalCost={report.totalCost}
+							fundedSoFar={report.fundedSoFar}
 						/>
-					))}
-					{pageTransactions.length ? (
-						pageTransactions.map((report: Report) => (
+					))} */}
+					{hypercerts.length ? (
+						hypercerts.map((hypercert: HypercertData) => (
 							<ReportCard
-								key={report.hypercertId}
-								slug={report.slug}
-								hypercertId={report.hypercertId}
-								image={report.image}
-								title={report.title}
-								summary={report.summary}
-								category={report.category}
-								state={report.state}
-								totalCost={report.totalCost}
-								fundedSoFar={report.fundedSoFar}
+								key={hypercert.id}
+								slug={hypercert.id}
+								hypercertId={hypercert.id}
+								image={hypercert.metadata.image}
+								title={hypercert.metadata.name}
+								summary={hypercert.metadata.description}
+								// totalCost={hypercert.total_cost}
+								// fundedSoFar={hypercert.value}
 							/>
 						))
 					) : (
