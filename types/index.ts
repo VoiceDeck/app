@@ -208,13 +208,13 @@ export type Contribution = {
 };
 
 export type SupportReportInfo = {
-	image: Partial<Report>["image"];
-	title: Partial<Report>["title"];
-	hypercertId: Partial<Report>["hypercertId"];
+	image: Partial<Metadata>["image"];
+	title: Partial<Metadata>["name"];
+	hypercertId: Partial<HypercertData>["hypercert_id"];
 };
 
 export interface ISortingOption {
 	label: string;
 	value: string;
-	sortFn: (a: Report, b: Report) => number;
+	sortFn: (a: HypercertData, b: HypercertData) => number;
 }

@@ -1,17 +1,18 @@
-import 'server-only'
+import "server-only";
 
 import {
-  type ClaimsByOwnerQuery,
-  HypercertClient,
-  type HypercertMetadata,
-  type HypercertsStorage,
+	HypercertClaimdata,
+	type HypercertsByOwnerQuery,
+	HypercertClient,
+	type HypercertMetadata,
+	type HypercertsStorage,
 } from "@hypercerts-org/sdk";
 import { Mutex } from "async-mutex";
 
 import type { Claim, Report } from "@/types";
 import { getCMSReports, getFundedAmountByHCId } from "./directus";
 import { getOrders } from "./marketplace";
-import { delay } from './utils';
+import { delay } from "./utils";
 
 let reports: Report[] | null = null;
 let claims: Claim[] | null = null;
@@ -25,73 +26,71 @@ let hypercertClient: HypercertClient | null = null;
  * @throws Throws an error if fetching reports fails.
  */
 export const fetchReports = async (): Promise<Report[]> => {
-  if (!process.env.HC_OWNER_ADDRESS) {
-    throw new Error("[server] Owner address environment variable is not set");
-  }
-  const ownerAddress = process.env.HC_OWNER_ADDRESS;
+	if (!process.env.HC_OWNER_ADDRESS) {
+		throw new Error("[server] Owner address environment variable is not set");
+	}
+	const ownerAddress = process.env.HC_OWNER_ADDRESS;
 
-  try {
-    if (reports) {
-      console.log(
-        "[server] Reports already exist, no need to fetch from remote"
-      );
-      console.log(`[server] Existing reports: ${reports.length}`);
-    } else {
-      console.log(
-        `[server] Fetching reports from remote using owner address: ${ownerAddress}`
-      );
-      claims = await getHypercertClaims(
-        ownerAddress
-      );
+	try {
+		if (reports) {
+			console.log(
+				"[server] Reports already exist, no need to fetch from remote",
+			);
+			console.log(`[server] Existing reports: ${reports.length}`);
+		} else {
+			console.log(
+				`[server] Fetching reports from remote using owner address: ${ownerAddress}`,
+			);
+			claims = await getHypercertClaims(ownerAddress);
 
-      const _reports = await updateReports();
+			const _reports = await updateReports();
 
-      	// step 3: get orders from marketplace
-      	const orders = await getOrders(_reports);
+			// step 3: get orders from marketplace
+			const orders = await getOrders(_reports);
 
-        // TODO: remove this when we don't need dummy order
-        if (process.env.DEPLOY_ENV === "production") {
-      	reports = _reports.map((report) => {
-      		for (const order of orders) {
-      			if (order && order.hypercertId === report.hypercertId) {
-      				report.order = order;
-      				break;
-      			}
-      		}
+			// TODO: remove this when we don't need dummy order
+			if (process.env.DEPLOY_ENV === "production") {
+				reports = _reports.map((report) => {
+					for (const order of orders) {
+						if (order && order.hypercertId === report.hypercertId) {
+							report.order = order;
+							break;
+						}
+					}
 
-      		if (!report.order && report.fundedSoFar < report.totalCost) {
-            // warn if there is no order for a report that is not fully funded
-      			console.warn(
-      				`[server] No order found for hypercert ${report.hypercertId}`,
-      			);
-      		}
-      		return report;
-      	});
-      } else {
-        reports = _reports.map((report) => {
-      		for (const order of orders) {
-      			if (order) {
-      				report.order = order;
-      				break;
-      			}
-      		}
-      		// warn if there is no order for a report that is not fully funded
-      		if (!report.order && report.fundedSoFar < report.totalCost) {
-      			console.warn(
-      				`[server] No order found for hypercert ${report.hypercertId}`,
-      			);
-      		}
-      		return report;
-      	});
-      }
-      console.log(`[server] total fetched reports: ${reports.length}`);
-    }
+					if (!report.order && report.fundedSoFar < report.totalCost) {
+						// warn if there is no order for a report that is not fully funded
+						console.warn(
+							`[server] No order found for hypercert ${report.hypercertId}`,
+						);
+					}
+					return report;
+				});
+			} else {
+				reports = _reports.map((report) => {
+					for (const order of orders) {
+						if (order) {
+							report.order = order;
+							break;
+						}
+					}
+					// warn if there is no order for a report that is not fully funded
+					if (!report.order && report.fundedSoFar < report.totalCost) {
+						console.warn(
+							`[server] No order found for hypercert ${report.hypercertId}`,
+						);
+					}
+					return report;
+				});
+			}
+			console.log(`[server] total fetched reports: ${reports.length}`);
+		}
 
-    return reports;
-  } catch (error) {
-    console.error(`[server] Failed to fetch reports: ${error}`);
-    throw new Error(`[server] Failed to fetch reports: ${error}`);
-  }
+		return reports;
+	} catch (error) {
+		console.error(`[server] Failed to fetch reports: ${error}`);
+		throw new Error(`[server] Failed to fetch reports: ${error}`);
+	}
 };
 
 /**
@@ -101,49 +100,49 @@ export const fetchReports = async (): Promise<Report[]> => {
  * @throws Throws an error if the report with the specified slug is not found.
  */
 export const fetchReportBySlug = async (slug: string): Promise<Report> => {
-  try {
-    const reports = await fetchReports();
+	try {
+		const reports = await fetchReports();
 
-    const foundReport = reports.find((report: Report) => report.slug === slug);
-    if (!foundReport) {
-      throw new Error(`[server] Report with slug '${slug}' not found.`);
-    }
+		const foundReport = reports.find((report: Report) => report.slug === slug);
+		if (!foundReport) {
+			throw new Error(`[server] Report with slug '${slug}' not found.`);
+		}
 
-    return foundReport;
-  } catch (error) {
-    console.error(`[server] Failed to get report by slug ${slug}: ${error}`);
-    throw new Error(`[server] Failed to get report by slug ${slug}: ${error}`);
-  }
+		return foundReport;
+	} catch (error) {
+		console.error(`[server] Failed to get report by slug ${slug}: ${error}`);
+		throw new Error(`[server] Failed to get report by slug ${slug}: ${error}`);
+	}
 };
 
 export const fetchReportByHCId = async (
-  hypercertId: string
+	hypercertId: string,
 ): Promise<Report> => {
-  try {
-    const reports = await fetchReports();
+	try {
+		const reports = await fetchReports();
 
-    const foundReport = reports.find(
-      (report: Report) => report.hypercertId === hypercertId
-    );
-    if (!foundReport) {
-      throw new Error(
-        `[server] Report with hypercert Id '${hypercertId}' not found.`
-      );
-    }
+		const foundReport = reports.find(
+			(report: Report) => report.hypercertId === hypercertId,
+		);
+		if (!foundReport) {
+			throw new Error(
+				`[server] Report with hypercert Id '${hypercertId}' not found.`,
+			);
+		}
 
-    return foundReport;
-  } catch (error) {
-    throw new Error(
-      `[server] Failed to get report with hypercert Id '${hypercertId}': ${error}`
-    );
-  }
+		return foundReport;
+	} catch (error) {
+		throw new Error(
+			`[server] Failed to get report with hypercert Id '${hypercertId}': ${error}`,
+		);
+	}
 };
 
 export const getReports = (): Report[] => {
-  if (reports) {
-    return reports;
-  }
-  return [];
+	if (reports) {
+		return reports;
+	}
+	return [];
 };
 
 /**
@@ -151,13 +150,13 @@ export const getReports = (): Report[] => {
  * @returns The HypercertClient instance.
  */
 export const getHypercertClient = (): HypercertClient => {
-  if (hypercertClient) {
-    return hypercertClient;
-  }
+	if (hypercertClient) {
+		return hypercertClient;
+	}
 
-  hypercertClient = new HypercertClient({ chain: { id: 11155111 } }); // Sepolia testnet
+	hypercertClient = new HypercertClient({ chain: { id: 11155111 } }); // Sepolia testnet
 
-  return hypercertClient;
+	return hypercertClient;
 };
 
 /**
@@ -168,130 +167,145 @@ export const getHypercertClient = (): HypercertClient => {
  * @throws Will throw an error if the owner address is not set or the claims cannot be fetched.
  */
 export const getHypercertClaims = async (
-  ownerAddress: string
+	ownerAddress: string,
 ): Promise<Claim[]> => {
-  if (claims) {
-    console.log(`[server] Claims already exist, no need to fetch from remote`);
-    console.log(`[server] Existing claims: ${claims.length}`);
-  } else {
+	if (claims) {
+		console.log(`[server] Claims already exist, no need to fetch from remote`);
+		console.log(`[server] Existing claims: ${claims.length}`);
+	} else {
+		try {
+			console.log(`[Hypercerts] Fetching claims owned by ${ownerAddress}`);
 
-  try {
-    console.log(`[Hypercerts] Fetching claims owned by ${ownerAddress}`);
+			// see graphql query: https://github.com/hypercerts-org/hypercerts/blob/d7f5fee/sdk/src/indexer/queries/claims.graphql#L1-L11
+			const response = await getHypercertClient().indexer.hypercertsByOwner({
+				owner: ownerAddress,
+			});
+			console.log("Response", response);
+			claims = (response as HypercertsByOwnerQuery).claims as Claim[];
+			console.log(`[Hypercerts] Fetched claims: ${claims ? claims.length : 0}`);
+		} catch (error) {
+			console.error(
+				`[Hypercerts] Failed to fetch claims owned by ${ownerAddress}: ${error}`,
+			);
+			throw new Error(
+				`[Hypercerts] Failed to fetch claims owned by ${ownerAddress}: ${error}`,
+			);
+		}
+	}
 
-    // see graphql query: https://github.com/hypercerts-org/hypercerts/blob/d7f5fee/sdk/src/indexer/queries/claims.graphql#L1-L11
-    const response = await getHypercertClient().indexer.claimsByOwner(ownerAddress);
-    claims = (response as ClaimsByOwnerQuery).claims as Claim[];
-    console.log(`[Hypercerts] Fetched claims: ${claims ? claims.length : 0}`);
-
-
-  } catch (error) {
-    console.error(
-      `[Hypercerts] Failed to fetch claims owned by ${ownerAddress}: ${error}`
-    );
-    throw new Error(
-      `[Hypercerts] Failed to fetch claims owned by ${ownerAddress}: ${error}`
-    );
-  }
-}
-
-return claims;
+	return claims;
 };
 
 export const fetchNewReports = async () => {
-  if (!process.env.HC_OWNER_ADDRESS) {
-    throw new Error("[server] Owner address environment variable is not set");
-  }
+	if (!process.env.HC_OWNER_ADDRESS) {
+		throw new Error("[server] Owner address environment variable is not set");
+	}
 
-  const ownerAddress = process.env.HC_OWNER_ADDRESS;
-  const response = await getHypercertClient().indexer.claimsByOwner(ownerAddress);
-  const newClaims = (response as ClaimsByOwnerQuery).claims as Claim[];
+	const ownerAddress = process.env.HC_OWNER_ADDRESS;
+	const response = await getHypercertClient().indexer.hypercertsByOwner({
+		owner: ownerAddress,
+	});
+	const newClaims = (response as HypercertsByOwnerQuery).claims as Claim[];
+	console.log("New Claims", newClaims);
 
-  console.log(`[server] update new reports if there are new claims`);
-  if (claims && newClaims.length === claims.length) {
-    console.log(`[server] no new claims, no need to update reports`);
-    return;
-  }
+	console.log(`[server] update new reports if there are new claims`);
+	if (claims && newClaims.length === claims.length) {
+		console.log(`[server] no new claims, no need to update reports`);
+		return;
+	}
 
-  if (!claims || newClaims.length > claims.length) {
-    console.log(`[server] claims in the cache are outdated, updating reports`);
-    claims = newClaims;
+	if (!claims || newClaims.length > claims.length) {
+		console.log(`[server] claims in the cache are outdated, updating reports`);
+		claims = newClaims;
 
-    await updateReports();
-  }
-}
+		await updateReports();
+	}
+};
 
-const updateReports = async () : Promise<Report[]> => {
-  if (!claims) {
-    throw new Error(`[server] Claims are not fetched yet, please fetch claims first.`);
-  }
-  
-  const fromCMS = await getCMSReports();
+const updateReports = async (): Promise<Report[]> => {
+	if (!claims) {
+		throw new Error(
+			`[server] Claims are not fetched yet, please fetch claims first.`,
+		);
+	}
 
-  const existingReportIds = reports ? reports.map(report => report.hypercertId) : [];
-  
-  const reportsToUpdatePromises = claims.filter(claim => !existingReportIds.includes(claim.id)).map(async (claim, index) => {
-    console.log(`[server] Processing claim with ID: ${claim.id}.`);
+	const fromCMS = await getCMSReports();
 
-    // a delay to spread out the requests
-    await delay(index * 20);
+	const existingReportIds = reports
+		? reports.map((report) => report.hypercertId)
+		: [];
 
-    // step 1: get metadata from IPFS
-    const metadata = await getHypercertMetadata(
-      claim.uri as string,
-      getHypercertClient().storage
-    );
+	const reportsToUpdatePromises = claims
+		.filter((claim) => !existingReportIds.includes(claim.id))
+		.map(async (claim, index) => {
+			console.log(`[server] Processing claim with ID: ${claim.id}.`);
 
-    // step 2: get offchain data from CMS
-    
-    const cmsReport = fromCMS.find(
-      (cmsReport) => cmsReport.title === metadata.name
-    );
-    if (!cmsReport) {
-      throw new Error(
-        `[server] CMS content for report titled '${metadata.name}' not found.`
-      );
-    }
+			// a delay to spread out the requests
+			await delay(index * 20);
 
-    return {
-      hypercertId: claim.id,
-      title: metadata.name,
-      summary: metadata.description,
-      image: metadata.image,
-      originalReportUrl: metadata.external_url,
-      state: metadata.properties?.[0].value,
-      category: metadata.hypercert?.work_scope.value?.[0],
-      workTimeframe: metadata.hypercert?.work_timeframe.display_value,
-      impactScope: metadata.hypercert?.impact_scope.display_value,
-      impactTimeframe: metadata.hypercert?.impact_timeframe.display_value,
-      contributors: metadata.hypercert?.contributors.value?.map((name) => name),
-      cmsId: cmsReport.id,
-      status: cmsReport.status,
-      dateCreated: cmsReport.date_created,
-      slug: cmsReport.slug,
-      story: cmsReport.story,
-      bcRatio: cmsReport.bc_ratio,
-      villagesImpacted: cmsReport.villages_impacted,
-      peopleImpacted: cmsReport.people_impacted,
-      verifiedBy: cmsReport.verified_by,
-      dateUpdated: cmsReport.date_updated,
-      byline: cmsReport.byline,
-      totalCost: Number(cmsReport.total_cost),
-      fundedSoFar: await getFundedAmountByHCId(claim.id),
-    } as Report;
-  });
+			// step 1: get metadata from IPFS
+			const metadata = await getHypercertMetadata(
+				claim.uri as string,
+				getHypercertClient().storage,
+			);
 
-  const reportsToUpdate = await Promise.all(reportsToUpdatePromises);
+			// step 2: get offchain data from CMS
 
-  if (reportsToUpdate.length > 0) {
-    console.log(`[server] Found ${reportsToUpdate.length} new. Updating reports...`);
-    reports = [...(reports || []), ...reportsToUpdate];
-    console.log(`[server] Reports updated. Total reports: ${reports.length}`);
-  } else {
-    console.log(`[server] No new or updated claims found. No need to update reports.`);
-  }
+			const cmsReport = fromCMS.find(
+				(cmsReport) => cmsReport.title === metadata.name,
+			);
+			if (!cmsReport) {
+				throw new Error(
+					`[server] CMS content for report titled '${metadata.name}' not found.`,
+				);
+			}
 
-  return reports as Report[];
-}
+			return {
+				hypercertId: claim.id,
+				title: metadata.name,
+				summary: metadata.description,
+				image: metadata.image,
+				originalReportUrl: metadata.external_url,
+				state: metadata.properties?.[0].value,
+				category: metadata.hypercert?.work_scope.value?.[0],
+				workTimeframe: metadata.hypercert?.work_timeframe.display_value,
+				impactScope: metadata.hypercert?.impact_scope.display_value,
+				impactTimeframe: metadata.hypercert?.impact_timeframe.display_value,
+				contributors: metadata.hypercert?.contributors.value?.map(
+					(name) => name,
+				),
+				cmsId: cmsReport.id,
+				status: cmsReport.status,
+				dateCreated: cmsReport.date_created,
+				slug: cmsReport.slug,
+				story: cmsReport.story,
+				bcRatio: cmsReport.bc_ratio,
+				villagesImpacted: cmsReport.villages_impacted,
+				peopleImpacted: cmsReport.people_impacted,
+				verifiedBy: cmsReport.verified_by,
+				dateUpdated: cmsReport.date_updated,
+				byline: cmsReport.byline,
+				totalCost: Number(cmsReport.total_cost),
+				fundedSoFar: await getFundedAmountByHCId(claim.id),
+			} as Report;
+		});
+
+	const reportsToUpdate = await Promise.all(reportsToUpdatePromises);
+
+	if (reportsToUpdate.length > 0) {
+		console.log(
+			`[server] Found ${reportsToUpdate.length} new. Updating reports...`,
+		);
+		reports = [...(reports || []), ...reportsToUpdate];
+		console.log(`[server] Reports updated. Total reports: ${reports.length}`);
+	} else {
+		console.log(
+			`[server] No new or updated claims found. No need to update reports.`,
+		);
+	}
+
+	return reports as Report[];
+};
 
 /**
  * Retrieves the metadata for a given claim URI from IPFS.
@@ -301,40 +315,40 @@ const updateReports = async () : Promise<Report[]> => {
  * @throws Will throw an error if the metadata cannot be fetched.
  */
 export const getHypercertMetadata = async (
-  claimUri: string,
-  storage: HypercertsStorage
+	claimUri: string,
+	storage: HypercertsStorage,
 ): Promise<HypercertMetadata> => {
-  let metadata: HypercertMetadata | null;
+	let metadata: HypercertMetadata | null;
 
-  try {
-    const response = await storage.getMetadata(claimUri);
-    metadata = response;
+	try {
+		const response = await storage.getMetadata(claimUri);
+		metadata = response;
 
-    return metadata;
-  } catch (error) {
-    console.error(
-      `[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`
-    );
-    throw new Error(
-      `[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`
-    );
-  }
+		return metadata;
+	} catch (error) {
+		console.error(
+			`[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
+		);
+		throw new Error(
+			`[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
+		);
+	}
 };
 
 // update the fundedSoFar field of the report
 export const updateFundedAmount = async (
-  hypercertId: string,
-  amount: number
+	hypercertId: string,
+	amount: number,
 ): Promise<void> => {
-  const release = await reportsMutex.acquire();
+	const release = await reportsMutex.acquire();
 
-  try {
-    const reports = getReports();
-    const report = reports.find((r) => r.hypercertId === hypercertId);
-    if (report) {
-      report.fundedSoFar += amount;
-    }
-  } finally {
-    release();
-  }
+	try {
+		const reports = getReports();
+		const report = reports.find((r) => r.hypercertId === hypercertId);
+		if (report) {
+			report.fundedSoFar += amount;
+		}
+	} finally {
+		release();
+	}
 };

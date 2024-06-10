@@ -1,10 +1,10 @@
-import type { ISortingOption, Report } from "@/types";
+import type { HypercertData, ISortingOption, Report } from "@/types";
 import type Fuse from "fuse.js";
 
 export const filterReports = (
-	reports: Report[],
+	reports: HypercertData[],
 	filters: [string, string][],
-	fuse: Fuse<Report>,
+	fuse: Fuse<HypercertData>,
 ) => {
 	// search first
 	let searchedReports = reports;
@@ -40,96 +40,101 @@ export const filterReports = (
 		: null;
 
 	return searchedReports.filter((report) => {
-		const remainingCost = report.totalCost - report.fundedSoFar;
-		// check state filter
-		if (statesSet.size > 0 && !statesSet.has(report.state)) return false;
-		// check outlet filter
-		if (outletsSet.size > 0 && report.contributors.length) {
-			const outletName = report.contributors[0].toLowerCase();
-			if (!outletName || !outletsSet.has(outletName)) return false;
-		}
-		// check category
-		if (
-			filters.some(
-				([key, value]) => key === "category" && report.category !== value,
-			)
-		) {
-			return false;
-		}
+		// ! Commented out while migrating to HypercertData
+		// const remainingCost = report.totalCost - report.fundedSoFar;
+		// // check state filter
+		// if (statesSet.size > 0 && !statesSet.has(report.state)) return false;
+		// // check outlet filter
+		// if (outletsSet.size > 0 && report.contributors.length) {
+		// 	const outletName = report.contributors[0].toLowerCase();
+		// 	if (!outletName || !outletsSet.has(outletName)) return false;
+		// }
+		// // check category
+		// if (
+		// 	filters.some(
+		// 		([key, value]) => key === "category" && report.category !== value,
+		// 	)
+		// ) {
+		// 	return false;
+		// }
 
-		// check min and max amount filter
-		if (minAmount !== null && remainingCost < minAmount) return false;
-		if (maxAmount !== null && remainingCost > maxAmount) return false;
+		// // check min and max amount filter
+		// if (minAmount !== null && remainingCost < minAmount) return false;
+		// if (maxAmount !== null && remainingCost > maxAmount) return false;
 
 		return true;
 	});
 };
 
-export const createFilterOptions = (reports: Report[]) => {
+export const createFilterOptions = (reports: HypercertData[]) => {
 	const uniqueCategoriesMap = new Map();
 	const uniqueOutletsMap = new Map();
 	const uniqueStatesMap = new Map();
-	const amountsNeeded = [];
+	// const amountsNeeded = [];
 
-	for (let i = 0; i < reports.length; i++) {
-		const report = reports[i];
-		uniqueCategoriesMap.set(report.category, {
-			label: report.category,
-			value: report.category,
-		});
-		if (report.contributors[0] && report.contributors[0].length > 0) {
-			uniqueOutletsMap.set(report.contributors[0].toLowerCase(), {
-				label: report.contributors[0],
-				value: encodeURIComponent(report.contributors[0]).toLowerCase(),
-			});
-		}
-		uniqueStatesMap.set(report.state, {
-			label: report.state,
-			value: report.state,
-		});
-		amountsNeeded.push(report.totalCost - report.fundedSoFar || 0);
-	}
+	// ! Commented out while migrating to HypercertData
+	// for (let i = 0; i < reports.length; i++) {
+	// 	const report = reports[i];
+	// 	uniqueCategoriesMap.set(report.category, {
+	// 		label: report.category,
+	// 		value: report.category,
+	// 	});
+	// 	if (report.contributors[0] && report.contributors[0].length > 0) {
+	// 		uniqueOutletsMap.set(report.contributors[0].toLowerCase(), {
+	// 			label: report.contributors[0],
+	// 			value: encodeURIComponent(report.contributors[0]).toLowerCase(),
+	// 		});
+	// 	}
+	// 	uniqueStatesMap.set(report.state, {
+	// 		label: report.state,
+	// 		value: report.state,
+	// 	});
+	// 	amountsNeeded.push(report.totalCost - report.fundedSoFar || 0);
+	// }
 
 	const uniqueCategories = Array.from(uniqueCategoriesMap.values());
 	const uniqueOutlets = Array.from(uniqueOutletsMap.values());
 	const uniqueStates = Array.from(uniqueStatesMap.values());
-	const minAmountNeeded = Math.min(...amountsNeeded);
-	const maxAmountNeeded = Math.max(...amountsNeeded);
+	// ! Commented out while migrating to HypercertData
+	// const minAmountNeeded = Math.min(...amountsNeeded);
+	// const maxAmountNeeded = Math.max(...amountsNeeded);
 
 	return {
 		uniqueCategories,
 		uniqueOutlets,
 		uniqueStates,
-		minAmountNeeded,
-		maxAmountNeeded,
+		// ! Commented out while migrating to HypercertData
+		// minAmountNeeded,
+		// maxAmountNeeded,
 	};
 };
 
 export const sortingOptions: Record<string, ISortingOption> = {
-	createdNewestFirst: {
-		label: "New to old",
-		value: "createdNewestFirst",
-		sortFn: (a: Report, b: Report) =>
-			new Date(b.dateCreated || "").getTime() -
-			new Date(a.dateCreated || "").getTime(),
-	},
-	createdOldestFirst: {
-		label: "Old to new",
-		value: "createdOldestFirst",
-		sortFn: (a: Report, b: Report) =>
-			new Date(a.dateCreated || "").getTime() -
-			new Date(b.dateCreated || "").getTime(),
-	},
-	amountNeededAsc: {
-		label: "$ needed: High to low",
-		value: "amountNeededAsc",
-		sortFn: (a: Report, b: Report) =>
-			a.totalCost - a.fundedSoFar - (b.totalCost - b.fundedSoFar),
-	},
-	amountNeededDesc: {
-		label: "$ needed: Low to high",
-		value: "amountNeededDesc",
-		sortFn: (a: Report, b: Report) =>
-			b.totalCost - b.fundedSoFar - (a.totalCost - a.fundedSoFar),
-	},
+	// ! Commented out while migrating to HypercertData
+	// createdNewestFirst: {
+	// 	label: "New to old",
+	// 	value: "createdNewestFirst",
+	// 	sortFn: (a: Report, b: Report) =>
+	// 		new Date(b.dateCreated || "").getTime() -
+	// 		new Date(a.dateCreated || "").getTime(),
+	// },
+	// createdOldestFirst: {
+	// 	label: "Old to new",
+	// 	value: "createdOldestFirst",
+	// 	sortFn: (a: Report, b: Report) =>
+	// 		new Date(a.dateCreated || "").getTime() -
+	// 		new Date(b.dateCreated || "").getTime(),
+	// },
+	// amountNeededAsc: {
+	// 	label: "$ needed: High to low",
+	// 	value: "amountNeededAsc",
+	// 	sortFn: (a: Report, b: Report) =>
+	// 		a.totalCost - a.fundedSoFar - (b.totalCost - b.fundedSoFar),
+	// },
+	// amountNeededDesc: {
+	// 	label: "$ needed: Low to high",
+	// 	value: "amountNeededDesc",
+	// 	sortFn: (a: Report, b: Report) =>
+	// 		b.totalCost - b.fundedSoFar - (a.totalCost - a.fundedSoFar),
+	// },
 };
