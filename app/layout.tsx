@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import "@fontsource-variable/plus-jakarta-sans";
 import type { Metadata } from "next";
-import "vaul/dist/index.css";
 import "./globals.css";
 
 import { cookieToInitialState } from "wagmi";
