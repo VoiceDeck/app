@@ -1,43 +1,46 @@
 import { useQuery } from "@tanstack/react-query";
 import { useHypercertClient } from "@/hooks/use-hypercerts-client";
 import { usePublicClient, useWaitForTransactionReceipt } from "wagmi";
-import { metadata } from "@/app/layout";
-import type {
-	HypercertMetadata,
+
+import {
+	type HypercertMetadata,
 	TransferRestrictions,
 } from "@hypercerts-org/sdk";
 
-const useMintHypercert = (
-	metaData: HypercertMetadata,
-	units: number,
-	transferRestrictions: TransferRestrictions,
-) => {
+interface MintHypercertParams {
+	metaData: HypercertMetadata | null;
+	units?: number;
+	transferRestrictions?: TransferRestrictions;
+}
+
+const useMintHypercert = ({
+	metaData,
+	units = 1,
+	transferRestrictions = TransferRestrictions.FromCreatorOnly,
+}: MintHypercertParams) => {
 	const { client } = useHypercertClient();
 
 	if (!client) {
-		// toast("No client found", {
-		//   type: "error",
-		// });
-		throw new Error("Client is not initialized");
+		throw new Error("Hypercert Client is not initialized");
 	}
 
 	const publicClient = usePublicClient();
 	if (!publicClient) {
-		// toast("No public client found", {
-		//   type: "error",
-		// });
 		throw new Error("Public client is not initialized");
 	}
 
 	const {
-		data: mintData,
-		isLoading,
-		isSuccess,
-		error,
+		data: mintClaimData,
+		isLoading: isLoadingMintClaim,
+		isSuccess: isSuccessMintClaim,
+		isError: isErrorMintClaim,
+		error: mintClaimError,
 	} = useQuery({
-		queryKey: ["hypercerts", { metaData, units, transferRestrictions }],
+		queryKey: ["hypercert", { metaData, units, transferRestrictions }],
 		queryFn: () =>
-			client.mintClaim(metaData, BigInt(units), transferRestrictions),
+			// biome-ignore lint/style/noNonNullAssertion: <explanation>
+			client.mintClaim(metaData!, BigInt(units), transferRestrictions),
+		enabled: !!metaData,
 	});
 
 	const {
@@ -47,20 +50,25 @@ const useMintHypercert = (
 		isFetched: isFetchedReceipt,
 		isSuccess: isSuccessReceipt,
 		isError: isErrorReceipt,
-		error: errorTransaction,
+		error: errorReceipt,
 	} = useWaitForTransactionReceipt({
-		hash: mintData,
+		hash: mintClaimData,
 	});
 
 	return {
-		isLoading,
-		isSuccess,
-		error,
+		isLoadingMintClaim,
+		isSuccessMintClaim,
+		isErrorMintClaim,
 		isFetchingReceipt,
 		isLoadingReceipt,
 		isFetchedReceipt,
 		isSuccessReceipt,
 		isErrorReceipt,
+		mintClaimData,
+		mintClaimError,
+		errorReceipt,
 		receipt,
 	};
 };
+
+export default useMintHypercert;

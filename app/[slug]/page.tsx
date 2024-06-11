@@ -64,34 +64,34 @@ export default async function ReportPage({ params }: ReportPageProps) {
 	const htmlParsedStory = report.story ? parse(report.story) : null;
 	// console.log({ report });
 	return (
-		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
+		<main className="flex h-svh flex-col justify-between pt-6 md:h-fit md:px-12">
 			{/* 192px is added to account for the funding progress on mobile */}
-			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[256px] md:pb-8 md:max-w-[1200px] md:mx-auto">
-				<section className="flex flex-col flex-1 gap-4">
-					<Link href={"/reports"} className="group flex space-x-1 items-center">
+			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[256px] md:mx-auto md:max-w-[1200px] md:pb-8">
+				<section className="flex flex-1 flex-col gap-4">
+					<Link href={"/reports"} className="group flex items-center space-x-1">
 						<ChevronLeft
 							size={24}
-							className="text-vd-blue-400 group-hover:-translate-x-2 transition-transform duration-300 ease-in-out"
+							className="group-hover:-translate-x-2 text-vd-blue-400 transition-transform duration-300 ease-in-out"
 						/>
-						<p className="font-semibold text-sm uppercase text-vd-blue-500 tracking-wider">
+						<p className="font-semibold text-sm text-vd-blue-500 uppercase tracking-wider">
 							All contributions
 						</p>
 					</Link>
 
-					<h1 className="font-bold text-3xl md:text-4xl tracking-tight">
+					<h1 className="font-bold text-3xl tracking-tight md:text-4xl">
 						{report.title}
 					</h1>
-					<ul className="flex flex-wrap gap-1 space-x-3 items-center">
-						<Badge className="hover:bg-vd-beige-200 pointer-events-none">
+					<ul className="flex flex-wrap items-center gap-1 space-x-3">
+						<Badge className="pointer-events-none hover:bg-vd-beige-200">
 							<DynamicCategoryIcon category={report.category} />
 							<p>{report.category}</p>
 						</Badge>
-						<Badge className="hover:bg-vd-beige-200 pointer-events-none">
+						<Badge className="pointer-events-none hover:bg-vd-beige-200">
 							<MapPin color="#C14E41" strokeWidth={1} size={18} />
 							<p>{report.state}</p>
 						</Badge>
 					</ul>
-					<div className="fixed bottom-[96px] -mx-4 -my-4 md:relative md:bottom-auto md:mx-0 md:my-0 w-full">
+					<div className="-mx-4 -my-4 fixed bottom-[96px] w-full md:relative md:bottom-auto md:mx-0 md:my-0">
 						<FundingDataWrapper
 							hypercertId={report.hypercertId}
 							totalAmount={report.totalCost}
@@ -109,17 +109,17 @@ export default async function ReportPage({ params }: ReportPageProps) {
 						</FundingDataWrapper>
 					</div>
 				</section>
-				<section className="flex flex-col gap-2 md:flex-row md:gap-12 pt-8">
+				<section className="flex flex-col gap-2 pt-8 md:flex-row md:gap-12">
 					<section className="flex flex-col gap-2">
 						<div>
-							<h3 className="font-bold text-2xl pb-3">Summary</h3>
+							<h3 className="pb-3 font-bold text-2xl">Summary</h3>
 							<p className="text-wrap leading-relaxed">{report.summary}</p>
 						</div>
-						<div className="relative rounded-2xl md:h-[420px] h-[358px] w-full overflow-hidden">
+						<div className="relative h-[358px] w-full overflow-hidden rounded-2xl md:h-[420px]">
 							<Image
 								src={report.image}
 								alt="Report illustration"
-								className="-z-10 object-cover bg-center"
+								className="-z-10 bg-center object-cover"
 								fill
 							/>
 						</div>
@@ -130,13 +130,13 @@ export default async function ReportPage({ params }: ReportPageProps) {
 						)}
 					</section>
 					<div>
-						<Separator className="block md:hidden my-6 md:my-0 bg-stone-300" />
+						<Separator className="my-6 block bg-stone-300 md:my-0 md:hidden" />
 						<ReportSidebar report={report} />
 					</div>
 				</section>
 				{contributions && (
 					<div>
-						<Separator className="block md:hidden my-6 bg-stone-300" />
+						<Separator className="my-6 block bg-stone-300 md:hidden" />
 						<ReportSupportFeed contributions={contributions} />
 					</div>
 				)}

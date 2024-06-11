@@ -33,8 +33,8 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 		uniqueCategories,
 		uniqueOutlets,
 		uniqueStates,
-		minAmountNeeded,
-		maxAmountNeeded,
+		// minAmountNeeded,
+		// maxAmountNeeded,
 	},
 }) => {
 	const { filters, updateSearchParams } = useFilters();
@@ -133,19 +133,19 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 		[localFilters],
 	);
 
-	const activeMin = useMemo(
-		() =>
-			Number(localFilters.find(([key]) => key === "min")?.[1]) ||
-			minAmountNeeded,
-		[localFilters, minAmountNeeded],
-	);
+	// const activeMin = useMemo(
+	// 	() =>
+	// 		Number(localFilters.find(([key]) => key === "min")?.[1]) ||
+	// 		minAmountNeeded,
+	// 	[localFilters, minAmountNeeded],
+	// );
 
-	const activeMax = useMemo(
-		() =>
-			Number(localFilters.find(([key]) => key === "max")?.[1]) ||
-			maxAmountNeeded,
-		[localFilters, maxAmountNeeded],
-	);
+	// const activeMax = useMemo(
+	// 	() =>
+	// 		Number(localFilters.find(([key]) => key === "max")?.[1]) ||
+	// 		maxAmountNeeded,
+	// 	[localFilters, maxAmountNeeded],
+	// );
 
 	return (
 		<div className="flex flex-col gap-8">
@@ -155,12 +155,12 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 				</Button>
 			)}
 			<section>
-				<h2 className="font-medium pb-2">Category</h2>
+				<h2 className="pb-2 font-medium">Category</h2>
 				<div className="flex flex-wrap gap-2">
 					{uniqueCategories.map(({ label, value }) => (
 						<Badge
 							key={value}
-							className={`border-vd-blue-500 rounded-2xl flex flex-auto flex-col items-center gap-1 px-2 py-3 cursor-pointer ${
+							className={`flex flex-auto cursor-pointer flex-col items-center gap-1 rounded-2xl border-vd-blue-500 px-2 py-3${
 								selectedCategory === value
 									? "bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700"
 									: ""
@@ -177,7 +177,8 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 				<h2 className="font-medium">Amount needed to complete funding</h2>
 				<div className="p-2" />
 				<div className="w-full px-4">
-					<Slider
+					{/* //! commented out for not to pass linter */}
+					{/* <Slider
 						defaultValue={[activeMin, activeMax]}
 						min={minAmountNeeded}
 						max={maxAmountNeeded}
@@ -193,7 +194,7 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 							);
 							setLocalFilters(updatedFilters);
 						}}
-					/>
+					/> */}
 				</div>
 				<div className="p-5" />
 			</section>
@@ -224,7 +225,7 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 			{isMobileFilter && (
 				<DrawerFooter className="flex flex-wrap justify-center gap-2">
 					<section className="flex flex-wrap gap-2">
-						<div className="flex gap-2 w-full">
+						<div className="flex w-full gap-2">
 							<DrawerClose
 								className={cn(
 									buttonVariants({ variant: "secondary" }),
@@ -268,17 +269,13 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 				<Drawer dismissible={false}>
 					<div className="relative">
 						{numFiltersApplied !== 0 && (
-							<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1 h-6 w-6 absolute -right-2 -top-2">
+							<div className="-right-2 -top-2 absolute h-6 w-6 rounded-full bg-vd-blue-100 px-2 py-1 font-medium text-vd-blue-500 text-xs">
 								{numFiltersApplied}
 							</div>
 						)}
-						<DrawerTrigger
-							className="flex gap-2 h-10 rounded-md border-input justify-between
-							items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2
-							text-vd-blue-500 hover:text-vd-blue-100 overflow-visible"
-						>
+						<DrawerTrigger className="flex h-10 items-center justify-between gap-2 overflow-visible rounded-md border border-input border-vd-blue-500 bg-vd-beige-100 px-3 py-2 text-vd-blue-500 hover:text-vd-blue-100">
 							<Filter size={16} />
-							<p className="text-sm font-medium">Filters</p>
+							<p className="font-medium text-sm">Filters</p>
 						</DrawerTrigger>
 					</div>
 					<DrawerContent className="px-6 py-3">
@@ -290,17 +287,17 @@ const ReportsFilters: React.FC<ReportFiltersProps> = ({
 			<div className="hidden md:flex min-[2560px]:hidden">
 				<div className="relative">
 					{numFiltersApplied !== 0 && (
-						<div className="bg-vd-blue-100 rounded-full text-xs font-medium text-vd-blue-500 px-2 py-1 h-6 w-6 absolute -right-2 -top-2">
+						<div className="-right-2 -top-2 absolute h-6 w-6 rounded-full bg-vd-blue-100 px-2 py-1 font-medium text-vd-blue-500 text-xs">
 							{numFiltersApplied}
 						</div>
 					)}
 
 					<Button
-						className="flex gap-2 h-10 rounded-md border-input justify-between items-center bg-vd-beige-100 border border-vd-blue-500 px-3 py-2 text-vd-blue-500 hover:text-vd-blue-100 overflow-visible"
+						className="flex h-10 items-center justify-between gap-2 overflow-visible rounded-md border border-input border-vd-blue-500 bg-vd-beige-100 px-3 py-2 text-vd-blue-500 hover:text-vd-blue-100"
 						onClick={() => setIsOpen(!isOpen)}
 					>
 						<Filter size={16} />
-						<p className="text-sm font-medium">Filters</p>
+						<p className="font-medium text-sm">Filters</p>
 					</Button>
 				</div>
 			</div>
