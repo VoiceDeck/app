@@ -109,6 +109,12 @@ const HypercertMintSchema = z.object({
 type MintingFormValues = z.infer<typeof HypercertMintSchema>;
 
 const HypercertForm = () => {
+	const imageRef = useRef<HTMLDivElement | null>(null);
+	const [badges, setBadges] = useState(["Edge Esmeralda", "Edge City"]);
+	const [openMintDialog, setOpenMintDialogChange] = useState(false);
+	const [hypercertMetadata, setHypercertMetadata] =
+		useState<HypercertMetadata | null>(null);
+
 	const form = useForm<MintingFormValues>({
 		resolver: zodResolver(HypercertMintSchema),
 		defaultValues: {
@@ -130,14 +136,7 @@ const HypercertForm = () => {
 		mode: "onChange",
 	});
 
-	const imageRef = useRef<HTMLDivElement | null>(null);
-	const [badges, setBadges] = useState(["Edge Esmeralda", "Edge City"]);
-	const [openMintDialog, setOpenMintDialogChange] = useState(false);
-	const [hypercertMetadata, setHypercertMetadata] =
-		useState<HypercertMetadata | null>(null);
-
 	const tags = form.watch("tags") || "";
-
 	useEffect(() => {
 		if (tags) {
 			const tagArray = tags
@@ -151,8 +150,6 @@ const HypercertForm = () => {
 	}, [tags]);
 
 	const onSubmit = async (values: MintingFormValues) => {
-		console.log(form.formState.errors);
-		console.log("Submit");
 		const image = await exportAsImage(imageRef);
 		if (!image) {
 			// throw Error with toast for user
@@ -495,12 +492,14 @@ const HypercertForm = () => {
 					</div>
 				</form>
 			</Form>
-			<HypercertMintDialog
-				hypercertMetadata={hypercertMetadata}
-				setHypercertMetadata={setHypercertMetadata}
-				setOpenMintDialogChange={setOpenMintDialogChange}
-				clearFormData={form.reset}
-			/>
+			{hypercertMetadata && (
+				<HypercertMintDialog
+					hypercertMetadata={hypercertMetadata}
+					setHypercertMetadata={setHypercertMetadata}
+					setOpenMintDialogChange={setOpenMintDialogChange}
+					clearFormData={form.reset}
+				/>
+			)}
 		</Dialog>
 	);
 };

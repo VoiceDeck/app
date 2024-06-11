@@ -6,6 +6,7 @@ import {
 	type HypercertMetadata,
 	TransferRestrictions,
 } from "@hypercerts-org/sdk";
+import { parseEther } from "viem";
 
 interface MintHypercertParams {
 	metaData: HypercertMetadata | null;
@@ -29,6 +30,8 @@ const useMintHypercert = ({
 		throw new Error("Public client is not initialized");
 	}
 
+	console.log("metaData", metaData);
+
 	const {
 		data: mintClaimData,
 		isLoading: isLoadingMintClaim,
@@ -36,11 +39,19 @@ const useMintHypercert = ({
 		isError: isErrorMintClaim,
 		error: mintClaimError,
 	} = useQuery({
-		queryKey: ["hypercert", { metaData, units, transferRestrictions }],
-		queryFn: () =>
-			// biome-ignore lint/style/noNonNullAssertion: <explanation>
-			client.mintClaim(metaData!, BigInt(units), transferRestrictions),
-		enabled: !!metaData,
+		queryKey: ["hypercert", { metaData }],
+		queryFn: async () => {
+			if (!metaData) {
+				throw new Error("Metadata is null");
+			}
+			return await client.mintClaim(
+				metaData,
+				parseEther("1"),
+				transferRestrictions,
+			);
+		},
+		staleTime: Number.POSITIVE_INFINITY,
+		enabled: metaData !== null || metaData !== undefined ? true : false,
 	});
 
 	const {
