@@ -17,7 +17,7 @@ export const useHypercertClient = () => {
 			chainId && isSupportedChain(chainId)
 				? new HypercertClient({
 						// commented out untill package is updated
-						// indexerEnvironment: "test",
+						indexerEnvironment: "test",
 						chain: { id: chainId },
 						walletClient: walletClient ?? undefined,
 				  })
