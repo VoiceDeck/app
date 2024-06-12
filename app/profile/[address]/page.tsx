@@ -21,66 +21,113 @@ import {
 } from "@/components/ui/select";
 import { z } from "zod";
 import { SellFractionsDialogContent } from "@/components/profile/sell-fractions-dialog-content";
+import type { Address } from "viem";
 
 /**
  * Fetches contribution history data for a given address.
  * @param {string} address The blockchain address to fetch contributions for.
  * @returns {Promise<{history: HistoryData[], categoryCounts: Record<string, number>, totalAmount: number, reportCount: number}>} An object containing the contribution history and summary statistics.
  */
-async function getContributionsHistoryData(address: `0x${string}`) {
+// async function getContributionsHistoryData(address: `0x${string}`) {
+// 	try {
+// 		const contributions = await getContributionsByAddress(address);
+// 		const historyPromises = contributions.map(
+// 			async (contribution): Promise<HistoryData | null> => {
+// 				const report = await fetchReportByHCId(contribution.hypercert_id);
+// 				return {
+// 					id: contribution.txid,
+// 					date: new Date(contribution.date_created),
+// 					amount: contribution.amount,
+// 					img: {
+// 						src: report.image,
+// 						alt: report.title,
+// 					},
+// 					title: report.title,
+// 					category: report.category,
+// 					location: report.state,
+// 					description: report.summary,
+// 				};
+// 			},
+// 		);
+// 		const historyResults = await Promise.all(historyPromises);
+// 		const history = historyResults.filter(isNotNull);
+// 		let totalAmount = 0;
+// 		const categoryCounts: { [key: string]: number } = {};
+// 		const reportCount = history.length;
+// 		for (const entry of history) {
+// 			totalAmount += entry.amount;
+// 			categoryCounts[entry.category] =
+// 				(categoryCounts[entry.category] || 0) + 1;
+// 		}
+// 		// Returning history, categoryCounts, and totalAmount directly
+// 		return { history, categoryCounts, totalAmount, reportCount };
+// 	} catch (error) {
+// 		return {
+// 			history: [],
+// 			categoryCounts: {},
+// 			totalAmount: 0,
+// 			reportCount: 0,
+// 		};
+// 	}
+// }
+async function getHypercertFractionsByOwner(address: Address) {
+	console.log("Address:", address);
 	try {
-		const contributions = await getContributionsByAddress(address);
-		const historyPromises = contributions.map(
-			async (contribution): Promise<HistoryData | null> => {
-				const report = await fetchReportByHCId(contribution.hypercert_id);
-				return {
-					id: contribution.txid,
-					date: new Date(contribution.date_created),
-					amount: contribution.amount,
-					img: {
-						src: report.image,
-						alt: report.title,
-					},
-					title: report.title,
-					category: report.category,
-					location: report.state,
-					description: report.summary,
-				};
+		const res = await fetch("https://api.hypercerts.org/v1/graphql", {
+			cache: "no-store",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
 			},
-		);
-		const historyResults = await Promise.all(historyPromises);
-		const history = historyResults.filter(isNotNull);
-		let totalAmount = 0;
-		const categoryCounts: { [key: string]: number } = {};
-		const reportCount = history.length;
-		for (const entry of history) {
-			totalAmount += entry.amount;
-			categoryCounts[entry.category] =
-				(categoryCounts[entry.category] || 0) + 1;
+			body: JSON.stringify({
+				query: `
+					query GetFractionsByOwner($address: String!) {
+						fractions(
+							where: {owner_address: {contains: $address}}
+							count: COUNT
+						) {
+							count
+							data {
+							metadata {
+								id
+								name
+							}
+							}
+						}
+					}
+				`,
+				variables: {
+					address: address,
+				},
+			}),
+		});
+		if (!res.ok) {
+			throw new Error("Network response was not ok.");
 		}
-		// Returning history, categoryCounts, and totalAmount directly
-		return { history, categoryCounts, totalAmount, reportCount };
+		const data = await res.json();
+		console.log("Data:", data);
+		return data;
 	} catch (error) {
-		return {
-			history: [],
-			categoryCounts: {},
-			totalAmount: 0,
-			reportCount: 0,
-		};
+		console.error("Error:", error);
+		throw error;
 	}
 }
 
 export default async function ProfilePage({
 	params: { address },
 }: {
-	params: { address: `0x${string}` };
+	params: { address: Address };
 }) {
-	const {
-		history = [],
-		categoryCounts = {},
-		totalAmount = 0,
-		reportCount = 0,
-	} = await getContributionsHistoryData(address);
+	// const {
+	// 	history = [],
+	// 	categoryCounts = {},
+	// 	totalAmount = 0,
+	// 	reportCount = 0,
+	// } = await getContributionsHistoryData(address);
+	const data = await getHypercertFractionsByOwner(
+		"0xA8cadC2268B01395f8573682fb9DD00Bd582E8A0",
+	);
+	console.log("Data:", data);
 
 	return (
 		<main className="mx-auto mb-6 grid max-w-6xl auto-rows-auto grid-cols-1 gap-4 p-4 pb-16 text-vd-blue-900 md:max-w-[1200px] md:grid-cols-3 md:px-6 xl:px-0 md:py-8 md:pb-0">
@@ -94,13 +141,13 @@ export default async function ProfilePage({
 					<Settings2 className="mt-1 ml-2 h-4 w-4" />
 				</Link>
 			</header>
-			<Summary
+			{/* <Summary
 				totalAmount={totalAmount}
 				reportCount={reportCount}
 				categoryCounts={categoryCounts}
-			/>
+			/> */}
 			<SideBar />
-			<History history={history} />
+			{/* <History history={history} /> */}
 			<Dialog>
 				<DialogTrigger asChild>
 					<Button size={"lg"} variant={"default"}>
