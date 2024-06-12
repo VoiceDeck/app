@@ -8,7 +8,19 @@ import { cn, isNotNull } from "@/lib/utils";
 import History, { type HistoryData } from "@/components/profile/history";
 import { SideBar } from "@/components/profile/sidebar";
 import { Summary } from "@/components/profile/summary";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { z } from "zod";
+import { SellFractionsDialogContent } from "@/components/profile/sell-fractions-dialog-content";
 
 /**
  * Fetches contribution history data for a given address.
@@ -89,6 +101,14 @@ export default async function ProfilePage({
 			/>
 			<SideBar />
 			<History history={history} />
+			<Dialog>
+				<DialogTrigger asChild>
+					<Button size={"lg"} variant={"default"}>
+						List for sale
+					</Button>
+				</DialogTrigger>
+				<SellFractionsDialogContent />
+			</Dialog>
 		</main>
 	);
 }
