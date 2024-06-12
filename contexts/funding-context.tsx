@@ -1,12 +1,11 @@
 "use client";
 import type { Claim } from "@/types";
-import type { ClaimToken } from "@hypercerts-org/sdk";
 import { type ReactNode, createContext, useContext } from "react";
 
 // Define the shape of the context
 interface FundingContextType {
-	genesisFraction?: ClaimToken;
-	hypercertClaim: Claim;
+	genesisFractionUnits?: number;
+	hypercertUnits?: number;
 	pricePerUnit: number;
 	totalUnits: number;
 	totalAmount: number;
