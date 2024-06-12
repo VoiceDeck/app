@@ -58,6 +58,7 @@
     "googleapis": "^140.0.0",
     "html-react-parser": "^5.1.8",
     "html-to-image": "^1.11.11",
+    "html2canvas": "^1.4.1",
     "js-sha3": "^0.9.3",
     "lit-html": "^3.1.2",
     "lucide-react": "^0.379.0",

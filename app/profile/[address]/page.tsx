@@ -73,7 +73,7 @@ import type { Address } from "viem";
 async function getHypercertFractionsByOwner(address: Address) {
 	console.log("Address:", address);
 	try {
-		const res = await fetch("https://api.hypercerts.org/v1/graphql", {
+		const res = await fetch("https://staging-api.hypercerts.org/v1/graphql", {
 			cache: "no-store",
 			method: "POST",
 			headers: {
@@ -104,9 +104,12 @@ async function getHypercertFractionsByOwner(address: Address) {
 		if (!res.ok) {
 			throw new Error("Network response was not ok.");
 		}
-		const data = await res.json();
-		console.log("Data:", data);
-		return data;
+		const { data } = await res.json();
+		console.log("Data In query:", data);
+		return {
+			fractionsCount: data.fractions.count,
+			fractions: data.fractions.data,
+		};
 	} catch (error) {
 		console.error("Error:", error);
 		throw error;
@@ -124,10 +127,10 @@ export default async function ProfilePage({
 	// 	totalAmount = 0,
 	// 	reportCount = 0,
 	// } = await getContributionsHistoryData(address);
-	const data = await getHypercertFractionsByOwner(
+	const fractions = await getHypercertFractionsByOwner(
 		"0xA8cadC2268B01395f8573682fb9DD00Bd582E8A0",
 	);
-	console.log("Data:", data);
+	console.log("Data in Page:", fractions);
 
 	return (
 		<main className="mx-auto mb-6 grid max-w-6xl auto-rows-auto grid-cols-1 gap-4 p-4 pb-16 text-vd-blue-900 md:max-w-[1200px] md:grid-cols-3 md:px-6 xl:px-0 md:py-8 md:pb-0">
@@ -141,6 +144,7 @@ export default async function ProfilePage({
 					<Settings2 className="mt-1 ml-2 h-4 w-4" />
 				</Link>
 			</header>
+
 			{/* <Summary
 				totalAmount={totalAmount}
 				reportCount={reportCount}

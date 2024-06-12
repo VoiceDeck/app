@@ -37,7 +37,7 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 
 	if (fractionsPending || claimPending)
 		return (
-			<section className="h-20 shadow-md max-w-3xl flex justify-center items-center bg-vd-beige-100 gap-2 rounded-lg ease-in duration-300">
+			<section className="flex h-20 max-w-3xl items-center justify-center gap-2 rounded-lg bg-vd-beige-100 shadow-md duration-300 ease-in">
 				<div className="animate-spin">
 					<Loader2 size={18} />
 				</div>
