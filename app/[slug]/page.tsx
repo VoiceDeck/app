@@ -7,7 +7,8 @@ import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
 import { getContributionsByHCId } from "@/lib/directus";
 import { fetchReportBySlug } from "@/lib/impact-reports";
-import type { Report } from "@/types";
+import type { HypercertData, Report } from "@/types";
+import { fetchHypercertById } from "@/utils/supabase/hypercerts";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import type { Metadata } from "next";
@@ -18,50 +19,59 @@ interface ReportPageProps {
 	params: { slug: string };
 }
 
-const getReportData = async (slug?: string | string[]) => {
+const getHypercertData = async (slug: string) => {
 	try {
-		const reportData = await fetchReportBySlug(slug as string);
-		return reportData;
+		const hypercertData = await fetchHypercertById(slug);
+		return hypercertData.data;
 	} catch (error) {
-		throw new Error(`Error fetching report data for slug: ${slug}`);
+		throw new Error(`Error fetching hypercert data for slug: ${slug}`);
 	}
 };
 
+// Used By CMS Can be removed or refactored
 const getContributionsByHypercertId = async (
-	hypercertId: Partial<Report>["hypercertId"],
+	hypercert_id: Partial<HypercertData>["hypercert_id"],
 ) => {
-	if (!hypercertId) return null;
+	if (!hypercert_id) return null;
 	try {
-		const contributionsData = await getContributionsByHCId(hypercertId);
+		const contributionsData = await getContributionsByHCId(hypercert_id);
 		return contributionsData || [];
 	} catch (error) {
 		throw new Error(
-			`Error fetching contributions for hypercertId: ${hypercertId}`,
+			`Error fetching contributions for hypercertId: ${hypercert_id}`,
 		);
 	}
 };
 
-export async function generateMetadata({
-	params,
-}: ReportPageProps): Promise<Metadata> {
-	const report = await getReportData(params.slug);
-	const metadata: Metadata = {
-		title: report.title,
-		description: report.summary,
-		openGraph: {
-			title: report.title,
-			description: report.summary,
-			images: report.image ? [{ url: report.image }] : [],
-		},
-	};
-	return metadata;
-}
+// export async function generateMetadata({
+// 	params,
+// }: ReportPageProps): Promise<Metadata> {
+// 	const report = await getHypercertData(params.slug);
+// const metadata: Metadata = {
+// 	title: report.title,
+// 	description: report.summary,
+// 	openGraph: {
+// 		title: report.title,
+// 		description: report.summary,
+// 		images: report.image ? [{ url: report.image }] : [],
+// 	},
+// };
+// return metadata;
+// }
 
 export default async function ReportPage({ params }: ReportPageProps) {
 	const { slug } = params;
-	const report = await getReportData(slug);
-	const contributions = await getContributionsByHypercertId(report.hypercertId);
-	const htmlParsedStory = report.story ? parse(report.story) : null;
+	const hypercertData = await getHypercertData(slug);
+	console.log("report", hypercertData);
+
+	if (!hypercertData) {
+		return <div>No hypercert found</div>;
+	}
+	// ! Below was used by CMS, can be removed or refactored
+	// const contributions = await getContributionsByHypercertId(
+	// 	report.hypercert_id,
+	// );
+	// const htmlParsedStory = report.story ? parse(report.story) : null;
 	// console.log({ report });
 	return (
 		<main className="flex h-svh flex-col justify-between pt-6 md:h-fit md:px-12">
@@ -79,20 +89,23 @@ export default async function ReportPage({ params }: ReportPageProps) {
 					</Link>
 
 					<h1 className="font-bold text-3xl tracking-tight md:text-4xl">
-						{report.title}
+						{hypercertData.metadata.name}
 					</h1>
 					<ul className="flex flex-wrap items-center gap-1 space-x-3">
-						<Badge className="pointer-events-none hover:bg-vd-beige-200">
+						{hypercertData.metadata.work_scope.map((scope) => (
+							<Badge key={scope}>{scope}</Badge>
+						))}
+						{/* <Badge className="pointer-events-none hover:bg-vd-beige-200">
 							<DynamicCategoryIcon category={report.category} />
 							<p>{report.category}</p>
 						</Badge>
 						<Badge className="pointer-events-none hover:bg-vd-beige-200">
 							<MapPin color="#C14E41" strokeWidth={1} size={18} />
 							<p>{report.state}</p>
-						</Badge>
+						</Badge> */}
 					</ul>
 					<div className="-mx-4 -my-4 fixed bottom-[96px] w-full md:relative md:bottom-auto md:mx-0 md:my-0">
-						<FundingDataWrapper
+						{/* <FundingDataWrapper
 							hypercertId={report.hypercertId}
 							totalAmount={report.totalCost}
 							fundedAmount={report.fundedSoFar}
@@ -106,40 +119,41 @@ export default async function ReportPage({ params }: ReportPageProps) {
 									hypercertId: report.hypercertId,
 								}}
 							/>
-						</FundingDataWrapper>
+						</FundingDataWrapper> */}
 					</div>
 				</section>
 				<section className="flex flex-col gap-2 pt-8 md:flex-row md:gap-12">
 					<section className="flex flex-col gap-2">
 						<div>
-							<h3 className="pb-3 font-bold text-2xl">Summary</h3>
-							<p className="text-wrap leading-relaxed">{report.summary}</p>
+							<h3 className="pb-3 font-bold text-2xl">Description</h3>
+							<p className="text-wrap leading-relaxed">
+								{hypercertData.metadata.description}
+							</p>
 						</div>
 						<div className="relative h-[358px] w-full overflow-hidden rounded-2xl md:h-[420px]">
 							<Image
-								src={report.image}
+								src={hypercertData.metadata.image}
 								alt="Report illustration"
 								className="-z-10 bg-center object-cover"
 								fill
 							/>
 						</div>
-						{htmlParsedStory && (
-							<article className="prose text-vd-blue-900">
-								{htmlParsedStory}
-							</article>
-						)}
 					</section>
 					<div>
 						<Separator className="my-6 block bg-stone-300 md:my-0 md:hidden" />
-						<ReportSidebar report={report} />
+						<ReportSidebar
+							metadata={hypercertData.metadata}
+							hypercert_id={hypercertData.hypercert_id}
+						/>
 					</div>
 				</section>
-				{contributions && (
+				{/* {contributions && (
 					<div>
 						<Separator className="my-6 block bg-stone-300 md:hidden" />
 						<ReportSupportFeed contributions={contributions} />
-					</div>
+					</div> 
 				)}
+					*/}
 			</div>
 		</main>
 	);

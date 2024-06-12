@@ -106,7 +106,7 @@ export default async function ReportsPage() {
 				/> */}
 			</section>
 
-			{data.length ? (
+			{data?.length ? (
 				<FilterProvider>
 					<ReportsView hypercerts={data} />
 				</FilterProvider>

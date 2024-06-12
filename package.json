@@ -18,7 +18,7 @@
     "@hookform/resolvers": "^3.3.4",
     "@hypercerts-org/contracts": "2.0.0-alpha.0",
     "@hypercerts-org/marketplace-sdk": "0.3.0",
-    "@hypercerts-org/sdk": "2.0.0-alpha.12",
+    "@hypercerts-org/sdk": "2.0.0-alpha.15",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",

@@ -38,7 +38,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 }) => {
 	console.log("hypercertId", hypercertId);
 	return (
-		<Link href={`/reports/${slug}`} passHref>
+		<Link href={`/${slug}`} passHref>
 			<Card
 				key={hypercertId}
 				// biome-ignore lint/nursery/useSortedClasses: ease-[cubic-bezier(0.76, 0, 0.24, 1)] gets sorted in the wrong way

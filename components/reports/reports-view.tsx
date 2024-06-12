@@ -133,7 +133,7 @@ export function ReportsView({ hypercerts }: IPageData) {
 						hypercerts.map((hypercert: HypercertData) => (
 							<ReportCard
 								key={hypercert.id}
-								slug={hypercert.id}
+								slug={hypercert.hypercert_id}
 								hypercertId={hypercert.id}
 								image={hypercert.metadata.image}
 								title={hypercert.metadata.name}

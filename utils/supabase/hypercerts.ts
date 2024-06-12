@@ -52,9 +52,14 @@ export const fetchHypercerts = async (): Promise<GetHypercertsResponse> => {
 	};
 };
 
+export type GetHypercertsByIdResponse = {
+	data: HypercertData | null;
+	error: PostgresError | null;
+};
+
 export const fetchHypercertById = async (
 	hypercert_id: string,
-): Promise<GetHypercertsResponse> => {
+): Promise<GetHypercertsByIdResponse> => {
 	const supabase = createClient();
 
 	if (!supabase) {
@@ -89,8 +94,10 @@ export const fetchHypercertById = async (
 			`)
 			.eq("hypercert_id", hypercert_id);
 
+		const hypercertData = data?.[0];
+
 		return {
-			data: data as HypercertData[] | null,
+			data: hypercertData as HypercertData,
 			error: error as PostgresError | null,
 		};
 	} catch (error) {
