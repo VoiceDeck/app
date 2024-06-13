@@ -38,9 +38,9 @@ const NavLinks = () => {
 	const isActive = (path: string) => pathname.startsWith(path);
 
 	return (
-		<ul className="hidden md:flex gap-1">
+		<ul className="hidden gap-1 md:flex">
 			<li>
-				<NavLink href="/reports" isActive={isActive("/reports")}>
+				<NavLink href="/" isActive={isActive("/reports")}>
 					Browse
 				</NavLink>
 			</li>
@@ -51,18 +51,18 @@ const NavLinks = () => {
 			</li>
 			<li>
 				<a
-					href="https://voicedeck.org/faq/"
+					href="https://testnet.hypercerts.org/docs/intro"
 					target="_blank"
 					rel="noopener noreferrer"
 					className={cn(
 						buttonVariants({ variant: "link" }),
-						"font-semibold group",
+						"group font-semibold",
 					)}
 				>
 					<span>FAQs</span>
 					<ArrowUpRight
 						size={18}
-						className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+						className="group-hover:-translate-y-0.5 ml-1 opacity-70 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:opacity-100"
 						aria-hidden="true"
 					/>
 				</a>

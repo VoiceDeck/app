@@ -6,12 +6,11 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { config, projectId } from "@/config/wagmi";
 import useMintHypercert from "@/hooks/use-mint-hypercert";
 import type { HypercertMetadata } from "@hypercerts-org/sdk";
 import { Badge, BadgeCheck, CircleCheck, Loader, Loader2 } from "lucide-react";
 import type React from "react";
-import { type Dispatch, type SetStateAction, useEffect } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import type {
 	Address,
 	TransactionReceipt,
@@ -19,10 +18,10 @@ import type {
 } from "viem";
 import type { UseWaitForTransactionReceiptReturnType } from "wagmi";
 import type { WaitForTransactionReceiptData } from "wagmi/query";
+import { config, projectId } from "@/config/wagmi";
 
 const HypercertMintDialog = ({
 	isMintLoading,
-	isMintPending,
 	isMintSuccess,
 	isMintError,
 	mintData,

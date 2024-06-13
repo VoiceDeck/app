@@ -18,7 +18,7 @@ import { WalletProfile } from "./wallet-profile";
 
 const Footer = () => {
 	return (
-		<footer className="fixed inset-x-0 bottom-0 bg-vd-beige-100 text-center items-center py-2 md:static border-t-[1.5px] border-vd-beige-400">
+		<footer className="fixed inset-x-0 bottom-0 items-center border-vd-beige-400 border-t-[1.5px] bg-vd-beige-100 py-2 text-center md:static">
 			<MobileFooter />
 			<DesktopFooter />
 		</footer>
@@ -29,16 +29,16 @@ const MobileFooter = () => {
 	return (
 		<nav
 			aria-label="Mobile Footer Navigation"
-			className="pb-4 pt-2 px-8 w-full"
+			className="w-full px-8 pt-2 pb-4"
 		>
-			<ul className="flex justify-between items-center gap-1 md:hidden">
+			<ul className="flex items-center justify-between gap-1 md:hidden">
 				<li>
 					<Link
 						href="/"
 						className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
 						passHref
 					>
-						<div className="flex flex-col jusify-center items-center">
+						<div className="jusify-center flex flex-col items-center">
 							<Newspaper aria-hidden="true" focusable="false" />
 							<span className="text-xs">Hypercerts</span>
 						</div>
@@ -50,7 +50,7 @@ const MobileFooter = () => {
 				<li>
 					<Drawer>
 						<DrawerTrigger>
-							<div className="flex flex-col justify-center items-center">
+							<div className="flex flex-col items-center justify-center">
 								<Menu aria-hidden="true" focusable="false" />
 								<span className="text-xs">More</span>
 							</div>
@@ -90,7 +90,7 @@ const MobileFooter = () => {
 
 							<DrawerFooter>
 								<DrawerClose>
-									<div className="flex flex-col justify-center items-center w-full">
+									<div className="flex w-full flex-col items-center justify-center">
 										<X aria-hidden="true" focusable="false" />
 										<span className="text-xs">Close</span>
 									</div>
@@ -106,7 +106,7 @@ const MobileFooter = () => {
 
 const DesktopFooter = () => {
 	return (
-		<div className="hidden md:flex md:container h-32 items-center justify-between">
+		<div className="hidden h-32 items-center justify-between md:container md:flex">
 			<div className="flex flex-col">
 				<Link href={"/reports"} passHref className="flex items-center gap-2">
 					<Image
@@ -117,7 +117,7 @@ const DesktopFooter = () => {
 						height={100}
 					/>
 				</Link>
-				<p className="text-base font-medium pt-2">Fund and reward impact</p>
+				<p className="pt-2 font-medium text-base">Fund and reward impact</p>
 			</div>
 			<ul className="flex space-x-2">
 				{externalLinks.map(({ url, title }) => (
@@ -128,7 +128,7 @@ const DesktopFooter = () => {
 							rel="noopener noreferrer"
 							className={cn(
 								buttonVariants({ variant: "link" }),
-								"text-lg flex justify-between items-center group",
+								"group flex items-center justify-between text-lg",
 							)}
 							aria-label={`Open ${title} in a new tab`}
 						>
@@ -136,7 +136,7 @@ const DesktopFooter = () => {
 							<span className="sr-only">(opens in a new tab)</span>
 							<ArrowUpRight
 								size={18}
-								className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+								className="group-hover:-translate-y-0.5 ml-1 opacity-70 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:opacity-100"
 								aria-hidden="true"
 							/>
 						</a>

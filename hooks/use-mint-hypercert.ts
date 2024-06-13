@@ -4,10 +4,12 @@ import { usePublicClient, useWaitForTransactionReceipt } from "wagmi";
 
 import {
 	type HypercertMetadata,
+	HypercertMinterAbi,
 	TransferRestrictions,
 } from "@hypercerts-org/sdk";
-import { parseEther } from "viem";
+import { decodeEventLog, parseEther, type TransactionReceipt } from "viem";
 import { useState } from "react";
+import { constructTokenIdsFromSplitFractionContractReceipt } from "@/utils/constructHypercertIdFromReceipt";
 
 const useMintHypercert = () => {
 	const [metaData, setMetaData] = useState<HypercertMetadata | null>(null);
@@ -56,6 +58,22 @@ const useMintHypercert = () => {
 	} = useWaitForTransactionReceipt({
 		hash: mintData,
 	});
+	const transactionReceipt = receiptData;
+	if (transactionReceipt) {
+		console.log("transactionReceipt", transactionReceipt);
+	}
+
+	if (receiptData) {
+		console.log("receiptData", receiptData);
+		const events = receiptData?.logs.map((log) =>
+			decodeEventLog({
+				abi: HypercertMinterAbi,
+				data: log.data,
+				topics: log.topics,
+			}),
+		);
+		console.log("events", events);
+	}
 
 	return {
 		isMintLoading,
