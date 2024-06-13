@@ -40,6 +40,7 @@ import {
 
 import { Dialog } from "../ui/dialog";
 import { HypercertMintDialog } from "./hypercert-mint-dialog";
+import useMintHypercert from "@/hooks/use-mint-hypercert";
 
 const telegramHandleRegex = /^@([a-zA-Z0-9_]{4,31})$/;
 const emailRegex =
@@ -111,9 +112,23 @@ type MintingFormValues = z.infer<typeof HypercertMintSchema>;
 const HypercertForm = () => {
 	const imageRef = useRef<HTMLDivElement | null>(null);
 	const [badges, setBadges] = useState(["Edge Esmeralda", "Edge City"]);
-	const [openMintDialog, setOpenMintDialogChange] = useState(false);
-	const [hypercertMetadata, setHypercertMetadata] =
-		useState<HypercertMetadata | null>(null);
+	const [openMintDialog, setOpenMintDialog] = useState(false);
+	const {
+		isMintLoading,
+		isMintPending,
+		isMintSuccess,
+		isMintError,
+		mintData,
+		mintError,
+		isReceiptPending,
+		isReceiptLoading,
+		isReceiptSuccess,
+		isReceiptError,
+		receiptData,
+		receiptError,
+		metaData,
+		setMetaData,
+	} = useMintHypercert();
 
 	const form = useForm<MintingFormValues>({
 		resolver: zodResolver(HypercertMintSchema),
@@ -182,16 +197,15 @@ const HypercertForm = () => {
 
 		if (!formattedMetadata.valid) {
 			console.log("Invalid metadata");
-			setHypercertMetadata(null);
 			return;
 		}
 
-		setHypercertMetadata(formattedMetadata.data);
-		setOpenMintDialogChange(true);
+		setMetaData(formattedMetadata.data);
+		setOpenMintDialog(true);
 	};
 
 	return (
-		<Dialog open={openMintDialog} onOpenChange={setOpenMintDialogChange}>
+		<Dialog open={openMintDialog} onOpenChange={setOpenMintDialog}>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<div className="flex gap-4">
@@ -492,12 +506,23 @@ const HypercertForm = () => {
 					</div>
 				</form>
 			</Form>
-			{hypercertMetadata && (
+			{metaData && (
 				<HypercertMintDialog
-					hypercertMetadata={hypercertMetadata}
-					setHypercertMetadata={setHypercertMetadata}
-					setOpenMintDialogChange={setOpenMintDialogChange}
-					clearFormData={form.reset}
+					isMintLoading={isMintLoading}
+					isMintPending={isMintPending}
+					isMintSuccess={isMintSuccess}
+					isMintError={isMintError}
+					mintData={mintData}
+					mintError={mintError}
+					isReceiptPending={isReceiptPending}
+					isReceiptLoading={isReceiptLoading}
+					isReceiptSuccess={isReceiptSuccess}
+					isReceiptError={isReceiptError}
+					receiptError={receiptError}
+					receiptData={receiptData}
+					metaData={metaData}
+					setMetaData={setMetaData}
+					setOpenMintDialog={setOpenMintDialog}
 				/>
 			)}
 		</Dialog>

@@ -8,48 +8,58 @@ import {
 } from "@/components/ui/dialog";
 import useMintHypercert from "@/hooks/use-mint-hypercert";
 import type { HypercertMetadata } from "@hypercerts-org/sdk";
-import { CircleCheck, Loader2 } from "lucide-react";
+import { Badge, BadgeCheck, CircleCheck, Loader, Loader2 } from "lucide-react";
 import type React from "react";
-import type { Dispatch, SetStateAction } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
+import type {
+	Address,
+	TransactionReceipt,
+	WaitForTransactionReceiptErrorType,
+} from "viem";
+import type { UseWaitForTransactionReceiptReturnType } from "wagmi";
+import type { WaitForTransactionReceiptData } from "wagmi/query";
+import { config, projectId } from "@/config/wagmi";
 
 const HypercertMintDialog = ({
-	hypercertMetadata,
-	setHypercertMetadata,
-	setOpenMintDialogChange,
-	clearFormData,
+	isMintLoading,
+	isMintPending,
+	isMintSuccess,
+	isMintError,
+	mintData,
+	mintError,
+	isReceiptPending,
+	isReceiptLoading,
+	isReceiptSuccess,
+	isReceiptError,
+	receiptError,
+	metaData,
+	receiptData,
+	setMetaData,
+	setOpenMintDialog,
 }: {
-	hypercertMetadata: HypercertMetadata | null;
-	setHypercertMetadata: Dispatch<SetStateAction<HypercertMetadata | null>>;
-	setOpenMintDialogChange: Dispatch<SetStateAction<boolean>>;
-	clearFormData: () => void;
+	isMintLoading: boolean;
+	isMintPending: boolean;
+	isMintSuccess: boolean;
+	isMintError: boolean;
+	mintData?: Address;
+	mintError: Error | null;
+	isReceiptPending: boolean;
+	isReceiptLoading: boolean;
+	isReceiptSuccess: boolean;
+	isReceiptError: boolean;
+	receiptError: WaitForTransactionReceiptErrorType | null;
+	metaData: HypercertMetadata | null;
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	receiptData?: WaitForTransactionReceiptData<any, any>;
+	setMetaData: Dispatch<SetStateAction<HypercertMetadata | null>>;
+	setOpenMintDialog: Dispatch<SetStateAction<boolean>>;
 }) => {
-	const {
-		isLoadingMintClaim,
-		isSuccessMintClaim,
-		mintClaimData,
-		mintClaimError,
-		isFetchingReceipt,
-		isLoadingReceipt,
-		isSuccessReceipt,
-		isErrorReceipt,
-		receipt,
-	} = useMintHypercert({
-		metaData: hypercertMetadata,
-	});
-
-	console.log("mintClaimData", mintClaimData);
-	console.log("receipt", receipt);
-
-	if (isSuccessReceipt) {
-		setHypercertMetadata(null);
-	}
-
-	const handleDialogClose = () => {
-		setHypercertMetadata(null);
-		setOpenMintDialogChange(false);
-		clearFormData();
+	const handleCloseDialog = () => {
+		setOpenMintDialog(false);
+		setMetaData(null);
 	};
 
+	console.log("receiptData", receiptData);
 	return (
 		<div>
 			<DialogContent className="sm:max-w-[425px]">
@@ -60,38 +70,40 @@ const HypercertMintDialog = ({
 					</DialogDescription>
 				</DialogHeader>
 				<div className="flex flex-col gap-4">
-					<div className="flex items-center justify-center gap-2">
-						{isLoadingMintClaim ? (
-							<Loader2 className="h-5 w-5 animate-spin" />
-						) : (
-							<CircleCheck className="h-5 w-5" />
+					<div className="flex items-center justify-start gap-2">
+						{!isReceiptSuccess && !isReceiptSuccess && (
+							<Badge className="h-5 w-5" />
 						)}
-						<p>Waiting for Signature</p>
+						{isMintLoading && <Loader className="h-5 w-5 animate-spin" />}
+						{isMintSuccess && <BadgeCheck className="h-5 w-5" />}
+						<p className="">
+							{isMintSuccess
+								? "Minting hypercert on chain..."
+								: "Preparing to mint hypercert..."}
+						</p>
 					</div>
-					<div className="flex items-center justify-center gap-2">
-						{isSuccessMintClaim ? (
-							<Loader2 className="h-5 w-5 animate-spin" />
-						) : (
-							<CircleCheck className="h-5 w-5" />
+					<div className="flex items-center justify-start gap-2">
+						{!isReceiptSuccess && !isReceiptSuccess && (
+							<Badge className="h-5 w-5" />
 						)}
-						<p>Claim minted</p>
+						{isReceiptLoading && <Loader className="h-5 w-5 animate-spin" />}
+						{isReceiptSuccess && <BadgeCheck className="h-5 w-5" />}
+						<p className="">
+							{isMintSuccess ? "Minting complete" : "Awaiting confirmation..."}
+						</p>
 					</div>
-					{mintClaimError && <div>Error: {mintClaimError.message}</div>}
-					<div className="flex items-center justify-center gap-2">
-						{isLoadingReceipt ? (
-							<Loader2 className="h-5 w-5 animate-spin" />
-						) : (
-							<CircleCheck className="h-5 w-5" />
-						)}
-						<p>Waiting for Transaction</p>
-					</div>
-					{isErrorReceipt && <div>Error receipt: </div>}
-					{isSuccessReceipt && receipt && (
-						<div>Success receipt: {receipt.transactionHash}</div>
+					{isReceiptSuccess && receiptData && (
+						<div className="flex items-center justify-center gap-2">
+							<a
+								href={`https://sepolia.etherscan.io/tx/${receiptData.transactionHash}`}
+							>
+								View transaction on etherscan
+							</a>
+						</div>
 					)}
 				</div>
 				<DialogFooter>
-					<Button type="button" onClick={handleDialogClose}>
+					<Button type="button" onClick={handleCloseDialog}>
 						Close
 					</Button>
 				</DialogFooter>

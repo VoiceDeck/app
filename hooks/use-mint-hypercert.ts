@@ -7,18 +7,10 @@ import {
 	TransferRestrictions,
 } from "@hypercerts-org/sdk";
 import { parseEther } from "viem";
+import { useState } from "react";
 
-interface MintHypercertParams {
-	metaData: HypercertMetadata | null;
-	units?: number;
-	transferRestrictions?: TransferRestrictions;
-}
-
-const useMintHypercert = ({
-	metaData,
-	units = 1,
-	transferRestrictions = TransferRestrictions.FromCreatorOnly,
-}: MintHypercertParams) => {
+const useMintHypercert = () => {
+	const [metaData, setMetaData] = useState<HypercertMetadata | null>(null);
 	const { client } = useHypercertClient();
 
 	if (!client) {
@@ -30,14 +22,13 @@ const useMintHypercert = ({
 		throw new Error("Public client is not initialized");
 	}
 
-	console.log("metaData", metaData);
-
 	const {
-		data: mintClaimData,
-		isLoading: isLoadingMintClaim,
-		isSuccess: isSuccessMintClaim,
-		isError: isErrorMintClaim,
-		error: mintClaimError,
+		data: mintData,
+		isLoading: isMintLoading,
+		isPending: isMintPending,
+		isSuccess: isMintSuccess,
+		isError: isMintError,
+		error: mintError,
 	} = useQuery({
 		queryKey: ["hypercert", { metaData }],
 		queryFn: async () => {
@@ -47,38 +38,40 @@ const useMintHypercert = ({
 			return await client.mintClaim(
 				metaData,
 				parseEther("1"),
-				transferRestrictions,
+				TransferRestrictions.FromCreatorOnly,
 			);
 		},
-		staleTime: Number.POSITIVE_INFINITY,
-		enabled: metaData !== null || metaData !== undefined ? true : false,
+		staleTime: 60 * 1000,
+		enabled: !!metaData,
 	});
 
 	const {
-		isFetching: isFetchingReceipt,
-		isLoading: isLoadingReceipt,
-		data: receipt,
-		isFetched: isFetchedReceipt,
-		isSuccess: isSuccessReceipt,
-		isError: isErrorReceipt,
-		error: errorReceipt,
+		data: receiptData,
+		isLoading: isReceiptLoading,
+		isPending: isReceiptPending,
+		isSuccess: isReceiptSuccess,
+		isError: isReceiptError,
+		status: receiptStatus,
+		error: receiptError,
 	} = useWaitForTransactionReceipt({
-		hash: mintClaimData,
+		hash: mintData,
 	});
 
 	return {
-		isLoadingMintClaim,
-		isSuccessMintClaim,
-		isErrorMintClaim,
-		isFetchingReceipt,
-		isLoadingReceipt,
-		isFetchedReceipt,
-		isSuccessReceipt,
-		isErrorReceipt,
-		mintClaimData,
-		mintClaimError,
-		errorReceipt,
-		receipt,
+		isMintLoading,
+		isMintPending,
+		isMintSuccess,
+		isMintError,
+		mintData,
+		mintError,
+		receiptData,
+		receiptError,
+		isReceiptPending,
+		isReceiptLoading,
+		isReceiptSuccess,
+		isReceiptError,
+		metaData,
+		setMetaData,
 	};
 };
 
