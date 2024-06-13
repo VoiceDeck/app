@@ -15,15 +15,16 @@ const postHypercertId = async (hypercertId: string) => {
 		range: "Sheet1!A:B",
 		valueInputOption: "USER_ENTERED",
 		requestBody: {
-			values: [[hypercertId, "FALSE"]], // Append a new row with the value and FALSE
+			values: [[hypercertId, "FALSE"]], // Append a new row with the value and FALSE to mark it as not approved
 		},
 	});
 
-	const data = response;
+	const { data } = response;
 	console.log("Data added to sheet:", data);
 	if (!data) {
 		throw new Error("No data found");
 	}
+	return data;
 };
 
 export { postHypercertId };

@@ -7,9 +7,10 @@ import {
 	HypercertMinterAbi,
 	TransferRestrictions,
 } from "@hypercerts-org/sdk";
-import { decodeEventLog, parseEther, type TransactionReceipt } from "viem";
+import { parseEther, type TransactionReceipt } from "viem";
 import { useState } from "react";
-import { constructTokenIdsFromSplitFractionContractReceipt } from "@/utils/constructHypercertIdFromReceipt";
+import { postHypercertId } from "@/utils/google/postHypercertId";
+import { constructHypercertIdFromReceipt } from "@/utils/constructHypercertIdFromReceipt";
 
 const useMintHypercert = () => {
 	const [metaData, setMetaData] = useState<HypercertMetadata | null>(null);
@@ -58,21 +59,26 @@ const useMintHypercert = () => {
 	} = useWaitForTransactionReceipt({
 		hash: mintData,
 	});
-	const transactionReceipt = receiptData;
-	if (transactionReceipt) {
-		console.log("transactionReceipt", transactionReceipt);
-	}
 
 	if (receiptData) {
+		console.log("no receipt data");
 		console.log("receiptData", receiptData);
-		const events = receiptData?.logs.map((log) =>
-			decodeEventLog({
-				abi: HypercertMinterAbi,
-				data: log.data,
-				topics: log.topics,
-			}),
-		);
-		console.log("events", events);
+		// TODO: dynamically get hypercertId form hook or something
+		const hypercertId = constructHypercertIdFromReceipt(receiptData, 11155111);
+		console.log("hypercertId", hypercertId);
+		// const {
+		// 	data: googleSheetData,
+		// 	isLoading: isGoogleSheetLoading,
+		// 	isPending: isGoogleSheetPending,
+		// 	isSuccess: isGoogleSheetSuccess,
+		// 	isError: isGoogleSheetError,
+		// 	error: googleSheetError,
+		// } = useQuery({
+		// 	queryKey: ["hypercertId", { hypercertId }],
+		// 	queryFn: () => fetch(`/api/post-hypercert-id?hypercertId=${hypercertId}`),
+		// 	staleTime: Number.POSITIVE_INFINITY,
+		// 	enabled: !!hypercertId,
+		// });
 	}
 
 	return {

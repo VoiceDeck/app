@@ -3,8 +3,9 @@ import { debugLog } from "@/utils/debugLog";
 import { HypercertMinterAbi } from "@hypercerts-org/contracts";
 import type { BigNumber } from "@ethersproject/bignumber";
 
-export const constructTokenIdsFromSplitFractionContractReceipt = (
+export const constructHypercertIdFromReceipt = (
 	receipt: TransactionReceipt,
+	chainId: number,
 ) => {
 	debugLog(receipt);
 	const events = receipt.logs.map((log) =>
@@ -20,15 +21,13 @@ export const constructTokenIdsFromSplitFractionContractReceipt = (
 		throw new Error("No events in receipt");
 	}
 
-	const BatchValueTransfer = events.find(
-		(e) => e.eventName === "BatchValueTransfer",
-	);
+	const claimEvent = events.find((e) => e.eventName === "ClaimStored");
 
-	if (!BatchValueTransfer) {
-		throw new Error("BatchValueTransfer event not found");
+	if (!claimEvent) {
+		throw new Error("ClaimStored event not found");
 	}
 
-	const { args } = BatchValueTransfer;
+	const { args } = claimEvent;
 
 	if (!args) {
 		throw new Error("No args in event");
@@ -36,17 +35,14 @@ export const constructTokenIdsFromSplitFractionContractReceipt = (
 
 	// @ts-ignore
 	// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-	const tokenIds = args["toTokenIDs"] as BigNumber[];
-	// @ts-ignore
-	// biome-ignore lint/complexity/useLiteralKeys: <explanation>
-	const values = args["values"] as BigNumber[];
+	const tokenIdBigNumber = args["claimID"] as BigNumber;
 
-	if (!tokenIds || tokenIds.length === 0) {
+	if (!tokenIdBigNumber) {
 		throw new Error("No tokenId arg in event");
 	}
 
-	return tokenIds.map((tokenId, index) => ({
-		tokenId: tokenId.toString(),
-		value: BigInt(values[index].toString()),
-	}));
+	const contractId = receipt.to?.toLowerCase();
+	const tokenId = tokenIdBigNumber.toString();
+
+	return `${chainId}-${contractId}-${tokenId}`;
 };
