@@ -1,6 +1,7 @@
 import { getSheetsInstance } from "./auth";
 
 const postHypercertId = async (hypercertId: string) => {
+	console.log("hypercertId", hypercertId);
 	const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 	if (!spreadsheetId) {
 		throw new Error("Missing Google spreadsheet ID");

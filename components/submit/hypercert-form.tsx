@@ -200,6 +200,8 @@ const HypercertForm = () => {
 			return;
 		}
 
+		console.log("formattedMetadata", formattedMetadata);
+
 		setMetaData(formattedMetadata.data);
 		setOpenMintDialog(true);
 	};
