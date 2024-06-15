@@ -32,44 +32,44 @@ const Summary = ({
 			<div className="flex flex-col gap-4 md:flex-row">
 				<Card
 					className={cn(
-						"bg-vd-blue-200 rounded-3xl flex-1 shadow-none border-none",
+						"flex-1 rounded-3xl border-none bg-vd-blue-200 shadow-none",
 					)}
 				>
 					<CardHeader>
-						<CardTitle className={cn("text-sm font-normal")}>
+						<CardTitle className={cn("font-normal text-sm")}>
 							My Support
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<data className="text-4xl font-bold">{totalAmount} USD</data>
+						<data className="font-bold text-4xl">{totalAmount} USD</data>
 					</CardContent>
 				</Card>
 				<Card
 					className={cn(
-						"bg-vd-beige-300 rounded-3xl md:flex-1 shadow-none border-none",
+						"rounded-3xl border-none bg-vd-beige-300 shadow-none md:flex-1",
 					)}
 				>
 					<CardHeader>
-						<CardTitle className={cn("text-sm font-normal")}>
+						<CardTitle className={cn("font-normal text-sm")}>
 							# of Hypercerts I own
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<data className="text-4xl font-bold">{reportCount}</data>
+						<data className="font-bold text-4xl">{reportCount}</data>
 					</CardContent>
 				</Card>
 			</div>
 			<Card
-				className={cn("rounded-3xl bg-vd-beige-100 shadow-none border-none")}
+				className={cn("rounded-3xl border-none bg-vd-beige-100 shadow-none")}
 			>
 				<CardHeader>
-					<CardTitle className={cn("text-sm font-normal")}>
+					<CardTitle className={cn("font-normal text-sm")}>
 						Categories of my Hypercerts:
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					{/* TODO: Populate data dynamically based on user */}
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+					<div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
 						{Object.entries(iconComponents).map(([icon, Icon]) => {
 							// Skip rendering the "Location" icon
 							if (icon === "Location") {
@@ -83,10 +83,10 @@ const Summary = ({
 								<Badge
 									key={icon}
 									variant="secondary"
-									className="rounded-3xl w-full justify-between px-5 py-3"
+									className="w-full justify-between rounded-3xl px-5 py-3"
 								>
-									<div className="flex gap-1 items-center">
-										<Icon className="text-vd-orange-400 stroke-[1.5] size-4" />
+									<div className="flex items-center gap-1">
+										<Icon className="size-4 stroke-[1.5] text-vd-orange-400" />
 										<p className="font-normal text-vd-blue-900">{icon}</p>
 									</div>
 									<data>{count}</data>

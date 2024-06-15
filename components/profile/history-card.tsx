@@ -23,9 +23,9 @@ const HistoryCard = ({
 	description,
 }: HistoryCardProps) => {
 	return (
-		<Card className={cn("rounded-3xl bg-vd-beige-100 shadow-none border-none")}>
+		<Card className={cn("rounded-3xl border-none bg-vd-beige-100 shadow-none")}>
 			<CardHeader className={cn("md:pb-2")}>
-				<div className="flex justify-between pb-2 items-center">
+				<div className="flex items-center justify-between pb-2">
 					<time
 						className="text-sm text-vd-blue-400"
 						dateTime={formatDate(date)}
@@ -39,7 +39,7 @@ const HistoryCard = ({
 						<img
 							src={img.src}
 							alt={img.alt}
-							className="h-auto md:max-h-32 aspect-[3/2] w-full rounded-2xl object-cover"
+							className="aspect-[3/2] h-auto w-full rounded-2xl object-cover md:max-h-32"
 						/>
 					</div>
 					<div className="flex flex-col gap-3">
@@ -47,17 +47,17 @@ const HistoryCard = ({
 						<div className="flex gap-2 pt-2">
 							<Badge
 								variant="secondary"
-								className={cn("rounded-3xl justify-between items-center")}
+								className={cn("items-center justify-between rounded-3xl")}
 							>
 								<DynamicCategoryIcon category={category} />
-								<p className="font-light text-xs ml-1">{category}</p>
+								<p className="ml-1 font-light text-xs">{category}</p>
 							</Badge>
 							<Badge
 								variant="secondary"
-								className={cn("rounded-3xl justify-between items-center")}
+								className={cn("items-center justify-between rounded-3xl")}
 							>
 								<DynamicCategoryIcon category="Location" />
-								<p className="font-light text-xs ml-1">{location}</p>
+								<p className="ml-1 font-light text-xs">{location}</p>
 							</Badge>
 						</div>
 					</div>

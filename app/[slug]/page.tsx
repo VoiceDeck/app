@@ -78,7 +78,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 			{/* 192px is added to account for the funding progress on mobile */}
 			<div className="flex flex-col gap-3 space-y-2 p-4 pb-[256px] md:mx-auto md:max-w-[1200px] md:pb-8">
 				<section className="flex flex-1 flex-col gap-4">
-					<Link href={"/reports"} className="group flex items-center space-x-1">
+					<Link href={"/"} className="group flex items-center space-x-1">
 						<ChevronLeft
 							size={24}
 							className="group-hover:-translate-x-2 text-vd-blue-400 transition-transform duration-300 ease-in-out"

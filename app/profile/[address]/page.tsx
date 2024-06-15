@@ -10,7 +10,7 @@ import { SideBar } from "@/components/profile/sidebar";
 import { Summary } from "@/components/profile/summary";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Select,
 	SelectContent,
@@ -22,6 +22,7 @@ import {
 import { z } from "zod";
 import { SellFractionsDialogContent } from "@/components/profile/sell-fractions-dialog-content";
 import type { Address } from "viem";
+import { HypercertClient, graphClient } from "@hypercerts-org/sdk";
 
 /**
  * Fetches contribution history data for a given address.
@@ -91,6 +92,7 @@ async function getHypercertFractionsByOwner(address: Address) {
 							metadata {
 								id
 								name
+								image
 							}
 							}
 						}
@@ -105,16 +107,52 @@ async function getHypercertFractionsByOwner(address: Address) {
 			throw new Error("Network response was not ok.");
 		}
 		const { data } = await res.json();
+		const fractions = data.fractions.data;
+		const filteredFractions = fractions.filter(
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			(fraction: any) =>
+				fraction.metadata.name !== null && fraction.metadata.image !== null,
+		);
 		console.log("Data In query:", data);
 		return {
-			fractionsCount: data.fractions.count,
-			fractions: data.fractions.data,
+			fractionsCount: filteredFractions.length,
+			fractions: filteredFractions,
 		};
 	} catch (error) {
 		console.error("Error:", error);
 		throw error;
 	}
 }
+
+// async function getHypercertFractionsByOwnerFromHypercertsClient(
+// 	address: Address,
+// ) {
+// 	const fractions = graphClient.graphql(
+// 		JSON.stringify({
+// 			query: `
+// 				query GetFractionsByOwner($address: String!) {
+// 					fractions(
+// 						where: {owner_address: {contains: $address}}
+// 						count: COUNT
+// 					) {
+// 						count
+// 						data {
+// 						metadata {
+// 							id
+// 							name
+// 							image
+// 						}
+// 						}
+// 					}
+// 				}
+// 			`,
+// 			variables: {
+// 				address: address,
+// 			},
+// 		}),
+// 	);
+// 	return fractions;
+// }
 
 export default async function ProfilePage({
 	params: { address },
@@ -127,9 +165,10 @@ export default async function ProfilePage({
 	// 	totalAmount = 0,
 	// 	reportCount = 0,
 	// } = await getContributionsHistoryData(address);
-	const fractions = await getHypercertFractionsByOwner(
-		"0xA8cadC2268B01395f8573682fb9DD00Bd582E8A0",
-	);
+	const { fractions, fractionsCount } =
+		await getHypercertFractionsByOwner(address);
+	// const fractions =
+	// 	await getHypercertFractionsByOwnerFromHypercertsClient(address);
 	console.log("Data in Page:", fractions);
 
 	return (
@@ -145,6 +184,23 @@ export default async function ProfilePage({
 				</Link>
 			</header>
 
+			{/* // TODO: Move to separate component */}
+			<section className="flex flex-col gap-4 md:col-span-2">
+				<Card
+					className={cn(
+						"rounded-3xl border-none bg-vd-beige-300 shadow-none md:flex-1",
+					)}
+				>
+					<CardHeader>
+						<CardTitle className={cn("font-normal text-sm")}>
+							# of Hypercerts I own
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<data className="font-bold text-4xl">{fractionsCount}</data>
+					</CardContent>
+				</Card>
+			</section>
 			{/* <Summary
 				totalAmount={totalAmount}
 				reportCount={reportCount}

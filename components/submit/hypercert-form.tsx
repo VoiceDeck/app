@@ -195,7 +195,7 @@ const HypercertForm = () => {
 			contributors: values.contributors,
 		});
 
-		if (!formattedMetadata.valid) {
+		if (!formattedMetadata.valid || !formattedMetadata.data) {
 			console.log("Invalid metadata");
 			return;
 		}

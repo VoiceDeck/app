@@ -7,6 +7,10 @@ export const constructHypercertIdFromReceipt = (
 	receipt: TransactionReceipt,
 	chainId: number,
 ) => {
+	if (!receipt || !receipt.logs) {
+		console.log("No receipt found");
+		return;
+	}
 	debugLog(receipt);
 	const events = receipt.logs.map((log) =>
 		decodeEventLog({

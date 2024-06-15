@@ -14,9 +14,9 @@ import Link from "next/link";
 const SideBar = () => {
 	return (
 		<section className="flex flex-col gap-4 md:col-span-1 md:row-span-2">
-			<Card className="rounded-3xl bg-vd-beige-100 shadow-none border-none">
+			<Card className="rounded-3xl border-none bg-vd-beige-100 shadow-none">
 				<CardHeader>
-					<div className="mx-auto px-6 w-40 h-auto my-2">
+					<div className="mx-auto my-2 h-auto w-40 px-6">
 						<HeartPulse className="h-28 w-28" />
 					</div>
 					<CardTitle className="text-center text-lg md:text-xl">
@@ -28,7 +28,7 @@ const SideBar = () => {
 				</CardHeader>
 				<CardContent className="flex justify-center">
 					<Link
-						href="/reports"
+						href="/"
 						className={buttonVariants({ variant: "default", size: "lg" })}
 					>
 						Explore

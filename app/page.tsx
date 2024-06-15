@@ -14,6 +14,8 @@ import type { Report } from "@/types";
 import { fetchHypercerts } from "@/utils/supabase/hypercerts";
 import { createClient } from "@/utils/supabase/server";
 
+export const fetchCache = "force-no-store";
+
 export default async function ReportsPage() {
 	// let uniqueReports: Report[];
 	// let numOfContributors: number;
@@ -36,41 +38,6 @@ export default async function ReportsPage() {
 	console.log("SUPABASE TEST", data);
 	console.log("SUPABASE Error", error);
 
-	// const supabase = createClient();
-	// const hypercertIds = [
-	// 	"11155111-0xa16DFb32Eb140a6f3F2AC68f41dAd8c7e83C4941-31986542490568215565557213098586211876864",
-	// 	"11155111-0xa16DFb32Eb140a6f3F2AC68f41dAd8c7e83C4941-31646260123647277102093838491154443665408",
-	// ];
-
-	// const { data: hypercerts, error } = await supabase
-	// 	.from("claims")
-	// 	.select(`
-	//   *,
-	//   metadata (
-	// 	allow_list_uri,
-	// 	contributors,
-	// 	description,
-	// 	external_url,
-	// 	id,
-	// 	image,
-	// 	impact_scope,
-	// 	impact_timeframe_from,
-	// 	impact_timeframe_to,
-	// 	name,
-	// 	parsed,
-	// 	properties,
-	// 	rights,
-	// 	uri,
-	// 	work_scope,
-	// 	work_timeframe_from,
-	// 	work_timeframe_to
-	//   ),
-	//   fractions!inner (id,units, owner_address)
-	// `)
-	// 	.in("hypercert_id", hypercertIds);
-
-	// console.log("SUPABASE TEST", hypercerts);
-	// console.log("SUPABASE Error", error);
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const uniqueReports: string | any[] = [];
 	return (

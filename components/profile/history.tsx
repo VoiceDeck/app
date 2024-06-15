@@ -34,9 +34,9 @@ const History = ({ history }: { history: HistoryData[] }) => {
 
 	const renderEmptyState = () => {
 		return (
-			<div className="text-center flex flex-col gap-6 md:px-20">
+			<div className="flex flex-col gap-6 text-center md:px-20">
 				<img src="/history-bg.svg" alt="circular pattern" />
-				<p className="text-vd-beige-600 px-8">
+				<p className="px-8 text-vd-beige-600">
 					When you start supporting reports they will appear here.
 				</p>
 			</div>
@@ -44,8 +44,8 @@ const History = ({ history }: { history: HistoryData[] }) => {
 	};
 
 	return (
-		<section className="flex flex-col gap-4 md:col-start-1 md:col-span-2 md:mt-2">
-			<h2 className="text-xl md:text-3xl font-semibold text-center md:text-left md:py-6">
+		<section className="flex flex-col gap-4 md:col-span-2 md:col-start-1 md:mt-2">
+			<h2 className="text-center font-semibold text-xl md:py-6 md:text-left md:text-3xl">
 				Supporting History
 			</h2>
 			{history && history.length > 0

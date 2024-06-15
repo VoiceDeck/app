@@ -11,9 +11,10 @@ import { parseEther, type TransactionReceipt } from "viem";
 import { useState } from "react";
 import { postHypercertId } from "@/utils/google/postHypercertId";
 import { constructHypercertIdFromReceipt } from "@/utils/constructHypercertIdFromReceipt";
+import { useAddHypercertIdToGoogleSheet } from "./use-add-hypercert-id-to-google-sheets";
 
 const useMintHypercert = () => {
-	const [metaData, setMetaData] = useState<HypercertMetadata | null>(null);
+	const [metaData, setMetaData] = useState<HypercertMetadata | undefined>();
 	const { client } = useHypercertClient();
 
 	if (!client) {
@@ -44,7 +45,7 @@ const useMintHypercert = () => {
 				TransferRestrictions.FromCreatorOnly,
 			);
 		},
-		staleTime: 60 * 1000,
+		staleTime: Number.POSITIVE_INFINITY,
 		enabled: !!metaData,
 	});
 
@@ -54,32 +55,24 @@ const useMintHypercert = () => {
 		isPending: isReceiptPending,
 		isSuccess: isReceiptSuccess,
 		isError: isReceiptError,
-		status: receiptStatus,
 		error: receiptError,
 	} = useWaitForTransactionReceipt({
 		hash: mintData,
 	});
 
-	if (receiptData) {
-		console.log("no receipt data");
-		console.log("receiptData", receiptData);
-		// TODO: dynamically get hypercertId form hook or something
-		const hypercertId = constructHypercertIdFromReceipt(receiptData, 11155111);
-		console.log("hypercertId", hypercertId);
-		// const {
-		// 	data: googleSheetData,
-		// 	isLoading: isGoogleSheetLoading,
-		// 	isPending: isGoogleSheetPending,
-		// 	isSuccess: isGoogleSheetSuccess,
-		// 	isError: isGoogleSheetError,
-		// 	error: googleSheetError,
-		// } = useQuery({
-		// 	queryKey: ["hypercertId", { hypercertId }],
-		// 	queryFn: () => fetch(`/api/post-hypercert-id?hypercertId=${hypercertId}`),
-		// 	staleTime: Number.POSITIVE_INFINITY,
-		// 	enabled: !!hypercertId,
-		// });
-	}
+	const hypercertId = constructHypercertIdFromReceipt(
+		receiptData as TransactionReceipt,
+		publicClient.chain.id,
+	);
+
+	const {
+		data: googleSheetsData,
+		isLoading: isGoogleSheetsLoading,
+		isPending: isGoogleSheetsPending,
+		isSuccess: isGoogleSheetsSuccess,
+		isError: isGoogleSheetsError,
+		error: googleSheetsError,
+	} = useAddHypercertIdToGoogleSheet(hypercertId);
 
 	return {
 		isMintLoading,
