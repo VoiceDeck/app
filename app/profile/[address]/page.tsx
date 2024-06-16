@@ -1,5 +1,6 @@
 import { Settings2 } from "lucide-react";
 import Link from "next/link";
+import { graphql } from "gql.tada";
 
 import { getContributionsByAddress } from "@/lib/directus";
 import { fetchReportByHCId } from "@/lib/impact-reports";
@@ -25,6 +26,7 @@ import type { Address } from "viem";
 import { HypercertClient, graphClient } from "@hypercerts-org/sdk";
 import { graphqlEndpoint } from "@/config/graphql";
 import { FractionCard } from "@/components/profile/fraction-card";
+import Fractions from "@/components/profile/fractions";
 
 /**
  * Fetches contribution history data for a given address.
@@ -73,7 +75,33 @@ import { FractionCard } from "@/components/profile/fraction-card";
 // 		};
 // 	}
 // }
-async function getHypercertFractionsByOwner(address: Address) {
+interface FractionPromise {
+	fractionsCount: number;
+	fractions: Fraction[];
+}
+
+export interface Fraction {
+	count: number;
+	id: string;
+	hypercert_id: string;
+	units: number;
+	owner_address: string;
+	metadata: {
+		id: string;
+		name: string;
+		description: string;
+		image: string;
+		external_url: string;
+		contributors: string[];
+		work_scope: string[];
+		work_timeframe_from: Date;
+		work_timeframe_to: Date;
+	};
+}
+
+async function getHypercertFractionsByOwner(
+	address: Address,
+): Promise<FractionPromise> {
 	console.log("Address:", address);
 	try {
 		const res = await fetch(graphqlEndpoint, {
@@ -91,16 +119,18 @@ async function getHypercertFractionsByOwner(address: Address) {
 						) {
 							count
 							data {
+								id
 								hypercert_id
-								units
 								owner_address
+								units
 								metadata {
-									contributors
-									description
 									id
-									image
 									name
+									description
+									image
+									external_url
 									work_scope
+									contributors
 									work_timeframe_from
 									work_timeframe_to
 								}
@@ -134,36 +164,6 @@ async function getHypercertFractionsByOwner(address: Address) {
 		throw error;
 	}
 }
-
-// async function getHypercertFractionsByOwnerFromHypercertsClient(
-// 	address: Address,
-// ) {
-// 	const fractions = graphClient.graphql(
-// 		JSON.stringify({
-// 			query: `
-// 				query GetFractionsByOwner($address: String!) {
-// 					fractions(
-// 						where: {owner_address: {contains: $address}}
-// 						count: COUNT
-// 					) {
-// 						count
-// 						data {
-// 						metadata {
-// 							id
-// 							name
-// 							image
-// 						}
-// 						}
-// 					}
-// 				}
-// 			`,
-// 			variables: {
-// 				address: address,
-// 			},
-// 		}),
-// 	);
-// 	return fractions;
-// }
 
 export default async function ProfilePage({
 	params: { address },
@@ -219,23 +219,7 @@ export default async function ProfilePage({
 			/> */}
 			<SideBar />
 			{/* <History history={history} /> */}
-			{fractions.map((fraction: any) => (
-				<FractionCard
-					key={fraction.id}
-					id={fraction.id}
-					units={fraction.units}
-					hypercert_id={fraction.hypercert_id}
-					owner_address={fraction.owner_address}
-					work_timeframe_from={fraction.metadata.work_timeframe_from}
-					work_timeframe_to={fraction.metadata.work_timeframe_to}
-					work_scope={fraction.metadata.work_scope}
-					contributors={fraction.metadata.contributors}
-					external_url={fraction.metadata.external_url}
-					image={fraction.metadata.image}
-					name={fraction.metadata.name}
-					description={fraction.metadata.description}
-				/>
-			))}
+			<Fractions fractions={fractions} />
 			<Dialog>
 				<DialogTrigger asChild>
 					<Button size={"lg"} variant={"default"}>

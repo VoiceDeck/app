@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(d: Date) {
-	const date = new Date(d);
+	const date = new Date(Number(d) * 1000);
 	return date
 		.toLocaleDateString("en-US", {
 			year: "numeric",

@@ -31,18 +31,21 @@ const FractionCard = ({
 		<Card className={cn("rounded-3xl border-none bg-vd-beige-100 shadow-none")}>
 			<CardHeader className={cn("md:pb-2")}>
 				<div className="flex items-center justify-between pb-2">
-					<time
-						className="text-sm text-vd-blue-400"
-						dateTime={formatDate(work_timeframe_from)}
-					>
-						{formatDate(work_timeframe_from)}
-					</time>
-					<time
-						className="text-sm text-vd-blue-400"
-						dateTime={formatDate(work_timeframe_to)}
-					>
-						{formatDate(work_timeframe_to)}
-					</time>
+					<div className="flex gap-2">
+						<time
+							className="text-sm text-vd-blue-400"
+							dateTime={formatDate(work_timeframe_from)}
+						>
+							{formatDate(work_timeframe_from)}
+						</time>
+						<span className="text-sm text-vd-blue-400"> - </span>
+						<time
+							className="text-sm text-vd-blue-400"
+							dateTime={formatDate(work_timeframe_to)}
+						>
+							{formatDate(work_timeframe_to)}
+						</time>
+					</div>
 					<data className="mt-0">{formatCurrency(units)}</data>
 				</div>
 				<div className="flex flex-col gap-2 md:flex-row md:items-center">
@@ -62,7 +65,6 @@ const FractionCard = ({
 									variant="secondary"
 									className={cn("items-center justify-between rounded-3xl")}
 								>
-									<DynamicCategoryIcon category={scope} />
 									<p className="ml-1 font-light text-xs">{scope}</p>
 								</Badge>
 							))}

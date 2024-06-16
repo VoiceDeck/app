@@ -1,33 +1,24 @@
-import { HistoryCard } from "@/components/profile/history-card";
-import type { Hex } from "viem";
-
-export interface HistoryData {
-	id: Hex;
-	date: Date;
-	amount: number;
-	img: {
-		src: string;
-		alt: string;
-	};
-	title: string;
-	category: string;
-	location: string;
-	description: string;
-}
+import type { Fraction } from "@/app/profile/[address]/page";
+import { FractionCard } from "./fraction-card";
 
 // TODO: Replace mockData with actual data from the API,
-const History = ({ history }: { history: HistoryData[] }) => {
+const History = ({ fractions }: { fractions: Fraction[] }) => {
 	const renderHistoryCards = () => {
-		return history.map((data) => (
-			<HistoryCard
-				key={data.id}
-				date={data.date}
-				amount={data.amount}
-				img={data.img}
-				title={data.title}
-				category={data.category}
-				location={data.location}
-				description={data.description}
+		return fractions.map((fraction) => (
+			<FractionCard
+				key={fraction.id}
+				id={fraction.id}
+				units={fraction.units}
+				hypercert_id={fraction.hypercert_id}
+				owner_address={fraction.owner_address}
+				work_timeframe_from={fraction.metadata.work_timeframe_from}
+				work_timeframe_to={fraction.metadata.work_timeframe_to}
+				work_scope={fraction.metadata.work_scope}
+				contributors={fraction.metadata.contributors}
+				external_url={fraction.metadata.external_url}
+				image={fraction.metadata.image}
+				name={fraction.metadata.name}
+				description={fraction.metadata.description}
 			/>
 		));
 	};
@@ -48,7 +39,7 @@ const History = ({ history }: { history: HistoryData[] }) => {
 			<h2 className="text-center font-semibold text-xl md:py-6 md:text-left md:text-3xl">
 				Supporting History
 			</h2>
-			{history && history.length > 0
+			{fractions && fractions.length > 0
 				? renderHistoryCards()
 				: renderEmptyState()}
 		</section>
