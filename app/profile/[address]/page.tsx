@@ -23,6 +23,8 @@ import { z } from "zod";
 import { SellFractionsDialogContent } from "@/components/profile/sell-fractions-dialog-content";
 import type { Address } from "viem";
 import { HypercertClient, graphClient } from "@hypercerts-org/sdk";
+import { graphqlEndpoint } from "@/config/graphql";
+import { FractionCard } from "@/components/profile/fraction-card";
 
 /**
  * Fetches contribution history data for a given address.
@@ -74,7 +76,7 @@ import { HypercertClient, graphClient } from "@hypercerts-org/sdk";
 async function getHypercertFractionsByOwner(address: Address) {
 	console.log("Address:", address);
 	try {
-		const res = await fetch("https://staging-api.hypercerts.org/v1/graphql", {
+		const res = await fetch(graphqlEndpoint, {
 			cache: "no-store",
 			method: "POST",
 			headers: {
@@ -89,11 +91,19 @@ async function getHypercertFractionsByOwner(address: Address) {
 						) {
 							count
 							data {
-							metadata {
-								id
-								name
-								image
-							}
+								hypercert_id
+								units
+								owner_address
+								metadata {
+									contributors
+									description
+									id
+									image
+									name
+									work_scope
+									work_timeframe_from
+									work_timeframe_to
+								}
 							}
 						}
 					}
@@ -107,6 +117,7 @@ async function getHypercertFractionsByOwner(address: Address) {
 			throw new Error("Network response was not ok.");
 		}
 		const { data } = await res.json();
+		console.log("Data in query:", data);
 		const fractions = data.fractions.data;
 		const filteredFractions = fractions.filter(
 			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -208,6 +219,23 @@ export default async function ProfilePage({
 			/> */}
 			<SideBar />
 			{/* <History history={history} /> */}
+			{fractions.map((fraction: any) => (
+				<FractionCard
+					key={fraction.id}
+					id={fraction.id}
+					units={fraction.units}
+					hypercert_id={fraction.hypercert_id}
+					owner_address={fraction.owner_address}
+					work_timeframe_from={fraction.metadata.work_timeframe_from}
+					work_timeframe_to={fraction.metadata.work_timeframe_to}
+					work_scope={fraction.metadata.work_scope}
+					contributors={fraction.metadata.contributors}
+					external_url={fraction.metadata.external_url}
+					image={fraction.metadata.image}
+					name={fraction.metadata.name}
+					description={fraction.metadata.description}
+				/>
+			))}
 			<Dialog>
 				<DialogTrigger asChild>
 					<Button size={"lg"} variant={"default"}>

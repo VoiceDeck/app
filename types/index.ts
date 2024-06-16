@@ -71,6 +71,18 @@ export type HypercertData = {
 	fractions: Fraction[];
 	// Add other fields from the `claims` table if there are any
 };
+
+export type FractionMetaData = {
+	id: string;
+	name: string;
+	image: string;
+	description: string;
+	work_timeframe_from: Date;
+	work_timeframe_to: Date;
+	work_scope: string[];
+	contributors: string[];
+	external_url: string;
+};
 export interface Report {
 	// properties for hypercert minting
 	hypercertId: string;
