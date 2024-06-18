@@ -26,34 +26,31 @@ const HypercertMintDialog = ({
 	isMintError,
 	mintData,
 	mintError,
-	isReceiptPending,
 	isReceiptLoading,
 	isReceiptSuccess,
 	isReceiptError,
 	receiptError,
 	isGoogleSheetsLoading,
-	isGoogleSheetsPending,
 	isGoogleSheetsSuccess,
 	isGoogleSheetsError,
+	googleSheetsError,
 	metaData,
 	receiptData,
 	setMetaData,
 	setOpenMintDialog,
 }: {
 	isMintLoading: boolean;
-	isMintPending: boolean;
 	isMintSuccess: boolean;
 	isMintError: boolean;
 	mintData?: Address;
 	mintError: Error | null;
-	isReceiptPending: boolean;
 	isReceiptLoading: boolean;
 	isReceiptSuccess: boolean;
 	isReceiptError: boolean;
 	isGoogleSheetsLoading: boolean;
-	isGoogleSheetsPending: boolean;
 	isGoogleSheetsSuccess: boolean;
 	isGoogleSheetsError: boolean;
+	googleSheetsError: Error | null;
 	receiptError: WaitForTransactionReceiptErrorType | null;
 	metaData: HypercertMetadata | null;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -147,25 +144,25 @@ const HypercertMintDialog = ({
 									<p>Waiting to send to Edge Esmeralda for approval...</p>
 								</>
 							)}
-						{isReceiptLoading && (
+						{isGoogleSheetsLoading && (
 							<>
 								<Loader className="h-5 w-5 animate-spin" />
 								<p>Sending to Edge Esmeralda team...</p>
 							</>
 						)}
-						{isReceiptSuccess && (
+						{isGoogleSheetsSuccess && (
 							<>
 								<BadgeCheck className="h-5 w-5" />
 								<p className="">Sent to Edge Esmeralda team!</p>
 							</>
 						)}
-						{isReceiptError && receiptError && (
+						{isGoogleSheetsError && googleSheetsError && (
 							<>
 								<BadgeX className="h-5 w-5" />
 								<p className="">
 									Upload for approval error:{" "}
-									{receiptError.message
-										? receiptError.message
+									{googleSheetsError.message
+										? googleSheetsError.message
 										: "Error processing transaction. Please try again."}
 								</p>
 							</>

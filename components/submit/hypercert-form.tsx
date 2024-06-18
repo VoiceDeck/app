@@ -518,17 +518,19 @@ const HypercertForm = () => {
 			{metaData && (
 				<HypercertMintDialog
 					isMintLoading={isMintLoading}
-					isMintPending={isMintPending}
 					isMintSuccess={isMintSuccess}
 					isMintError={isMintError}
 					mintData={mintData}
 					mintError={mintError}
-					isReceiptPending={isReceiptPending}
 					isReceiptLoading={isReceiptLoading}
 					isReceiptSuccess={isReceiptSuccess}
 					isReceiptError={isReceiptError}
 					receiptError={receiptError}
 					receiptData={receiptData}
+					isGoogleSheetsLoading={isGoogleSheetsLoading}
+					isGoogleSheetsSuccess={isGoogleSheetsSuccess}
+					isGoogleSheetsError={isGoogleSheetsError}
+					googleSheetsError={googleSheetsError}
 					metaData={metaData}
 					setMetaData={setMetaData}
 					setOpenMintDialog={setOpenMintDialog}
