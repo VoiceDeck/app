@@ -11,9 +11,12 @@ import { Separator } from "@/components/ui/separator";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
 import type { HistoryData } from "./history";
 import type { FractionMetaData } from "@/types";
+import { SellFractionsDialog } from "./sell-fractions-dialog";
+import type { Address } from "viem";
+import { ListForSaleButton } from "../marketplace/list-for-sale-button";
 
 type FractionCardProps = FractionMetaData & {
-	owner_address: string;
+	owner_address: Address;
 	units: number;
 	hypercert_id: string;
 };
@@ -22,6 +25,8 @@ const FractionCard = ({
 	description,
 	image,
 	name,
+	owner_address,
+	hypercert_id,
 	units,
 	work_scope,
 	work_timeframe_from,
@@ -56,18 +61,23 @@ const FractionCard = ({
 							className="aspect-[3/2] h-auto w-full rounded-2xl object-cover md:max-h-32"
 						/>
 					</div>
-					<div className="flex flex-col gap-3">
+					<div className="flex w-full flex-col gap-3">
 						<CardTitle>{name}</CardTitle>
-						<div className="flex gap-2 pt-2">
-							{work_scope.map((scope) => (
-								<Badge
-									key={scope}
-									variant="secondary"
-									className={cn("items-center justify-between rounded-3xl")}
-								>
-									<p className="ml-1 font-light text-xs">{scope}</p>
-								</Badge>
-							))}
+
+						<div className="flex items-center justify-between">
+							<div className="flex gap-2 pt-2">
+								{work_scope.map((scope) => (
+									<Badge
+										key={scope}
+										variant="secondary"
+										className={cn("items-center justify-between rounded-3xl")}
+									>
+										<p className="ml-1 font-light text-xs">{scope}</p>
+									</Badge>
+								))}
+							</div>
+							{/* <SellFractionsDialog owner_address={owner_address} /> */}
+							<ListForSaleButton hypercertId={hypercert_id} />
 						</div>
 					</div>
 				</div>

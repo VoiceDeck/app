@@ -13,6 +13,7 @@ export const fetchHypercerts = async (): Promise<GetHypercertsResponse> => {
 	if (!hypercertIds) {
 		throw new Error("No hypercert IDs found");
 	}
+	console.log("Hypercert IDs", hypercertIds);
 	const supabase = createClient();
 
 	if (!supabase) {
@@ -42,7 +43,7 @@ export const fetchHypercerts = async (): Promise<GetHypercertsResponse> => {
 		work_timeframe_from,
 		work_timeframe_to
 	  ),
-	  fractions!inner (id,units, owner_address)
+	  fractions!inner (id, units, owner_address, value)
 	`)
 		.in("hypercert_id", hypercertIds);
 

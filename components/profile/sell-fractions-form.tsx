@@ -24,6 +24,15 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
+export interface CreateFractionalOfferFormValues {
+	fractionId: string;
+	// minUnitAmount: string;
+	// maxUnitAmount: string;
+	// minUnitsToKeep: string;
+	// price: string;
+	// sellLeftoverFraction: boolean;
+}
+
 // TODO: Move to modal component
 const SellFractionsFormSchema = z.object({
 	fractionsToSellFrom: z
