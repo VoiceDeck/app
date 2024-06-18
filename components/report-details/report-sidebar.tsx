@@ -5,14 +5,30 @@ import {
 	isValidEthereumAddress,
 	truncateEthereumAddress,
 } from "@/lib/utils";
-import type { HypercertData, Metadata, Report } from "@/types";
 import { ArrowUpRight, ShieldCheck } from "lucide-react";
 import type { Address } from "viem";
+
+export interface SidebarData {
+	name: string;
+	work_scope: string[];
+	impact_timeframe_from?: Date;
+	impact_timeframe_to?: Date;
+	work_timeframe_to: Date;
+	work_timeframe_from: Date;
+	impact_scope: string[];
+	image: string;
+	description: string;
+	external_url: string;
+	contributors: string[];
+	allow_list_uri: string;
+	modificationTime?: Date;
+	size?: number;
+}
 
 const ImpactDetails = ({
 	metadata,
 	hypercert_id,
-}: { metadata: Metadata; hypercert_id: string }) => {
+}: { metadata: SidebarData; hypercert_id: string }) => {
 	const details = [
 		{
 			title: "Work scope",
@@ -158,7 +174,7 @@ const EvaluationDetails = () => {
 const ReportSidebar = ({
 	metadata,
 	hypercert_id,
-}: { metadata: Metadata; hypercert_id: string }) => {
+}: { metadata: SidebarData; hypercert_id: string }) => {
 	return (
 		<aside className="flex flex-col gap-4">
 			<ImpactDetails metadata={metadata} hypercert_id={hypercert_id} />

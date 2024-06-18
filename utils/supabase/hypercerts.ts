@@ -58,6 +58,7 @@ export type GetHypercertsByIdResponse = {
 	error: PostgresError | null;
 };
 
+// TODO: Delete this as we migrated to GraphQL
 export const fetchHypercertById = async (
 	hypercert_id: string,
 ): Promise<GetHypercertsByIdResponse> => {
@@ -93,7 +94,7 @@ export const fetchHypercertById = async (
 				),
 				fractions!inner (id, units, owner_address)
 			`)
-			.contains("hypercert_id", hypercert_id);
+			.eq("hypercert_id", hypercert_id);
 
 		const hypercertData = data?.[0];
 
