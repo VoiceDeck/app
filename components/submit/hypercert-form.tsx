@@ -126,6 +126,12 @@ const HypercertForm = () => {
 		isReceiptError,
 		receiptData,
 		receiptError,
+		isGoogleSheetsLoading,
+		isGoogleSheetsPending,
+		isGoogleSheetsSuccess,
+		isGoogleSheetsError,
+		googleSheetsData,
+		googleSheetsError,
 		metaData,
 		setMetaData,
 	} = useMintHypercert();

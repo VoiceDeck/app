@@ -31,6 +31,10 @@ const HypercertMintDialog = ({
 	isReceiptSuccess,
 	isReceiptError,
 	receiptError,
+	isGoogleSheetsLoading,
+	isGoogleSheetsPending,
+	isGoogleSheetsSuccess,
+	isGoogleSheetsError,
 	metaData,
 	receiptData,
 	setMetaData,
@@ -46,6 +50,10 @@ const HypercertMintDialog = ({
 	isReceiptLoading: boolean;
 	isReceiptSuccess: boolean;
 	isReceiptError: boolean;
+	isGoogleSheetsLoading: boolean;
+	isGoogleSheetsPending: boolean;
+	isGoogleSheetsSuccess: boolean;
+	isGoogleSheetsError: boolean;
 	receiptError: WaitForTransactionReceiptErrorType | null;
 	metaData: HypercertMetadata | null;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -131,29 +139,31 @@ const HypercertMintDialog = ({
 						)}
 					</div>
 					<div className="flex items-center justify-start gap-2">
-						{!isReceiptSuccess && !isReceiptLoading && !isReceiptError && (
-							<>
-								<Badge className="h-5 w-5" />
-								<p>Waiting for transaction to process...</p>
-							</>
-						)}
+						{!isGoogleSheetsSuccess &&
+							!isGoogleSheetsLoading &&
+							!isGoogleSheetsError && (
+								<>
+									<Badge className="h-5 w-5" />
+									<p>Waiting to send to Edge Esmeralda for approval...</p>
+								</>
+							)}
 						{isReceiptLoading && (
 							<>
 								<Loader className="h-5 w-5 animate-spin" />
-								<p>Waiting for transaction receipt...</p>
+								<p>Sending to Edge Esmeralda team...</p>
 							</>
 						)}
 						{isReceiptSuccess && (
 							<>
 								<BadgeCheck className="h-5 w-5" />
-								<p className="">Hypercert minted successfully!</p>
+								<p className="">Sent to Edge Esmeralda team!</p>
 							</>
 						)}
 						{isReceiptError && receiptError && (
 							<>
 								<BadgeX className="h-5 w-5" />
 								<p className="">
-									Minting Error:{" "}
+									Upload for approval error:{" "}
 									{receiptError.message
 										? receiptError.message
 										: "Error processing transaction. Please try again."}

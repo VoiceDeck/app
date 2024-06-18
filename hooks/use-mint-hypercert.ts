@@ -87,6 +87,12 @@ const useMintHypercert = () => {
 		isReceiptLoading,
 		isReceiptSuccess,
 		isReceiptError,
+		googleSheetsData,
+		googleSheetsError,
+		isGoogleSheetsLoading,
+		isGoogleSheetsPending,
+		isGoogleSheetsSuccess,
+		isGoogleSheetsError,
 		metaData,
 		setMetaData,
 	};
