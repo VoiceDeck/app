@@ -124,7 +124,6 @@ async function getOrdersForReport(
 		const { data: orders } = await hypercertClient.api.fetchOrdersByHypercertId(
 			{
 				hypercertId,
-				chainId,
 			},
 		);
 		return orders;
@@ -175,8 +174,8 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 	if (orderError || orders?.length === 0) {
 		return (
 			<div className="flex flex-col gap-4 p-3">
-				<div className="flex flex-col gap-4 justify-center items-center">
-					<h4 className="font-bold text-center">
+				<div className="flex flex-col items-center justify-center gap-4">
+					<h4 className="text-center font-bold">
 						We could't find an order for this report. Please send the link to
 						this report to the team!
 					</h4>
@@ -188,8 +187,8 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 	if (!isConnected && !address) {
 		return (
 			<div className="flex flex-col gap-4 p-3">
-				<div className="flex flex-col gap-4 justify-center items-center">
-					<h4 className="font-bold text-center">
+				<div className="flex flex-col items-center justify-center gap-4">
+					<h4 className="text-center font-bold">
 						Connect your wallet to support this report
 					</h4>
 					<ConnectButton />
@@ -224,7 +223,7 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 														: "outline"
 												}
 												className={cn(
-													"flex justify-center items-center h-10 rounded-lg font-bold transition-colors duration-200",
+													"flex h-10 items-center justify-center rounded-lg font-bold transition-colors duration-200",
 													form.watch("fractionPayment") === amount
 														? "bg-vd-beige-600 text-white hover:bg-vd-beige-700"
 														: "text-primary hover:bg-vd-beige-200 hover:text-primary",
@@ -243,7 +242,7 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 											type="number"
 											placeholder="Enter amount"
 											{...field}
-											className="w-full px-4 py-2 border border-vd-blue-400 rounded-lg"
+											className="w-full rounded-lg border border-vd-blue-400 px-4 py-2"
 										/>
 									</FormControl>
 									<FormDescription>
@@ -264,7 +263,7 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 											rows={3}
 											placeholder="Leave a message with your donation"
 											{...field}
-											className="w-full px-4 py-2 border rounded-lg resize-none bg-stone-100"
+											className="w-full resize-none rounded-lg border bg-stone-100 px-4 py-2"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -313,14 +312,14 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 								You will need ETH on the Sepolia testnet. You can get some from
 								the link below.
 							</AlertDescription>
-							<AlertDescription className="flex gap-2 items-center py-1">
+							<AlertDescription className="flex items-center gap-2 py-1">
 								<a
 									href="https://www.alchemy.com/faucets/ethereum-sepolia"
 									target="_blank"
 									rel="noopener noreferrer"
 									className={cn(
 										buttonVariants({ variant: "link" }),
-										"flex justify-between items-center group p-0",
+										"group flex items-center justify-between p-0",
 									)}
 									aria-label="Open Sepolia Faucet in a new tab"
 								>
@@ -328,14 +327,14 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 									<span className="sr-only">(opens in a new tab)</span>
 									<ArrowUpRight
 										size={16}
-										className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
+										className="group-hover:-translate-y-0.5 ml-1 opacity-70 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:opacity-100"
 										aria-hidden="true"
 									/>
 								</a>
 							</AlertDescription>
 							<div className="p-2" />
 							<Button
-								className="w-full py-6 flex gap-2 rounded-md"
+								className="flex w-full gap-2 rounded-md py-6"
 								type="submit"
 							>
 								<Wallet2 />

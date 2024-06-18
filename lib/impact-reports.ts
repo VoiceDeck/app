@@ -2,10 +2,8 @@ import "server-only";
 
 import {
 	HypercertClaimdata,
-	type HypercertsByOwnerQuery,
 	HypercertClient,
 	type HypercertMetadata,
-	type HypercertsStorage,
 } from "@hypercerts-org/sdk";
 import { Mutex } from "async-mutex";
 
@@ -154,7 +152,7 @@ export const getHypercertClient = (): HypercertClient => {
 		return hypercertClient;
 	}
 
-	hypercertClient = new HypercertClient({ chain: { id: 11155111 } }); // Sepolia testnet
+	hypercertClient = new HypercertClient({ environment: "test" }); // Sepolia testnet
 
 	return hypercertClient;
 };
@@ -170,7 +168,7 @@ export const getHypercertClaims = async (
 	ownerAddress: string,
 ): Promise<Claim[]> => {
 	if (claims) {
-		console.log(`[server] Claims already exist, no need to fetch from remote`);
+		console.log("[server] Claims already exist, no need to fetch from remote");
 		console.log(`[server] Existing claims: ${claims.length}`);
 	} else {
 		try {
@@ -180,8 +178,11 @@ export const getHypercertClaims = async (
 			const response = await getHypercertClient().indexer.hypercertsByOwner({
 				owner: ownerAddress,
 			});
+			if (!response || !response) {
+				return [];
+			}
 			console.log("Response", response);
-			claims = (response as HypercertsByOwnerQuery).claims as Claim[];
+			claims = response.hypercerts.data as Claim[];
 			console.log(`[Hypercerts] Fetched claims: ${claims ? claims.length : 0}`);
 		} catch (error) {
 			console.error(
@@ -205,17 +206,17 @@ export const fetchNewReports = async () => {
 	const response = await getHypercertClient().indexer.hypercertsByOwner({
 		owner: ownerAddress,
 	});
-	const newClaims = (response as HypercertsByOwnerQuery).claims as Claim[];
+	const newClaims = response?.hypercerts.data as Claim[];
 	console.log("New Claims", newClaims);
 
-	console.log(`[server] update new reports if there are new claims`);
+	console.log("[server] update new reports if there are new claims");
 	if (claims && newClaims.length === claims.length) {
-		console.log(`[server] no new claims, no need to update reports`);
+		console.log("[server] no new claims, no need to update reports");
 		return;
 	}
 
 	if (!claims || newClaims.length > claims.length) {
-		console.log(`[server] claims in the cache are outdated, updating reports`);
+		console.log("[server] claims in the cache are outdated, updating reports");
 		claims = newClaims;
 
 		await updateReports();
@@ -225,7 +226,7 @@ export const fetchNewReports = async () => {
 const updateReports = async (): Promise<Report[]> => {
 	if (!claims) {
 		throw new Error(
-			`[server] Claims are not fetched yet, please fetch claims first.`,
+			"[server] Claims are not fetched yet, please fetch claims first.",
 		);
 	}
 
@@ -300,7 +301,7 @@ const updateReports = async (): Promise<Report[]> => {
 		console.log(`[server] Reports updated. Total reports: ${reports.length}`);
 	} else {
 		console.log(
-			`[server] No new or updated claims found. No need to update reports.`,
+			"[server] No new or updated claims found. No need to update reports.",
 		);
 	}
 
@@ -316,13 +317,17 @@ const updateReports = async (): Promise<Report[]> => {
  */
 export const getHypercertMetadata = async (
 	claimUri: string,
-	storage: HypercertsStorage,
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	storage: any,
 ): Promise<HypercertMetadata> => {
 	let metadata: HypercertMetadata | null;
 
 	try {
 		const response = await storage.getMetadata(claimUri);
 		metadata = response;
+		if (!metadata) {
+			throw new Error("No metadata found");
+		}
 
 		return metadata;
 	} catch (error) {

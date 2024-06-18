@@ -2,10 +2,51 @@ import type { HypercertData } from "@/types";
 import { createClient } from "./server";
 import type { Error as PostgresError } from "postgres";
 import { getHypercertIds } from "../google/getHypercertIds";
+import { graphql } from "gql.tada";
+import { graphqlEndpoint } from "@/config/graphql";
+import request from "graphql-request";
 
 export type GetHypercertsResponse = {
 	data: HypercertData[] | null;
 	error: PostgresError | null;
+};
+const query = graphql(
+	`
+		query GetHypercertByHypercertId($hypercert_ids: [String!]) {
+			hypercerts(
+				where: {hypercert_id: {in: $hypercert_ids}}
+			) {
+				data {
+					creator_address
+					metadata {
+						allow_list_uri
+						contributors
+						external_url
+						description
+						image
+						impact_scope
+						work_timeframe_from
+						work_timeframe_to
+						work_scope
+						name
+					}
+				}
+			}
+		}
+		
+	`,
+);
+
+const getHypercertByHypercertIds = async (hypercert_ids: string[]) => {
+	const res = await request(graphqlEndpoint, query, {
+		hypercert_ids: hypercert_ids,
+	});
+	const data = res;
+	if (!data.hypercerts.data || data.hypercerts.data[0].metadata === null) {
+		throw new Error("No hypercert found");
+	}
+	const hypercertData = data.hypercerts.data[0];
+	return hypercertData;
 };
 
 export const fetchHypercerts = async (): Promise<GetHypercertsResponse> => {
