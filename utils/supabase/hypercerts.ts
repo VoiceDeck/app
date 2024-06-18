@@ -93,7 +93,7 @@ export const fetchHypercertById = async (
 				),
 				fractions!inner (id, units, owner_address)
 			`)
-			.eq("hypercert_id", hypercert_id);
+			.contains("hypercert_id", hypercert_id);
 
 		const hypercertData = data?.[0];
 

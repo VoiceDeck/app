@@ -38,8 +38,6 @@ export default async function ReportsPage() {
 	console.log("SUPABASE TEST", data);
 	console.log("SUPABASE Error", error);
 
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const uniqueReports: string | any[] = [];
 	return (
 		<main className="flex flex-col gap-4 pb-[64px] md:pb-0">
 			<section className="flex flex-col items-center gap-4 p-4 md:p-8">

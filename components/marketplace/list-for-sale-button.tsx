@@ -6,7 +6,7 @@ import { parseClaimOrFractionId } from "@hypercerts-org/sdk";
 
 import { useHypercertClient } from "@/hooks/use-hypercerts-client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ListForSaleForm } from "@/components/marketplace/list-for-sale-form";
 import {
@@ -98,7 +98,7 @@ export function ListForSaleButton({
 		return (
 			<TooltipProvider>
 				<Tooltip>
-					<TooltipTrigger>
+					<TooltipTrigger asChild className="cursor-not-allowed">
 						<div>
 							<Button disabled {...props}>
 								{text}

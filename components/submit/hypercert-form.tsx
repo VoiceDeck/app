@@ -501,6 +501,7 @@ const HypercertForm = () => {
 								logo={form.getValues().logo || undefined}
 								workStartDate={form.getValues().projectDates.workStartDate}
 								workEndDate={form.getValues().projectDates.workEndDate}
+								badges={badges}
 								displayOnly={true}
 								ref={imageRef}
 							/>

@@ -1,6 +1,7 @@
 import { Settings2 } from "lucide-react";
 import Link from "next/link";
 import { graphql } from "gql.tada";
+import request from "graphql-request";
 
 import { getContributionsByAddress } from "@/lib/directus";
 import { fetchReportByHCId } from "@/lib/impact-reports";
@@ -63,11 +64,14 @@ import Fractions from "@/components/profile/fractions";
 // 		};
 // 	}
 // }
-interface FractionPromise {
-	fractionsCount: number;
-	fractions: Fraction[];
-}
 
+// TODO: Delete
+// interface FractionPromise {
+// 	fractionsCount: number;
+// 	fractions: Fraction[];
+// }
+
+// TODO: Delete
 export interface Fraction {
 	count: number;
 	id: string;
@@ -87,71 +91,54 @@ export interface Fraction {
 	};
 }
 
-async function getHypercertFractionsByOwner(
-	address: Address,
-): Promise<FractionPromise> {
-	console.log("Address:", address);
-	try {
-		const res = await fetch(graphqlEndpoint, {
-			cache: "no-store",
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				query: `
-					query GetFractionsByOwner($address: String!) {
-						fractions(
-							where: {owner_address: {contains: $address}}
-							count: COUNT
-						) {
-							count
-							data {
-								id
-								hypercert_id
-								owner_address
-								units
-								metadata {
-									id
-									name
-									description
-									image
-									external_url
-									work_scope
-									contributors
-									work_timeframe_from
-									work_timeframe_to
-								}
-							}
-						}
+const query = graphql(
+	`
+		query GetFractionsByOwner($address: String!) {
+			fractions(
+				where: {owner_address: {contains: $address}}
+				count: COUNT
+			) {
+				count
+				data {
+					id
+					hypercert_id
+					owner_address
+					units
+					metadata {
+						id
+						name
+						description
+						image
+						external_url
+						work_scope
+						contributors
+						work_timeframe_from
+						work_timeframe_to
 					}
-				`,
-				variables: {
-					address: address,
-				},
-			}),
-		});
-		if (!res.ok) {
-			throw new Error("Network response was not ok.");
+				}
+			}
 		}
-		const { data } = await res.json();
-		console.log("Data in query:", data);
-		const fractions = data.fractions.data;
-		const filteredFractions = fractions.filter(
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-			(fraction: any) =>
-				fraction.metadata.name !== null && fraction.metadata.image !== null,
-		);
-		console.log("Data In query:", data);
-		return {
-			fractionsCount: filteredFractions.length,
-			fractions: filteredFractions,
-		};
-	} catch (error) {
-		console.error("Error:", error);
-		throw error;
-	}
-}
+		
+	`,
+);
+
+const getFractionsByOwner = async (address: Address) => {
+	const res = await request(graphqlEndpoint, query, {
+		address: address,
+	});
+	const data = res;
+	const fractionsData = data.fractions.data;
+	const filteredFractions = fractionsData?.filter((fraction) => {
+		if (fraction.metadata === null) {
+			return { fractionsCount: 0, fractions: [] };
+		}
+		return fraction.metadata.name !== null && fraction.metadata.image !== null;
+	});
+	return {
+		fractionsCount: filteredFractions?.length || 0,
+		fractions: filteredFractions,
+	};
+};
 
 export default async function ProfilePage({
 	params: { address },
@@ -164,10 +151,7 @@ export default async function ProfilePage({
 	// 	totalAmount = 0,
 	// 	reportCount = 0,
 	// } = await getContributionsHistoryData(address);
-	const { fractions, fractionsCount } =
-		await getHypercertFractionsByOwner(address);
-	// const fractions =
-	// 	await getHypercertFractionsByOwnerFromHypercertsClient(address);
+	const { fractions, fractionsCount } = await getFractionsByOwner(address);
 	console.log("Data in Page:", fractions);
 
 	return (
@@ -207,7 +191,8 @@ export default async function ProfilePage({
 			/> */}
 			<SideBar />
 			{/* <History history={history} /> */}
-			<Fractions fractions={fractions} />
+			{/* // TODO: Fix type error */}
+			<Fractions fractions={fractions as Fraction[]} />
 		</main>
 	);
 }
