@@ -1,21 +1,22 @@
-import { Settings2 } from "lucide-react";
-import Link from "next/link";
 import { graphql } from "gql.tada";
 import request from "graphql-request";
+import { Settings2 } from "lucide-react";
+import Link from "next/link";
 
 import { getContributionsByAddress } from "@/lib/directus";
 import { fetchReportByHCId } from "@/lib/impact-reports";
 import { cn, isNotNull } from "@/lib/utils";
 
-import History, { type HistoryData } from "@/components/profile/history";
+import History from "@/components/profile/fractions";
+// TODO: Delete this
+// import History, { type HistoryData } from "@/components/profile/history";
 import { SideBar } from "@/components/profile/sidebar";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { z } from "zod";
-import type { Address } from "viem";
-import { HypercertClient, graphClient } from "@hypercerts-org/sdk";
 import { graphqlEndpoint } from "@/config/graphql";
-import Fractions from "@/components/profile/fractions";
+import { HypercertClient, graphClient } from "@hypercerts-org/sdk";
+import type { Address } from "viem";
+import { z } from "zod";
 
 /**
  * Fetches contribution history data for a given address.
@@ -72,26 +73,74 @@ import Fractions from "@/components/profile/fractions";
 // }
 
 // TODO: Delete
+interface Metadata {
+	id: string;
+	name: string;
+	description: string;
+	image: string;
+	external_url: string;
+	contributors: string[];
+	work_scope: string[];
+	work_timeframe_from: Date;
+	work_timeframe_to: Date;
+}
+
 export interface Fraction {
+	id: string;
 	count: number;
+	fraction_id: string;
+	units: number;
+	owner_address: Address;
+	metadata: Metadata;
+}
+
+export interface Hypercert {
 	id: string;
 	hypercert_id: string;
 	units: number;
-	owner_address: Address;
-	metadata: {
-		id: string;
-		name: string;
-		description: string;
-		image: string;
-		external_url: string;
-		contributors: string[];
-		work_scope: string[];
-		work_timeframe_from: Date;
-		work_timeframe_to: Date;
+	uri: string;
+	creator_address: Address;
+	contract: {
+		chain_id: number;
 	};
+	metadata: Metadata;
 }
 
-const query = graphql(
+const hypercertsByCreatorQuery = graphql(
+	`
+	  query GetHypercertsByCreator($address: String!) {
+		hypercerts(
+		  sort: { by: { claim_attestation_count: descending } }
+		  where: { creator_address: { contains: $address } }
+		  count: COUNT
+		) {
+		  count
+		  data {
+			hypercert_id
+			units
+			uri
+			creator_address
+			contract {
+			  chain_id
+			}
+			metadata {
+				id
+				name
+				description
+				image
+				external_url
+				work_scope
+				contributors
+				work_timeframe_from
+				work_timeframe_to
+			}
+		  }
+		}
+	  }
+	`,
+);
+
+const getFractionsByOwnerQuery = graphql(
 	`
 		query GetFractionsByOwner($address: String!) {
 			fractions(
@@ -101,7 +150,7 @@ const query = graphql(
 				count
 				data {
 					id
-					hypercert_id
+					fraction_id
 					owner_address
 					units
 					metadata {
@@ -123,7 +172,7 @@ const query = graphql(
 );
 
 const getFractionsByOwner = async (address: Address) => {
-	const res = await request(graphqlEndpoint, query, {
+	const res = await request(graphqlEndpoint, getFractionsByOwnerQuery, {
 		address: address,
 	});
 	const data = res;
@@ -140,6 +189,23 @@ const getFractionsByOwner = async (address: Address) => {
 	};
 };
 
+const getHypercertsByCreator = async (address: Address) => {
+	const res = await request(graphqlEndpoint, hypercertsByCreatorQuery, {
+		address: address,
+	});
+	const data = res;
+	const hypercertsData = data.hypercerts.data;
+	const filteredHypercerts = hypercertsData?.filter((hypercert) => {
+		if (hypercert.metadata === null) {
+			return { hypercertsCount: 0, hypercerts: [] };
+		}
+		return (
+			hypercert.metadata.name !== null && hypercert.metadata.image !== null
+		);
+	});
+	return filteredHypercerts;
+};
+
 export default async function ProfilePage({
 	params: { address },
 }: {
@@ -152,6 +218,8 @@ export default async function ProfilePage({
 	// 	reportCount = 0,
 	// } = await getContributionsHistoryData(address);
 	const { fractions, fractionsCount } = await getFractionsByOwner(address);
+	const hypercerts = await getHypercertsByCreator(address);
+	console.log("Hypercerts By Creator data:", hypercerts);
 	console.log("Data in Page:", fractions);
 
 	return (
@@ -192,7 +260,10 @@ export default async function ProfilePage({
 			<SideBar />
 			{/* <History history={history} /> */}
 			{/* // TODO: Fix type error */}
-			<Fractions fractions={fractions as Fraction[]} />
+			<History
+				hypercerts={hypercerts as Hypercert[]}
+				fractions={fractions as Fraction[]}
+			/>
 		</main>
 	);
 }

@@ -9,29 +9,32 @@ import {
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
-import type { HistoryData } from "./history";
 import type { FractionMetaData } from "@/types";
-import { SellFractionsDialog } from "./sell-fractions-dialog";
 import type { Address } from "viem";
 import { ListForSaleButton } from "../marketplace/list-for-sale-button";
+import type { HistoryData } from "./history";
+import { SellFractionsDialog } from "./sell-fractions-dialog";
 
 type FractionCardProps = FractionMetaData & {
 	owner_address: Address;
 	units: number;
-	hypercert_id: string;
+	fraction_id?: string;
+	hypercert_id?: string;
 };
 
-const FractionCard = ({
+const HistoryCard = ({
 	description,
 	image,
 	name,
 	owner_address,
+	fraction_id,
 	hypercert_id,
 	units,
 	work_scope,
 	work_timeframe_from,
 	work_timeframe_to,
 }: FractionCardProps) => {
+	console.log("hypercert_id", hypercert_id);
 	return (
 		<Card className={cn("rounded-3xl border-none bg-vd-beige-100 shadow-none")}>
 			<CardHeader className={cn("md:pb-2")}>
@@ -77,7 +80,7 @@ const FractionCard = ({
 								))}
 							</div>
 							{/* <SellFractionsDialog owner_address={owner_address} /> */}
-							<ListForSaleButton hypercertId={hypercert_id} />
+							{hypercert_id && <ListForSaleButton hypercertId={hypercert_id} />}
 						</div>
 					</div>
 				</div>
@@ -90,6 +93,6 @@ const FractionCard = ({
 	);
 };
 
-FractionCard.displayName = "FractionCard";
+HistoryCard.displayName = "HistoryCard";
 
-export { FractionCard };
+export { HistoryCard };

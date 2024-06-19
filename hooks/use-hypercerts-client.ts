@@ -1,3 +1,4 @@
+"use client";
 import { HypercertClient } from "@hypercerts-org/sdk";
 import { useMemo } from "react";
 import { useWalletClient } from "wagmi";

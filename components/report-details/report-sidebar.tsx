@@ -2,6 +2,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	cn,
+	formatDate,
 	isValidEthereumAddress,
 	truncateEthereumAddress,
 } from "@/lib/utils";
@@ -34,11 +35,9 @@ const ImpactDetails = ({
 			title: "Work scope",
 			value:
 				metadata.impact_timeframe_from && metadata.impact_timeframe_to
-					? `${new Date(
-							metadata.impact_timeframe_from,
-					  ).toLocaleDateString()} - ${new Date(
+					? `${formatDate(metadata.impact_timeframe_from)} - ${formatDate(
 							metadata.impact_timeframe_to,
-					  ).toLocaleDateString()}`
+					  )}`
 					: "N/A",
 		},
 		// {
@@ -51,11 +50,9 @@ const ImpactDetails = ({
 			title: "Time of work",
 			value:
 				metadata.work_timeframe_from && metadata.work_timeframe_to
-					? `${new Date(
-							metadata.work_timeframe_from,
-					  ).toLocaleDateString()} - ${new Date(
+					? `${formatDate(metadata.work_timeframe_from)} - ${formatDate(
 							metadata.work_timeframe_to,
-					  ).toLocaleDateString()}`
+					  )}`
 					: "N/A",
 		},
 		{

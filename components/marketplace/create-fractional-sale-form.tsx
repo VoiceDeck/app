@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 
-import React from "react";
+import { StepProcessDialogProvider } from "@/components/global/step-process-dialog";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Form,
 	FormControl,
@@ -11,9 +12,6 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useQuery } from "@tanstack/react-query";
-import { useAccount, useChainId } from "wagmi";
-import { useHypercertClient } from "@/hooks/use-hypercerts-client";
 import {
 	Select,
 	SelectContent,
@@ -21,12 +19,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { StepProcessDialogProvider } from "@/components/global/step-process-dialog";
+import { useHypercertClient } from "@/hooks/use-hypercerts-client";
 import {
 	useCreateFractionalMakerAsk,
 	useFetchMarketplaceOrdersForHypercert,
 } from "@/marketplace/hooks";
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
+import { useAccount, useChainId } from "wagmi";
 
 export interface CreateFractionalOfferFormValues {
 	fractionId: string;
@@ -134,7 +134,7 @@ const CreateFractionalOrderFormInner = ({
 
 	const yourFractionsWithoutActiveOrder = yourFractions.filter(
 		// biome-ignore lint/style/noNonNullAssertion: <explanation>
-		(fraction) => !fractionsWithActiveOrder.includes(fraction.hypercert_id!),
+		(fraction) => !fractionsWithActiveOrder.includes(fraction.fraction_id!),
 	);
 
 	const hasFractionsWithoutActiveOrder =
@@ -169,11 +169,11 @@ const CreateFractionalOrderFormInner = ({
 													<SelectContent>
 														{yourFractionsWithoutActiveOrder.map((fraction) => (
 															<SelectItem
-																key={fraction.hypercert_id}
+																key={fraction.fraction_id}
 																// biome-ignore lint/style/noNonNullAssertion: <explanation>
-																value={fraction.hypercert_id!}
+																value={fraction.fraction_id!}
 															>
-																{fraction.hypercert_id}
+																{fraction.fraction_id}
 															</SelectItem>
 														))}
 													</SelectContent>

@@ -1,22 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useAccount } from "wagmi";
-import { parseClaimOrFractionId } from "@hypercerts-org/sdk";
-
-import { useHypercertClient } from "@/hooks/use-hypercerts-client";
-
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useFetchHypercertFractionsByHypercertId } from "@/components/marketplace/create-fractional-sale-form";
 import { ListForSaleForm } from "@/components/marketplace/list-for-sale-form";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useFetchHypercertFractionsByHypercertId } from "@/components/marketplace/create-fractional-sale-form";
+import { useHypercertClient } from "@/hooks/use-hypercerts-client";
 import { useFetchMarketplaceOrdersForHypercert } from "@/marketplace/hooks";
+import { parseClaimOrFractionId } from "@hypercerts-org/sdk";
+import { useState } from "react";
+import { useAccount } from "wagmi";
 
 type Props = {
 	hypercertId: string;
@@ -81,7 +79,7 @@ export function ListForSaleButton({
 					(order) =>
 						order.itemIds[0] ===
 						// biome-ignore lint/style/noNonNullAssertion: <explanation>
-						parseClaimOrFractionId(fraction.hypercert_id!).id.toString(),
+						parseClaimOrFractionId(fraction.fraction_id!).id.toString(),
 				),
 		);
 
@@ -98,7 +96,7 @@ export function ListForSaleButton({
 		return (
 			<TooltipProvider>
 				<Tooltip>
-					<TooltipTrigger asChild className="cursor-not-allowed">
+					<TooltipTrigger>
 						<div>
 							<Button disabled {...props}>
 								{text}
