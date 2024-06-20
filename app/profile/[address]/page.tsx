@@ -203,7 +203,10 @@ const getHypercertsByCreator = async (address: Address) => {
 			hypercert.metadata.name !== null && hypercert.metadata.image !== null
 		);
 	});
-	return filteredHypercerts;
+	return {
+		hypercertsCount: filteredHypercerts?.length || 0,
+		hypercerts: filteredHypercerts,
+	};
 };
 
 export default async function ProfilePage({
@@ -218,7 +221,7 @@ export default async function ProfilePage({
 	// 	reportCount = 0,
 	// } = await getContributionsHistoryData(address);
 	const { fractions, fractionsCount } = await getFractionsByOwner(address);
-	const hypercerts = await getHypercertsByCreator(address);
+	const { hypercerts, hypercertsCount } = await getHypercertsByCreator(address);
 	console.log("Hypercerts By Creator data:", hypercerts);
 	console.log("Data in Page:", fractions);
 
@@ -237,20 +240,36 @@ export default async function ProfilePage({
 
 			{/* // TODO: Move to separate component */}
 			<section className="flex flex-col gap-4 md:col-span-2">
-				<Card
-					className={cn(
-						"rounded-3xl border-none bg-vd-beige-300 shadow-none md:flex-1",
-					)}
-				>
-					<CardHeader>
-						<CardTitle className={cn("font-normal text-sm")}>
-							# of Hypercerts I own
-						</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<data className="font-bold text-4xl">{fractionsCount}</data>
-					</CardContent>
-				</Card>
+				<div className="flex flex-col gap-4 md:flex-row">
+					<Card
+						className={cn(
+							"flex-1 rounded-3xl border-none bg-vd-blue-200 shadow-none",
+						)}
+					>
+						<CardHeader>
+							<CardTitle className={cn("font-normal text-sm")}>
+								Hypercerts I've created
+							</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<data className="font-bold text-4xl">{hypercertsCount}</data>
+						</CardContent>
+					</Card>
+					<Card
+						className={cn(
+							"rounded-3xl border-none bg-vd-beige-300 shadow-none md:flex-1",
+						)}
+					>
+						<CardHeader>
+							<CardTitle className={cn("font-normal text-sm")}>
+								# of Hypercerts I own
+							</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<data className="font-bold text-4xl">{fractionsCount}</data>
+						</CardContent>
+					</Card>
+				</div>
 			</section>
 			{/* <Summary
 				totalAmount={totalAmount}

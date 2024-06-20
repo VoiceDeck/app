@@ -29,7 +29,7 @@ const History = ({
 
 	const renderHypercertsEmptyState = () => {
 		return (
-			<div className="flex flex-col gap-6 text-center md:px-20">
+			<div className="flex flex-col gap-6 pt-6 text-center md:px-20">
 				<img src="/history-bg.svg" alt="circular pattern" />
 				<p className="px-8 text-vd-beige-600">
 					When you create Hypercerts they will appear here.
@@ -60,7 +60,7 @@ const History = ({
 
 	const renderFractionsEmptyState = () => {
 		return (
-			<div className="flex flex-col gap-6 text-center md:px-20">
+			<div className="flex flex-col gap-6 pt-6 text-center md:px-20">
 				<img src="/history-bg.svg" alt="circular pattern" />
 				<p className="px-8 text-vd-beige-600">
 					When you start supporting different causes they will appear here.
