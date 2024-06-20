@@ -42,7 +42,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 			<Card
 				key={hypercertId}
 				// biome-ignore lint/nursery/useSortedClasses: ease-[cubic-bezier(0.76, 0, 0.24, 1)] gets sorted in the wrong way
-				className="w-full rounded-3xl bg-vd-beige-100 text-vd-blue-900 shadow-none transition-transform duration-300 ease-[cubic-bezier(0.76, 0, 0.24, 1)] md:w-[280px] sm:w-[250px] hover:scale-105 hover:shadow-md"
+				className="w-full h-full rounded-3xl bg-vd-beige-100 text-vd-blue-900 shadow-none transition-transform duration-300 ease-[cubic-bezier(0.76, 0, 0.24, 1)] md:w-[280px] sm:w-[250px] hover:scale-105 hover:shadow-md"
 			>
 				<CardHeader className="p-0">
 					<div className="relative h-40 w-full overflow-hidden rounded-t-3xl">

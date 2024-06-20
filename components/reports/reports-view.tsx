@@ -114,7 +114,7 @@ export function ReportsView({ hypercerts }: IPageData) {
 					/>
 				)}
 				<div className="p-3" />
-				<div className="flex flex-wrap justify-center gap-3 md:justify-start sm:gap-5">
+				<div className="flex flex-wrap items-stretch justify-center gap-3 md:justify-start sm:gap-5">
 					{/* {pageTransactions.map((report: Report) => (
 						<ReportCard
 							key={report.hypercertId}
