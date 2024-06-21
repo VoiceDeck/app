@@ -14,7 +14,7 @@ import { SideBar } from "@/components/profile/sidebar";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { graphqlEndpoint } from "@/config/graphql";
-import { HypercertClient, graphClient } from "@hypercerts-org/sdk";
+import { HypercertClient } from "@hypercerts-org/sdk";
 import type { Address } from "viem";
 import { z } from "zod";
 

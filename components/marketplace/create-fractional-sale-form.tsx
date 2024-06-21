@@ -28,6 +28,8 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useAccount, useChainId } from "wagmi";
 
+// TODO: Lots of ts-ignores here, need to fix after update Hypercerts SDK
+
 export interface CreateFractionalOfferFormValues {
 	fractionId: string;
 	minUnitAmount: string;
@@ -60,13 +62,18 @@ export const useFetchHypercertFractionsByHypercertId = (
 				(await client.indexer
 					.fractionsByHypercert({ hypercertId })
 					.then((res) =>
-						res?.hypercerts.data?.flatMap((x) => x.fractions?.data),
+						res?.hypercerts.data?.flatMap(
+							// biome-ignore lint/suspicious/noExplicitAny: <Waiting for Hypercerts SDK to be updated>
+							(x: { fractions: { data: any } }) => x.fractions?.data,
+						),
 					)) || [];
 			const totalUnitsForAllFractions = fractions?.reduce(
+				// @ts-ignore
 				(acc, cur) => acc + BigInt(cur?.units),
 				BigInt(0),
 			);
 
+			// @ts-ignore
 			return fractions.map((fraction) => ({
 				...fraction,
 				percentage: Number(
@@ -125,6 +132,7 @@ const CreateFractionalOrderFormInner = ({
 	};
 
 	const yourFractions = fractions.filter(
+		// @ts-ignore
 		(fraction) => fraction.owner_address === address,
 	);
 
@@ -133,6 +141,7 @@ const CreateFractionalOrderFormInner = ({
 		: [];
 
 	const yourFractionsWithoutActiveOrder = yourFractions.filter(
+		// @ts-ignore
 		// biome-ignore lint/style/noNonNullAssertion: <explanation>
 		(fraction) => !fractionsWithActiveOrder.includes(fraction.fraction_id!),
 	);
@@ -167,6 +176,7 @@ const CreateFractionalOrderFormInner = ({
 														<SelectValue placeholder="Fraction" />
 													</SelectTrigger>
 													<SelectContent>
+														{/* @ts-ignore */}
 														{yourFractionsWithoutActiveOrder.map((fraction) => (
 															<SelectItem
 																key={fraction.fraction_id}

@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@directus/sdk": "^15.0.2",
-    "@ethersproject/providers": "^5.7.2",
     "@fontsource-variable/plus-jakarta-sans": "^5.0.20",
     "@hookform/resolvers": "^3.3.4",
     "@hypercerts-org/contracts": "2.0.0-alpha.0",
@@ -55,7 +54,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "emailjs": "^4.0.3",
-    "ethers": "^6.11.1",
+    "ethers": "^6.13.0",
     "fuse.js": "^7.0.0",
     "googleapis": "^140.0.0",
     "gql.tada": "^1.7.6",

@@ -1,6 +1,5 @@
 /* eslint-disable */
 /* prettier-ignore */
-/* biome-ignore */
 
 /** An IntrospectionQuery representation of your schema.
  *

@@ -1,24 +1,15 @@
 import "server-only";
 
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
-import { ethers } from "ethers";
 import { sepolia } from "viem/chains";
 
 import type { Order, Report } from "@/types";
+import { useEthersProvider } from "@/hooks/use-ethers-provider";
+import { useEthersSigner } from "@/hooks/use-ethers-signer";
 
 let orders: (Order | null)[] | null = null;
 
 let hypercertExchangeClient: HypercertExchangeClient | null = null;
-
-const provider = new ethers.JsonRpcProvider(
-	process.env.ETHEREUM_RPC_URL as string,
-);
-
-// here we use placeholder private key for the signer because we are not actually signing any transactions
-const signer = new ethers.Wallet(
-	"0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-	provider,
-);
 
 /**
  * Fetches the order corresponding to the given hypercert ID.
@@ -98,13 +89,26 @@ export async function getOrders(reports: Report[]): Promise<(Order | null)[]> {
  * Retrieves the singleton instance of the getHypercertExchangeClient.
  */
 export const getHypercertExchangeClient = (): HypercertExchangeClient => {
+	const provider = useEthersProvider();
+	const signer = useEthersSigner();
+
+	if (!provider) {
+		throw new Error("No provider found");
+	}
+
+	if (!signer) {
+		throw new Error("No signer found");
+	}
+
 	if (hypercertExchangeClient) {
 		return hypercertExchangeClient;
 	}
 
 	hypercertExchangeClient = new HypercertExchangeClient(
 		sepolia.id,
-		provider,
+		// @ts-ignore
+		provider as unknown as Provider,
+		// @ts-ignore
 		signer,
 	);
 
