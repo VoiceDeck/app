@@ -152,16 +152,6 @@ export default async function ReportPage({ params }: ReportPageProps) {
 									: null}
 							</ul>
 							<div className="-mx-4 -my-4 fixed bottom-[96px] w-full md:relative md:bottom-auto md:mx-0 md:my-0">
-								<Suspense fallback={<div>Loading...</div>}>
-									{hypercertData.metadata.image &&
-										hypercertData.metadata.name && (
-											<BuyFraction
-												hypercertId={slug}
-												image={hypercertData.metadata.image}
-												name={hypercertData.metadata.name}
-											/>
-										)}
-								</Suspense>
 								{/* <FundingDataWrapper
 										hypercertId={report.hypercertId}
 										totalAmount={report.totalCost}
@@ -210,6 +200,9 @@ export default async function ReportPage({ params }: ReportPageProps) {
 										{hypercertData.metadata.description}
 									</p>
 								</div>
+								<Suspense fallback={<div>Loading...</div>}>
+									<BuyFraction hypercertId={slug} />
+								</Suspense>
 							</section>
 							{hypercertData.metadata && (
 								<div>
