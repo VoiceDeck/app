@@ -74,9 +74,7 @@ async function BuyFraction({ hypercertId }: { hypercertId: string }) {
 				</div>
 			</CardContent>
 			<CardFooter className="flex justify-end">
-				<Button variant="outline" className="w-28">
-					Buy
-				</Button>
+				<Button className="w-28">Buy</Button>
 			</CardFooter>
 			{/* <SupportReport hypercertId={hypercertId} image={image} title={name} /> */}
 		</Card>
