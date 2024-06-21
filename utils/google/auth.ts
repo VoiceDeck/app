@@ -20,7 +20,7 @@ async function getAuthClient() {
 		scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 		credentials: {
 			client_email: clientEmail,
-			private_key: privateKey,
+			private_key: privateKey.split(String.raw`\n`).join("\n"),
 		},
 	});
 }
