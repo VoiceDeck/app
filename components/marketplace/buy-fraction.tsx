@@ -2,6 +2,7 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import type { Address } from "viem";
 import { decodeAbiParameters, formatEther, parseAbiParameters } from "viem";
 import EthAddress from "../eth-address";
 import { SupportReport } from "../report-details/support/dialog";
+import { Button } from "../ui/button";
 
 const parseAdditionalParameters = (additionalParameters: Address) => {
 	const [unitAmount, maxUnitsToBuy] = decodeAbiParameters(
@@ -50,16 +52,32 @@ async function BuyFraction({ hypercertId }: { hypercertId: string }) {
 				<CardTitle className="text-vd-beige-600">
 					Sold by: {truncateEthereumAddress(orders[0].signer as Address)}
 				</CardTitle>
-				<CardDescription className="text-center">
-					<div className="flex justify-between">
-						<div className="text-sm">
-							Price per unit: {formatEther(BigInt(orders[0].price))} ETH
-						</div>
-						<div className="text-sm">Min units to buy: {unitAmount}</div>
-						<div className="text-sm">Max units to buy: {maxUnitsToBuy}</div>
-					</div>
+				<CardDescription>
+					To support this contribution, you will need to buy a fraction of the
+					total units
 				</CardDescription>
 			</CardHeader>
+			<CardContent className="flex flex-col gap-2">
+				<div className="flex items-end justify-between">
+					<p className="font-bold text-sm">Price per unit:</p>
+					<data className="text-xs">
+						{formatEther(BigInt(orders[0].price))} ETH
+					</data>
+				</div>
+				<div className="flex items-end justify-between">
+					<p className="font-bold text-sm">Min units to buy:</p>
+					<data className="text-xs">{unitAmount}</data>
+				</div>
+				<div className="flex items-end justify-between">
+					<p className="font-bold text-sm">Max units to buy:</p>
+					<data className="text-xs">{maxUnitsToBuy}</data>
+				</div>
+			</CardContent>
+			<CardFooter className="flex justify-end">
+				<Button variant="outline" className="w-28">
+					Buy
+				</Button>
+			</CardFooter>
 			{/* <SupportReport hypercertId={hypercertId} image={image} title={name} /> */}
 		</Card>
 	);
