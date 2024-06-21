@@ -14,7 +14,6 @@ import ReportSidebar, {
 import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { SupportReport } from "@/components/report-details/support/dialog";
 import { Badge } from "@/components/ui/badge";
-import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
 import { graphqlEndpoint } from "@/config/graphql";
 import { fetchReportBySlug } from "@/lib/impact-reports";

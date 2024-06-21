@@ -7,7 +7,6 @@ import {
 	DrawerFooter,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Slider } from "@/components/ui/slider";
 import { useFilters } from "@/contexts/filter";
 import type { createFilterOptions } from "@/lib/search-filter-utils";
@@ -167,7 +166,6 @@ export const FilterItems: React.FC<FilterItemsProps> = ({
 							}`}
 							onClick={() => handleCategoryChange(value)}
 						>
-							<DynamicCategoryIcon category={value} />
 							<p className="text-xs">{label}</p>
 						</Badge>
 					))}

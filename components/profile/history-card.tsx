@@ -6,7 +6,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
 import type { HistoryData } from "./history";
@@ -49,14 +48,12 @@ const HistoryCard = ({
 								variant="secondary"
 								className={cn("items-center justify-between rounded-3xl")}
 							>
-								<DynamicCategoryIcon category={category} />
 								<p className="ml-1 font-light text-xs">{category}</p>
 							</Badge>
 							<Badge
 								variant="secondary"
 								className={cn("items-center justify-between rounded-3xl")}
 							>
-								<DynamicCategoryIcon category="Location" />
 								<p className="ml-1 font-light text-xs">{location}</p>
 							</Badge>
 						</div>

@@ -6,7 +6,6 @@ import { useAccount } from "wagmi";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { iconComponents } from "@/components/ui/dynamic-category-icon";
 import { cn } from "@/lib/utils";
 
 const Summary = ({
@@ -70,7 +69,8 @@ const Summary = ({
 				<CardContent>
 					{/* TODO: Populate data dynamically based on user */}
 					<div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-4">
-						{Object.entries(iconComponents).map(([icon, Icon]) => {
+						{/* TODO: DELETE as we don't have categories that pair with icons */}
+						{/* {Object.entries(iconComponents).map(([icon, Icon]) => {
 							// Skip rendering the "Location" icon
 							if (icon === "Location") {
 								return null;
@@ -86,13 +86,12 @@ const Summary = ({
 									className="w-full justify-between rounded-3xl px-5 py-3"
 								>
 									<div className="flex items-center gap-1">
-										<Icon className="size-4 stroke-[1.5] text-vd-orange-400" />
 										<p className="font-normal text-vd-blue-900">{icon}</p>
 									</div>
 									<data>{count}</data>
 								</Badge>
 							);
-						})}
+						})} */}
 					</div>
 				</CardContent>
 			</Card>

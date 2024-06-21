@@ -1,4 +1,3 @@
-import { MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
@@ -10,7 +9,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "../ui/card";
-import { DynamicCategoryIcon } from "../ui/dynamic-category-icon";
 import { Progress } from "../ui/progress";
 
 interface ReportCardProps {
@@ -68,7 +66,6 @@ const ReportCard: React.FC<ReportCardProps> = ({
 						variant="secondary"
 						className="font-normal hover:bg-vd-beige-200 pointer-events-none"
 					>
-						<DynamicCategoryIcon category={category} />
 						<p>{category}</p>
 					</Badge> */}
 					{/* <Badge
