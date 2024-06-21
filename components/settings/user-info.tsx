@@ -28,11 +28,11 @@ const UserInfo = () => {
 	return (
 		<>
 			<section className="flex flex-col gap-4 md:gap-0">
-				<h2 className="text-xl md:text-2xl font-semibold md:py-6">Account</h2>
-				<div className="flex flex-col gap-2 md:col-start-1 md:col-span-2 md:mt-2">
+				<h2 className="font-semibold text-xl md:py-6 md:text-2xl">Account</h2>
+				<div className="flex flex-col gap-2 md:col-span-2 md:col-start-1 md:mt-2">
 					<Label htmlFor="displayName">Display Name</Label>
 
-					<Alert className="bg-vd-beige-300 max-w-md">
+					<Alert className="max-w-md bg-vd-beige-300">
 						<AlertDescription className="truncate">
 							{ensName ? ensName : "No ENS name found"}
 						</AlertDescription>
@@ -42,9 +42,9 @@ const UserInfo = () => {
 					</small>
 				</div>
 				<div className="py-4" />
-				<div className="flex flex-col gap-2 md:col-start-1 md:col-span-2 md:mt-2">
+				<div className="flex flex-col gap-2 md:col-span-2 md:col-start-1 md:mt-2">
 					<Label htmlFor="address">Wallet Address</Label>
-					<Alert className="bg-vd-beige-300 max-w-md">
+					<Alert className="max-w-md bg-vd-beige-300">
 						<AlertDescription className="truncate">
 							{address ? address : "No address found"}
 						</AlertDescription>
