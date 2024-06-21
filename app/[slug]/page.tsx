@@ -15,7 +15,7 @@ import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { SupportReport } from "@/components/report-details/support/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { graphqlEndpoint } from "@/config/graphql";
+import { HYPERCERTS_API_URL } from "@/config/graphql";
 import { fetchReportBySlug } from "@/lib/impact-reports";
 import type { HypercertData, Report } from "@/types";
 import { fetchHypercertById } from "@/utils/supabase/hypercerts";
@@ -55,7 +55,7 @@ const query = graphql(
 );
 
 const getHypercertByHypercertId = async (hypercert_id: string) => {
-	const res = await request(graphqlEndpoint, query, {
+	const res = await request(HYPERCERTS_API_URL, query, {
 		hypercert_id: hypercert_id,
 	});
 	const data = res;

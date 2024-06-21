@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { graphqlEndpoint } from "@/config/graphql";
+import { HYPERCERTS_API_URL } from "@/config/graphql";
 import { graphql } from "@/lib/graphql";
 import graphQlrequest from "graphql-request";
 
@@ -66,7 +66,7 @@ export async function GET(
 	}
 
 	try {
-		const res = await graphQlrequest(graphqlEndpoint, IMAGE_QUERY, {
+		const res = await graphQlrequest(HYPERCERTS_API_URL, IMAGE_QUERY, {
 			hypercert_id: hypercertId,
 		});
 		const imageOrUrl = res.hypercerts.data?.[0]?.metadata?.image;

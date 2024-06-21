@@ -3,7 +3,7 @@ import { createClient } from "./server";
 import type { Error as PostgresError } from "postgres";
 import { getHypercertIds } from "../google/getHypercertIds";
 import { graphql } from "gql.tada";
-import { graphqlEndpoint } from "@/config/graphql";
+import { HYPERCERTS_API_URL } from "@/config/graphql";
 import request from "graphql-request";
 
 export type GetHypercertsResponse = {
@@ -38,7 +38,7 @@ const query = graphql(
 );
 
 const getHypercertByHypercertIds = async (hypercert_ids: string[]) => {
-	const res = await request(graphqlEndpoint, query, {
+	const res = await request(HYPERCERTS_API_URL, query, {
 		hypercert_ids: hypercert_ids,
 	});
 	const data = res;

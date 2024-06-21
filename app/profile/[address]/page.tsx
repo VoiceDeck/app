@@ -12,7 +12,7 @@ import History from "@/components/profile/fractions";
 import { SideBar } from "@/components/profile/sidebar";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { graphqlEndpoint } from "@/config/graphql";
+import { HYPERCERTS_API_URL } from "@/config/graphql";
 import { HypercertClient } from "@hypercerts-org/sdk";
 import type { Address } from "viem";
 import { z } from "zod";
@@ -171,7 +171,7 @@ const getFractionsByOwnerQuery = graphql(
 );
 
 const getFractionsByOwner = async (address: Address) => {
-	const res = await request(graphqlEndpoint, getFractionsByOwnerQuery, {
+	const res = await request(HYPERCERTS_API_URL, getFractionsByOwnerQuery, {
 		address: address,
 	});
 	const data = res;
@@ -189,7 +189,7 @@ const getFractionsByOwner = async (address: Address) => {
 };
 
 const getHypercertsByCreator = async (address: Address) => {
-	const res = await request(graphqlEndpoint, hypercertsByCreatorQuery, {
+	const res = await request(HYPERCERTS_API_URL, hypercertsByCreatorQuery, {
 		address: address,
 	});
 	const data = res;
