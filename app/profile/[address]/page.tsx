@@ -3,7 +3,6 @@ import request from "graphql-request";
 import { Settings2 } from "lucide-react";
 import Link from "next/link";
 
-import { getContributionsByAddress } from "@/lib/directus";
 import { fetchReportByHCId } from "@/lib/impact-reports";
 import { cn, isNotNull } from "@/lib/utils";
 

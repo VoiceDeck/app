@@ -5,22 +5,24 @@ import Link from "next/link";
 import { graphql } from "gql.tada";
 import request from "graphql-request";
 
+import BuyFraction from "@/components/marketplace/buy-fraction";
 import FundingDataWrapper from "@/components/report-details/funding-data-wrapper";
 import FundingProgress from "@/components/report-details/funding-progress";
 import ReportSidebar, {
 	type SidebarData,
 } from "@/components/report-details/report-sidebar";
 import ReportSupportFeed from "@/components/report-details/report-support-feed";
+import { SupportReport } from "@/components/report-details/support/dialog";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
 import { graphqlEndpoint } from "@/config/graphql";
-import { getContributionsByHCId } from "@/lib/directus";
 import { fetchReportBySlug } from "@/lib/impact-reports";
 import type { HypercertData, Report } from "@/types";
 import { fetchHypercertById } from "@/utils/supabase/hypercerts";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
+import { Suspense } from "react";
 
 interface ReportPageProps {
 	params: { slug: string };
@@ -72,21 +74,6 @@ const getHypercertData = async (slug: string) => {
 		return hypercertData.data;
 	} catch (error) {
 		throw new Error(`Error fetching hypercert data for slug: ${slug}`);
-	}
-};
-
-// Used By CMS Can be removed or refactored
-const getContributionsByHypercertId = async (
-	hypercert_id: Partial<HypercertData>["hypercert_id"],
-) => {
-	if (!hypercert_id) return null;
-	try {
-		const contributionsData = await getContributionsByHCId(hypercert_id);
-		return contributionsData || [];
-	} catch (error) {
-		throw new Error(
-			`Error fetching contributions for hypercertId: ${hypercert_id}`,
-		);
 	}
 };
 
@@ -166,6 +153,16 @@ export default async function ReportPage({ params }: ReportPageProps) {
 									: null}
 							</ul>
 							<div className="-mx-4 -my-4 fixed bottom-[96px] w-full md:relative md:bottom-auto md:mx-0 md:my-0">
+								<Suspense fallback={<div>Loading...</div>}>
+									{hypercertData.metadata.image &&
+										hypercertData.metadata.name && (
+											<BuyFraction
+												hypercertId={slug}
+												image={hypercertData.metadata.image}
+												name={hypercertData.metadata.name}
+											/>
+										)}
+								</Suspense>
 								{/* <FundingDataWrapper
 										hypercertId={report.hypercertId}
 										totalAmount={report.totalCost}

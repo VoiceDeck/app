@@ -8,7 +8,6 @@ import { ReportsView } from "@/components/reports/reports-view";
 import VoicedeckStats from "@/components/reports/voicedeck-stats";
 import { siteConfig } from "@/config/site";
 import { FilterProvider } from "@/contexts/filter";
-import { getNumberOfContributors } from "@/lib/directus";
 import { fetchReports } from "@/lib/impact-reports";
 import type { Report } from "@/types";
 import { fetchHypercerts } from "@/utils/supabase/hypercerts";
