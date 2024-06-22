@@ -1,7 +1,7 @@
-import { graphql } from "gql.tada";
 import request from "graphql-request";
 import { Settings2 } from "lucide-react";
 import Link from "next/link";
+import type { Address } from "viem";
 
 import { fetchReportByHCId } from "@/lib/impact-reports";
 import { cn, isNotNull } from "@/lib/utils";
@@ -13,63 +13,11 @@ import { SideBar } from "@/components/profile/sidebar";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HYPERCERTS_API_URL } from "@/config/graphql";
-import { HypercertClient } from "@hypercerts-org/sdk";
-import type { Address } from "viem";
+import {
+	getFractionsByOwnerQuery,
+	hypercertsByCreatorQuery,
+} from "@/graphql/queries";
 import { z } from "zod";
-
-/**
- * Fetches contribution history data for a given address.
- * @param {string} address The blockchain address to fetch contributions for.
- * @returns {Promise<{history: HistoryData[], categoryCounts: Record<string, number>, totalAmount: number, reportCount: number}>} An object containing the contribution history and summary statistics.
- */
-// async function getContributionsHistoryData(address: `0x${string}`) {
-// 	try {
-// 		const contributions = await getContributionsByAddress(address);
-// 		const historyPromises = contributions.map(
-// 			async (contribution): Promise<HistoryData | null> => {
-// 				const report = await fetchReportByHCId(contribution.hypercert_id);
-// 				return {
-// 					id: contribution.txid,
-// 					date: new Date(contribution.date_created),
-// 					amount: contribution.amount,
-// 					img: {
-// 						src: report.image,
-// 						alt: report.title,
-// 					},
-// 					title: report.title,
-// 					category: report.category,
-// 					location: report.state,
-// 					description: report.summary,
-// 				};
-// 			},
-// 		);
-// 		const historyResults = await Promise.all(historyPromises);
-// 		const history = historyResults.filter(isNotNull);
-// 		let totalAmount = 0;
-// 		const categoryCounts: { [key: string]: number } = {};
-// 		const reportCount = history.length;
-// 		for (const entry of history) {
-// 			totalAmount += entry.amount;
-// 			categoryCounts[entry.category] =
-// 				(categoryCounts[entry.category] || 0) + 1;
-// 		}
-// 		// Returning history, categoryCounts, and totalAmount directly
-// 		return { history, categoryCounts, totalAmount, reportCount };
-// 	} catch (error) {
-// 		return {
-// 			history: [],
-// 			categoryCounts: {},
-// 			totalAmount: 0,
-// 			reportCount: 0,
-// 		};
-// 	}
-// }
-
-// TODO: Delete
-// interface FractionPromise {
-// 	fractionsCount: number;
-// 	fractions: Fraction[];
-// }
 
 // TODO: Delete
 interface Metadata {
@@ -104,71 +52,6 @@ export interface Hypercert {
 	};
 	metadata: Metadata;
 }
-
-const hypercertsByCreatorQuery = graphql(
-	`
-	  query GetHypercertsByCreator($address: String!) {
-		hypercerts(
-		  sort: { by: { claim_attestation_count: descending } }
-		  where: { creator_address: { contains: $address } }
-		  count: COUNT
-		) {
-		  count
-		  data {
-			hypercert_id
-			units
-			uri
-			creator_address
-			contract {
-			  chain_id
-			}
-			metadata {
-				id
-				name
-				description
-				image
-				external_url
-				work_scope
-				contributors
-				work_timeframe_from
-				work_timeframe_to
-			}
-		  }
-		}
-	  }
-	`,
-);
-
-const getFractionsByOwnerQuery = graphql(
-	`
-		query GetFractionsByOwner($address: String!) {
-			fractions(
-				where: {owner_address: {contains: $address}}
-				count: COUNT
-			) {
-				count
-				data {
-					id
-					fraction_id
-					owner_address
-					units
-					metadata {
-						id
-						name
-						description
-						image
-						external_url
-						work_scope
-						contributors
-						work_timeframe_from
-						work_timeframe_to
-					}
-				}
-			}
-		}
-		
-	`,
-);
 
 const getFractionsByOwner = async (address: Address) => {
 	const res = await request(HYPERCERTS_API_URL, getFractionsByOwnerQuery, {

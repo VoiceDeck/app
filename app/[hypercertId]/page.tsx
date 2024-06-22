@@ -16,64 +16,31 @@ import { SupportReport } from "@/components/report-details/support/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { HYPERCERTS_API_URL } from "@/config/graphql";
+import { getHypercertsByHypercertIdQuery } from "@/graphql/queries";
 import { fetchReportBySlug } from "@/lib/impact-reports";
 import type { HypercertData, Report } from "@/types";
-import { fetchHypercertById } from "@/utils/supabase/hypercerts";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import { Suspense } from "react";
 
 interface ReportPageProps {
-	params: { slug: string };
+	params: { hypercertId: string };
 }
 
-const query = graphql(
-	`
-		query GetHypercertByHypercertId($hypercert_id: String!) {
-			hypercerts(
-				where: {hypercert_id: {contains: $hypercert_id}}
-			) {
-				data {
-					creator_address
-					metadata {
-						allow_list_uri
-						contributors
-						external_url
-						description
-						image
-						impact_scope
-						work_timeframe_from
-						work_timeframe_to
-						work_scope
-						name
-					}
-				}
-			}
-		}
-		
-	`,
-);
-
 const getHypercertByHypercertId = async (hypercert_id: string) => {
-	const res = await request(HYPERCERTS_API_URL, query, {
-		hypercert_id: hypercert_id,
-	});
+	const res = await request(
+		HYPERCERTS_API_URL,
+		getHypercertsByHypercertIdQuery,
+		{
+			hypercert_id: hypercert_id,
+		},
+	);
 	const data = res;
 	if (!data.hypercerts.data || data.hypercerts.data[0].metadata === null) {
 		throw new Error("No hypercert found");
 	}
 	const hypercertData = data.hypercerts.data[0];
 	return hypercertData;
-};
-
-// TODO: Delete this
-const getHypercertData = async (slug: string) => {
-	try {
-		const hypercertData = await fetchHypercertById(slug);
-		return hypercertData.data;
-	} catch (error) {
-		throw new Error(`Error fetching hypercert data for slug: ${slug}`);
-	}
 };
 
 // export async function generateMetadata({
@@ -93,9 +60,9 @@ const getHypercertData = async (slug: string) => {
 // }
 
 export default async function ReportPage({ params }: ReportPageProps) {
-	const { slug } = params;
+	const { hypercertId } = params;
 	// const hypercertData = await getHypercertData(slug);
-	const hypercertData = await getHypercertByHypercertId(slug);
+	const hypercertData = await getHypercertByHypercertId(hypercertId);
 	console.log("report", hypercertData);
 
 	if (!hypercertData) {
@@ -201,7 +168,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 									</p>
 								</div>
 								<Suspense fallback={<div>Loading...</div>}>
-									<BuyFraction hypercertId={slug} />
+									<BuyFraction hypercertId={hypercertId} />
 								</Suspense>
 							</section>
 							{hypercertData.metadata && (
@@ -209,7 +176,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 									<Separator className="my-6 block bg-stone-300 md:my-0 md:hidden" />
 									<ReportSidebar
 										metadata={hypercertData.metadata as SidebarData}
-										hypercert_id={slug}
+										hypercert_id={hypercertId}
 									/>
 								</div>
 							)}
