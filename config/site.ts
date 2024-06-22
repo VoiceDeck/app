@@ -11,15 +11,15 @@ interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "VoiceDeck",
-  title: "From individual actions to collective impact",
+  name: "Edge Esmeralda",
+  title: "Measuring impact through Edge Esmeralda",
   description:
     "A month-long gathering for people building the future",
   localeDefault: "en",
   links: {
-    discord: "https://discord.gg/EUUupE3J",
-    twitter: "https://twitter.com/VoiceDeckDAO",
-    github: "https://github.com/VoiceDeck/",
+    discord: "https://discord.gg/EUUupE3J", // TODO: Update to @EdgeEsmeralda
+    twitter: "https://twitter.com/VoiceDeckDAO", // TODO: Update to @EdgeEsmeralda
+    github: "https://github.com/hypercerts-org/voicedeck-fork",
   },
 };
 

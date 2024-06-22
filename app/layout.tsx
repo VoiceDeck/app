@@ -16,27 +16,34 @@ import Script from "next/script";
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://app.voicedeck.org/"),
-	title: { default: siteConfig.name, template: "%s | VoiceDeck" },
+	title: { default: siteConfig.name, template: "%s | Edge Esmeralda" },
 	description: siteConfig.description,
 	icons: [
-		{ rel: "shortcut icon", url: "/favicon.ico", type: "image/x-icon" },
-		{ rel: "icon", url: "/favicon-16x16.png", sizes: "16x16" },
-		{ rel: "icon", url: "/favicon-32x32.png", sizes: "32x32" },
-		{ rel: "icon", url: "/favicon-192x192.png", sizes: "192x192" },
-		{ rel: "icon", url: "/favicon-512x512.png", sizes: "512x512" },
+		{
+			rel: "icon",
+			type: "image/x-icon",
+			url: "/favicon.svg",
+			media: "(prefers-color-scheme: light)",
+		},
+		{
+			rel: "icon",
+			type: "image/png",
+			url: "/favicon-dark.svg",
+			media: "(prefers-color-scheme: dark)",
+		},
 	],
 	openGraph: {
-		title: { default: "VoiceDeck", template: "%s | VoiceDeck" },
+		title: { default: "Edge Esmeralda", template: "%s | Edge Esmeralda" },
 		description: siteConfig.description,
 		type: "website",
-		images: [{ url: "/opengraph-image.png", alt: "VoiceDeck" }],
+		images: [{ url: "/opengraph-image.png", alt: "Edge Esmeralda" }],
 	},
 	twitter: {
 		card: "summary_large_image",
-		site: "@voicedeck",
-		title: { default: "VoiceDeck", template: "%s | VoiceDeck" },
+		site: "@edge-esmeralda",
+		title: { default: "Edge Esmeralda", template: "%s | Edge Esmeralda" },
 		description: siteConfig.description,
-		images: [{ url: "/opengraph-image.png", alt: "VoiceDeck" }],
+		images: [{ url: "/opengraph-image.png", alt: "Edge Esmeralda" }],
 	},
 };
 
