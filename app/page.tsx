@@ -5,13 +5,10 @@ import hero from "@/assets/EdgeEsmeraldaHero.webp";
 import noReportsImage from "@/assets/history-bg.svg";
 
 import { ReportsView } from "@/components/reports/reports-view";
-import VoicedeckStats from "@/components/reports/voicedeck-stats";
 import { siteConfig } from "@/config/site";
 import { FilterProvider } from "@/contexts/filter";
-import { fetchReports } from "@/lib/impact-reports";
 import type { Hypercert, Report } from "@/types";
 import { fetchHypercerts } from "@/utils/supabase/hypercerts";
-import { createClient } from "@/utils/supabase/server";
 
 export const fetchCache = "force-no-store";
 

@@ -1,10 +1,11 @@
+import { CreateFractionalOrderForm } from "@/components/marketplace/create-fractional-sale-form";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { CreateFractionalOrderForm } from "@/components/marketplace/create-fractional-sale-form";
 
 export const ListForSaleForm = ({ hypercertId }: { hypercertId: string }) => {
+	// * Set initial form step to "fractional" to show the fractional sale form. Could update this to "initial" if we want to show the direct sale form.
 	const [formStep, setFormStep] = useState<"initial" | "direct" | "fractional">(
-		"initial",
+		"fractional",
 	);
 	return (
 		<form>
