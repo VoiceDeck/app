@@ -10,18 +10,14 @@ import {
 	filterReports,
 	sortingOptions,
 } from "@/lib/search-filter-utils";
-import type { HypercertData, ISortingOption, Report } from "@/types";
+import type { Hypercert, HypercertData, ISortingOption, Report } from "@/types";
 import Fuse from "fuse.js";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import { ShowingDisplay, VDPaginator } from "../global/vd-paginator";
 import { SidebarFilter } from "./filter-sidebar";
 
-interface IPageData {
-	hypercerts: HypercertData[];
-}
-
-export function ReportsView({ hypercerts }: IPageData) {
+export function ReportsView({ hypercerts }: { hypercerts: Hypercert[] }) {
 	const { filters, updateSearchParams } = useFilters();
 	// ! Commented out while migrating to HypercertData
 	// const [activeSortOption, setActiveSortOption] = useState(
@@ -76,7 +72,7 @@ export function ReportsView({ hypercerts }: IPageData) {
 		loadPage,
 		maxPage,
 		needsPagination,
-	} = usePagination<HypercertData>(filteredReports, itemsPerPage);
+	} = usePagination<Hypercert>(filteredReports, itemsPerPage);
 
 	const [filterOpen, setFilterOpen] = useState(false);
 
@@ -130,16 +126,15 @@ export function ReportsView({ hypercerts }: IPageData) {
 						/>
 					))} */}
 					{hypercerts.length ? (
-						hypercerts.map((hypercert: HypercertData) => (
+						hypercerts.map((hypercert: Hypercert) => (
 							<ReportCard
-								key={hypercert.id}
-								slug={hypercert.hypercert_id}
-								hypercertId={hypercert.id}
+								key={hypercert.hypercert_id}
+								hypercert_id={hypercert.hypercert_id}
 								image={hypercert.metadata.image}
-								title={hypercert.metadata.name}
-								summary={hypercert.metadata.description}
-								// totalCost={hypercert.total_cost}
-								// fundedSoFar={hypercert.value}
+								name={hypercert.metadata.name}
+								description={hypercert.metadata.description}
+								work_scope={hypercert.metadata.work_scope}
+								creator_address={hypercert.creator_address}
 							/>
 						))
 					) : (

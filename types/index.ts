@@ -1,34 +1,21 @@
 import type { Address, Hash } from "viem";
 
-/**
- * Defines the structure of an Impact Report.
- *
- * @interface Report
- * @property {string} hypercertId - Claim id of hypercert.
- * @property {string} title - Title of the report.
- * @property {string} summary - Brief summary of the report.
- * @property {string} image - the image representing the report.
- * @property {string} originalReportUrl - URL to the original report.
- * @property {string} state - State where the impact is being made.
- * @property {string} category - Category under which the report falls.
- * @property {string} workTimeframe - Timeframe during which the work was performed.
- * @property {string} impactScope - Scope of the impact.
- * @property {string} impactTimeframe - Timeframe of the impact.
- * @property {string[]} contributors - List of contributors to the report.
- * @property {string} cmsId - Identifier for the report in the CMS.
- * @property {string} status - Publication status of the report.
- * @property {string | null} dateCreated - Date when the report was created.
- * * @property {string | null} dateUpdated - Date when the report was last updated.
- * @property {string} slug - Slug for the report URL.
- * @property {string | null} story - Detailed story of the report.
- * @property {number | null} bcRatio - bc ratio of the impact.
- * @property {number | null} villagesImpacted - Number of villages impacted.
- * @property {number | null} peopleImpacted - Number of people impacted.
- * @property {string[] | null} verifiedBy - Entities that have verified the report.
- * @property {string | null} byline - Byline of the report.
- * @property {number} totalCost - Total cost of the report.
- * @property {number} fundedSoFar - Amount funded so far.
- */
+export interface Hypercert {
+	metadata: {
+		name: string;
+		work_scope: string[];
+		work_timeframe_to: Date;
+		work_timeframe_from: Date;
+		impact_scope: string[];
+		image: string;
+		description: string;
+		external_url: string;
+		contributors: string[];
+		allow_list_uri: string;
+	};
+	hypercert_id: string;
+	creator_address: string;
+}
 
 export type Metadata = {
 	allow_list_uri: string;
@@ -83,6 +70,7 @@ export type FractionMetaData = {
 	contributors: string[];
 	external_url: string;
 };
+
 export interface Report {
 	// properties for hypercert minting
 	hypercertId: string;
@@ -172,44 +160,6 @@ export type Order = {
 	strategyId: number;
 	subsetNonce: number;
 };
-
-/*************
- *
- * type definition from Directus CMS collections
- *
- ************/
-
-// Directus schema of `report` collection
-export interface CMSContent {
-	// properties for hypercert minting
-	title: string | null;
-	summary: string | null;
-	image: string | null;
-	original_report_url: string | null;
-	states: string[] | null;
-	category: string | null;
-	work_timeframe: string | null;
-	impact_scope: string | null;
-	impact_timeframe: string | null;
-	// NOTE: it's actually comma separated string
-	contributor: string | null;
-
-	//non hypercert propoerties
-	id: string;
-	status: string;
-	date_created: string | null;
-	slug: string;
-	story: string | null;
-	bc_ratio: number | null;
-	villages_impacted: number | null;
-	people_impacted: number | null;
-	verified_by: string[] | null;
-	date_updated: string | null;
-	byline: string | null;
-	total_cost: string | null;
-}
-
-// Directus schema of `contributions` collection
 export type Contribution = {
 	txid: Hash;
 	hypercert_id: string;

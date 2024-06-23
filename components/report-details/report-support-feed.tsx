@@ -28,7 +28,7 @@ const MobileFeed = ({ contributions }: { contributions: Contribution[] }) => {
 					className="flex flex-col gap-2"
 					aria-labelledby={`contribution-${contribution.txid}`}
 				>
-					<p className="text-xs uppercase text-vd-orange-700 bg-vd-beige-300 px-2 py-2 rounded-md font-medium">
+					<p className="rounded-md bg-vd-beige-300 px-2 py-2 font-medium text-vd-orange-700 text-xs uppercase">
 						{transformDate(contribution.date_created)}
 					</p>
 					<div className="px-2">
@@ -38,7 +38,7 @@ const MobileFeed = ({ contributions }: { contributions: Contribution[] }) => {
 						>
 							<p
 								id={`contribution-${contribution.txid}`}
-								className="text-sm font-semibold py-1 px-2 border-[1.5px] border-stone-300 bg-vd-beige-100 inline rounded-full text-stone-600"
+								className="inline rounded-full border-[1.5px] border-stone-300 bg-vd-beige-100 px-2 py-1 font-semibold text-sm text-stone-600"
 							>
 								{truncateEthereumAddress(
 									contribution.sender,
@@ -52,7 +52,7 @@ const MobileFeed = ({ contributions }: { contributions: Contribution[] }) => {
 						</div>
 						{contribution.comment && (
 							<div className="border-l-2 border-l-vd-blue-300 pl-2" role="note">
-								<q className="py-2 text-vd-blue-700 text-sm">
+								<q className="py-2 text-sm text-vd-blue-700">
 									{contribution.comment}
 								</q>
 							</div>
@@ -67,7 +67,7 @@ const MobileFeed = ({ contributions }: { contributions: Contribution[] }) => {
 const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 	return (
 		<ol
-			className="border-l border-stone-300 dark:border-stone-500 hidden md:block"
+			className="hidden border-stone-300 border-l md:block dark:border-stone-500"
 			aria-label="Contributions list"
 		>
 			{contributions.map((contribution) => (
@@ -76,7 +76,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 					className="pt-3"
 				>
 					<div
-						className="flex-start flex items-center"
+						className="flex flex-start items-center"
 						role="group"
 						aria-labelledby="contributor-info"
 					>
@@ -85,7 +85,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 							aria-hidden="true"
 						/>
 						<div className="flex items-center gap-2" id="contributor-info">
-							<p className="text-sm font-semibold py-1 px-2 border-[1.5px] border-stone-300 bg-vd-beige-100 inline rounded-full text-stone-600">
+							<p className="inline rounded-full border-[1.5px] border-stone-300 bg-vd-beige-100 px-2 py-1 font-semibold text-sm text-stone-600">
 								{truncateEthereumAddress(
 									contribution.sender,
 								).toLocaleLowerCase() || "Anonymous"}
@@ -111,7 +111,7 @@ const DesktopFeed = ({ contributions }: { contributions: Contribution[] }) => {
 						</div>
 					</div>
 					{contribution.comment && (
-						<div className="mb-6 ml-4 mt-2">
+						<div className="mt-2 mb-6 ml-4">
 							<p
 								className="mb-3 text-stone-500 dark:text-stone-300"
 								role="article"
@@ -148,7 +148,7 @@ const ReportSupportFeed = ({
 	if (!contributionsBySupportDate || !contributionsBySupportDate.length) {
 		return (
 			<section>
-				<h3 className="text-2xl font-semibold py-4" id="support-feed-title">
+				<h3 className="py-4 font-semibold text-2xl" id="support-feed-title">
 					Support Feed
 				</h3>
 				<p className="text-stone-500 dark:text-stone-300">
@@ -160,7 +160,7 @@ const ReportSupportFeed = ({
 
 	return (
 		<section>
-			<h3 className="text-2xl font-semibold py-4">Support Feed</h3>
+			<h3 className="py-4 font-semibold text-2xl">Support Feed</h3>
 			<ShowingDisplay
 				currentPage={currentPage}
 				totalItemAmount={contributionsBySupportDate.length}

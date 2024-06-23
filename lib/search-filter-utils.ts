@@ -1,10 +1,10 @@
-import type { HypercertData, ISortingOption, Report } from "@/types";
+import type { Hypercert, HypercertData, ISortingOption, Report } from "@/types";
 import type Fuse from "fuse.js";
 
 export const filterReports = (
-	reports: HypercertData[],
+	reports: Hypercert[],
 	filters: [string, string][],
-	fuse: Fuse<HypercertData>,
+	fuse: Fuse<Hypercert>,
 ) => {
 	// search first
 	let searchedReports = reports;
@@ -66,7 +66,7 @@ export const filterReports = (
 	});
 };
 
-export const createFilterOptions = (reports: HypercertData[]) => {
+export const createFilterOptions = (reports: Hypercert[]) => {
 	const uniqueCategoriesMap = new Map();
 	const uniqueOutletsMap = new Map();
 	const uniqueStatesMap = new Map();

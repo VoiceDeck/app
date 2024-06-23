@@ -8,6 +8,7 @@ export const getHypercertsByHypercertIdQuery = graphql(
 			) {
 				data {
 					creator_address
+          hypercert_id
 					metadata {
 						allow_list_uri
 						contributors

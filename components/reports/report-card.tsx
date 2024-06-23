@@ -12,33 +12,39 @@ import {
 import { Progress } from "../ui/progress";
 
 interface ReportCardProps {
-	slug: string;
-	hypercertId: string;
+	hypercert_id: string;
 	image: string;
-	title: string;
-	summary: string;
-	category?: string;
+	name: string;
+	description: string;
+	work_scope?: string;
 	state?: string;
 	totalCost?: number;
 	fundedSoFar?: number;
 }
 
-const ReportCard: React.FC<ReportCardProps> = ({
-	slug,
-	hypercertId,
+export interface Hypercert {
+	hypercert_id: string;
+	name: string;
+	work_scope: string[];
+	image: string;
+	description: string;
+	creator_address: string;
+}
+
+const ReportCard: React.FC<Hypercert> = ({
+	hypercert_id,
 	image,
-	title,
-	summary,
-	category,
-	state,
-	totalCost,
-	fundedSoFar,
+	name,
+	description,
+	work_scope,
+	creator_address,
 }) => {
-	console.log("hypercertId", hypercertId);
+	const firstThreeBadges = work_scope.slice(0, 3);
+	console.log("hypercert_id", hypercert_id);
 	return (
-		<Link href={`/${slug}`} passHref>
+		<Link href={`/${hypercert_id}`} passHref>
 			<Card
-				key={hypercertId}
+				key={hypercert_id}
 				// biome-ignore lint/nursery/useSortedClasses: ease-[cubic-bezier(0.76, 0, 0.24, 1)] gets sorted in the wrong way
 				className="w-full h-full rounded-3xl bg-vd-beige-100 text-vd-blue-900 shadow-none transition-transform duration-300 ease-[cubic-bezier(0.76, 0, 0.24, 1)] md:w-[280px] sm:w-[250px] hover:scale-105 hover:shadow-md"
 			>
@@ -47,38 +53,41 @@ const ReportCard: React.FC<ReportCardProps> = ({
 						<Image
 							className="bg-center object-cover"
 							src={image}
-							alt={title}
+							alt={name}
 							sizes="(min-width: 780px) 278px, (min-width: 640px) 248px, (min-width: 420px) calc(100vw - 26px), calc(20vw + 294px)"
 							fill
 						/>
 					</div>
 					<section className="flex flex-col gap-1 px-5 py-2">
 						<CardTitle className="line-clamp-2 font-bold text-lg leading-tight">
-							{title}
+							{name}
 						</CardTitle>
 						<CardDescription className="line-clamp-2 text-xs tracking-normal">
-							{summary}
+							{description}
 						</CardDescription>
 					</section>
 				</CardHeader>
-				<CardContent className="flex w-full gap-1 px-4 py-2">
-					{/* <Badge
-						variant="secondary"
-						className="font-normal hover:bg-vd-beige-200 pointer-events-none"
-					>
-						<p>{category}</p>
-					</Badge> */}
-					{/* <Badge
-						variant="secondary"
-						className="*:font-normal hover:bg-vd-beige-200 pointer-events-none overflow-clip text-ellipsis"
-						title={state}
-					>
-						<MapPin color="#C14E41" strokeWidth={1} size={18} />
-						<p className="text-nowrap line-clamp-1">{state}</p>
-					</Badge> */}
+				<CardContent className="flex w-full flex-wrap gap-1 px-4 py-2">
+					{firstThreeBadges.map((badge) => (
+						<Badge
+							key={badge}
+							variant="secondary"
+							className="items-center justify-between rounded-3xl"
+						>
+							<p>{badge}</p>
+						</Badge>
+					))}
+					{work_scope.length > 3 && (
+						<Badge
+							variant="secondary"
+							className="items-center justify-between rounded-3xl"
+						>
+							<p>More...</p>
+						</Badge>
+					)}
 				</CardContent>
 				<CardFooter className="flex-col justify-center gap-2 p-3">
-					<p>placeholder for funding progress</p>
+					{/* <p>placeholder for funding progress</p> */}
 					{/* <Progress
 						className="w-full"
 						value={(fundedSoFar / totalCost) * 100}

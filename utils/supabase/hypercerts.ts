@@ -5,96 +5,34 @@ import { getHypercertIds } from "../google/getHypercertIds";
 import { graphql } from "gql.tada";
 import { HYPERCERTS_API_URL } from "@/config/graphql";
 import request from "graphql-request";
+import { getHypercertsByHypercertIdQuery } from "@/graphql/queries";
 
-export type GetHypercertsResponse = {
-	data: HypercertData[] | null;
-	error: PostgresError | null;
-};
-const query = graphql(
-	`
-		query GetHypercertByHypercertId($hypercert_ids: [String!]) {
-			hypercerts(
-				where: {hypercert_id: {in: $hypercert_ids}}
-			) {
-				data {
-					creator_address
-					metadata {
-						allow_list_uri
-						contributors
-						external_url
-						description
-						image
-						impact_scope
-						work_timeframe_from
-						work_timeframe_to
-						work_scope
-						name
-					}
-				}
-			}
+export const fetchHypercerts = async () => {
+	try {
+		const hypercertIds = await getHypercertIds();
+		if (!hypercertIds) {
+			const errorMessage = "No hypercert IDs found (status code: 404)";
+			throw new Error(errorMessage);
 		}
-		
-	`,
-);
+		console.log("Hypercert IDs", hypercertIds);
 
-const getHypercertByHypercertIds = async (hypercert_ids: string[]) => {
-	const res = await request(HYPERCERTS_API_URL, query, {
-		hypercert_ids: hypercert_ids,
-	});
-	const data = res;
-	if (!data.hypercerts.data || data.hypercerts.data[0].metadata === null) {
-		throw new Error("No hypercert found");
+		const hypercertPromises = hypercertIds.map((hypercertId) =>
+			request(HYPERCERTS_API_URL, getHypercertsByHypercertIdQuery, {
+				hypercert_id: hypercertId,
+			}),
+		);
+		const hypercertsData = await Promise.all(hypercertPromises);
+		// Extract data from the first index of each hypercerts.data
+		const hypercerts = hypercertsData.map(
+			(hypercert) => hypercert?.hypercerts?.data?.[0] || null,
+		);
+
+		return {
+			data: hypercerts.filter((hypercert) => hypercert != null),
+		};
+	} catch (error) {
+		return {
+			error: error as Error,
+		};
 	}
-	const hypercertData = data.hypercerts.data[0];
-	return hypercertData;
-};
-
-export const fetchHypercerts = async (): Promise<GetHypercertsResponse> => {
-	const hypercertIds = await getHypercertIds();
-	if (!hypercertIds) {
-		throw new Error("No hypercert IDs found");
-	}
-	console.log("Hypercert IDs", hypercertIds);
-	const supabase = createClient();
-
-	if (!supabase) {
-		throw new Error("Supabase client is not initialized");
-	}
-
-	const { data, error } = await supabase
-		.from("claims")
-		.select(`
-	  *,
-	  metadata (
-		allow_list_uri,
-		contributors,
-		description,
-		external_url,
-		id,
-		image,
-		impact_scope,
-		impact_timeframe_from,
-		impact_timeframe_to,
-		name,
-		parsed,
-		properties,
-		rights,
-		uri,
-		work_scope,
-		work_timeframe_from,
-		work_timeframe_to
-	  ),
-	  fractions!inner (id, units, owner_address, value)
-	`)
-		.in("hypercert_id", hypercertIds);
-
-	return {
-		data: data as HypercertData[],
-		error: error as PostgresError | null,
-	};
-};
-
-export type GetHypercertsByIdResponse = {
-	data: HypercertData | null;
-	error: PostgresError | null;
 };
