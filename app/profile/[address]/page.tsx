@@ -3,7 +3,6 @@ import { Settings2 } from "lucide-react";
 import Link from "next/link";
 import type { Address } from "viem";
 
-import { fetchReportByHCId } from "@/lib/impact-reports";
 import { cn, isNotNull } from "@/lib/utils";
 
 import History from "@/components/profile/fractions";

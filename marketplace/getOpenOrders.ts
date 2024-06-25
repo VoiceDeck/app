@@ -3,7 +3,7 @@ import "server-only";
 import { ApiClient } from "@hypercerts-org/marketplace-sdk";
 
 export async function getOpenOrders(hypercertId: string) {
-  const apiClient = new ApiClient();
+  const apiClient = new ApiClient("test");
   if (!apiClient) {
     throw new Error("ApiClient is not initialized");
   }

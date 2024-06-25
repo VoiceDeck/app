@@ -49,3 +49,13 @@ export const delay = (ms: number) =>
 
 export const isValidEthereumAddress = (address: string) =>
 	/^0x[a-fA-F0-9]{40}$/.test(address);
+
+export const calculateBigIntPercentage = (
+	numerator: bigint | string | null | undefined,
+	denominator: bigint | string | null | undefined,
+) => {
+	if (!numerator || !denominator) {
+		return undefined;
+	}
+	return Number((BigInt(numerator) * BigInt(100)) / BigInt(denominator));
+};

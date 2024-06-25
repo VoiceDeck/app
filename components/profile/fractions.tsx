@@ -7,11 +7,12 @@ const History = ({
 	hypercerts,
 	fractions,
 }: { hypercerts: Hypercert[]; fractions: Fraction[] }) => {
+	console.log("hypercerts", hypercerts);
 	const renderHypercertProfileCards = () => {
 		return hypercerts.map((hypercert) => (
 			<HistoryCard
-				key={hypercert.id}
-				id={hypercert.id}
+				key={hypercert.hypercert_id}
+				id={hypercert.hypercert_id}
 				units={hypercert.units}
 				hypercert_id={hypercert.hypercert_id}
 				owner_address={hypercert.creator_address}

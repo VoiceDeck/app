@@ -2,46 +2,20 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { graphql } from "gql.tada";
-import request from "graphql-request";
-
 import BuyFraction from "@/components/marketplace/buy-fraction";
-import FundingDataWrapper from "@/components/report-details/funding-data-wrapper";
-import FundingProgress from "@/components/report-details/funding-progress";
 import ReportSidebar, {
 	type SidebarData,
 } from "@/components/report-details/report-sidebar";
-import ReportSupportFeed from "@/components/report-details/report-support-feed";
-import { SupportReport } from "@/components/report-details/support/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { HYPERCERTS_API_URL } from "@/config/graphql";
-import { getHypercertsByHypercertIdQuery } from "@/graphql/queries";
-import { fetchReportBySlug } from "@/lib/impact-reports";
-import type { HypercertData, Report } from "@/types";
+import { getHypercertByHypercertId } from "@/hypercerts/getHypercertByHypercertId";
 import parse from "html-react-parser";
-import { ChevronLeft, MapPin } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Suspense } from "react";
 
 interface ReportPageProps {
 	params: { hypercertId: string };
 }
-
-const getHypercertByHypercertId = async (hypercert_id: string) => {
-	const res = await request(
-		HYPERCERTS_API_URL,
-		getHypercertsByHypercertIdQuery,
-		{
-			hypercert_id: hypercert_id,
-		},
-	);
-	const data = res;
-	if (!data.hypercerts.data || data.hypercerts.data[0].metadata === null) {
-		throw new Error("No hypercert found");
-	}
-	const hypercertData = data.hypercerts.data[0];
-	return hypercertData;
-};
 
 // export async function generateMetadata({
 // 	params,
@@ -65,8 +39,12 @@ export default async function ReportPage({ params }: ReportPageProps) {
 	const hypercertData = await getHypercertByHypercertId(hypercertId);
 	console.log("report", hypercertData);
 
-	if (!hypercertData) {
+	if (hypercertData instanceof Error) {
 		return <div>No hypercert found</div>;
+	}
+
+	if (!hypercertData || !hypercertData.metadata) {
+		return <div>No hypercert data found</div>;
 	}
 	// ! Below was used by CMS, can be removed or refactored
 	// const contributions = await getContributionsByHypercertId(

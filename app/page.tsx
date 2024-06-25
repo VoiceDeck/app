@@ -14,8 +14,8 @@ export const fetchCache = "force-no-store";
 
 export default async function ReportsPage() {
 	const { data, error } = await fetchHypercerts();
-	console.log("SUPABASE TEST", data);
-	console.log("SUPABASE Error", error);
+	console.log("Hypercerts data:", data);
+	console.log("Hypercerts error:", error);
 
 	return (
 		<main className="flex flex-col gap-4 pb-[64px] md:pb-0">
