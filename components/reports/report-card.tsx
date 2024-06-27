@@ -3,16 +3,7 @@ import { type SupportedChainIdType, supportedChains } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { formatEther } from "viem";
-import { Badge } from "../ui/badge";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "../ui/card";
-import { Progress } from "../ui/progress";
+
 import { Separator } from "../ui/separator";
 
 export interface ExploreHypercertCardProps {
@@ -24,7 +15,7 @@ export interface ExploreHypercertCardProps {
 	units: bigint;
 	chain_id: SupportedChainIdType;
 }
-
+// * REFACTORED from hypercerts-app hypercert-window
 const ReportCard: React.FC<ExploreHypercertCardProps> = ({
 	hypercert_id,
 	name,
