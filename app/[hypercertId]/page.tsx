@@ -84,43 +84,14 @@ export default async function ReportPage({ params }: ReportPageProps) {
 							<h1 className="font-bold text-3xl tracking-tight md:text-4xl">
 								{hypercertData.metadata.name}
 							</h1>
-							<ul className="flex flex-wrap items-center gap-2">
-								{hypercertData.metadata.work_scope
-									? hypercertData.metadata.work_scope.map((scope) => (
-											<Badge
-												className="pointer-events-none hover:bg-vd-beige-200"
-												key={scope}
-											>
-												{scope}
-											</Badge>
-									  ))
-									: null}
-							</ul>
-							<div className="-mx-4 -my-4 fixed bottom-[96px] w-full md:relative md:bottom-auto md:mx-0 md:my-0">
-								{/* <FundingDataWrapper
-										hypercertId={report.hypercertId}
-										totalAmount={report.totalCost}
-										fundedAmount={report.fundedSoFar}
-									>
-										<FundingProgress
-											totalAmount={report.totalCost}
-											fundedAmount={report.fundedSoFar}
-											reportInfo={{
-												image: report.image,
-												title: report.title,
-												hypercertId: report.hypercertId,
-											}}
-										/>
-									</FundingDataWrapper> */}
-							</div>
 						</section>
-						<section className="flex flex-col gap-2 pt-8 md:flex-row md:gap-12">
-							<section className="flex flex-col gap-2">
+						<section className="flex flex-col gap-2 pt-2 md:flex-row md:gap-12">
+							<section className="flex flex-col gap-4">
 								{/* // ! Ported from hypercerts-app maybe use maybe not? */}
 								{/* <div className="h-[300px] min-w-[300px] max-w-[500px] lg:h-[350px] lg:min-w-[500px]">
 									<div className="relative h-full w-full overflow-hidden rounded-lg border border-slate-800 bg-black">
 										<Image
-											src={`/api/hypercerts/${slug}/image`}
+											src={`/api/hypercerts/${hypercertId}/image`}
 											alt={hypercertData?.metadata?.name || ""}
 											fill
 											className="object-contain object-top p-2"
@@ -128,7 +99,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 									</div>
 								</div> */}
 								{hypercertData.metadata.image && (
-									<div className="h-[300px] min-w-[300px] max-w-[500px] lg:h-[350px] lg:min-w-[500px]">
+									<div className="h-[300px] min-w-[300px] lg:h-[350px] lg:min-w-[500px]">
 										<div className="relative h-full w-full overflow-hidden rounded-lg border border-slate-800 bg-black">
 											<Image
 												src={hypercertData.metadata.image}

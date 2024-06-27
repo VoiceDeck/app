@@ -1,8 +1,9 @@
 import { Sparkle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { forwardRef } from "react";
+import { forwardRef, memo, useEffect } from "react";
 import { Badge } from "../ui/badge";
+import { ScrollArea } from "../ui/scroll-area";
 
 /**
  * HypercertCard component
@@ -44,17 +45,37 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 		title = title ?? "Your title here";
 		description = description ?? "Your description here";
 
-		const CardContent = () => (
+		// TODO: Create a date formatter function
+		const formattedDateRange =
+			workStartDate && workEndDate
+				? workStartDate === workEndDate
+					? workStartDate.toLocaleDateString("en-US", {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+					  })
+					: `${workStartDate.toLocaleDateString("en-US", {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+					  })} - ${workEndDate.toLocaleDateString("en-US", {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+					  })}`
+				: "";
+
+		return (
 			<article
 				ref={ref}
-				className="relative h-[320px] w-[275px] overflow-clip rounded-xl border-[1.5px] border-slate-500 bg-black"
+				className="relative w-[275px] overflow-clip rounded-xl border-[1.5px] border-slate-500 bg-black"
 			>
-				<header className="relative flex h-2/5 w-full items-center justify-center overflow-clip rounded-b-xl">
+				<header className="relative flex h-[135px] w-full items-center justify-center overflow-clip rounded-b-xl">
 					{banner ? (
 						<Image
 							src={banner}
 							alt={`${title} banner`}
-							className="object-cover"
+							className="object-cover object-center"
 							fill
 							unoptimized
 						/>
@@ -63,11 +84,26 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 							<span className="text-lg text-slate-500">Your banner here</span>
 						</div>
 					)}
+					<div className="absolute inset-0 h-full w-full mix-blend-luminosity">
+						<Image
+							src={"/hc-guilloche.svg"}
+							alt="Guilloche"
+							className="object-cover opacity-25"
+							fill
+							unoptimized
+						/>
+					</div>
 				</header>
-				<section className="absolute top-16 left-3 overflow-hidden rounded-full border-4 border-white bg-slate-200">
-					<div className="relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-full border border-slate-300">
+				<section className="absolute top-4 left-3 overflow-hidden rounded-full border-2 border-white bg-slate-200">
+					<div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-slate-300">
 						{logo ? (
-							<Image src={logo} alt={`${title} logo`} fill unoptimized />
+							<Image
+								src={logo}
+								alt={`${title} logo`}
+								fill
+								unoptimized
+								className="object-cover"
+							/>
 						) : (
 							<div className="flex h-10 w-10 items-center justify-center bg-slate-300">
 								<Sparkle size={24} />
@@ -75,47 +111,33 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 						)}
 					</div>
 				</section>
-				<section className="flex h-3/5 flex-col justify-between rounded-t-xl border-black border-t-[1.5px] bg-white px-3 pt-3 pb-3">
-					<div className="">
-						{workStartDate && workEndDate && (
-							<p className="text-start text-slate-600 text-xs">{`${workStartDate.toDateString()} - ${workEndDate.toDateString()}`}</p>
-						)}
-						<h5
-							className="line-clamp-1 text-ellipsis pt-2 font-semibold text-base text-slate-800 tracking-tight"
-							title={title}
-						>
-							{title}
-						</h5>
-						<p className="test-slate-800 text-xs">
-							{description.length > 100
-								? `${description.substring(0, 100)}...`
-								: description}
-						</p>
+				<section className="space-y-2 rounded-t-xl border-black border-t-[1.5px] bg-white p-3 pt-4">
+					<div className="flex items-center">
+						<span className="text-slate-600 text-xs uppercase">
+							{formattedDateRange}
+						</span>
 					</div>
-					<div className="flex flex-wrap gap-0.5 overflow-hidden">
-						{badges?.map((badge) => (
-							<Badge key={badge} variant="secondary">
-								{badge}
-							</Badge>
-						))}
-					</div>
+					<h5
+						className="line-clamp-2 h-10 text-ellipsis font-semibold text-base text-slate-800 leading-tight tracking-tight"
+						title={title}
+					>
+						{title}
+					</h5>
+					<ScrollArea className="h-[50px]">
+						<div className="flex flex-wrap gap-1">
+							{badges?.map((badge) => (
+								<Badge key={badge} variant="secondary">
+									{badge}
+								</Badge>
+							))}
+						</div>
+					</ScrollArea>
 				</section>
 			</article>
-		);
-		return displayOnly ? (
-			<CardContent />
-		) : (
-			<Link
-				href={hypercertId ? `/hypercert/${hypercertId}` : "#"}
-				passHref
-				className="hover:-translate-y-1 w-max transition-transform duration-200 ease-[cubic-bezier(.44,.95,.63,.96)]"
-			>
-				<CardContent />
-			</Link>
 		);
 	},
 );
 
 HypercertCard.displayName = "HypercertCard";
 
-export { HypercertCard };
+export default memo(HypercertCard);

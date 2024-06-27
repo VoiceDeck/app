@@ -8,7 +8,7 @@ import {
 	TransferRestrictions,
 } from "@hypercerts-org/sdk";
 import { parseEther, type TransactionReceipt } from "viem";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { postHypercertId } from "@/utils/google/postHypercertId";
 import { constructHypercertIdFromReceipt } from "@/utils/constructHypercertIdFromReceipt";
 import { useAddHypercertIdToGoogleSheet } from "./use-add-hypercert-id-to-google-sheets";
@@ -58,6 +58,7 @@ const useMintHypercert = () => {
 		error: receiptError,
 	} = useWaitForTransactionReceipt({
 		hash: mintData,
+		query: { enabled: !!mintData },
 	});
 
 	const hypercertId = constructHypercertIdFromReceipt(

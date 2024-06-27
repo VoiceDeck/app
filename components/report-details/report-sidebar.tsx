@@ -8,6 +8,7 @@ import {
 } from "@/lib/utils";
 import { ArrowUpRight, ShieldCheck } from "lucide-react";
 import type { Address } from "viem";
+import { Badge } from "../ui/badge";
 
 export interface SidebarData {
 	name: string;
@@ -34,26 +35,38 @@ const ImpactDetails = ({
 		{
 			title: "Work scope",
 			value:
-				metadata.impact_timeframe_from && metadata.impact_timeframe_to
-					? `${formatDate(metadata.impact_timeframe_from)} - ${formatDate(
-							metadata.impact_timeframe_to,
-					  )}`
-					: "N/A",
+				metadata.work_scope.length > 0 ? (
+					<div className="flex gap-1">
+						{metadata.work_scope.map((scope) => (
+							<Badge
+								className="pointer-events-none hover:bg-vd-beige-200"
+								variant={"secondary"}
+							>
+								{scope}
+							</Badge>
+						))}
+					</div>
+				) : (
+					"N/A"
+				),
 		},
-		// {
-		// 	title: "Impact Timeframe",
-		// 	value: report.impactTimeframe
-		// 		? new Date(report.impactTimeframe).toLocaleDateString()
-		// 		: "N/A",
-		// },
 		{
 			title: "Time of work",
 			value:
-				metadata.work_timeframe_from && metadata.work_timeframe_to
-					? `${formatDate(metadata.work_timeframe_from)} - ${formatDate(
-							metadata.work_timeframe_to,
-					  )}`
-					: "N/A",
+				metadata.work_timeframe_from && metadata.work_timeframe_to ? (
+					<p className="text-base">
+						{metadata.work_timeframe_from === metadata.work_timeframe_to ? (
+							formatDate(metadata.work_timeframe_from)
+						) : (
+							<>
+								{formatDate(metadata.work_timeframe_from)} -
+								{formatDate(metadata.work_timeframe_to)}
+							</>
+						)}
+					</p>
+				) : (
+					"N/A"
+				),
 		},
 		{
 			title: "Contributors",
@@ -84,8 +97,7 @@ const ImpactDetails = ({
 							className="border-b-[1.5px] border-b-vd-beige-200 py-4"
 						>
 							<p className="text-sm text-vd-blue-600">{detail.title}</p>
-							<div className="p-1" />
-							<p className="text-base">{detail.value}</p>
+							{detail.value}
 						</li>
 					))}
 				</ul>
@@ -147,7 +159,7 @@ const EvaluationDetails = () => {
 					<ShieldCheck size={32} className="stroke-current" />
 					<div className="p-1" />
 					<p className="font-medium text-sm text-vd-blue-700">
-						The work and Hypercert details are verified.
+						This hypercerts and the work it represents have been verified.
 					</p>
 				</div>
 
@@ -158,8 +170,7 @@ const EvaluationDetails = () => {
 							className="border-b-[1.5px] border-b-vd-beige-200 py-4"
 						>
 							<p className="text-sm text-vd-blue-600">{detail.title}</p>
-							<div className="p-1" />
-							<p className="text-base">{detail.value}</p>
+							{detail.value}
 						</li>
 					))}
 				</ul>
