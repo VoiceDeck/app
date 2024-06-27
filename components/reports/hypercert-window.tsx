@@ -1,63 +1,59 @@
-import { calculateBigIntPercentage } from "@/lib/calculateBigIntPercentage";
+import { Separator } from "@/components/ui/separator";
 import { type SupportedChainIdType, supportedChains } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
-import { formatEther } from "viem";
-import { Badge } from "../ui/badge";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "../ui/card";
-import { Progress } from "../ui/progress";
-import { Separator } from "../ui/separator";
 
-export interface ExploreHypercertCardProps {
-	hypercert_id: string;
+export type HypercertMiniDisplayProps = {
+	hypercertId: string;
 	name: string;
-	image: string;
-	totalUnitsForSale?: bigint;
-	lowestAvailablePrice?: bigint;
-	units: bigint;
-	chain_id: SupportedChainIdType;
-}
+	chainId: SupportedChainIdType;
+	fromDateDisplay?: string | null;
+	toDateDisplay?: string | null;
+	attestations: {
+		data:
+			| {
+					data: unknown;
+			  }[]
+			| null;
+		count: number | null;
+	} | null;
+	hasTrustedEvaluator?: boolean;
+	percentAvailable?: number;
+	lowestPrice?: string;
+};
 
-const ReportCard: React.FC<ExploreHypercertCardProps> = ({
-	hypercert_id,
+const HypercertWindow = ({
+	hasTrustedEvaluator,
+	percentAvailable,
+	lowestPrice,
+	hypercertId,
 	name,
-	image,
-	totalUnitsForSale,
-	lowestAvailablePrice,
-	units,
-	chain_id,
-}) => {
+	chainId,
+	attestations,
+}: HypercertMiniDisplayProps) => {
 	const cardChain = (chainId: SupportedChainIdType) => {
 		return supportedChains.find((x) => x.id === chainId)?.name;
 	};
-	const percentAvailable = calculateBigIntPercentage(totalUnitsForSale, units);
+
 	return (
-		<Link href={`/${hypercert_id}`} passHref>
+		<Link href={`/hypercerts/${hypercertId}`}>
 			<article className="hover:-translate-y-2 group relative overflow-hidden rounded-md transition-transform duration-300">
 				<div className="h-[320px] min-w-[300px] max-w-[350px]">
 					<div className="relative h-full w-full overflow-hidden bg-black">
 						<Image
-							// src={`/api/hypercerts/${hypercert_id}/image`}
-							src={image}
+							src={`/api/hypercerts/${hypercertId}/image`}
 							alt={name || "Untitled"}
 							fill
-							sizes="300px"
 							className="object-contain object-center p-4"
 						/>
 					</div>
 				</div>
 				<section className="absolute top-4 left-4 flex space-x-1 opacity-100 transition-opacity duration-150 ease-out group-hover:opacity-100 md:opacity-0">
 					<div className="rounded-md border border-white/60 bg-black px-2 py-0.5 text-white text-xs">
-						{cardChain(chain_id)}
+						{cardChain(chainId)}
 					</div>
 					<div className="rounded-md border border-white/60 bg-black px-2 py-0.5 text-white text-xs">
+						{/* // ! This is rendered based on Evaluation Status in hypercerts-app. Because the explore hypercerts page only renders approved hypercerts hard-coded for now. */}
 						approved
 					</div>
 				</section>
@@ -78,10 +74,7 @@ const ReportCard: React.FC<ExploreHypercertCardProps> = ({
 						<section>
 							<h6 className="text-end opacity-70">lowest per %</h6>
 							<p className="font-medium">
-								{lowestAvailablePrice
-									? formatEther(lowestAvailablePrice)
-									: "--"}{" "}
-								ETH
+								{lowestPrice ? lowestPrice : "--"} ETH
 							</p>
 						</section>
 					</section>
@@ -91,4 +84,4 @@ const ReportCard: React.FC<ExploreHypercertCardProps> = ({
 	);
 };
 
-export default ReportCard;
+export default HypercertWindow;

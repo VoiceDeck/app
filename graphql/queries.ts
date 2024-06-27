@@ -7,6 +7,13 @@ export const getHypercertsByHypercertIdQuery = graphql(`
         creator_address
         hypercert_id
         units
+        contract {
+          chain_id
+        }
+        orders {
+          totalUnitsForSale
+          lowestAvailablePrice
+        }
         metadata {
           allow_list_uri
           contributors

@@ -5,6 +5,7 @@ import { useFilters } from "@/contexts/filter";
 import { usePagination } from "@/hooks/use-pagination";
 
 import { Button } from "@/components/ui/button";
+import { SupportedChainIdType } from "@/lib/constants";
 import {
 	createFilterOptions,
 	filterReports,
@@ -132,9 +133,10 @@ export function ReportsView({ hypercerts }: { hypercerts: Hypercert[] }) {
 								hypercert_id={hypercert.hypercert_id}
 								image={hypercert.metadata.image}
 								name={hypercert.metadata.name}
-								description={hypercert.metadata.description}
-								work_scope={hypercert.metadata.work_scope}
-								creator_address={hypercert.creator_address}
+								chain_id={hypercert.contract.chain_id}
+								totalUnitsForSale={hypercert.orders.totalUnitsForSale}
+								lowestAvailablePrice={hypercert.orders.lowestAvailablePrice}
+								units={hypercert.units}
 							/>
 						))
 					) : (

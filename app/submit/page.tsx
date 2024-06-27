@@ -13,7 +13,7 @@ function SubmitPage() {
 				</h1>
 				<p className="text-sm">
 					Please note: All information will be publicly available and can not be
-					changed afterwards as the hypercert lives on-chain, similar to an NFT.
+					changed afterwards.
 				</p>
 			</header>
 			<section>

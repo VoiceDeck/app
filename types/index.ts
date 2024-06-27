@@ -1,6 +1,14 @@
+import type { SupportedChainIdType } from "@/lib/constants";
 import type { Address, Hash } from "viem";
 
 export interface Hypercert {
+	contract: {
+		chain_id: SupportedChainIdType;
+	};
+	orders: {
+		lowestAvailablePrice: bigint;
+		totalUnitsForSale: bigint;
+	};
 	metadata: {
 		name: string;
 		work_scope: string[];
@@ -15,6 +23,7 @@ export interface Hypercert {
 	};
 	hypercert_id: string;
 	creator_address: string;
+	units: bigint;
 }
 
 export type Metadata = {

@@ -25,7 +25,6 @@ export const exportAsImage = async (
 				// @ts-ignore
 				if (el.style) {
 					// @ts-ignore
-					el.style.transform = `${el.style.transform} translateY(-40%)`;
 					return;
 				}
 			});
