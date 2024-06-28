@@ -51,14 +51,14 @@ const HypercertMintSchema = z.object({
 	title: z
 		.string()
 		.min(1, { message: "Hypercert Name is required" })
-		.max(50, { message: "Hypercert Name must be less than 50 characters" }),
+		.max(100, { message: "Hypercert Name must be less than 50 characters" }),
 	description: z
 		.string()
 		.min(10, {
 			message: "Description is required and must be at least 10 characters",
 		})
 		.max(500, { message: "Description must be less than 500 characters" }),
-	link: z.string().url({ message: "Link must be a valid URL" }),
+	link: z.string().url({ message: "Link must be a valid URL" }).optional(),
 	logo: z.string().url({ message: "Logo Image must be a valid URL" }),
 	banner: z
 		.string()
@@ -229,7 +229,7 @@ const HypercertForm = () => {
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<div className="flex gap-4">
-						<Card className="rounded-3xl border-none bg-vd-beige-100 py-4 shadow-none">
+						<Card className="rounded-3xl py-4 shadow-none">
 							<CardContent className="flex flex-col gap-4">
 								<h2 className="text-2xl">General Fields</h2>
 								<FormField

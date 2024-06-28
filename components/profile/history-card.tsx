@@ -22,7 +22,7 @@ const HistoryCard = ({
 	description,
 }: HistoryCardProps) => {
 	return (
-		<Card className={cn("rounded-3xl border-none bg-vd-beige-100 shadow-none")}>
+		<Card className={cn("rounded-3xl border-none shadow-none")}>
 			<CardHeader className={cn("md:pb-2")}>
 				<div className="flex items-center justify-between pb-2">
 					<time

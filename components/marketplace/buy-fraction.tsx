@@ -31,9 +31,9 @@ async function BuyFraction({ hypercertId }: { hypercertId: string }) {
 	console.log("Orders Data:", orders);
 	if (!orders || orders.length === 0) {
 		return (
-			<Card className="bg-vd-beige-100 shadow-none">
+			<Card className="bg-gray-100 shadow-none">
 				<CardHeader>
-					<CardTitle className="px-8 text-center text-vd-beige-600">
+					<CardTitle className="px-8 text-center text-zinc-500">
 						When this hypercert is listed on the marketplace, you will be able
 						to buy it here.
 					</CardTitle>
@@ -47,29 +47,29 @@ async function BuyFraction({ hypercertId }: { hypercertId: string }) {
 	);
 	// console.log("Orders Data:", data);
 	return (
-		<Card className="max-w-[500px] bg-vd-beige-100 shadow-none">
+		<Card className="max-w-[500px] shadow-none">
 			<CardHeader>
-				<CardTitle className="text-vd-beige-600">
+				<CardTitle className="text-zinc-500">
 					Sold by: {truncateEthereumAddress(orders[0].signer as Address)}
 				</CardTitle>
 				<CardDescription>
 					To support this contribution, buy a fraction of the hypercert.
 				</CardDescription>
 			</CardHeader>
-			<CardContent className="flex flex-col gap-2">
-				<div className="flex items-end justify-between">
-					<p className="font-bold text-sm">Price per unit:</p>
-					<data className="text-xs">
-						{formatEther(BigInt(orders[0].price))} ETH
-					</data>
-				</div>
-				<div className="flex items-end justify-between">
+			<CardContent className="flex justify-between gap-2">
+				<div className="flex flex-col items-center justify-between">
 					<p className="font-bold text-sm">Min units to buy:</p>
 					<data className="text-xs">{unitAmount}</data>
 				</div>
-				<div className="flex items-end justify-between">
+				<div className="flex flex-col items-center justify-between">
 					<p className="font-bold text-sm">Max units to buy:</p>
 					<data className="text-xs">{maxUnitsToBuy}</data>
+				</div>
+				<div className="flex flex-col items-center justify-between">
+					<p className="font-bold text-sm">Price per unit</p>
+					<data className="text-xs">
+						{formatEther(BigInt(orders[0].price))} ETH
+					</data>
 				</div>
 			</CardContent>
 			<CardFooter className="flex justify-end">

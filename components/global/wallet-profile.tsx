@@ -61,7 +61,7 @@ const WalletProfile = ({
 			<DropdownMenuTrigger
 				asChild
 				className={cn(
-					"relative w-10 h-10 rounded-full overflow-hidden ring-[1.5px] ring-vd-beige-300 focus:outline-none focus:ring-2 focus:ring-vd-beige-400",
+					"relative h-10 w-10 cursor-pointer overflow-hidden rounded-full ring-[1.5px] focus:outline-none focus:ring-2",
 				)}
 			>
 				<Avatar className="h-10 w-10 bg-stone-50">
@@ -69,7 +69,7 @@ const WalletProfile = ({
 						<AvatarImage
 							src={ensAvatar}
 							alt="ENS Avatar"
-							className="object-center object-cover"
+							className="object-cover object-center"
 						/>
 					)}
 					<AvatarFallback>
@@ -77,17 +77,13 @@ const WalletProfile = ({
 					</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent
-				className="w-56 bg-vd-beige-100"
-				align={alignment}
-				forceMount
-			>
+			<DropdownMenuContent className="w-56" align={alignment} forceMount>
 				<DropdownMenuLabel className="font-normal">
 					<div className="flex flex-col space-y-1">
 						{ensName && (
-							<p className="text-sm font-medium leading-none">{ensName}</p>
+							<p className="font-medium text-sm leading-none">{ensName}</p>
 						)}
-						<p className="text-xs leading-none text-muted-foreground">
+						<p className="text-muted-foreground text-xs leading-none">
 							{address ? truncateEthereumAddress(address) : "No address"}
 						</p>
 					</div>

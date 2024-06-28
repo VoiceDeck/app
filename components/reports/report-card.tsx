@@ -25,10 +25,10 @@ const ReportCard: React.FC<ExploreHypercertCardProps> = ({
 	units,
 	chain_id,
 }) => {
-	const cardChain = (chainId: SupportedChainIdType) => {
-		return supportedChains.find((x) => x.id === chainId)?.name;
+	const cardChain = (chain_id: SupportedChainIdType) => {
+		return supportedChains.find((x) => x.id === Number(chain_id))?.name;
 	};
-	const percentAvailable = calculateBigIntPercentage(totalUnitsForSale, units);
+	const percentAvailable = calculateBigIntPercentage(units, totalUnitsForSale);
 	return (
 		<Link href={`/${hypercert_id}`} passHref>
 			<article className="hover:-translate-y-2 group relative overflow-hidden rounded-md transition-transform duration-300">

@@ -94,7 +94,7 @@ export function ReportsView({ hypercerts }: { hypercerts: Hypercert[] }) {
 					filterOptions={filterOptions}
 				/>
 			</div>
-			<section className="flex-1 px-3 py-6 md:px-8 md:py-8">
+			<section className="container flex-1 px-3 py-6 md:px-8 md:py-8">
 				{/* <ReportsHeader
 					reports={reports}
 					filterOverlayOpen={filterOpen}
@@ -111,7 +111,7 @@ export function ReportsView({ hypercerts }: { hypercerts: Hypercert[] }) {
 					/>
 				)}
 				<div className="p-3" />
-				<div className="flex flex-wrap items-stretch justify-center gap-3 md:justify-start sm:gap-5">
+				<div className="flex flex-wrap items-stretch justify-center gap-3 sm:gap-5">
 					{/* {pageTransactions.map((report: Report) => (
 						<ReportCard
 							key={report.hypercertId}

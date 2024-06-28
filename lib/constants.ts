@@ -1,11 +1,12 @@
-import { optimism, sepolia } from "viem/chains";
+import { base, baseSepolia, celo, optimism, sepolia } from "viem/chains";
 import type { Chain } from "viem";
 
-export const apiEnvironment: "test" | "production" = (process.env
-	.NEXT_PUBLIC_API_ENVIRONMENT || "test") as "test" | "production";
+export const apiEnvironment: "test" | "production" = (process.env[
+	"NEXT_PUBLIC_API_ENVIRONMENT"
+] || "test") as "test" | "production";
 
-export const testNetChains = [sepolia] as const;
-export const prodNetChains = [optimism] as const;
+export const testNetChains = [sepolia, baseSepolia] as const;
+export const prodNetChains = [optimism, celo, base] as const;
 
 export const supportedChains = (
 	apiEnvironment === "production" ? prodNetChains : testNetChains

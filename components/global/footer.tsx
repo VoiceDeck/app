@@ -18,7 +18,7 @@ import { WalletProfile } from "./wallet-profile";
 
 const Footer = () => {
 	return (
-		<footer className="fixed inset-x-0 bottom-0 items-center border-vd-beige-400 border-t-[1.5px] bg-vd-beige-100 py-2 text-center md:static">
+		<footer className="fixed inset-x-0 bottom-0 items-center border-gray-400 border-t-[1.5px] bg-gray-100 py-2 text-center md:static">
 			<MobileFooter />
 			<DesktopFooter />
 		</footer>

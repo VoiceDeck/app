@@ -83,7 +83,7 @@ const ImpactDetails = ({
 		},
 	];
 	return (
-		<Card className="bg-vd-beige-100 shadow-none md:min-w-[300px]">
+		<Card className="bg-gray-100 shadow-none md:min-w-[300px]">
 			<CardHeader>
 				<CardTitle className="line-clamp-none font-semibold text-xl leading-none tracking-tight">
 					Hypercert details
@@ -148,7 +148,7 @@ const EvaluationDetails = () => {
 	];
 
 	return (
-		<Card className="bg-vd-beige-100 shadow-none md:min-w-[300px]">
+		<Card className="bg-white shadow-none md:min-w-[300px]">
 			<CardHeader>
 				<CardTitle className="line-clamp-none font-semibold text-xl leading-none tracking-tight">
 					Verification
