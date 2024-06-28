@@ -40,55 +40,50 @@ export const fetchReports = async (): Promise<Report[]> => {
       console.log(
         `[server] Fetching reports from remote using owner address: ${ownerAddress}`
       );
-      claims = await getHypercertClaims(
-        ownerAddress
-      );
 
-      const _reports = await updateReports();
+      // case 1: Hypercerts are available
+      try {
+        claims = await getHypercertClaims(ownerAddress);
+      
+        const _reports = await updateReports({isHypercertsAvailable: true});
 
-      	// step 3: get orders from marketplace
-      	const orders = await getOrders(_reports);
+          // step 3: get orders from marketplace
+          const orders = await getOrders(_reports);
 
-        // TODO: remove this when we don't need dummy order
-        if (process.env.DEPLOY_ENV === "production") {
-      	reports = _reports.map((report) => {
-      		for (const order of orders) {
-      			if (order && order.hypercertId === report.hypercertId) {
-      				report.order = order;
-      				break;
-      			}
-      		}
+          // TODO: remove this when we don't need dummy order
 
-      		if (!report.order && report.fundedSoFar < report.totalCost) {
-            // warn if there is no order for a report that is not fully funded
-      			console.warn(
-      				`[server] No order found for hypercert ${report.hypercertId}`,
-      			);
-      		}
-      		return report;
-      	});
-      } else {
         reports = _reports.map((report) => {
-      		for (const order of orders) {
-      			if (order) {
-      				report.order = order;
-      				break;
-      			}
-      		}
-      		// warn if there is no order for a report that is not fully funded
-      		if (!report.order && report.fundedSoFar < report.totalCost) {
-      			console.warn(
-      				`[server] No order found for hypercert ${report.hypercertId}`,
-      			);
-      		}
-      		return report;
-      	});
-      }
-      console.log(`[server] total fetched reports: ${reports.length}`);
-    }
+          for (const order of orders) {
+            if (order && order.hypercertId === report.hypercertId) {
+              report.order = order;
+              break;
+            }
+          }
 
+          if (!report.order && report.fundedSoFar < report.totalCost) {
+            // warn if there is no order for a report that is not fully funded
+            console.warn(
+              `[server] No order found for hypercert ${report.hypercertId}`,
+            );
+          }
+          return report;
+        });
+
+        console.log(`[server] total fetched reports: ${reports.length}`);
+      }
+      
+      // case 2: Hypercerts are not available
+      catch (error) {
+        console.log("try me")
+        reports = await updateReports({isHypercertsAvailable: false});
+
+        console.log(`[server] total fetched reports without Hypercerts: ${reports.length}`);
+      }
+    }
     return reports;
-  } catch (error) {
+  }
+
+  catch (error) {
     console.error(`[server] Failed to fetch reports: ${error}`);
     throw new Error(`[server] Failed to fetch reports: ${error}`);
   }
@@ -216,41 +211,47 @@ export const fetchNewReports = async () => {
     console.log(`[server] claims in the cache are outdated, updating reports`);
     claims = newClaims;
 
-    await updateReports();
+    await updateReports({isHypercertsAvailable: true});
   }
 }
 
-const updateReports = async () : Promise<Report[]> => {
-  if (!claims) {
-    throw new Error(`[server] Claims are not fetched yet, please fetch claims first.`);
-  }
-  
+const updateReports = async (params: {isHypercertsAvailable: boolean}) : Promise<Report[]> => {  
   const fromCMS = await getCMSReports();
 
-  const existingReportIds = reports ? reports.map(report => report.hypercertId) : [];
-  
-  const reportsToUpdatePromises = claims.filter(claim => !existingReportIds.includes(claim.id)).map(async (claim, index) => {
-    console.log(`[server] Processing claim with ID: ${claim.id}.`);
+  if (params.isHypercertsAvailable) {
 
-    // a delay to spread out the requests
-    await delay(index * 20);
-
-    // step 1: get metadata from IPFS
-    const metadata = await getHypercertMetadata(
-      claim.uri as string,
-      getHypercertClient().storage
-    );
-
-    // step 2: get offchain data from CMS
-    
-    const cmsReport = fromCMS.find(
-      (cmsReport) => cmsReport.title === metadata.name
-    );
-    if (!cmsReport) {
-      throw new Error(
-        `[server] CMS content for report titled '${metadata.name}' not found.`
-      );
+    if (!claims) {
+      throw new Error(`[server] Claims are not fetched yet, please fetch claims first.`);
     }
+
+    const existingReportIds = reports ? reports.map(report => report.hypercertId) : [];
+
+  
+    const reportsToUpdatePromises = claims.filter(claim => !existingReportIds.includes(claim.id)).map(async (claim, index) => {
+      
+        console.log(`[server] Processing claim with ID: ${claim.id}.`);
+
+        // a delay to spread out the requests
+        await delay(index * 20);
+
+        // step 1: get metadata from IPFS
+        const metadata = await getHypercertMetadata(
+          claim.uri as string,
+          getHypercertClient().storage
+        );
+
+        // step 2: get offchain data from CMS
+        
+        const cmsReport = fromCMS.find(
+          (cmsReport) => cmsReport.title === metadata.name
+        );
+        if (!cmsReport) {
+          throw new Error(
+            `[server] CMS content for report titled '${metadata.name}' not found.`
+          );
+        }
+    
+  
 
     return {
       hypercertId: claim.id,
@@ -278,7 +279,7 @@ const updateReports = async () : Promise<Report[]> => {
       totalCost: Number(cmsReport.total_cost),
       fundedSoFar: await getFundedAmountByHCId(claim.id),
     } as Report;
-  });
+  })
 
   const reportsToUpdate = await Promise.all(reportsToUpdatePromises);
 
@@ -289,6 +290,41 @@ const updateReports = async () : Promise<Report[]> => {
   } else {
     console.log(`[server] No new or updated claims found. No need to update reports.`);
   }
+
+} else {
+  const _reports : Report[] = [];
+  fromCMS.forEach((item) => {
+    const _report = {
+      hypercertId: "",
+      title: item.title,
+      summary: item.summary,
+      image: "https://directus.voicedeck.org/assets/" + item.image,
+      originalReportUrl: item.original_report_url,
+      state: item.states ? item.states[0] : "",
+      category: item.category,
+      workTimeframe: item.work_timeframe,
+      impactScope: item.impact_scope,
+      impactTimeframe: item.impact_timeframe,
+      contributors: [item.contributor],
+      cmsId: item.id,
+      status: item.status,
+      dateCreated: item.date_created,
+      slug: item.slug,
+      story: item.story,
+      bcRatio: item.bc_ratio,
+      villagesImpacted: item.villages_impacted,
+      peopleImpacted: item.people_impacted,
+      verifiedBy: item.verified_by,
+      dateUpdated: item.date_updated,
+      byline: item.byline,
+      totalCost: Number(item.total_cost),
+      fundedSoFar: 0,
+    } as Report; 
+
+    _reports.push(_report);
+  })
+  reports = _reports;
+};
 
   return reports as Report[];
 }
