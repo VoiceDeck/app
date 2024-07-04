@@ -7,24 +7,16 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import useMintHypercert from "@/hooks/use-mint-hypercert";
-import { MintingError, type HypercertMetadata } from "@hypercerts-org/sdk";
-import { Badge, BadgeCheck, BadgeX, Loader, ArrowUpRight } from "lucide-react";
+import { type HypercertMetadata, MintingError } from "@hypercerts-org/sdk";
+import type { MutationStatus } from "@tanstack/query-core";
+import { ArrowUpRight, Badge, BadgeCheck, BadgeX, Loader } from "lucide-react";
 import type React from "react";
-import { useEffect, type Dispatch, type SetStateAction } from "react";
-import type {
-	Address,
-	TransactionReceipt,
-	WaitForTransactionReceiptErrorType,
-} from "viem";
-import type { UseWaitForTransactionReceiptReturnType } from "wagmi";
+import type { Dispatch, SetStateAction } from "react";
+import type { Address, WaitForTransactionReceiptErrorType } from "viem";
 import type { WaitForTransactionReceiptData } from "wagmi/query";
-import { config, projectId } from "@/config/wagmi";
 
 const HypercertMintDialog = ({
-	isMintLoading,
-	isMintSuccess,
-	isMintError,
-	mintData,
+	mintStatus,
 	mintError,
 	isReceiptLoading,
 	isReceiptSuccess,
@@ -34,14 +26,10 @@ const HypercertMintDialog = ({
 	isGoogleSheetsSuccess,
 	isGoogleSheetsError,
 	googleSheetsError,
-	metaData,
 	receiptData,
-	setMetaData,
 	setOpenMintDialog,
 }: {
-	isMintLoading: boolean;
-	isMintSuccess: boolean;
-	isMintError: boolean;
+	mintStatus: MutationStatus;
 	mintData?: Address;
 	mintError: Error | null;
 	isReceiptLoading: boolean;
@@ -52,15 +40,12 @@ const HypercertMintDialog = ({
 	isGoogleSheetsError: boolean;
 	googleSheetsError: Error | null;
 	receiptError: WaitForTransactionReceiptErrorType | null;
-	metaData: HypercertMetadata | null;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	receiptData?: WaitForTransactionReceiptData<any, any>;
-	setMetaData: Dispatch<SetStateAction<HypercertMetadata | undefined>>;
 	setOpenMintDialog: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const handleCloseDialog = () => {
 		setOpenMintDialog(false);
-		setMetaData(undefined);
 	};
 
 	return (
@@ -74,25 +59,25 @@ const HypercertMintDialog = ({
 				</DialogHeader>
 				<div className="flex flex-col gap-4">
 					<div className="flex items-center justify-start gap-2">
-						{!isMintSuccess && !isMintLoading && !isMintError && (
+						{mintStatus === "idle" && (
 							<>
 								<Badge className="h-5 w-5" />
 								<p>Preparing to mint hypercert...</p>
 							</>
 						)}
-						{isMintLoading && (
+						{mintStatus === "pending" && (
 							<>
 								<Loader className="h-5 w-5 animate-spin" />
 								<p>Minting hypercert on chain...</p>
 							</>
 						)}
-						{isMintSuccess && (
+						{mintStatus === "success" && (
 							<>
 								<BadgeCheck className="h-5 w-5" />
 								<p className="">Transaction processed</p>
 							</>
 						)}
-						{isMintError && mintError && (
+						{mintStatus === "error" && mintError && (
 							<>
 								<BadgeX className="h-5 w-5" />
 								<p className="">

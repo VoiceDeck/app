@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, min } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -118,9 +117,8 @@ const HypercertForm = () => {
 	const [badges, setBadges] = useState(["Edge Esmeralda", "Edge City"]);
 	const [openMintDialog, setOpenMintDialog] = useState(false);
 	const {
-		isMintLoading,
-		isMintSuccess,
-		isMintError,
+		mintHypercert,
+		mintStatus,
 		mintData,
 		mintError,
 		isReceiptLoading,
@@ -132,8 +130,6 @@ const HypercertForm = () => {
 		isGoogleSheetsSuccess,
 		isGoogleSheetsError,
 		googleSheetsError,
-		metaData,
-		setMetaData,
 	} = useMintHypercert();
 
 	const form = useForm<MintingFormValues>({
@@ -221,10 +217,14 @@ const HypercertForm = () => {
 
 			console.log("formattedMetadata", formattedMetadata);
 
-			setMetaData(formattedMetadata.data);
+			mintHypercert({
+				metaData: formattedMetadata.data,
+				contactInfo: values.contact,
+				amount: "1",
+			});
 			setOpenMintDialog(true);
 		},
-		[badges, setMetaData],
+		[badges, mintHypercert],
 	);
 
 	return (
@@ -532,27 +532,21 @@ const HypercertForm = () => {
 					</div>
 				</form>
 			</Form>
-			{metaData && (
-				<HypercertMintDialog
-					isMintLoading={isMintLoading}
-					isMintSuccess={isMintSuccess}
-					isMintError={isMintError}
-					mintData={mintData}
-					mintError={mintError}
-					isReceiptLoading={isReceiptLoading}
-					isReceiptSuccess={isReceiptSuccess}
-					isReceiptError={isReceiptError}
-					receiptError={receiptError}
-					receiptData={receiptData}
-					isGoogleSheetsLoading={isGoogleSheetsLoading}
-					isGoogleSheetsSuccess={isGoogleSheetsSuccess}
-					isGoogleSheetsError={isGoogleSheetsError}
-					googleSheetsError={googleSheetsError}
-					metaData={metaData}
-					setMetaData={setMetaData}
-					setOpenMintDialog={setOpenMintDialog}
-				/>
-			)}
+			<HypercertMintDialog
+				mintStatus={mintStatus}
+				mintData={mintData}
+				mintError={mintError}
+				isReceiptLoading={isReceiptLoading}
+				isReceiptSuccess={isReceiptSuccess}
+				isReceiptError={isReceiptError}
+				receiptError={receiptError}
+				receiptData={receiptData}
+				isGoogleSheetsLoading={isGoogleSheetsLoading}
+				isGoogleSheetsSuccess={isGoogleSheetsSuccess}
+				isGoogleSheetsError={isGoogleSheetsError}
+				googleSheetsError={googleSheetsError}
+				setOpenMintDialog={setOpenMintDialog}
+			/>
 		</Dialog>
 	);
 };
