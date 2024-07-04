@@ -126,9 +126,7 @@ const HypercertForm = () => {
 		isReceiptError,
 		receiptData,
 		receiptError,
-		isGoogleSheetsLoading,
-		isGoogleSheetsSuccess,
-		isGoogleSheetsError,
+		googleSheetsStatus,
 		googleSheetsError,
 	} = useMintHypercert();
 
@@ -541,9 +539,7 @@ const HypercertForm = () => {
 				isReceiptError={isReceiptError}
 				receiptError={receiptError}
 				receiptData={receiptData}
-				isGoogleSheetsLoading={isGoogleSheetsLoading}
-				isGoogleSheetsSuccess={isGoogleSheetsSuccess}
-				isGoogleSheetsError={isGoogleSheetsError}
+				googleSheetsStatus={googleSheetsStatus}
 				googleSheetsError={googleSheetsError}
 				setOpenMintDialog={setOpenMintDialog}
 			/>

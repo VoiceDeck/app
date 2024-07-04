@@ -1,18 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
-const useAddHypercertIdToGoogleSheet = (hypercertId: string | undefined) => {
-	return useQuery({
-		queryKey: ["hypercertId", { hypercertId }],
-		queryFn: () =>
+type Payload = { hypercertId: string };
+
+const useAddHypercertIdToGoogleSheet = () => {
+	return useMutation({
+		mutationFn: (payload: Payload) =>
 			fetch("/api/post-hypercert-id", {
 				headers: {
 					"Content-Type": "application/json",
 				},
 				method: "POST",
-				body: JSON.stringify({ hypercertId }),
+				body: JSON.stringify(payload),
 			}),
-		staleTime: Number.POSITIVE_INFINITY,
-		enabled: !!hypercertId,
 	});
 };
 

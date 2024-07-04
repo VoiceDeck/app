@@ -4,12 +4,10 @@ import { usePublicClient, useWaitForTransactionReceipt } from "wagmi";
 
 import {
 	type HypercertMetadata,
-	HypercertMinterAbi,
 	TransferRestrictions,
 } from "@hypercerts-org/sdk";
 import { parseEther, type TransactionReceipt } from "viem";
-import { useMemo, useState } from "react";
-import { postHypercertId } from "@/utils/google/postHypercertId";
+import { useEffect, useState } from "react";
 import { constructHypercertIdFromReceipt } from "@/utils/constructHypercertIdFromReceipt";
 import { useAddHypercertIdToGoogleSheet } from "./use-add-hypercert-id-to-google-sheets";
 
@@ -23,12 +21,12 @@ const useMintHypercert = () => {
 	const [contactInfo, setContactInfo] = useState<string | undefined>();
 	const [metaData, setMetaData] = useState<HypercertMetadata | undefined>();
 	const { client } = useHypercertClient();
+	const publicClient = usePublicClient();
 
 	if (!client) {
 		throw new Error("Hypercert Client is not initialized");
 	}
 
-	const publicClient = usePublicClient();
 	if (!publicClient) {
 		throw new Error("Public client is not initialized");
 	}
@@ -79,19 +77,22 @@ const useMintHypercert = () => {
 					hypercertId,
 				};
 			},
+			staleTime: Number.POSITIVE_INFINITY,
 		},
 	});
 
-	console.log("receiptData", receiptData);
-
 	const {
 		data: googleSheetsData,
-		isLoading: isGoogleSheetsLoading,
-		isPending: isGoogleSheetsPending,
-		isSuccess: isGoogleSheetsSuccess,
-		isError: isGoogleSheetsError,
+		mutate: updateGoogleSheets,
+		status: googleSheetsStatus,
 		error: googleSheetsError,
-	} = useAddHypercertIdToGoogleSheet(receiptData?.hypercertId);
+	} = useAddHypercertIdToGoogleSheet();
+
+	useEffect(() => {
+		if (receiptData?.hypercertId) {
+			updateGoogleSheets({ hypercertId: receiptData.hypercertId });
+		}
+	}, [receiptData?.hypercertId, updateGoogleSheets]);
 
 	return {
 		mintHypercert,
@@ -109,11 +110,8 @@ const useMintHypercert = () => {
 		isReceiptSuccess,
 		isReceiptError,
 		googleSheetsData,
+		googleSheetsStatus,
 		googleSheetsError,
-		isGoogleSheetsLoading,
-		isGoogleSheetsPending,
-		isGoogleSheetsSuccess,
-		isGoogleSheetsError,
 		metaData,
 		setMetaData,
 	};

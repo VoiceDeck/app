@@ -22,9 +22,7 @@ const HypercertMintDialog = ({
 	isReceiptSuccess,
 	isReceiptError,
 	receiptError,
-	isGoogleSheetsLoading,
-	isGoogleSheetsSuccess,
-	isGoogleSheetsError,
+	googleSheetsStatus,
 	googleSheetsError,
 	receiptData,
 	setOpenMintDialog,
@@ -35,9 +33,7 @@ const HypercertMintDialog = ({
 	isReceiptLoading: boolean;
 	isReceiptSuccess: boolean;
 	isReceiptError: boolean;
-	isGoogleSheetsLoading: boolean;
-	isGoogleSheetsSuccess: boolean;
-	isGoogleSheetsError: boolean;
+	googleSheetsStatus: MutationStatus;
 	googleSheetsError: Error | null;
 	receiptError: WaitForTransactionReceiptErrorType | null;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -121,27 +117,25 @@ const HypercertMintDialog = ({
 						)}
 					</div>
 					<div className="flex items-center justify-start gap-2">
-						{!isGoogleSheetsSuccess &&
-							!isGoogleSheetsLoading &&
-							!isGoogleSheetsError && (
-								<>
-									<Badge className="h-5 w-5" />
-									<p>Waiting to send to Edge Esmeralda for approval...</p>
-								</>
-							)}
-						{isGoogleSheetsLoading && (
+						{googleSheetsStatus === "idle" && (
+							<>
+								<Badge className="h-5 w-5" />
+								<p>Waiting to send to Edge Esmeralda for approval...</p>
+							</>
+						)}
+						{googleSheetsStatus === "pending" && (
 							<>
 								<Loader className="h-5 w-5 animate-spin" />
 								<p>Sending to Edge Esmeralda team...</p>
 							</>
 						)}
-						{isGoogleSheetsSuccess && (
+						{googleSheetsStatus === "success" && (
 							<>
 								<BadgeCheck className="h-5 w-5" />
 								<p className="">Sent to Edge Esmeralda team!</p>
 							</>
 						)}
-						{isGoogleSheetsError && googleSheetsError && (
+						{googleSheetsStatus === "error" && googleSheetsError && (
 							<>
 								<BadgeX className="h-5 w-5" />
 								<p className="">
