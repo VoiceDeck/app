@@ -1,20 +1,9 @@
 import { Sparkle } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { forwardRef, memo, useEffect } from "react";
+import { forwardRef, memo } from "react";
 import { Badge } from "../ui/badge";
 import { ScrollArea } from "../ui/scroll-area";
 
-/**
- * HypercertCard component
- * @param {string} name - The name of the hypercert
- * @param {string} description - The description of the hypercert
- * @param {string} banner - The banner image of the hypercert
- * @param {string} logo - The logo image of the hypercert
- * @param {string} link - The link of the hypercert
- * @param {boolean} displayOnly - Whether the card is just for display (non-interactive) or not
- * @param {string} hypercertId - The unique identifier for the hypercert
- */
 export interface HypercertCardProps {
 	title?: string;
 	description?: string;
@@ -73,7 +62,7 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 				<header className="relative flex h-[135px] w-full items-center justify-center overflow-clip rounded-b-xl">
 					{banner ? (
 						<Image
-							src={banner}
+							src={`https://cors-proxy.hypercerts.workers.dev/?url=${banner}`}
 							alt={`${title} banner`}
 							className="object-cover object-center"
 							fill
@@ -84,21 +73,12 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 							<span className="text-lg text-slate-500">Your banner here</span>
 						</div>
 					)}
-					<div className="absolute inset-0 h-full w-full mix-blend-luminosity">
-						<Image
-							src={"/hc-guilloche.svg"}
-							alt="Guilloche"
-							className="object-cover opacity-25"
-							fill
-							unoptimized
-						/>
-					</div>
 				</header>
 				<section className="absolute top-4 left-3 overflow-hidden rounded-full border-2 border-white bg-slate-200">
 					<div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-slate-300">
 						{logo ? (
 							<Image
-								src={logo}
+								src={`https://cors-proxy.hypercerts.workers.dev/?url=${logo}`}
 								alt={`${title} logo`}
 								fill
 								unoptimized
@@ -125,8 +105,14 @@ const HypercertCard = forwardRef<HTMLDivElement, HypercertCardProps>(
 					</h5>
 					<ScrollArea className="h-[50px]">
 						<div className="flex flex-wrap gap-1">
-							{badges?.map((badge) => (
-								<Badge key={badge} variant="secondary">
+							{badges?.map((badge, index) => (
+								<Badge
+									key={`${badge}-${
+										// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+										index
+									}`}
+									variant="secondary"
+								>
 									{badge}
 								</Badge>
 							))}

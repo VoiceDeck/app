@@ -339,8 +339,14 @@ const HypercertForm = () => {
 											</FormControl>
 											<FormMessage />
 											<div className="flex flex-wrap gap-0.5">
-												{badges.map((tag) => (
-													<Badge key={tag} variant="secondary">
+												{badges.map((tag, index) => (
+													<Badge
+														key={`${tag}-${
+															// biome-ignore lint/suspicious/noArrayIndexKey: tags are not unique and could be duplicated
+															index
+														}`}
+														variant="secondary"
+													>
 														{tag}
 													</Badge>
 												))}
