@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { exportAsImage } from "@/lib/exportToImage";
 import {
 	type HypercertMetadata,
 	formatHypercertData,
@@ -177,7 +176,8 @@ const HypercertForm = () => {
 
 	const onSubmit = useCallback(
 		async (values: MintingFormValues) => {
-			const image = await exportAsImage(imageRef);
+			// const image = await exportAsImage(imageRef);
+			const image = await generateImage();
 			if (!image) {
 				// throw Error with toast for user
 				return;
@@ -222,7 +222,7 @@ const HypercertForm = () => {
 			});
 			setOpenMintDialog(true);
 		},
-		[badges, mintHypercert],
+		[badges, mintHypercert, generateImage],
 	);
 
 	const testData = {
