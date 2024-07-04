@@ -9,7 +9,7 @@ import {
 import { parseEther, type TransactionReceipt } from "viem";
 import { useEffect, useState } from "react";
 import { constructHypercertIdFromReceipt } from "@/utils/constructHypercertIdFromReceipt";
-import { useAddHypercertIdToGoogleSheet } from "./use-add-hypercert-id-to-google-sheets";
+import { useSendEmailAndUpdateGoogle } from "./use-send-email-and-update-google";
 
 type Payload = {
 	metaData: HypercertMetadata;
@@ -18,7 +18,7 @@ type Payload = {
 };
 
 const useMintHypercert = () => {
-	const [contactInfo, setContactInfo] = useState<string | undefined>();
+	const [contactInfo, setContactInfo] = useState<string>("");
 	const [metaData, setMetaData] = useState<HypercertMetadata | undefined>();
 	const { client } = useHypercertClient();
 	const publicClient = usePublicClient();
@@ -81,18 +81,22 @@ const useMintHypercert = () => {
 		},
 	});
 
+	// TODO: Update these values to better reflect the hook
 	const {
 		data: googleSheetsData,
-		mutate: updateGoogleSheets,
+		mutate: sendEmailAndUpdateGoogle,
 		status: googleSheetsStatus,
 		error: googleSheetsError,
-	} = useAddHypercertIdToGoogleSheet();
+	} = useSendEmailAndUpdateGoogle();
 
 	useEffect(() => {
-		if (receiptData?.hypercertId) {
-			updateGoogleSheets({ hypercertId: receiptData.hypercertId });
+		if (receiptData?.hypercertId && contactInfo) {
+			sendEmailAndUpdateGoogle({
+				hypercertId: receiptData.hypercertId,
+				contactInfo,
+			});
 		}
-	}, [receiptData?.hypercertId, updateGoogleSheets]);
+	}, [receiptData?.hypercertId, contactInfo, sendEmailAndUpdateGoogle]);
 
 	return {
 		mintHypercert,

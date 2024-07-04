@@ -1,4 +1,4 @@
-const sendPosts = async ({
+const sendEmailAndUpdateGoogle = async ({
 	hypercertId,
 	contactInfo,
 	image,
@@ -47,8 +47,13 @@ const sendPosts = async ({
 		}
 
 		const emailResults = await emailResponse.json();
-		console.log("Second POST response:", emailResults);
+		if (emailResults.success && googleSheetsResult.success) {
+			return { success: true };
+		}
 	} catch (error) {
 		console.error("Error sending POST requests:", error);
+		return { error };
 	}
 };
+
+export { sendEmailAndUpdateGoogle };

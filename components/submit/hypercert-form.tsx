@@ -225,6 +225,11 @@ const HypercertForm = () => {
 		[badges, mintHypercert],
 	);
 
+	const testData = {
+		hypercertId: "0x1",
+		contactInfo: "test@test.com",
+	};
+
 	return (
 		<Dialog open={openMintDialog} onOpenChange={setOpenMintDialog}>
 			<Form {...form}>

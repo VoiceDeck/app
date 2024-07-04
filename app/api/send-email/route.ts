@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(req: Request) {
-	const { hypercert_id, contactInfo, image } = await req.json();
+	const { hypercertId, contactInfo, image } = await req.json();
 
 	// Configure the email transporter
 	const transporter = nodemailer.createTransport({
@@ -18,8 +18,16 @@ export async function POST(req: Request) {
 		from: process.env.EMAIL_USER,
 		to: "mark@r0wdy.dev",
 		subject: "New Hypercert created for Edge Esmeralda",
-		text: "A new hypercert has been created for Edge Esmeralda! Please review the hypercert and move it to approved in the google sheet.",
-		html: "<p>A new hypercert has been created for Edge Esmeralda! Please review the hypercert and move it to approved in the google sheet.</p>",
+		text: `A new hypercert has been created for Edge Esmeralda!
+		Hypercert ID: ${hypercertId}
+		Contact Info: ${contactInfo}
+		 Please review the hypercert and move it to approved in the google sheet.`,
+		html: `<div>
+						<h1>A new hypercert has been created for Edge Esmeralda!</h1>
+						<p>Hypercert ID: ${hypercertId}</p>
+						<p>Contact Info: ${contactInfo}</p>
+		 				<p>Please review the hypercert and move it to approved in the google sheet.</p>
+		 			</div>`,
 		amp: `<!doctype html>
     <html ⚡4email>
       <head>
