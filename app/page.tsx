@@ -22,7 +22,7 @@ export default async function ReportsPage() {
 			<section className="flex flex-col items-center gap-4 p-4 md:p-8">
 				<header className="relative flex h-[420px] w-full max-w-screen-xl flex-col justify-end gap-4 overflow-hidden rounded-3xl p-4 text-vd-beige-100 2xl:h-[520px] min-[2560px]:h-[720px] min-[2560px]:max-w-screen-2xl 2xl:p-16 md:p-8">
 					<Image
-						className="-z-10 bg-center object-cover opacity-60"
+						className="-z-10 bg-center object-cover opacity-60 grayscale filter"
 						src={hero}
 						alt="Hero Image"
 						placeholder="blur"
@@ -31,7 +31,7 @@ export default async function ReportsPage() {
 						priority
 					/>
 					<Image
-						className="self-center"
+						className="h-auto w-3/5 self-center"
 						src={edgeEsmeralda}
 						alt="Edge Esmeralda"
 						height={200}
