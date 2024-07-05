@@ -16,7 +16,8 @@ export async function POST(req: Request) {
 	// Set up email data
 	const mailOptions = {
 		from: process.env.EMAIL_USER,
-		to: "mark@r0wdy.dev",
+		to: "holke@hypercerts.org",
+		cc: "mark@r0wdy.dev",
 		subject: "New Hypercert created for Edge Esmeralda",
 		text: `A new hypercert has been created for Edge Esmeralda!
 		Hypercert ID: ${hypercertId}

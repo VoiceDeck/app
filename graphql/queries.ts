@@ -1,4 +1,5 @@
-import { graphql } from "gql.tada";
+import { ResultOf, graphql } from "gql.tada";
+import { HypercertFullFragment } from "@/hypercerts/fragments/hypercert-full.fragment";
 
 export const getHypercertsByHypercertIdQuery = graphql(`
   query GetHypercertByHypercertId($hypercert_id: String!) {
@@ -30,6 +31,8 @@ export const getHypercertsByHypercertIdQuery = graphql(`
     }
   }
 `);
+
+export type GetHypercertsByHypercertId = ResultOf<typeof getHypercertsByHypercertIdQuery>;
 
 export const hypercertsByCreatorQuery = graphql(`
   query GetHypercertsByCreator($address: String!) {
@@ -64,6 +67,8 @@ export const hypercertsByCreatorQuery = graphql(`
   }
 `);
 
+export type HypercertsByCreatorQuery = ResultOf<typeof hypercertsByCreatorQuery>;
+
 export const getFractionsByOwnerQuery = graphql(`
   query GetFractionsByOwner($address: String!) {
     fractions(where: { owner_address: { contains: $address } }, count: COUNT) {
@@ -88,3 +93,5 @@ export const getFractionsByOwnerQuery = graphql(`
     }
   }
 `);
+
+export type GetFractionsByOwner = ResultOf<typeof getFractionsByOwnerQuery>;
