@@ -84,16 +84,16 @@ export function ReportsView({ hypercerts }: { hypercerts: Hypercert[] }) {
 
 	return (
 		<section
-			className="flex border-t border-t-stone-300 min-[2560px]:mx-auto min-[2560px]:grid min-[2560px]:w-[64vw] min-[2560px]:grid-cols-[380px_1fr]"
+			className="flex max-w-screen-xl border-t border-t-stone-300 min-[2560px]:mx-auto min-[2560px]:grid min-[2560px]:w-[64vw] min-[2560px]:grid-cols-[380px_1fr]"
 			id="discover"
 		>
-			<div className="hidden md:block">
+			{/* <div className="hidden md:block">
 				<SidebarFilter
 					isOpen={filterOpen}
 					setIsOpen={setFilterOpen}
 					filterOptions={filterOptions}
 				/>
-			</div>
+			</div> */}
 			<section className="container flex-1 px-3 py-6 md:px-8 md:py-8">
 				{/* <ReportsHeader
 					reports={reports}
@@ -111,21 +111,7 @@ export function ReportsView({ hypercerts }: { hypercerts: Hypercert[] }) {
 					/>
 				)}
 				<div className="p-3" />
-				<div className="flex flex-wrap items-stretch justify-center gap-3 sm:gap-5">
-					{/* {pageTransactions.map((report: Report) => (
-						<ReportCard
-							key={report.hypercertId}
-							slug={report.slug}
-							hypercertId={report.hypercertId}
-							image={report.image}
-							title={report.title}
-							summary={report.summary}
-							category={report.category}
-							state={report.state}
-							totalCost={report.totalCost}
-							fundedSoFar={report.fundedSoFar}
-						/>
-					))} */}
+				<div className="flex flex-wrap items-stretch justify-start gap-3 sm:gap-5">
 					{hypercerts.length ? (
 						hypercerts.map((hypercert: Hypercert) => (
 							<ReportCard
