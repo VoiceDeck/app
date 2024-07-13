@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import logo from "@/assets/Hypercerts.svg";
+import Logo from "@/assets/Hypercerts.svg";
 import { NavLinks } from "@/components/global/nav-links";
 import { WalletProfile } from "@/components/global/wallet-profile";
 
@@ -16,9 +16,8 @@ const NavMenu = () => {
 						aria-label="ZuDeck Home"
 						href="/reports"
 					>
-						<Image
+						<Logo
 							className="h-8 w-auto"
-							src={logo}
 							alt="Hypercerts Logo"
 							width={250}
 							height={250}

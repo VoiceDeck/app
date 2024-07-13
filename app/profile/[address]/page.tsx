@@ -124,7 +124,7 @@ export default async function ProfilePage({
 				<div className="flex flex-col gap-4 md:flex-row">
 					<Card
 						className={cn(
-							"flex-1 rounded-3xl border-none bg-vd-blue-200 shadow-none",
+							"flex-1 rounded-3xl border-none bg-stone-200 shadow-none",
 						)}
 					>
 						<CardHeader>
@@ -138,7 +138,7 @@ export default async function ProfilePage({
 					</Card>
 					<Card
 						className={cn(
-							"rounded-3xl border-none bg-vd-beige-300 shadow-none md:flex-1",
+							"rounded-3xl border-none bg-slate-200 shadow-none md:flex-1",
 						)}
 					>
 						<CardHeader>
