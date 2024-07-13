@@ -29,5 +29,5 @@ export const externalLinks = [
   { title: "Terms of Use", url: "https://hypercerts.org/terms" },
   { title: "Privacy Policy", url: "https://hypercerts.org/privacy" },
   { title: "GitHub", url: "https://github.com/hypercerts-org" },
-  { title: "X", url: "https://twitter.com/hypercerts" },
+  { title: "X (Twitter)", url: "https://twitter.com/hypercerts" },
 ];

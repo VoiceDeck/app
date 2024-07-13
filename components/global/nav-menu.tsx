@@ -8,7 +8,7 @@ import { WalletProfile } from "@/components/global/wallet-profile";
 
 const NavMenu = () => {
 	return (
-		<nav className="border-b-[1.5px] border-b-vd-beige-300 py-5">
+		<nav className="border-b-[1.5px] border-b-stone-300 py-2 md:py-5">
 			<section className="container flex max-w-7xl items-center justify-between">
 				<div className="flex flex-1 items-center py-5 md:absolute md:left-[50%]">
 					<Link
