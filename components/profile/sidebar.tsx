@@ -14,7 +14,7 @@ import Link from "next/link";
 const SideBar = () => {
 	return (
 		<section className="flex flex-col gap-4 md:col-span-1 md:row-span-2">
-			<Card className="rounded-3xl border-none bg-vd-beige-100 shadow-none">
+			<Card className="rounded-3xl shadow-none">
 				<CardHeader>
 					<div className="mx-auto my-2 h-auto w-40 px-6">
 						<HeartPulse className="h-28 w-28" />

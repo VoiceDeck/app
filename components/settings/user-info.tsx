@@ -32,7 +32,7 @@ const UserInfo = () => {
 				<div className="flex flex-col gap-2 md:col-span-2 md:col-start-1 md:mt-2">
 					<Label htmlFor="displayName">Display Name</Label>
 
-					<Alert className="max-w-md bg-vd-beige-300">
+					<Alert className="max-w-md bg-stone-200">
 						<AlertDescription className="truncate">
 							{ensName ? ensName : "No ENS name found"}
 						</AlertDescription>
@@ -44,7 +44,7 @@ const UserInfo = () => {
 				<div className="py-4" />
 				<div className="flex flex-col gap-2 md:col-span-2 md:col-start-1 md:mt-2">
 					<Label htmlFor="address">Wallet Address</Label>
-					<Alert className="max-w-md bg-vd-beige-300">
+					<Alert className="max-w-md bg-stone-200">
 						<AlertDescription className="truncate">
 							{address ? address : "No address found"}
 						</AlertDescription>

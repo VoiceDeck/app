@@ -31,8 +31,12 @@ const History = ({
 	const renderHypercertsEmptyState = () => {
 		return (
 			<div className="flex flex-col gap-6 pt-6 text-center md:px-20">
-				<img src="/history-bg.svg" alt="circular pattern" />
-				<p className="px-8 text-vd-beige-600">
+				<img
+					src="/history-bg.svg"
+					alt="circular pattern"
+					className="text-stone-600"
+				/>
+				<p className="px-8 text-stone-600">
 					When you create Hypercerts they will appear here.
 				</p>
 			</div>
@@ -63,7 +67,7 @@ const History = ({
 		return (
 			<div className="flex flex-col gap-6 pt-6 text-center md:px-20">
 				<img src="/history-bg.svg" alt="circular pattern" />
-				<p className="px-8 text-vd-beige-600">
+				<p className="px-8 text-stone-600">
 					When you start supporting different causes they will appear here.
 				</p>
 			</div>
