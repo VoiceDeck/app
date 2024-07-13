@@ -234,7 +234,7 @@ const HypercertForm = () => {
 		<Dialog open={openMintDialog} onOpenChange={setOpenMintDialog}>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
-					<div className="flex gap-4">
+					<div className="mb-10 flex flex-col-reverse gap-6 md:mb-0 md:flex-row md:gap-4">
 						<Card className="rounded-3xl py-4 shadow-none">
 							<CardContent className="flex flex-col gap-4">
 								<h2 className="text-2xl">General Fields</h2>
@@ -525,7 +525,7 @@ const HypercertForm = () => {
 								</Button>
 							</CardContent>
 						</Card>
-						<div>
+						<div className="flex justify-center md:block md:justify-start">
 							<HypercertCard
 								title={form.watch("title") || undefined}
 								description={form.watch("description") || undefined}
