@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import edgeEsmeralda from "@/assets/EdgeEsmeralda.svg";
+import EdgeEsmeralda from "@/assets/EdgeEsmeralda.svg";
 import hero from "@/assets/EdgeEsmeraldaHero.webp";
 import noReportsImage from "@/assets/history-bg.svg";
 
@@ -30,13 +30,7 @@ export default async function ReportsPage() {
 						fill
 						priority
 					/>
-					<Image
-						className="h-auto w-3/5 self-center"
-						src={edgeEsmeralda}
-						alt="Edge Esmeralda"
-						height={200}
-						width={800}
-					/>
+					<EdgeEsmeralda className="self-center" />
 					{/* <h1 className="text-3xl lg:text-5xl 2xl:text-7xl font-bold text-left max-w-screen-md 2xl:max-w-screen-lg">
 						{siteConfig.title}
 					</h1> */}
