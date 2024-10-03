@@ -42,6 +42,7 @@ export const fetchReports = async (): Promise<Report[]> => {
         `[server] Fetching reports from remote using owner address: ${ownerAddress}`,
       );
       const hypercertsRes = await getHypercertsByOwner({ ownerAddress });
+
       if (!hypercertsRes) {
         throw new Error(
           `[Hypercerts] Failed to fetch claims owned by ${ownerAddress}`,
@@ -293,35 +294,36 @@ const updateReports = async (): Promise<Report[]> => {
       await delay(index * 20);
 
       // step 1: get metadata from IPFS
-      const metadata = await getHypercertMetadata(
-        claim.uri as string,
-        getHypercertClient().storage,
-      );
+      // const metadata = await getHypercertMetadata(
+      //   claim.uri as string,
+      //   getHypercertClient().storage,
+      // );
 
       // step 2: get offchain data from CMS
 
       const cmsReport = fromCMS.find(
-        (cmsReport) => cmsReport.title === metadata.name,
+        (cmsReport) => cmsReport.title === claim.metadata.name,
       );
       if (!cmsReport) {
         throw new Error(
-          `[server] CMS content for report titled '${metadata.name}' not found.`,
+          `[server] CMS content for report titled '${claim.metadata.name}' not found.`,
         );
       }
 
       return {
-        hypercertId: claim.id,
-        title: metadata.name,
-        summary: metadata.description,
-        image: metadata.image,
-        originalReportUrl: metadata.external_url,
-        state: metadata.properties?.[0].value,
-        category: metadata.hypercert?.work_scope.value?.[0],
-        workTimeframe: metadata.hypercert?.work_timeframe.display_value,
-        impactScope: metadata.hypercert?.impact_scope.display_value,
-        impactTimeframe: metadata.hypercert?.impact_timeframe.display_value,
-        contributors: metadata.hypercert?.contributors.value?.map(
-          (name) => name,
+        hypercertId: claim.hypercert_id,
+        title: claim.metadata.name,
+        summary: claim.metadata.description,
+        image: claim.metadata.image,
+        originalReportUrl: claim.metadata.external_url,
+        state: claim.metadata.properties?.[0].value,
+        category: claim.metadata.hypercert?.work_scope.value?.[0],
+        workTimeframe: claim.metadata.hypercert?.work_timeframe.display_value,
+        impactScope: claim.metadata.hypercert?.impact_scope.display_value,
+        impactTimeframe:
+          claim.metadata.hypercert?.impact_timeframe.display_value,
+        contributors: claim.metadata.hypercert?.contributors.value?.map(
+          (name: string) => name,
         ),
         cmsId: cmsReport.id,
         status: cmsReport.status,
@@ -335,7 +337,7 @@ const updateReports = async (): Promise<Report[]> => {
         dateUpdated: cmsReport.date_updated,
         byline: cmsReport.byline,
         totalCost: Number(cmsReport.total_cost),
-        fundedSoFar: await getFundedAmountByHCId(claim.id),
+        fundedSoFar: await getFundedAmountByHCId(claim.hypercert_id),
       } as Report;
     });
 
@@ -398,26 +400,27 @@ const updateReports = async (): Promise<Report[]> => {
  * @returns A promise that resolves to the metadata of the claim.
  * @throws Will throw an error if the metadata cannot be fetched.
  */
-export const getHypercertMetadata = async (
-  claimUri: string,
-  storage: HypercertsStorage,
-): Promise<HypercertMetadata> => {
-  let metadata: HypercertMetadata | null;
+// ! Deprecated
+// export const getHypercertMetadata = async (
+//   claimUri: string,
+//   storage: HypercertsStorage,
+// ): Promise<HypercertMetadata> => {
+//   let metadata: HypercertMetadata | null;
 
-  try {
-    const response = await storage.getMetadata(claimUri);
-    metadata = response;
+//   try {
+//     const response = await storage.getMetadata(claimUri);
+//     metadata = response;
 
-    return metadata;
-  } catch (error) {
-    console.error(
-      `[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
-    );
-    throw new Error(
-      `[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
-    );
-  }
-};
+//     return metadata;
+//   } catch (error) {
+//     console.error(
+//       `[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
+//     );
+//     throw new Error(
+//       `[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
+//     );
+//   }
+// };
 
 // update the fundedSoFar field of the report
 export const updateFundedAmount = async (
