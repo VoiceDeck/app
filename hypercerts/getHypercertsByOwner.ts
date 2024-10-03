@@ -38,7 +38,7 @@ export async function getHypercertsByOwner({
       count: queryRes.hypercerts.count ?? 0,
       data:
         queryRes.hypercerts.data.map((hypercert) =>
-          readFragment(HypercertListFragment, hypercert),
+          readFragment(HypercertFullFragment, hypercert),
         ) || [],
     };
   } catch (e) {
