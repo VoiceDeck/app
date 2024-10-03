@@ -15,8 +15,13 @@
     "incremental": true,
     "plugins": [
       {
-        "name": "next",
+        "name": "next"
       },
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "https://staging-api.hypercerts.org/v1/graphql",
+        "tadaOutputLocation": "./graphql-hypercerts-env.d.ts"
+      }
     ],
     "paths": {
       "@/*": ["./*"],
@@ -25,9 +30,9 @@
       "@/styles/*": ["./styles/*"],
       "@/types/*": ["./types/*"],
       "@/hooks/*": ["./hooks/*"],
-      "@/assets/*": ["./assets/*"],
-    },
+      "@/assets/*": ["./assets/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }
