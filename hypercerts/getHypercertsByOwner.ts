@@ -7,6 +7,7 @@ import { HYPERCERTS_API_URL_GRAPH } from "@/config/hypercerts";
 import { HypercertFullFragment } from "@/hypercerts/fragments/hypercert-full.fragment";
 import request from "graphql-request";
 import { getAddress } from "viem";
+import { FragmentOf } from "gql.tada";
 
 const query = graphql(
   `
@@ -46,3 +47,10 @@ export async function getHypercertsByOwner({
     return undefined;
   }
 }
+
+export type HypercertsByOwnerResult =
+  | {
+      count: number;
+      data: FragmentOf<typeof HypercertFullFragment>[];
+    }
+  | undefined;
