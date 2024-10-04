@@ -13,9 +13,14 @@ import { getOrders } from "./marketplace";
 import { delay } from "./utils";
 import { getHypercertsByCreator } from "@/hypercerts/getHypercertsByCreator";
 import { getHypercertsByOwner } from "@/hypercerts/getHypercertsByOwner";
+import { FragmentOf } from "gql.tada";
+
+import { HypercertFullFragment } from "@/hypercerts/fragments/hypercert-full.fragment";
 
 let reports: Report[] | null = null;
-let claims: any[] | null = null;
+let claims:
+  | NonNullable<Awaited<ReturnType<typeof getHypercertsByOwner>>>["data"]
+  | null = null;
 const reportsMutex = new Mutex();
 
 let hypercertClient: HypercertClient | null = null;
@@ -49,7 +54,7 @@ export const fetchReports = async (): Promise<Report[]> => {
         );
       }
       console.log("hypercertsRes", hypercertsRes.data);
-      claims = hypercertsRes?.data;
+      claims = hypercertsRes.data;
 
       // case 1: Hypercerts are available
       try {
@@ -282,13 +287,13 @@ const updateReports = async (): Promise<Report[]> => {
   const existingReportIds = reports
     ? reports.map((report) => report.hypercertId)
     : [];
-
   const reportsToUpdatePromises = claims
-    .filter((claim) => !existingReportIds.includes(claim.hypercert_id))
+    .filter(
+      (claim) =>
+        claim.hypercert_id && !existingReportIds.includes(claim.hypercert_id),
+    )
     .map(async (claim, index) => {
       console.log(`[server] Processing claim with ID: ${claim.hypercert_id}.`);
-
-      console.log("claims", claims);
 
       // a delay to spread out the requests
       await delay(index * 20);
@@ -302,27 +307,27 @@ const updateReports = async (): Promise<Report[]> => {
       // step 2: get offchain data from CMS
 
       const cmsReport = fromCMS.find(
-        (cmsReport) => cmsReport.title === claim.metadata.name,
+        (cmsReport) => cmsReport.title === claim?.metadata?.name,
       );
       if (!cmsReport) {
         throw new Error(
-          `[server] CMS content for report titled '${claim.metadata.name}' not found.`,
+          `[server] CMS content for report titled '${claim?.metadata?.name}' not found.`,
         );
       }
 
       return {
         hypercertId: claim.hypercert_id,
-        title: claim.metadata.name,
-        summary: claim.metadata.description,
-        image: claim.metadata.image,
-        originalReportUrl: claim.metadata.external_url,
-        state: claim.metadata.properties?.[0].value,
-        category: claim.metadata.hypercert?.work_scope.value?.[0],
-        workTimeframe: claim.metadata.hypercert?.work_timeframe.display_value,
-        impactScope: claim.metadata.hypercert?.impact_scope.display_value,
-        impactTimeframe:
-          claim.metadata.hypercert?.impact_timeframe.display_value,
-        contributors: claim.metadata.hypercert?.contributors.value?.map(
+        title: claim?.metadata?.name,
+        summary: claim?.metadata?.description,
+        image: claim?.metadata?.image || null,
+        originalReportUrl: claim?.metadata?.external_url,
+        // @ts-ignore
+        state: claim?.metadata?.properties,
+        category: claim?.metadata?.work_scope?.[0],
+        workTimeframe: `${claim.metadata?.work_timeframe_from} - ${claim.metadata?.work_timeframe_to}`,
+        impactScope: claim?.metadata?.impact_scope?.[0],
+        impactTimeframe: `${claim?.metadata?.impact_timeframe_from} - ${claim?.metadata?.impact_timeframe_to}`,
+        contributors: claim?.metadata?.contributors?.map(
           (name: string) => name,
         ),
         cmsId: cmsReport.id,
@@ -337,7 +342,7 @@ const updateReports = async (): Promise<Report[]> => {
         dateUpdated: cmsReport.date_updated,
         byline: cmsReport.byline,
         totalCost: Number(cmsReport.total_cost),
-        fundedSoFar: await getFundedAmountByHCId(claim.hypercert_id),
+        fundedSoFar: await getFundedAmountByHCId(claim.hypercert_id as string),
       } as Report;
     });
 
