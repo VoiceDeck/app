@@ -32,8 +32,8 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 	const { data: hypercertClaimResponse, isPending: claimPending } =
 		hypercertClaimQuery;
 
-	const genesisFraction = genesisFractionResponse?.claimTokens[0];
-	const hypercertClaim = hypercertClaimResponse?.claim;
+	const genesisFraction = genesisFractionResponse?.data[0];
+	const hypercertClaim = hypercertClaimResponse?.metadata;
 
 	if (fractionsPending || claimPending)
 		return (
