@@ -9,6 +9,7 @@ export const HypercertFullFragment = graphql(`
       work_scope
       work_timeframe_from
       work_timeframe_to
+      impact_scope
       impact_timeframe_from
       impact_timeframe_to
       properties
