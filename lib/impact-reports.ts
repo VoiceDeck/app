@@ -7,7 +7,7 @@ import {
 } from "@hypercerts-org/sdk";
 import { Mutex } from "async-mutex";
 
-import type { Claim, Report } from "@/types";
+import type { Report } from "@/types";
 import { getCMSReports, getFundedAmountByHCId } from "./directus";
 import { getOrders } from "./marketplace";
 import { delay } from "./utils";
@@ -67,22 +67,19 @@ export const fetchReports = async (): Promise<Report[]> => {
 
       // TODO: remove this when we don't need dummy order
       if (process.env.DEPLOY_ENV === "production") {
-        reports = _reports.map((report) => {
-          for (const order of orders) {
-            if (order && order.hypercertId === report.hypercertId) {
-              report.order = order;
-              break;
-            }
-          }
+        const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
 
-          if (!report.order && report.fundedSoFar < report.totalCost) {
-            // warn if there is no order for a report that is not fully funded
-            console.warn(
-              `[server] No order found for hypercert ${report.hypercertId}`,
-            );
+
+        reports = _reports.map(report => {
+          const order = orderMap.get(report.hypercertId);
+          if (order) {
+            report.order = order;
+          } else if (report.fundedSoFar < report.totalCost) {
+            console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
           }
           return report;
         });
+
       } else {
         reports = _reports.map((report) => {
           for (const order of orders) {
@@ -298,18 +295,13 @@ const updateReports = async (): Promise<Report[]> => {
       // a delay to spread out the requests
       await delay(index * 20);
 
-      // step 1: get metadata from IPFS
-      // const metadata = await getHypercertMetadata(
-      //   claim.uri as string,
-      //   getHypercertClient().storage,
-      // );
-
       // step 2: get offchain data from CMS
 
       const cmsReport = fromCMS.find(
         (cmsReport) => cmsReport.title === claim?.metadata?.name,
       );
       if (!cmsReport) {
+        // TODO: change this to just logging
         throw new Error(
           `[server] CMS content for report titled '${claim?.metadata?.name}' not found.`,
         );
@@ -396,35 +388,6 @@ const updateReports = async (): Promise<Report[]> => {
 
   return reports as Report[];
 };
-
-/**
- * Retrieves the metadata for a given claim URI from IPFS.
- * @param claimUri - The IPFS URI of the claim for which metadata is to be fetched.
- * @param storage - An instance of HypercertsStorage to retrieve metadata from IPFS.
- * @returns A promise that resolves to the metadata of the claim.
- * @throws Will throw an error if the metadata cannot be fetched.
- */
-// ! Deprecated
-// export const getHypercertMetadata = async (
-//   claimUri: string,
-//   storage: HypercertsStorage,
-// ): Promise<HypercertMetadata> => {
-//   let metadata: HypercertMetadata | null;
-
-//   try {
-//     const response = await storage.getMetadata(claimUri);
-//     metadata = response;
-
-//     return metadata;
-//   } catch (error) {
-//     console.error(
-//       `[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
-//     );
-//     throw new Error(
-//       `[Hypercerts] Failed to fetch metadata of ${claimUri}: ${error}`,
-//     );
-//   }
-// };
 
 // update the fundedSoFar field of the report
 export const updateFundedAmount = async (
