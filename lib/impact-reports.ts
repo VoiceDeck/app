@@ -321,8 +321,6 @@ const updateReports = async (): Promise<Report[]> => {
         summary: claim?.metadata?.description,
         image: claim?.metadata?.image || null,
         originalReportUrl: claim?.metadata?.external_url,
-        // @ts-ignore
-        state: claim?.metadata?.properties,
         category: claim?.metadata?.work_scope?.[0],
         workTimeframe: `${claim.metadata?.work_timeframe_from} - ${claim.metadata?.work_timeframe_to}`,
         impactScope: claim?.metadata?.impact_scope?.[0],
@@ -335,6 +333,7 @@ const updateReports = async (): Promise<Report[]> => {
         dateCreated: cmsReport.date_created,
         slug: cmsReport.slug,
         story: cmsReport.story,
+        state: cmsReport.states[0],
         bcRatio: cmsReport.bc_ratio,
         villagesImpacted: cmsReport.villages_impacted,
         peopleImpacted: cmsReport.people_impacted,

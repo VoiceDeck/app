@@ -148,7 +148,6 @@ export interface CMSContent {
   summary: string | null;
   image: string | null;
   original_report_url: string | null;
-  states: string[] | null;
   category: string | null;
   work_timeframe: string | null;
   impact_scope: string | null;
@@ -161,6 +160,7 @@ export interface CMSContent {
   status: string;
   date_created: string | null;
   slug: string;
+  states: string[];
   story: string | null;
   bc_ratio: number | null;
   villages_impacted: number | null;
