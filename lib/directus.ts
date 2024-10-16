@@ -202,7 +202,7 @@ export const getFundedAmountByHCId = async (
         fields: ["amount"],
         filter: {
           hypercert_id: {
-            _eq: hypercertId,
+            _eq: hypercertId.toLowerCase(),
           },
         },
       })
