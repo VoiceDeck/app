@@ -3,7 +3,8 @@ import "server-only";
 import { graphql, readFragment } from "@/lib/graphql";
 
 import { HYPERCERTS_API_URL_GRAPH } from "@/config/hypercerts";
-import { HypercertListFragment } from "@/hypercerts/fragments/hypercert-list.fragment";
+// import { HypercertListFragment } from "@/hypercerts/fragments/hypercert-list.fragment";
+import { HypercertFullFragment } from "@/hypercerts/fragments/hypercert-full.fragment";
 import request from "graphql-request";
 import { getAddress } from "viem";
 
@@ -13,12 +14,12 @@ const query = graphql(
       hypercerts(where: $where) {
         count
         data {
-          ...HypercertListFragment
+          ...HypercertFullFragment
         }
       }
     }
   `,
-  [HypercertListFragment],
+  [HypercertFullFragment],
 );
 
 export async function getHypercertsByOwner({
