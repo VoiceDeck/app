@@ -93,6 +93,7 @@ export interface Claim {
   // biome-ignore lint: type definition imported from @hypercerts-org/sdk
   totalUnits?: any | null;
   uri?: string | null;
+  hypercert_id: string;
 }
 
 // Represents an Order in the Hypercerts Marketplace
