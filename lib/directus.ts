@@ -334,7 +334,7 @@ export const getContributionsByHCId = async (
       readItems("contributions", {
         filter: {
           hypercert_id: {
-            _eq: hypercertId,
+            _eq: hypercertId.toLowerCase(),
           },
         },
       })
