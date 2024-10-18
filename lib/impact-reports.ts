@@ -302,11 +302,14 @@ export const updateFundedAmount = async (
   const release = await reportsMutex.acquire();
 
   try {
-    const reports = await getReports();
-    const report = reports.find((r) => r.hypercertId === hypercertId);
-    if (report) {
-      report.fundedSoFar += amount;
-    }
+    const currentReports = await getReports();
+    const updatedReports = currentReports.map(report => 
+      report.hypercertId === hypercertId
+        ? { ...report, fundedSoFar: report.fundedSoFar + amount }
+        : report
+    );
+    
+    reports = updatedReports;
   } finally {
     release();
   }
