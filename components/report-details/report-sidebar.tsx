@@ -13,13 +13,13 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 		{
 			title: "Impact Timeframe",
 			value: report.impactTimeframe
-				? new Date(report.impactTimeframe).toLocaleDateString()
+				? report.impactTimeframe
 				: "N/A",
 		},
 		{
 			title: "Work Timeframe",
 			value: report.workTimeframe
-				? new Date(report.workTimeframe).toLocaleDateString()
+				? report.workTimeframe
 				: "N/A",
 		},
 		{

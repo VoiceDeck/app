@@ -54,6 +54,7 @@ const useSupportForm = (
       throw new Error("No address found");
     }
 
+    console.log("amount to buy: ", BigInt(Math.trunc(unitsToBuy)));
     await handleBuyFraction(
       order,
       BigInt(Math.trunc(unitsToBuy)),
