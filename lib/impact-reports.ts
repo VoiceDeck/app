@@ -208,7 +208,24 @@ export const fetchNewReports = async () => {
     console.log(`[server] claims in the cache are outdated, updating reports`);
     claims = newClaims;
 
-    await updateReports();
+    const _reports = await updateReports();
+
+    const orders = await getOrders(_reports);
+
+    const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
+
+
+    reports = _reports.map(report => {
+      const order = orderMap.get(report.hypercertId);
+      if (order) {
+        report.order = order;
+      } else if (report.fundedSoFar < report.totalCost) {
+        console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
+      }
+      return report;
+    });
+
+    console.log(`[server] total fetched reports: ${reports.length}`);
   }
 };
 
