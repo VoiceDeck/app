@@ -48,7 +48,7 @@ const TransactionStatus = ({
 					>
 						<a
 							// TODO: UPDATE FOR MAINNET WHEN READY
-							href={`https://sepolia.etherscan.io/tx/${transactionHash}`}
+							href={`https://optimistic.etherscan.io/tx/${transactionHash}`}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="w-full h-full flex gap-2 justify-center items-center"

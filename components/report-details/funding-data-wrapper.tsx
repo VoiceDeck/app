@@ -53,7 +53,7 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
   const pricePerUnit = totalAmount / Number(totalUnits);
   const percentProgress = ((fundedAmount || 0) / totalAmount) * 100;
   const minUnitAmount = 1 / pricePerUnit;
-  const dollarAmountNeeded = (totalAmount - (fundedAmount || 0)).toFixed(2);
+  const dollarAmountNeeded = String((totalAmount - (fundedAmount || 0)));
 
   return (
     <FundingProvider

@@ -83,7 +83,7 @@ export async function processNewContribution(
     // update the funded amount of the hypercert in server memory
     await updateFundedAmount(hypercertId, amount);
     // add the contribution to the cache
-    updateContribution(hypercertId, contribution);
+    await updateContribution(hypercertId, contribution);
   } catch (error) {
     console.error(`[server] failed to process new contribution: ${error}`);
     throw new Error(`[server] failed to process new contribution: ${error}`);
