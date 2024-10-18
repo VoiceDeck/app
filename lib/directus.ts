@@ -71,7 +71,7 @@ export async function processNewContribution(
 
     const contribution = {
       sender: getAddress(sender),
-      hypercert_id: hypercertId,
+      hypercert_id: hypercertId.toLowerCase(),
       amount: amount,
       txid: txId,
       date_created: new Date().toISOString(),
