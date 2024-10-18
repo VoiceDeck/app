@@ -124,7 +124,6 @@ async function getOrdersForReport(
 		const { data: orders } = await hypercertClient.api.fetchOrdersByHypercertId(
 			{
 				hypercertId,
-				chainId,
 			},
 		);
 		return orders;

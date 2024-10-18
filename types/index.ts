@@ -80,20 +80,6 @@ export interface Report {
  * @property {any} totalUnits - The total number of units.
  * @property {string} uri - The URI of the claim metadata.
  */
-export interface Claim {
-  __typename?: "Claim";
-  contract: string;
-  // biome-ignore lint: type definition imported from @hypercerts-org/sdk
-  tokenID: any;
-  // biome-ignore lint: type definition imported from @hypercerts-org/sdk
-  creator?: any | null;
-  id: string;
-  // biome-ignore lint: type definition imported from @hypercerts-org/sdk
-  owner?: any | null;
-  // biome-ignore lint: type definition imported from @hypercerts-org/sdk
-  totalUnits?: any | null;
-  uri?: string | null;
-}
 
 // Represents an Order in the Hypercerts Marketplace
 export type Order = {
@@ -132,7 +118,6 @@ export interface CMSContent {
   summary: string | null;
   image: string | null;
   original_report_url: string | null;
-  states: string[] | null;
   category: string | null;
   work_timeframe: string | null;
   impact_scope: string | null;
@@ -145,6 +130,7 @@ export interface CMSContent {
   status: string;
   date_created: string | null;
   slug: string;
+  states: string[];
   story: string | null;
   bc_ratio: number | null;
   villages_impacted: number | null;
