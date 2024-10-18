@@ -192,7 +192,7 @@ export const getHypercertClaims = async (ownerAddress: string) => {
           `[Hypercerts] Failed to fetch claims owned by ${ownerAddress}`,
         );
       }
-      console.log("Query Results:", hypercertsRes);
+      // console.log("Query Results:", hypercertsRes);
       claims = hypercertsRes?.data;
       // console.log(`[Hypercerts] Fetched claims: ${claims ? claims.length : 0}`);
     } catch (error) {
