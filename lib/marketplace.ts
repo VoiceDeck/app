@@ -2,7 +2,7 @@ import "server-only";
 
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { ethers } from "ethers";
-import { sepolia } from "viem/chains";
+import { optimism } from "viem/chains";
 
 import type { Order, Report } from "@/types";
 
@@ -101,7 +101,7 @@ export const getHypercertExchangeClient = (): HypercertExchangeClient => {
   }
 
   hypercertExchangeClient = new HypercertExchangeClient(
-    sepolia.id,
+    optimism.id,
     provider,
     signer,
   );

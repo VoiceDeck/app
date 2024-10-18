@@ -53,7 +53,7 @@ export const fetchReports = async (): Promise<Report[]> => {
           `[Hypercerts] Failed to fetch claims owned by ${ownerAddress}`,
         );
       }
-      console.log("hypercertsRes", hypercertsRes.data);
+      // console.log("hypercertsRes", hypercertsRes.data);
       claims = hypercertsRes.data;
 
       const _reports = await updateReports();
@@ -164,7 +164,7 @@ export const getHypercertClient = (): HypercertClient => {
     return hypercertClient;
   }
 
-  hypercertClient = new HypercertClient({ environment: "test" }); // Sepolia testnet
+  hypercertClient = new HypercertClient({ environment: "production" }); // Optimism
 
   return hypercertClient;
 };
@@ -279,9 +279,9 @@ const updateReports = async (): Promise<Report[]> => {
         image: "https://directus.voicedeck.org/assets/" + cmsReport.image,
         originalReportUrl: claim?.metadata?.external_url,
         category: claim?.metadata?.work_scope?.[0],
-        workTimeframe: `${claim.metadata?.work_timeframe_from} - ${claim.metadata?.work_timeframe_to}`,
+        workTimeframe: `${(new Date(Number(claim.metadata?.work_timeframe_from) * 1000)).toLocaleDateString()} - ${(new Date(Number(claim.metadata?.work_timeframe_to) * 1000)).toLocaleDateString()}`,
         impactScope: claim?.metadata?.impact_scope?.[0],
-        impactTimeframe: `${claim?.metadata?.impact_timeframe_from} - ${claim?.metadata?.impact_timeframe_to}`,
+        impactTimeframe: `${new Date(Number(claim.metadata?.impact_timeframe_from) * 1000).toLocaleDateString()} - ${(new Date(Number(claim.metadata?.impact_timeframe_to) * 1000).toLocaleDateString())}`,
         contributors: claim?.metadata?.contributors?.map(
           (name: string) => name,
         ),

@@ -21,7 +21,7 @@ import {
   createPublicClient,
   getAddress,
 } from "viem";
-import { sepolia } from "viem/chains";
+import { optimism } from "viem/chains";
 
 import type { CMSContent, Contribution } from "@/types";
 import { updateFundedAmount } from "./impact-reports";
@@ -432,7 +432,7 @@ export const getViemClient = (): PublicClient => {
   }
   
   viemClient = createPublicClient({
-    chain: sepolia,
+    chain: optimism,
     transport: http(process.env.JSON_RPC_ENDPOINT ? process.env.JSON_RPC_ENDPOINT : undefined),
   });
 
