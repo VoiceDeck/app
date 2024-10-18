@@ -56,11 +56,7 @@ export const fetchReports = async (): Promise<Report[]> => {
       console.log("hypercertsRes", hypercertsRes.data);
       claims = hypercertsRes.data;
 
-      // case 1: Hypercerts are available
-      try {
-        claims = await getHypercertClaims(ownerAddress);
-      
-        const _reports = await updateReports({isHypercertsAvailable: true});
+      const _reports = await updateReports();
 
       // step 3: get orders from marketplace
       const orders = await getOrders(_reports);
@@ -100,30 +96,8 @@ export const fetchReports = async (): Promise<Report[]> => {
       console.log(`[server] total fetched reports: ${reports.length}`);
     }
 
-          if (!report.order && report.fundedSoFar < report.totalCost) {
-            // warn if there is no order for a report that is not fully funded
-            console.warn(
-              `[server] No order found for hypercert ${report.hypercertId}`,
-            );
-          }
-          return report;
-        });
-
-        console.log(`[server] total fetched reports: ${reports.length}`);
-      }
-      
-      // case 2: Hypercerts are not available
-      catch (error) {
-        console.log("try me")
-        reports = await updateReports({isHypercertsAvailable: false});
-
-        console.log(`[server] total fetched reports without Hypercerts: ${reports.length}`);
-      }
-    }
     return reports;
-  }
-
-  catch (error) {
+  } catch (error) {
     console.error(`[server] Failed to fetch reports: ${error}`);
     throw new Error(`[server] Failed to fetch reports: ${error}`);
   }
@@ -209,11 +183,6 @@ export const getHypercertClaims = async (ownerAddress: string) => {
   } else {
     try {
       console.log(`[Hypercerts] Fetching claims owned by ${ownerAddress}`);
-      // ! Legacy code
-      // see graphql query: https://github.com/hypercerts-org/hypercerts/blob/d7f5fee/sdk/src/indexer/queries/claims.graphql#L1-L11
-      // const response =
-      //   await getHypercertClient().indexer.claimsByOwner(ownerAddress);
-      // claims = (response as ClaimsByOwnerQuery).claims as Claim[];
 
       const hypercertsRes = await getHypercertsByOwner({
         ownerAddress,
@@ -245,10 +214,6 @@ export const fetchNewReports = async () => {
   }
 
   const ownerAddress = process.env.HC_OWNER_ADDRESS;
-  // ! Legacy code
-  // const response =
-  //   await getHypercertClient().indexer.claimsByOwner(ownerAddress);
-  // const newClaims = (response as ClaimsByOwnerQuery).claims as Claim[];\
   const hypercertsRes = await getHypercertsByOwner({
     ownerAddress,
   });
@@ -268,7 +233,7 @@ export const fetchNewReports = async () => {
     console.log(`[server] claims in the cache are outdated, updating reports`);
     claims = newClaims;
 
-    await updateReports({isHypercertsAvailable: true});
+    await updateReports();
   }
 };
 
@@ -311,7 +276,7 @@ const updateReports = async (): Promise<Report[]> => {
         hypercertId: claim.hypercert_id,
         title: claim?.metadata?.name,
         summary: claim?.metadata?.description,
-        image: claim?.metadata?.image || null,
+        image: "https://directus.voicedeck.org/assets/" + cmsReport.image,
         originalReportUrl: claim?.metadata?.external_url,
         category: claim?.metadata?.work_scope?.[0],
         workTimeframe: `${claim.metadata?.work_timeframe_from} - ${claim.metadata?.work_timeframe_to}`,
@@ -350,41 +315,6 @@ const updateReports = async (): Promise<Report[]> => {
       `[server] No new or updated claims found. No need to update reports.`,
     );
   }
-
-} else {
-  const _reports : Report[] = [];
-  fromCMS.forEach((item) => {
-    const _report = {
-      hypercertId: "",
-      title: item.title,
-      summary: item.summary,
-      image: "https://directus.voicedeck.org/assets/" + item.image,
-      originalReportUrl: item.original_report_url,
-      state: item.states ? item.states[0] : "",
-      category: item.category,
-      workTimeframe: item.work_timeframe,
-      impactScope: item.impact_scope,
-      impactTimeframe: item.impact_timeframe,
-      contributors: [item.contributor],
-      cmsId: item.id,
-      status: item.status,
-      dateCreated: item.date_created,
-      slug: item.slug,
-      story: item.story,
-      bcRatio: item.bc_ratio,
-      villagesImpacted: item.villages_impacted,
-      peopleImpacted: item.people_impacted,
-      verifiedBy: item.verified_by,
-      dateUpdated: item.date_updated,
-      byline: item.byline,
-      totalCost: Number(item.total_cost),
-      fundedSoFar: 0,
-    } as Report; 
-
-    _reports.push(_report);
-  })
-  reports = _reports;
-};
 
   return reports as Report[];
 };

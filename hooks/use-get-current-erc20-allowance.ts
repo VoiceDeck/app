@@ -12,8 +12,8 @@ export const useGetCurrentERC20Allowance = () => {
   const { chainId, address } = useAccount();
   const hypercertsExchangeAddress =
     deployments[asDeployedChain(chainId ?? sepolia.id)].HypercertExchange;
-  const wethAddress =
-    addressesByNetwork[utils.asDeployedChain(chainId ?? sepolia.id)].WETH;
+  // TODO: FIX IT
+  const wethAddress = "FILL_ME";
   const { data } = useReadContract({
     abi: WETHAbi,
     address: wethAddress as `0x${string}`,
