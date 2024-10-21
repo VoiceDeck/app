@@ -1,8 +1,8 @@
-import 'server-only'
+import "server-only";
 
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { ethers } from "ethers";
-import { sepolia } from "viem/chains";
+import { optimism } from "viem/chains";
 
 import type { Order, Report } from "@/types";
 
@@ -11,13 +11,13 @@ let orders: (Order | null)[] | null = null;
 let hypercertExchangeClient: HypercertExchangeClient | null = null;
 
 const provider = new ethers.JsonRpcProvider(
-  process.env.ETHEREUM_RPC_URL as string
+  process.env.ETHEREUM_RPC_URL as string,
 );
 
 // here we use placeholder private key for the signer because we are not actually signing any transactions
 const signer = new ethers.Wallet(
   "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  provider
+  provider,
 );
 
 /**
@@ -29,15 +29,13 @@ export async function fetchOrder(hypercertId: string): Promise<Order | null> {
   const hypercertExchangeClient = getHypercertExchangeClient();
 
   const response = await hypercertExchangeClient.api.fetchOrdersByHypercertId({
-    hypercertId:
-    hypercertId,
-    chainId: sepolia.id,
+    hypercertId: hypercertId,
   });
 
   if (response.data && response.data.length > 0) {
     if (response.data.length > 1) {
       console.warn(
-        `[server] ${response.data.length} orders found for hypercert ${hypercertId}`
+        `[server] ${response.data.length} orders found for hypercert ${hypercertId}`,
       );
     }
     // Assuming there is only one item per order for the VoiceDeck use case
@@ -54,36 +52,39 @@ export async function fetchOrder(hypercertId: string): Promise<Order | null> {
 export async function getOrders(reports: Report[]): Promise<(Order | null)[]> {
   try {
     if (orders) {
-    	console.log(
-    		"[server] Hypercert orders already exist, no need to fetch from remote",
-    	);
-    	console.log(`[server] existing Hypercert orders: ${orders.length}`);
-    } else {
-
-      // TODO: remove this when we don't need dummy order
-    if (process.env.NEXT_PUBLIC_DEPLOY_ENV === "production") {
-      // fetch only orders for reports that are not fully funded
-      orders = await Promise.all(
-        reports.map((report) =>
-          report.fundedSoFar < report.totalCost
-            ? fetchOrder(report.hypercertId)
-            : null
-        )
+      console.log(
+        "[server] Hypercert orders already exist, no need to fetch from remote",
       );
-      console.log(`[server] fetched orders: ${orders.length}`);
+      console.log(`[server] existing Hypercert orders: ${orders.length}`);
     } else {
-      // fetch only orders for reports that are not fully funded
-    orders = await Promise.all(
-      reports.map((report) =>
-        report.fundedSoFar < report.totalCost
-          ? fetchOrder("0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896")
-          : null
-      )
-    );
-    console.log(`[server] fetched orders: ${orders.filter(order => order !== null).length}`);
+      // TODO: remove this when we don't need dummy order
+      if (process.env.NEXT_PUBLIC_DEPLOY_ENV === "production") {
+        // fetch only orders for reports that are not fully funded
+        orders = await Promise.all(
+          reports.map((report) =>
+            report.fundedSoFar < report.totalCost
+              ? fetchOrder(report.hypercertId)
+              : null,
+          ),
+        );
+        console.log(`[server] fetched orders: ${orders.length}`);
+      } else {
+        // fetch only orders for reports that are not fully funded
+        orders = await Promise.all(
+          reports.map((report) =>
+            report.fundedSoFar < report.totalCost
+              ? fetchOrder(
+                  "0xa16dfb32eb140a6f3f2ac68f41dad8c7e83c4941-39472754562828861761751454462085112528896",
+                )
+              : null,
+          ),
+        );
+        console.log(
+          `[server] fetched orders: ${orders.filter((order) => order !== null).length}`,
+        );
+      }
     }
-    }
-    
+
     return orders;
   } catch (error) {
     console.error(`[server] Failed to fetch orders: ${error}`);
@@ -100,9 +101,9 @@ export const getHypercertExchangeClient = (): HypercertExchangeClient => {
   }
 
   hypercertExchangeClient = new HypercertExchangeClient(
-    sepolia.id,
+    optimism.id,
     provider,
-    signer
+    signer,
   );
 
   return hypercertExchangeClient;

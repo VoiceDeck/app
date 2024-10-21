@@ -1,43 +1,28 @@
 "use client";
-import type { Claim, Report } from "@/types";
-import { type ClaimToken, HypercertClient } from "@hypercerts-org/sdk";
-import { type UseQueryResult, useQuery } from "@tanstack/react-query";
-import { sepolia } from "viem/chains";
-import { usePublicClient } from "wagmi";
+import { getFractionsByHypercert } from "@/hypercerts/getFractionsByHypercert";
+import { getHypercert } from "@/hypercerts/getHypercert";
+import type { Report } from "@/types";
 
-type UseFetchFundingDataReturnType = {
-  genesisFractionQuery: UseQueryResult<Record<"claimTokens", ClaimToken[]>>;
-  hypercertClaimQuery: UseQueryResult<Record<"claim", Claim>>;
-};
+import { useQuery } from "@tanstack/react-query";
+
 
 export const useFetchFundingData = (
-  hypercertId: Partial<Report>["hypercertId"]
-): UseFetchFundingDataReturnType => {
-  const publicClient = usePublicClient({ chainId: sepolia.id });
+  hypercertId: Partial<Report>["hypercertId"],
+) => {
+  if (!hypercertId) {
+    throw new Error("hypercertId is required");
+  }
 
-  const { indexer } = new HypercertClient({
-    chain: { id: sepolia.id }, // Sepolia testnet
-    // @ts-ignore
-    publicClient,
+
+  const fractionQuery = useQuery({
+    queryKey: ["hypercerts", "fractions", "id", hypercertId],
+    queryFn: () => getFractionsByHypercert(hypercertId),
   });
 
-  const fractionQuery: Partial<UseFetchFundingDataReturnType>["genesisFractionQuery"] =
-    useQuery({
-      queryKey: ["hypercerts", "fractions", "id", hypercertId],
-      queryFn: () =>
-        indexer.fractionsByClaim(
-          hypercertId as string
-        ),
-    });
-
-  const claimByIdQuery: Partial<UseFetchFundingDataReturnType>["hypercertClaimQuery"] =
-    useQuery({
-      queryKey: ["hypercerts", "claim", "id", hypercertId],
-      queryFn: () =>
-        indexer.claimById(
-          hypercertId as string
-        ),
-    });
+  const claimByIdQuery = useQuery({
+    queryKey: ["hypercerts", "claim", "id", hypercertId],
+    queryFn: () => getHypercert(hypercertId),
+  });
 
   return {
     genesisFractionQuery: fractionQuery,

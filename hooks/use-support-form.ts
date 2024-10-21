@@ -23,7 +23,7 @@ const useSupportForm = (
     typeof useHandleBuyFraction
   >["handleBuyFraction"],
   address: Address | undefined,
-  hypercertId: string | undefined
+  hypercertId: string | undefined,
 ) => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
@@ -47,12 +47,22 @@ const useSupportForm = (
   const onSubmit = async (values: SupportFormInputs) => {
     setIsProcessing(true);
     form.reset();
+    console.log("values", values);
+    console.log("pricePerUnit", pricePerUnit);
     const unitsToBuy = values.fractionPayment / pricePerUnit;
     if (!address) {
       throw new Error("No address found");
     }
 
-    await handleBuyFraction(order, BigInt(Math.trunc(unitsToBuy)), address, hypercertId, values.comment, values.fractionPayment);
+    console.log("amount to buy: ", BigInt(Math.trunc(unitsToBuy)));
+    await handleBuyFraction(
+      order,
+      BigInt(Math.trunc(unitsToBuy)),
+      address,
+      hypercertId,
+      values.comment,
+      values.fractionPayment,
+    );
   };
 
   return { form, isProcessing, onSubmit };

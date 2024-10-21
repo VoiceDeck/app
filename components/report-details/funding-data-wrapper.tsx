@@ -31,9 +31,8 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 		genesisFractionQuery;
 	const { data: hypercertClaimResponse, isPending: claimPending } =
 		hypercertClaimQuery;
-
-	const genesisFraction = genesisFractionResponse?.claimTokens[0];
-	const hypercertClaim = hypercertClaimResponse?.claim;
+	const genesisFraction = genesisFractionResponse?.data[0];
+	const hypercertClaim = hypercertClaimResponse;
 
 	if (fractionsPending || claimPending)
 		return (
@@ -48,12 +47,13 @@ const FundingDataWrapper: React.FC<FundingDataWrapperProps> = ({
 	if (!hypercertClaim) {
 		return <div>Missing data for calculations</div>;
 	}
+	console.log("hypercertClaim", hypercertClaim);
 
-	const totalUnits = hypercertClaim.totalUnits;
+	const totalUnits = hypercertClaim.units ? Number(hypercertClaim.units) : 0;
 	const pricePerUnit = totalAmount / Number(totalUnits);
 	const percentProgress = ((fundedAmount || 0) / totalAmount) * 100;
 	const minUnitAmount = 1 / pricePerUnit;
-	const dollarAmountNeeded = (totalAmount - (fundedAmount || 0)).toFixed(2);
+	const dollarAmountNeeded = String(totalAmount - (fundedAmount || 0));
 
 	return (
 		<FundingProvider

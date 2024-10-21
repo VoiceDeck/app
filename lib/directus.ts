@@ -21,7 +21,7 @@ import {
   createPublicClient,
   getAddress,
 } from "viem";
-import { sepolia } from "viem/chains";
+import { optimism } from "viem/chains";
 
 import type { CMSContent, Contribution } from "@/types";
 import { updateFundedAmount } from "./impact-reports";
@@ -71,7 +71,7 @@ export async function processNewContribution(
 
     const contribution = {
       sender: getAddress(sender),
-      hypercert_id: hypercertId,
+      hypercert_id: hypercertId.toLowerCase(),
       amount: amount,
       txid: txId,
       date_created: new Date().toISOString(),
@@ -83,7 +83,7 @@ export async function processNewContribution(
     // update the funded amount of the hypercert in server memory
     await updateFundedAmount(hypercertId, amount);
     // add the contribution to the cache
-    updateContribution(hypercertId, contribution);
+    await updateContribution(hypercertId, contribution);
   } catch (error) {
     console.error(`[server] failed to process new contribution: ${error}`);
     throw new Error(`[server] failed to process new contribution: ${error}`);
@@ -202,7 +202,7 @@ export const getFundedAmountByHCId = async (
         fields: ["amount"],
         filter: {
           hypercert_id: {
-            _eq: hypercertId,
+            _eq: hypercertId.toLowerCase(),
           },
         },
       })
@@ -334,7 +334,7 @@ export const getContributionsByHCId = async (
       readItems("contributions", {
         filter: {
           hypercert_id: {
-            _eq: hypercertId,
+            _eq: hypercertId.toLowerCase(),
           },
         },
       })
@@ -432,7 +432,7 @@ export const getViemClient = (): PublicClient => {
   }
   
   viemClient = createPublicClient({
-    chain: sepolia,
+    chain: optimism,
     transport: http(process.env.JSON_RPC_ENDPOINT ? process.env.JSON_RPC_ENDPOINT : undefined),
   });
 

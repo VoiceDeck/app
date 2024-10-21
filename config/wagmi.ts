@@ -2,7 +2,7 @@ import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 
 import { cookieStorage, createStorage } from "wagmi";
 import { getVoiceDeckUrl } from "./endpoint";
-import { sepolia } from "viem/chains";
+import { optimism } from "viem/chains";
 
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
@@ -19,7 +19,7 @@ const metadata = {
 
 // Create wagmiConfig
 export const config = defaultWagmiConfig({
-  chains: [sepolia], // required
+  chains: [optimism], // required
   projectId, // required
   metadata, // required
   ssr: true,

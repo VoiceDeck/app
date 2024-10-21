@@ -48,6 +48,18 @@ const useHandleBuyFraction = (
     );
 
     try {
+      console.log("doolor: ", amountInDollars)
+      console.log("doolor: ", BigInt(amountInDollars));
+    const approveTx = await hypercertExhangeClient.approveErc20(order.currency, BigInt(amountInDollars * 1_000_000));
+
+    await waitForTransactionReceipt(publicClient, {
+      hash: approveTx.hash as `0x${string}`,
+    });
+  } catch (e) {
+    console.error("faiiled to approve tx: " + e);
+  }
+
+    try {
       setTransactionStatus("PreparingOrder");
       const { call } = hypercertExhangeClient.executeOrder(
         order,

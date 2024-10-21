@@ -124,7 +124,6 @@ async function getOrdersForReport(
 		const { data: orders } = await hypercertClient.api.fetchOrdersByHypercertId(
 			{
 				hypercertId,
-				chainId,
 			},
 		);
 		return orders;
@@ -307,41 +306,10 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 								</FormItem>
 							)}
 						/> */}
-						<Alert className="bg-stone-50">
-							{/* <AlertTitle className="font-semibold">Please note</AlertTitle> */}
-							<AlertDescription>
-								You will need ETH on the Sepolia testnet. You can get some from
-								the link below.
-							</AlertDescription>
-							<AlertDescription className="flex gap-2 items-center py-1">
-								<a
-									href="https://www.alchemy.com/faucets/ethereum-sepolia"
-									target="_blank"
-									rel="noopener noreferrer"
-									className={cn(
-										buttonVariants({ variant: "link" }),
-										"flex justify-between items-center group p-0",
-									)}
-									aria-label="Open Sepolia Faucet in a new tab"
-								>
-									Sepolia Faucet
-									<span className="sr-only">(opens in a new tab)</span>
-									<ArrowUpRight
-										size={16}
-										className="ml-1 opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
-										aria-hidden="true"
-									/>
-								</a>
-							</AlertDescription>
-							<div className="p-2" />
-							<Button
-								className="w-full py-6 flex gap-2 rounded-md"
-								type="submit"
-							>
-								<Wallet2 />
-								Send from wallet
-							</Button>
-						</Alert>
+						<Button className="w-full py-6 flex gap-2 rounded-md" type="submit">
+							<Wallet2 />
+							Send from wallet
+						</Button>
 					</form>
 				</Form>
 			)}

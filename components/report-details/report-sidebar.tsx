@@ -12,15 +12,11 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 		},
 		{
 			title: "Impact Timeframe",
-			value: report.impactTimeframe
-				? new Date(report.impactTimeframe).toLocaleDateString()
-				: "N/A",
+			value: report.impactTimeframe ? report.impactTimeframe : "N/A",
 		},
 		{
 			title: "Work Timeframe",
-			value: report.workTimeframe
-				? new Date(report.workTimeframe).toLocaleDateString()
-				: "N/A",
+			value: report.workTimeframe ? report.workTimeframe : "N/A",
 		},
 		{
 			title: "Contributors",
@@ -51,7 +47,7 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 					))}
 				</ul>
 				<a
-					href={`https://testnet.hypercerts.org/app/view#claimId=${report.hypercertId}`}
+					href={`https://app.hypercerts.org/hypercerts/${report.hypercertId}`}
 					target="_blank"
 					rel="noopener noreferrer"
 					className={cn(
@@ -75,7 +71,7 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 						"pl-0 text-vd-orange-800 hover:text-vd-orange-900 dark:text-vd-beige-100 dark:hover:text-vd-beige-100 gap-1 group",
 					)}
 				>
-					<span>What is a Hypercert?</span>
+					<span>What is Hypercert?</span>
 					<ArrowUpRight
 						size={18}
 						className="opacity-70 group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-transform duration-300 ease-in-out"
