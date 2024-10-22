@@ -86,7 +86,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 					<p className="text-xs">
 						{fundedSoFar === totalCost
 							? "Funded!"
-							: `${totalCost - fundedSoFar} needed`}
+							: `$${totalCost - fundedSoFar} needed`}
 					</p>
 				</CardFooter>
 			</Card>

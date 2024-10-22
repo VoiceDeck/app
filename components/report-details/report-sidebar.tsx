@@ -12,15 +12,11 @@ const ImpactDetails = ({ report }: { report: Report }) => {
 		},
 		{
 			title: "Impact Timeframe",
-			value: report.impactTimeframe
-				? report.impactTimeframe
-				: "N/A",
+			value: report.impactTimeframe ? report.impactTimeframe : "N/A",
 		},
 		{
 			title: "Work Timeframe",
-			value: report.workTimeframe
-				? report.workTimeframe
-				: "N/A",
+			value: report.workTimeframe ? report.workTimeframe : "N/A",
 		},
 		{
 			title: "Contributors",
@@ -94,7 +90,7 @@ const EvaluationDetails = ({ report }: { report: Partial<Report> }) => {
 			value: report.verifiedBy || "Not Verified",
 		},
 		{
-			title: "Byline",
+			title: "Evaluated By",
 			value: report.byline || "Anonymous",
 		},
 	];
