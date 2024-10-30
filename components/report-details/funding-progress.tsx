@@ -23,16 +23,16 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 				<div className="flex justify-between">
 					<div className="text-sm text-vd-blue-600 flex-1">
 						<span className="text-vd-blue-900 font-semibold text-lg">
-							${totalAmount}
+							${dollarAmountNeeded}
 						</span>{" "}
-						GOAL
+						NEEDED
 					</div>
 					{!isFullyFunded && (
 						<div className="text-sm text-vd-blue-600">
 							<span className="text-vd-blue-900 font-semibold text-lg">
-								${dollarAmountNeeded}
+								${totalAmount}
 							</span>{" "}
-							NEEDED
+							GOAL
 						</div>
 					)}
 				</div>

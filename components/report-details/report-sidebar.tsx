@@ -90,7 +90,7 @@ const EvaluationDetails = ({ report }: { report: Partial<Report> }) => {
 			value: report.verifiedBy || "Not Verified",
 		},
 		{
-			title: "Byline",
+			title: "Evaluated By",
 			value: report.byline || "Anonymous",
 		},
 	];
