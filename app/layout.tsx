@@ -9,7 +9,9 @@ import { Footer } from "@/components/global/footer";
 import { NavMenu } from "@/components/global/nav-menu";
 import { siteConfig } from "@/config/site";
 import { config } from "@/config/wagmi";
+import { PrivyContextProvider } from "@/contexts/privy";
 import { WagmiContextProvider } from "@/contexts/wagmi";
+import { PrivyProvider } from "@privy-io/react-auth";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
@@ -51,11 +53,13 @@ export default function RootLayout({
 					"min-h-screen bg-background font-sans antialiased flex flex-col",
 				)}
 			>
-				<WagmiContextProvider initialState={initialState}>
-					<NavMenu />
-					<div className="flex-1">{children}</div>
-					<Footer />
-				</WagmiContextProvider>
+				<PrivyContextProvider>
+					<WagmiContextProvider initialState={initialState}>
+						<NavMenu />
+						<div className="flex-1">{children}</div>
+						<Footer />
+					</WagmiContextProvider>
+				</PrivyContextProvider>
 			</body>
 		</html>
 	);
