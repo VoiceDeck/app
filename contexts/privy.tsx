@@ -3,7 +3,7 @@
 
 import { ReactNode } from "react";
 import { PrivyProvider } from "@privy-io/react-auth";
-import { optimism } from "viem/chains";
+import { optimism } from "wagmi/chains";
 
 const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? '';
 
