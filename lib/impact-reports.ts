@@ -1,9 +1,7 @@
 import "server-only";
 
 import {
-  HypercertClaimdata,
   HypercertClient,
-  type HypercertMetadata,
 } from "@hypercerts-org/sdk";
 import { Mutex } from "async-mutex";
 
@@ -11,7 +9,6 @@ import type { Report } from "@/types";
 import { getCMSReports, getFundedAmountByHCId } from "./directus";
 import { getOrders } from "./marketplace";
 import { delay } from "./utils";
-import { getHypercertsByCreator } from "@/hypercerts/getHypercertsByCreator";
 import { getHypercertsByOwner } from "@/hypercerts/getHypercertsByOwner";
 import { FragmentOf } from "gql.tada";
 
@@ -61,38 +58,19 @@ export const fetchReports = async (): Promise<Report[]> => {
       // step 3: get orders from marketplace
       const orders = await getOrders(_reports);
 
-      // TODO: remove this when we don't need dummy order
-      if (process.env.DEPLOY_ENV === "production") {
-        const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
+      const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
 
 
-        reports = _reports.map(report => {
-          const order = orderMap.get(report.hypercertId);
-          if (order) {
-            report.order = order;
-          } else if (report.fundedSoFar < report.totalCost) {
-            console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
-          }
-          return report;
-        });
+      reports = _reports.map(report => {
+        const order = orderMap.get(report.hypercertId);
+        if (order) {
+          report.order = order;
+        } else if (report.fundedSoFar < report.totalCost) {
+          console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
+        }
+        return report;
+      });
 
-      } else {
-        reports = _reports.map((report) => {
-          for (const order of orders) {
-            if (order) {
-              report.order = order;
-              break;
-            }
-          }
-          // warn if there is no order for a report that is not fully funded
-          if (!report.order && report.fundedSoFar < report.totalCost) {
-            console.warn(
-              `[server] No order found for hypercert ${report.hypercertId}`,
-            );
-          }
-          return report;
-        });
-      }
       console.log(`[server] total fetched reports: ${reports.length}`);
     }
 
@@ -111,7 +89,7 @@ export const fetchReports = async (): Promise<Report[]> => {
  */
 export const fetchReportBySlug = async (slug: string): Promise<Report> => {
   try {
-    const reports = await fetchReports();
+    let reports = await getReports();
 
     const foundReport = reports.find((report: Report) => report.slug === slug);
     if (!foundReport) {
@@ -129,9 +107,9 @@ export const fetchReportByHCId = async (
   hypercertId: string,
 ): Promise<Report> => {
   try {
-    const reports = await fetchReports();
+    let reports = await getReports();
 
-    const foundReport = reports.find(
+    const foundReport = reports?.find(
       (report: Report) => report.hypercertId === hypercertId,
     );
     if (!foundReport) {
@@ -148,11 +126,8 @@ export const fetchReportByHCId = async (
   }
 };
 
-export const getReports = (): Report[] => {
-  if (reports) {
-    return reports;
-  }
-  return [];
+export const getReports = async (): Promise<Report[]> => {
+  return reports ?  reports ?? [] as Report[] : await fetchReports();
 };
 
 /**
@@ -192,7 +167,7 @@ export const getHypercertClaims = async (ownerAddress: string) => {
           `[Hypercerts] Failed to fetch claims owned by ${ownerAddress}`,
         );
       }
-      console.log("Query Results:", hypercertsRes);
+      // console.log("Query Results:", hypercertsRes);
       claims = hypercertsRes?.data;
       // console.log(`[Hypercerts] Fetched claims: ${claims ? claims.length : 0}`);
     } catch (error) {
@@ -233,7 +208,24 @@ export const fetchNewReports = async () => {
     console.log(`[server] claims in the cache are outdated, updating reports`);
     claims = newClaims;
 
-    await updateReports();
+    const _reports = await updateReports();
+
+    const orders = await getOrders(_reports);
+
+    const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
+
+
+    reports = _reports.map(report => {
+      const order = orderMap.get(report.hypercertId);
+      if (order) {
+        report.order = order;
+      } else if (report.fundedSoFar < report.totalCost) {
+        console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
+      }
+      return report;
+    });
+
+    console.log(`[server] total fetched reports: ${reports.length}`);
   }
 };
 
@@ -277,7 +269,6 @@ const updateReports = async (): Promise<Report[]> => {
         title: claim?.metadata?.name,
         summary: claim?.metadata?.description,
         image: "https://directus.voicedeck.org/assets/" + cmsReport.image,
-        originalReportUrl: claim?.metadata?.external_url,
         category: claim?.metadata?.work_scope?.[0],
         workTimeframe: `${(new Date(Number(claim.metadata?.work_timeframe_from) * 1000)).toLocaleDateString()} - ${(new Date(Number(claim.metadata?.work_timeframe_to) * 1000)).toLocaleDateString()}`,
         impactScope: claim?.metadata?.impact_scope?.[0],
@@ -298,6 +289,7 @@ const updateReports = async (): Promise<Report[]> => {
         dateUpdated: cmsReport.date_updated,
         byline: cmsReport.byline,
         totalCost: Number(cmsReport.total_cost),
+        originalReportUrl: cmsReport.original_report_url,
         fundedSoFar: await getFundedAmountByHCId(claim.hypercert_id as string),
       } as Report;
     });
@@ -327,11 +319,14 @@ export const updateFundedAmount = async (
   const release = await reportsMutex.acquire();
 
   try {
-    const reports = getReports();
-    const report = reports.find((r) => r.hypercertId === hypercertId);
-    if (report) {
-      report.fundedSoFar += amount;
-    }
+    const currentReports = await getReports();
+    const updatedReports = currentReports.map(report => 
+      report.hypercertId === hypercertId
+        ? { ...report, fundedSoFar: report.fundedSoFar + amount }
+        : report
+    );
+    
+    reports = updatedReports;
   } finally {
     release();
   }

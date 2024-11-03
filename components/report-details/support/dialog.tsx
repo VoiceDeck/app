@@ -25,9 +25,13 @@ const SupportContent = ({
 	address,
 	isConnected,
 	hypercertId,
+	reportTitle,
+	reportImage,
 }: {
 	address: `0x${string}` | undefined;
 	isConnected: boolean;
+	reportTitle?: string,
+	reportImage?: string,
 	hypercertId: SupportReportInfo["hypercertId"];
 }) => {
 	if (!isConnected && !address) {
@@ -44,7 +48,7 @@ const SupportContent = ({
 	}
 	// TODO: remove this when we don't need dummy order
 	if (process.env.NEXT_PUBLIC_DEPLOY_ENV === "production") {
-		return <SupportReportForm hypercertId={hypercertId} />;
+		return <SupportReportForm hypercertId={hypercertId} reportImage={reportImage} reportTitle={reportTitle} />;
 	}
 	return (
 		<SupportReportForm
@@ -104,6 +108,8 @@ const ReportSupportUI = ({
 				<Separator />
 				<SupportContent
 					address={address}
+					reportTitle={reportTitle}
+					reportImage={reportImage}
 					isConnected={isConnected}
 					hypercertId={hypercertId}
 				/>

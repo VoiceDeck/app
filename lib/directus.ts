@@ -22,7 +22,7 @@ import {
   getAddress,
 } from "viem";
 import { optimism } from "viem/chains";
-
+// import { PrivyClient } from '@privy-io/server-auth';
 import type { CMSContent, Contribution } from "@/types";
 import { updateFundedAmount } from "./impact-reports";
 
@@ -32,6 +32,7 @@ let CMSReports: CMSContent[] | null = null;
 // biome-ignore lint/suspicious/noExplicitAny: type definition imported from @directus/sdk
 let directusClient: (DirectusClient<any> & RestClient<any>) | null = null;
 let viemClient: PublicClient | null = null;
+// const privy = new PrivyClient(process.env.NEXT_PUBLIC_PRIVY_APP_ID, process.env.NEXT_PUBLIC_PRIVY_APP_SECRET);
 
 // cache CMS contents
 const users: { [address: Address]: string } = {};
@@ -83,7 +84,7 @@ export async function processNewContribution(
     // update the funded amount of the hypercert in server memory
     await updateFundedAmount(hypercertId, amount);
     // add the contribution to the cache
-    updateContribution(hypercertId, contribution);
+    await updateContribution(hypercertId, contribution);
   } catch (error) {
     console.error(`[server] failed to process new contribution: ${error}`);
     throw new Error(`[server] failed to process new contribution: ${error}`);
@@ -454,3 +455,17 @@ const updateContribution = async (
     release();
   }
 };
+
+// export async function generateWallet(email: string) {
+//   const wallet = await privy.importUser({
+//     linkedAccounts: [
+//       {
+//         type: 'email',
+//         address: email,
+//       }
+//     ],
+//     createEthereumWallet: true,
+//   })
+
+//   console.log({wallet});
+// }
