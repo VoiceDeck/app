@@ -29,13 +29,13 @@ const ConnectButton = () => {
 	return (
 		<div>
 			<Button onClick={() => open()}>Connect Wallet</Button>
-			{!isLogin ? (
+			{/* {!isLogin ? (
 				<Button onClick={() => login({ loginMethods: ["email"] })}>
 					Login
 				</Button>
 			) : (
 				<Button onClick={() => logout()}>LogOut</Button>
-			)}
+			)} */}
 		</div>
 	);
 };

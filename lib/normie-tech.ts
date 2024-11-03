@@ -154,9 +154,11 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
+
 export const normieTechClient =  createClient<paths>({ 
-  baseUrl: "https://hkov68i606.execute-api.us-east-2.amazonaws.com/dipanshu/",
+  baseUrl: "https://api.normie.tech",
   headers:{
-    "Access-Control-Allow-Origin":"*"
+    "Access-Control-Allow-Origin":"*",
+    "Content-Type":"application/json"
   }
 });

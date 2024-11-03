@@ -1,7 +1,6 @@
 import { DEFAULT_BLOCKCHAIN_NAME, DEFAULT_CHAIN_ID } from "@/config/constants";
 import { normieTechClient } from "@/lib/normie-tech";
 import type { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
-import { User } from "@privy-io/react-auth";
 import type { EthersError } from "ethers";
 import { useState } from "react";
 import type { Address } from "viem";
@@ -40,12 +39,14 @@ const useHandleBuyFraction = (
     images?: string[]
   ) =>{
     try{
+    console.log("order",order)
     const amountInCents = amountInDollars * 100;
     setTransactionStatus("PreparingOrder");
     const res = (await normieTechClient.POST("/v1/voice-deck/0/checkout",{
       params: {
         header: {
-          "x-api-key":process.env.NEXT_PUBLIC_NORMAL_TECH_API_KEY ?? ""
+          "x-api-key":process.env.NEXT_PUBLIC_NORMAL_TECH_API_KEY ?? "",
+          
         }
       },
       body:{
@@ -70,7 +71,7 @@ const useHandleBuyFraction = (
     console.log("res", res)
     if(res){
       setTransactionStatus("Approval")
-      window.open(res.url)
+      window.open(res.url,"_self")
     }
   }catch(e){
     setTransactionStatus("Failed"); // generic fail error
@@ -205,36 +206,36 @@ const useHandleBuyFraction = (
           name,
           images
         );
-      case "fiat-without-login": {
-        if (!email) {
-          throw new Error("Email is required for fiat-without-login");
-        }
-        const wallet : {wallet:User} = await fetch("/api/wallet-generate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            address: email,
-          }),
-        }).then((res) => res.json());
-        if(!wallet.wallet.wallet?.address){
-          setTransactionStatus("Failed");
+      // case "fiat-without-login": {
+      //   if (!email) {
+      //     throw new Error("Email is required for fiat-without-login");
+      //   }
+      //   const wallet : {wallet:User} = await fetch("/api/wallet-generate", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       address: email,
+      //     }),
+      //   }).then((res) => res.json());
+      //   if(!wallet.wallet.wallet?.address){
+      //     setTransactionStatus("Failed");
 
-          return
-        }
-        return handleFiatBuyFraction(
-          order,
-          amount,
-          wallet.wallet.wallet.address as Address,
-          hypercertId,
-          comment,
-          amountInDollars,
-          email,
-          name,
-          images
-        );
-      }
+      //     return
+      //   }
+      //   return handleFiatBuyFraction(
+      //     order,
+      //     amount,
+      //     wallet.wallet.wallet.address as Address,
+      //     hypercertId,
+      //     comment,
+      //     amountInDollars,
+      //     email,
+      //     name,
+      //     images
+      //   );
+      // }
       
 
     }
