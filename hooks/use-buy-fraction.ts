@@ -45,7 +45,7 @@ const useHandleBuyFraction = (
     const res = (await normieTechClient.POST("/v1/voice-deck/0/checkout",{
       params: {
         header: {
-          "x-api-key":process.env.NEXT_PUBLIC_NORMAL_TECH_API_KEY ?? "",
+          "x-api-key":process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY ?? "",
           
         }
       },
