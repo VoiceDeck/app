@@ -6,7 +6,7 @@ import { useLogin, useLogout } from "@privy-io/react-auth";
 import { useState } from "react";
 
 const ConnectButton = () => {
-	const { open } = useWeb3Modal();
+	// const { open } = useWeb3Modal();
 	const [isLogin, setIsLogin] = useState(false);
 
 	const { logout } = useLogout({
@@ -28,7 +28,7 @@ const ConnectButton = () => {
 
 	return (
 		<div>
-			<Button onClick={() => open()}>Connect Wallet</Button>
+			{/* <Button onClick={() => open()}>Connect Wallet</Button> */}
 			{/* {!isLogin ? (
 				<Button onClick={() => login({ loginMethods: ["email"] })}>
 					Login

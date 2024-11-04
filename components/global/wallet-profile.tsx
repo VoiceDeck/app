@@ -1,5 +1,5 @@
 "use client";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
+// import { useWeb3Modal } from "@web3modal/wagmi/react";
 import Link from "next/link";
 import { normalize } from "viem/ens";
 import { useAccount, useEnsAvatar, useEnsName } from "wagmi";
@@ -23,7 +23,7 @@ import { ConnectButton } from "./connect-button";
 const WalletProfile = ({
 	alignment = "end",
 }: { alignment?: "end" | "center" | "start" }) => {
-	const { open } = useWeb3Modal();
+	// const { open } = useWeb3Modal();
 	const { address, isConnecting, isDisconnected } = useAccount();
 	const [ensName, setEnsName] = useState<string | undefined>(undefined);
 	const [ensAvatar, setEnsAvatar] = useState<string | undefined>(undefined);
@@ -106,9 +106,9 @@ const WalletProfile = ({
 					</Link>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem className="cursor-pointer" onClick={() => open()}>
+				{/* <DropdownMenuItem className="cursor-pointer" onClick={() => open()}>
 					Disconnect
-				</DropdownMenuItem>
+				</DropdownMenuItem> */}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
