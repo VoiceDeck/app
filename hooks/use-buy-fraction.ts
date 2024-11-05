@@ -206,36 +206,36 @@ const useHandleBuyFraction = (
           name,
           images
         );
-      // case "fiat-without-login": {
-      //   if (!email) {
-      //     throw new Error("Email is required for fiat-without-login");
-      //   }
-      //   const wallet : {wallet:User} = await fetch("/api/wallet-generate", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       address: email,
-      //     }),
-      //   }).then((res) => res.json());
-      //   if(!wallet.wallet.wallet?.address){
-      //     setTransactionStatus("Failed");
+      case "fiat-without-login": {
+        if (!email) {
+          throw new Error("Email is required for fiat-without-login");
+        }
+        const wallet : {wallet:User} = await fetch("/api/wallet-generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            address: email,
+          }),
+        }).then((res) => res.json());
+        if(!wallet.wallet.wallet?.address){
+          setTransactionStatus("Failed");
 
-      //     return
-      //   }
-      //   return handleFiatBuyFraction(
-      //     order,
-      //     amount,
-      //     wallet.wallet.wallet.address as Address,
-      //     hypercertId,
-      //     comment,
-      //     amountInDollars,
-      //     email,
-      //     name,
-      //     images
-      //   );
-      // }
+          return
+        }
+        return handleFiatBuyFraction(
+          order,
+          amount,
+          wallet.wallet.wallet.address as Address,
+          hypercertId,
+          comment,
+          amountInDollars,
+          email,
+          name,
+          images
+        );
+      }
       
 
     }
