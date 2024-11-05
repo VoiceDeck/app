@@ -1,6 +1,7 @@
 import { DEFAULT_BLOCKCHAIN_NAME, DEFAULT_CHAIN_ID } from "@/config/constants";
 import { normieTechClient } from "@/lib/normie-tech";
 import type { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
+import { User } from "@privy-io/server-auth";
 import type { EthersError } from "ethers";
 import { useState } from "react";
 import type { Address } from "viem";
