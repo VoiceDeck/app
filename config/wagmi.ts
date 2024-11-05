@@ -27,10 +27,7 @@ export const config = createConfig({
     // For each of your required chains, add an entry to `transports` with
     // a key of the chain's `id` and a value of `http()`
   },
-  ssr:true,
-  storage: createStorage({
-    storage: cookieStorage,
-  }),
+ 
 });
 // // Create wagmiConfig
 // export const config = defaultWagmiConfig({

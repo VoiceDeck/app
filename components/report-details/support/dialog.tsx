@@ -34,18 +34,18 @@ const SupportContent = ({
 	reportImage?: string,
 	hypercertId: SupportReportInfo["hypercertId"];
 }) => {
-	if (!isConnected && !address) {
-		return (
-			<div className="flex flex-col gap-4 p-3">
-				<div className="flex flex-col gap-4 justify-center items-center">
-					<h4 className="font-bold text-center">
-						Connect your wallet to support this report
-					</h4>
-					<ConnectButton />
-				</div>
-			</div>
-		);
-	}
+	// if (!isConnected && !address) {
+	// 	return (
+	// 		<div className="flex flex-col gap-4 p-3">
+	// 			<div className="flex flex-col gap-4 justify-center items-center">
+	// 				<h4 className="font-bold text-center">
+	// 					Connect your wallet to support this report
+	// 				</h4>
+	// 				<ConnectButton />
+	// 			</div>
+	// 		</div>
+	// 	);
+	// }
 	// TODO: remove this when we don't need dummy order
 	if (process.env.NEXT_PUBLIC_DEPLOY_ENV === "production") {
 		return <SupportReportForm hypercertId={hypercertId} reportImage={reportImage} reportTitle={reportTitle} />;

@@ -11,10 +11,14 @@ export function PrivyContextProvider({ children }: { children: ReactNode }) {
     return (
         <PrivyProvider
             appId={appId}
+      
             config={{
                 loginMethods: ["email","wallet"],
                 supportedChains:[optimism],
-
+                appearance:{
+                    showWalletLoginFirst:true,
+                },
+                
             }}
             
         >

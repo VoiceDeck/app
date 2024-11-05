@@ -2,7 +2,7 @@
 // import { useWeb3Modal } from "@web3modal/wagmi/react";
 import Link from "next/link";
 import { normalize } from "viem/ens";
-import { useAccount, useEnsAvatar, useEnsName } from "wagmi";
+import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from "wagmi";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,6 +19,7 @@ import { Loader2, VenetianMaskIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { mainnet } from "viem/chains";
 import { ConnectButton } from "./connect-button";
+import { useLogout, usePrivy } from "@privy-io/react-auth";
 
 const WalletProfile = ({
 	alignment = "end",
@@ -52,6 +53,15 @@ const WalletProfile = ({
 			setEnsAvatar(avatarData);
 		}
 	}, [avatarData, avatarError]);
+	const { authenticated, } = usePrivy()
+	const logout = useLogout()
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(()=>{
+		if(isDisconnected && authenticated){
+			logout.logout()
+		}
+	},[isDisconnected,authenticated])
+	const {disconnectAsync} = useDisconnect()
 
 	if (isConnecting) return <Loader2 className="animate-spin" />;
 	if (isDisconnected) return <ConnectButton />;
@@ -106,9 +116,13 @@ const WalletProfile = ({
 					</Link>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				{/* <DropdownMenuItem className="cursor-pointer" onClick={() => open()}>
+				<DropdownMenuItem className="cursor-pointer" onClick={async () => {
+					await logout.logout()
+					await disconnectAsync()
+
+				}}>
 					Disconnect
-				</DropdownMenuItem> */}
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

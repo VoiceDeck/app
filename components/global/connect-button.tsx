@@ -18,24 +18,18 @@ const ConnectButton = () => {
 
 	const { login } = useLogin({
 		onComplete: (user) => {
-			console.log(user);
+			console.log("user logged in...", user);
 			setIsLogin(true);
 		},
 		onError: (error) => {
 			console.log("error while logging in...", error);
+			setIsLogin(false);
 		},
 	});
 
 	return (
 		<div>
-			{/* <Button onClick={() => open()}>Connect Wallet</Button> */}
-			{/* {!isLogin ? (
-				<Button onClick={() => login({ loginMethods: ["email"] })}>
-					Login
-				</Button>
-			) : (
-				<Button onClick={() => logout()}>LogOut</Button>
-			)} */}
+			<Button onClick={login}>Connect Wallet</Button>
 		</div>
 	);
 };
