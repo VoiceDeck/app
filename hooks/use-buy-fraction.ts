@@ -57,7 +57,8 @@ const useHandleBuyFraction = (
         extraMetadata:{
           hypercertId,
           comment,
-          sender:address
+          sender:address,
+          redirectUrl: `${window.location.href}`,
         },
         amount: amountInCents,
         chainId: DEFAULT_CHAIN_ID,
@@ -65,12 +66,14 @@ const useHandleBuyFraction = (
         name: name ? name : "Donation",
         blockChainName:DEFAULT_BLOCKCHAIN_NAME,
         images:images,
-        success_url: `${window.location.href}?transactionId=${customId}`,
+        success_url: `${window.location.origin}/checkout/success?transactionId=${customId}`,
+
         metadata:{
           order,
           amount:Number.parseInt(amount.toString()),
           // give in dominations of usdc decimals
           amountApproved:amountInDollars * 1_000_000,
+          
 
           recipient:address,
           chainId:DEFAULT_CHAIN_ID,

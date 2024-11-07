@@ -66,42 +66,7 @@ export default async function ReportPage({ params,searchParams }: ReportPageProp
 	const contributions = await getContributionsByHypercertId(report.hypercertId);
 	const htmlParsedStory = report.story ? parse(report.story) : null;
 	console.log({ searchParams });
-	if(searchParams?.transactionId){
-		console.log("transactionId",searchParams.transactionId)
-		const transactionData = (await normieTechClient.GET('/v1/{projectId}/transactions/{transactionId}',{
-			params:{
-				header:{
-					"x-api-key":process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY ?? "",
-					
-				},
-				path:{
-					projectId:"voice-deck",
-					transactionId:searchParams.transactionId as string
-				}
-
-			}
-		})).data
-		console.log("transactionData",transactionData)
-		const extraMetadata = JSON.parse(typeof transactionData?.extraMetadataJson === 'string' ? transactionData.extraMetadataJson : JSON.stringify(transactionData?.extraMetadataJson))
-		console.log("extraMetadata",extraMetadata)
-		
-		if(!extraMetadata.sender || !transactionData?.blockchainTransactionId || !extraMetadata.hypercertId || !transactionData?.amountInFiat){
-			console.error("Missing required fields")
-			return
-		}
-		const result = await processNewCryptoContribution(
-			extraMetadata.sender,
-			transactionData?.blockchainTransactionId as `0x${string}`,
-			extraMetadata.hypercertId,
-			transactionData?.amountInFiat,
-			extraMetadata.comment	
-		);
-		console.log("result",result)
-		
-		
-		
-	}
-	// console.log({ report });
+	
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
