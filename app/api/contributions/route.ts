@@ -1,4 +1,4 @@
-import { processNewCryptoContribution } from "@/lib/directus";
+import { processNewContribution } from "@/lib/directus";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 				{ status: 400 },
 			);
 		}
-		const result = await processNewCryptoContribution(
+		const result = await processNewContribution(
 			sender,
 			txId,
 			hypercertId,
