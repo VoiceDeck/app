@@ -1,12 +1,12 @@
 import { DEFAULT_BLOCKCHAIN_NAME, DEFAULT_CHAIN_ID } from "@/config/constants";
 import { normieTechClient } from "@/lib/normie-tech";
 import type { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
-import { User } from "@privy-io/server-auth";
 import type { EthersError } from "ethers";
 import { useState } from "react";
 import type { Address } from "viem";
 import { waitForTransactionReceipt } from "viem/actions";
 import type { UsePublicClientReturnType } from "wagmi";
+import { nanoid } from "nanoid";
 
 
 export enum TransactionStatuses {
@@ -22,7 +22,8 @@ export enum TransactionStatuses {
 export type PaymentType = "fiat-with-login" | "fiat-without-login" | "crypto" ;
 const useHandleBuyFraction = (
   publicClient: UsePublicClientReturnType,
-  hypercertExhangeClient: HypercertExchangeClient
+  hypercertExhangeClient: HypercertExchangeClient,
+  defaultTransactionStatus = TransactionStatuses.PreparingOrder
 ) => {
   const [transactionStatus, setTransactionStatus] =
     useState<keyof typeof TransactionStatuses>("Pending");
@@ -40,7 +41,8 @@ const useHandleBuyFraction = (
     images?: string[]
   ) =>{
     try{
-    console.log("order",order)
+    console.log("ordcer",order)
+    const customId = nanoid(20)
     const amountInCents = amountInDollars * 100;
     setTransactionStatus("PreparingOrder");
     const res = (await normieTechClient.POST("/v1/voice-deck/0/checkout",{
@@ -51,13 +53,19 @@ const useHandleBuyFraction = (
         }
       },
       body:{
+        customId:customId,
+        extraMetadata:{
+          hypercertId,
+          comment,
+          sender:address
+        },
         amount: amountInCents,
         chainId: DEFAULT_CHAIN_ID,
         customerEmail: email,
         name: name ? name : "Donation",
         blockChainName:DEFAULT_BLOCKCHAIN_NAME,
         images:images,
-        success_url: `${window.location.origin}`,
+        success_url: `${window.location.href}?transactionId=${customId}`,
         metadata:{
           order,
           amount:Number.parseInt(amount.toString()),
@@ -72,6 +80,7 @@ const useHandleBuyFraction = (
     console.log("res", res)
     if(res){
       setTransactionStatus("Approval")
+
       window.open(res.url,"_self")
     }
   }catch(e){
@@ -207,36 +216,36 @@ const useHandleBuyFraction = (
           name,
           images
         );
-      case "fiat-without-login": {
-        if (!email) {
-          throw new Error("Email is required for fiat-without-login");
-        }
-        const wallet : {wallet:User} = await fetch("/api/wallet-generate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            address: email,
-          }),
-        }).then((res) => res.json());
-        if(!wallet.wallet.wallet?.address){
-          setTransactionStatus("Failed");
+      // case "fiat-without-login": {
+      //   if (!email) {
+      //     throw new Error("Email is required for fiat-without-login");
+      //   }
+      //   const wallet : {wallet:User} = await fetch("/api/wallet-generate", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       address: email,
+      //     }),
+      //   }).then((res) => res.json());
+      //   if(!wallet.wallet.wallet?.address){
+      //     setTransactionStatus("Failed");
 
-          return
-        }
-        return handleFiatBuyFraction(
-          order,
-          amount,
-          wallet.wallet.wallet.address as Address,
-          hypercertId,
-          comment,
-          amountInDollars,
-          email,
-          name,
-          images
-        );
-      }
+      //     return
+      //   }
+      //   return handleFiatBuyFraction(
+      //     order,
+      //     amount,
+      //     wallet.wallet.wallet.address as Address,
+      //     hypercertId,
+      //     comment,
+      //     amountInDollars,
+      //     email,
+      //     name,
+      //     images
+      //   );
+      // }
       
 
     }
@@ -244,7 +253,7 @@ const useHandleBuyFraction = (
     
   };
 
-  return { handleBuyFraction, transactionStatus, transactionHash };
+  return { handleBuyFraction, setTransactionStatus,transactionStatus, transactionHash };
 };
 
 export { useHandleBuyFraction };

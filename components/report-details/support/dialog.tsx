@@ -134,9 +134,11 @@ const SupportReport = ({
 	image: reportImage,
 	title: reportTitle,
 	hypercertId,
+	defaultOpenModal = false,
 }: SupportReportInfo) => {
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(defaultOpenModal);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
+	
 
 	const props = {
 		image: reportImage,
@@ -144,6 +146,7 @@ const SupportReport = ({
 		hypercertId,
 		open,
 		setOpen,
+		
 	};
 
 	if (isDesktop) {

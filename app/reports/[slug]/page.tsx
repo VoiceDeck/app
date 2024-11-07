@@ -5,17 +5,20 @@ import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
-import { getContributionsByHCId } from "@/lib/directus";
+import { getContributionsByHCId, processNewCryptoContribution } from "@/lib/directus";
 import { fetchReportBySlug } from "@/lib/impact-reports";
+import { normieTechClient } from "@/lib/normie-tech";
 import type { Report } from "@/types";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { comment } from "postcss";
 
 interface ReportPageProps {
 	params: { slug: string };
+	searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 const getReportData = async (slug?: string | string[]) => {
@@ -57,11 +60,47 @@ export async function generateMetadata({
 	return metadata;
 }
 
-export default async function ReportPage({ params }: ReportPageProps) {
+export default async function ReportPage({ params,searchParams }: ReportPageProps) {
 	const { slug } = params;
 	const report = await getReportData(slug);
 	const contributions = await getContributionsByHypercertId(report.hypercertId);
 	const htmlParsedStory = report.story ? parse(report.story) : null;
+	console.log({ searchParams });
+	if(searchParams?.transactionId){
+		console.log("transactionId",searchParams.transactionId)
+		const transactionData = (await normieTechClient.GET('/v1/{projectId}/transactions/{transactionId}',{
+			params:{
+				header:{
+					"x-api-key":process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY ?? "",
+					
+				},
+				path:{
+					projectId:"voice-deck",
+					transactionId:searchParams.transactionId as string
+				}
+
+			}
+		})).data
+		console.log("transactionData",transactionData)
+		const extraMetadata = JSON.parse(typeof transactionData?.extraMetadataJson === 'string' ? transactionData.extraMetadataJson : JSON.stringify(transactionData?.extraMetadataJson))
+		console.log("extraMetadata",extraMetadata)
+		
+		if(!extraMetadata.sender || !transactionData?.blockchainTransactionId || !extraMetadata.hypercertId || !transactionData?.amountInFiat){
+			console.error("Missing required fields")
+			return
+		}
+		const result = await processNewCryptoContribution(
+			extraMetadata.sender,
+			transactionData?.blockchainTransactionId as `0x${string}`,
+			extraMetadata.hypercertId,
+			transactionData?.amountInFiat,
+			extraMetadata.comment	
+		);
+		console.log("result",result)
+		
+		
+		
+	}
 	// console.log({ report });
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
@@ -96,6 +135,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 							hypercertId={report.hypercertId}
 							totalAmount={report.totalCost}
 							fundedAmount={report.fundedSoFar}
+
 						>
 							<FundingProgress
 								totalAmount={report.totalCost}
@@ -105,6 +145,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 									title: report.title,
 									hypercertId: report.hypercertId,
 								}}
+								
 							/>
 						</FundingDataWrapper>
 					</div>
