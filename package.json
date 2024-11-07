@@ -21,7 +21,7 @@
     "@hypercerts-org/marketplace-sdk": "0.3.35",
     "@hypercerts-org/sdk": "2.2.0-beta.2",
     "@privy-io/react-auth": "^1.92.6",
-    "@privy-io/server-auth": "1.15.0",
+    "@privy-io/server-auth": "1.16.1",
     "@privy-io/wagmi": "^0.2.12",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.4",
