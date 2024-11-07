@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { normieTechClient } from '@/lib/normie-tech'
 
-import { processNewCryptoContribution } from '@/lib/directus'
+import { processNewContribution } from '@/lib/directus'
 
 async function getTransactionData(transactionId: string) {
     const transactionData = (await normieTechClient.GET('/v1/{projectId}/transactions/{transactionId}',{
@@ -67,7 +67,7 @@ export default async function PaymentSuccessPage({
         <h1>Error some data not defined</h1>
     )
   }
-  await processNewCryptoContribution(
+  await processNewContribution(
     extraMetadata.sender,
 	blockchainTransactionId as `0x${string}`,
 	extraMetadata.hypercertId,
