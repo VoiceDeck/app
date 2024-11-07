@@ -39,8 +39,43 @@ const users: { [address: Address]: string } = {};
 const contributionsByHCId: { [hypercertId: string]: Contribution[] } = {};
 const contributionsMutex = new Mutex();
 
+
 /**
- * Processes a new contribution by waiting for a transaction to be included in a block,
+ * Processes a new fiat contribution
+ *
+ * @param hypercertId The identifier of the hypercert associated with the contribution.
+ * @param amount The amount of the contribution.
+ * @param comment The comment of the contributor to the contribution.
+ */
+export async function processNewFiatContribution(
+  hypercertId: string,
+  amount: number,
+  comment?: string
+) {
+  try {
+    const client = getDirectusClient();
+
+    const contribution = {
+      hypercert_id: hypercertId.toLowerCase(),
+      amount: amount,
+      date_created: new Date().toISOString(),
+      comment: comment,
+    } as Contribution;
+    // create a contribution record in Directus
+    await createFiatContribution(contribution);
+
+    // update the funded amount of the hypercert in server memory
+    await updateFundedAmount(hypercertId, amount);
+    // add the contribution to the cache
+    await updateContribution(hypercertId, contribution);
+  } catch (error) {
+    console.error(`[server] failed to process new contribution: ${error}`);
+    throw new Error(`[server] failed to process new contribution: ${error}`);
+  }
+}
+
+/**
+ * Processes a new crypto contribution by waiting for a transaction to be included in a block,
  * checking the transaction status, and creating a contribution record if successful.
  *
  * @param txId The hash of the transaction to be processed.
@@ -48,7 +83,7 @@ const contributionsMutex = new Mutex();
  * @param amount The amount of the contribution.
  * @param comment The comment of the contributor to the contribution.
  */
-export async function processNewContribution(
+export async function processNewCryptoContribution(
   sender: Address,
   txId: Hash,
   hypercertId: string,
@@ -79,7 +114,7 @@ export async function processNewContribution(
       comment: comment,
     } as Contribution;
     // create a contribution record in Directus
-    await createContribution(contribution);
+    await createCryptoContribution(contribution);
 
     // update the funded amount of the hypercert in server memory
     await updateFundedAmount(hypercertId, amount);
@@ -91,7 +126,27 @@ export async function processNewContribution(
   }
 }
 
-export async function createContribution(contribution: Contribution) {
+export async function createFiatContribution(contribution: Contribution) {
+  const client = getDirectusClient();
+
+  try {
+    console.log(`[Directus] creating fiat contribution . . .`);
+    console.log(` - hypercert_id: ${contribution.hypercert_id}`);
+    console.log(` - amount: ${contribution.amount}`);
+    console.log(
+      ` - comment exists: ${contribution.comment ? "true" : "false"}`
+    );
+    await client.request(createItem("contributions", contribution));
+    console.log(
+      `[Directus] fiat contribution created successfully`
+    );
+  } catch (error) {
+    console.error("[Directus] failed to create contribution: ", error);
+    throw new Error(`[Directus] failed to create contribution: ${error}`);
+  }
+}
+
+export async function createCryptoContribution(contribution: Contribution) {
   const user = {
     address: contribution.sender,
   };
