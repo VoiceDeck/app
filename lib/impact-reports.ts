@@ -6,7 +6,7 @@ import {
 import { Mutex } from "async-mutex";
 
 import type { Report } from "@/types";
-import { getCMSReports, getFundedAmountByHCId } from "./directus";
+import { getCMSReports, getFundedAmountByHCId, updateCMSReports } from "./directus";
 import { getOrders } from "./marketplace";
 import { delay } from "./utils";
 import { getHypercertsByOwner } from "@/hypercerts/getHypercertsByOwner";
@@ -236,24 +236,17 @@ const updateReports = async (): Promise<Report[]> => {
     );
   }
 
-  const fromCMS = await getCMSReports();
+  const fromCMS = await updateCMSReports();
 
-  const existingReportIds = reports
-    ? reports.map((report) => report.hypercertId)
-    : [];
   const reportsToUpdatePromises = claims
     .filter(
       (claim) =>
-        claim.hypercert_id && !existingReportIds.includes(claim.hypercert_id),
+        claim.hypercert_id,
     )
     .map(async (claim, index) => {
       console.log(`[server] Processing claim with ID: ${claim.hypercert_id}.`);
 
-      // a delay to spread out the requests
-      await delay(index * 20);
-
       // step 2: get offchain data from CMS
-
       const cmsReport = fromCMS.find(
         (cmsReport) => cmsReport.title === claim?.metadata?.name,
       );
@@ -330,4 +323,24 @@ export const updateFundedAmount = async (
   } finally {
     release();
   }
+};
+
+export const updateCMSContents = async () => {
+  const _reports = await updateReports();
+
+  const orders = await getOrders(_reports);
+
+  const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
+
+  reports = _reports.map(report => {
+    const order = orderMap.get(report.hypercertId);
+    if (order) {
+      report.order = order;
+    } else if (report.fundedSoFar < report.totalCost) {
+      console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
+    }
+    return report;
+  });
+
+  console.log(`[server] total fetched reports: ${reports.length}`);
 };
