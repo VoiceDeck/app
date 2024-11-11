@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
 	try {
+		console.log("api/reports/update has called");
 		await fetchNewReports();
 		await updateCMSContents();
 		return NextResponse.json({ status: 200 });

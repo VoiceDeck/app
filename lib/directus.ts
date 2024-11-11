@@ -168,6 +168,9 @@ export const getCMSReports = async (): Promise<CMSContent[]> => {
           filter: {
             status: {
               _eq: 'published',
+            },
+            Minted: {
+              _eq: true,
             }
           },
         })
@@ -198,6 +201,9 @@ export const updateCMSReports = async (): Promise<CMSContent[]> => {
         filter: {
           status: {
             _eq: 'published',
+          },
+          Minted: {
+            _eq: true,
           }
         },
       })
