@@ -18,6 +18,10 @@ export function PrivyContextProvider({ children }: { children: ReactNode }) {
                 appearance:{
                     showWalletLoginFirst:true,
                 },
+                embeddedWallets:{
+                    createOnLogin:'users-without-wallets'
+
+                }
                 
             }}
             

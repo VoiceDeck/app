@@ -2,7 +2,9 @@
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 import { Button } from "@/components/ui/button";
-import { useLogin, useLogout } from "@privy-io/react-auth";
+import { useLogin, useLogout, useWallets } from "@privy-io/react-auth";
+import { useSetActiveWallet } from "@privy-io/wagmi";
+import { UserPlus } from "lucide-react";
 import { useState } from "react";
 
 const ConnectButton = () => {
@@ -15,10 +17,22 @@ const ConnectButton = () => {
 			setIsLogin(false);
 		},
 	});
+	const { wallets, ready } = useWallets();
+	const { setActiveWallet } = useSetActiveWallet();
 
 	const { login } = useLogin({
-		onComplete: (user) => {
+		onComplete: async (user) => {
 			console.log("user logged in...", user);
+
+			if (user.wallet?.address && ready) {
+				console.log("wallets", wallets);
+				const newActiveWallet = wallets.find(
+					(wallet) => wallet.address === user.wallet?.address,
+				);
+				if (newActiveWallet) {
+					await setActiveWallet(newActiveWallet);
+				}
+			}
 			setIsLogin(true);
 		},
 		onError: (error) => {

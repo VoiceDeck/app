@@ -15,11 +15,11 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn, truncateEthereumAddress } from "@/lib/utils";
+import { useLogout, usePrivy } from "@privy-io/react-auth";
 import { Loader2, VenetianMaskIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { mainnet } from "viem/chains";
 import { ConnectButton } from "./connect-button";
-import { useLogout, usePrivy } from "@privy-io/react-auth";
 
 const WalletProfile = ({
 	alignment = "end",
@@ -53,15 +53,15 @@ const WalletProfile = ({
 			setEnsAvatar(avatarData);
 		}
 	}, [avatarData, avatarError]);
-	const { authenticated, } = usePrivy()
-	const logout = useLogout()
+	const { authenticated } = usePrivy();
+	const logout = useLogout();
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(()=>{
-		if(isDisconnected && authenticated){
-			logout.logout()
-		}
-	},[isDisconnected,authenticated])
-	const {disconnectAsync} = useDisconnect()
+	// useEffect(()=>{
+	// 	if(isDisconnected && authenticated){
+	// 		logout.logout()
+	// 	}
+	// },[isDisconnected,authenticated])
+	const { disconnectAsync } = useDisconnect();
 
 	if (isConnecting) return <Loader2 className="animate-spin" />;
 	if (isDisconnected) return <ConnectButton />;
@@ -116,11 +116,13 @@ const WalletProfile = ({
 					</Link>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem className="cursor-pointer" onClick={async () => {
-					await logout.logout()
-					await disconnectAsync()
-
-				}}>
+				<DropdownMenuItem
+					className="cursor-pointer"
+					onClick={async () => {
+						await logout.logout();
+						await disconnectAsync();
+					}}
+				>
 					Disconnect
 				</DropdownMenuItem>
 			</DropdownMenuContent>
