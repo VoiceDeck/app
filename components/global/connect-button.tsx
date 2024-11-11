@@ -2,6 +2,7 @@
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 import { Button } from "@/components/ui/button";
+import { DEFAULT_CHAIN_ID } from "@/config/constants";
 import { useLogin, useLogout, useWallets } from "@privy-io/react-auth";
 import { useSetActiveWallet } from "@privy-io/wagmi";
 import { UserPlus } from "lucide-react";
@@ -31,6 +32,10 @@ const ConnectButton = () => {
 				);
 				if (newActiveWallet) {
 					await setActiveWallet(newActiveWallet);
+					const chainId = newActiveWallet.chainId;
+					if (chainId !== DEFAULT_CHAIN_ID.toString()) {
+						await newActiveWallet.switchChain(DEFAULT_CHAIN_ID);
+					}
 				}
 			}
 			setIsLogin(true);
