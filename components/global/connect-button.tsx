@@ -24,13 +24,17 @@ const ConnectButton = () => {
 	const { login } = useLogin({
 		onComplete: async (user) => {
 			console.log("user logged in...", user);
-
-			if (user.wallet?.address && ready) {
+			const wallet = user.linkedAccounts.filter(a=>a.type === "wallet")[0]
+			console.log("wallet", wallet);
+			if (wallet.address) {
 				console.log("wallets", wallets);
 				const newActiveWallet = wallets.find(
 					(wallet) => wallet.address === user.wallet?.address,
 				);
 				if (newActiveWallet) {
+					console.log("newActiveWallet", newActiveWallet);
+					console.log("chainId", newActiveWallet.chainId);
+					
 					await setActiveWallet(newActiveWallet);
 					const chainId = newActiveWallet.chainId;
 					if (chainId !== DEFAULT_CHAIN_ID.toString()) {
@@ -40,6 +44,7 @@ const ConnectButton = () => {
 			}
 			setIsLogin(true);
 		},
+	
 		onError: (error) => {
 			console.log("error while logging in...", error);
 			setIsLogin(false);

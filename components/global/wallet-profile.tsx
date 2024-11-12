@@ -119,8 +119,9 @@ const WalletProfile = ({
 				<DropdownMenuItem
 					className="cursor-pointer"
 					onClick={async () => {
-						await logout.logout();
 						await disconnectAsync();
+						await logout.logout();
+						
 					}}
 				>
 					Disconnect
