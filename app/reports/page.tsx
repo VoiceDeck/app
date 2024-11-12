@@ -10,6 +10,7 @@ import { FilterProvider } from "@/contexts/filter";
 import { getNumberOfContributors } from "@/lib/directus";
 import { fetchReports } from "@/lib/impact-reports";
 import type { Report } from "@/types";
+import { Suspense } from "react";
 
 export default async function ReportsPage() {
 	let uniqueReports: Report[];
@@ -30,6 +31,7 @@ export default async function ReportsPage() {
 	}
 
 	return (
+		<Suspense fallback={<div>Loading...</div>}>
 		<main className="flex flex-col gap-4 pb-[64px] md:pb-0">
 			<section className="flex flex-col items-center p-4 md:p-8 gap-4">
 				<header className="relative overflow-hidden w-full flex flex-col justify-end max-w-screen-xl min-[2560px]:max-w-screen-2xl h-[420px] 2xl:h-[520px] min-[2560px]:h-[720px] text-vd-beige-100 rounded-3xl p-4 md:p-8 2xl:p-16">
@@ -72,5 +74,6 @@ export default async function ReportsPage() {
 				</section>
 			)}
 		</main>
+		</Suspense>
 	);
 }

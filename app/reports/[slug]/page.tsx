@@ -5,17 +5,20 @@ import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
-import { getContributionsByHCId } from "@/lib/directus";
+import { getContributionsByHCId, processNewCryptoContribution } from "@/lib/directus";
 import { fetchReportBySlug } from "@/lib/impact-reports";
+import { normieTechClient } from "@/lib/normie-tech";
 import type { Report } from "@/types";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { comment } from "postcss";
 
 interface ReportPageProps {
 	params: { slug: string };
+	searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 const getReportData = async (slug?: string | string[]) => {
@@ -57,12 +60,13 @@ export async function generateMetadata({
 	return metadata;
 }
 
-export default async function ReportPage({ params }: ReportPageProps) {
+export default async function ReportPage({ params,searchParams }: ReportPageProps) {
 	const { slug } = params;
 	const report = await getReportData(slug);
 	const contributions = await getContributionsByHypercertId(report.hypercertId);
 	const htmlParsedStory = report.story ? parse(report.story) : null;
-	// console.log({ report });
+	console.log({ searchParams });
+	
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
@@ -96,6 +100,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 							hypercertId={report.hypercertId}
 							totalAmount={report.totalCost}
 							fundedAmount={report.fundedSoFar}
+
 						>
 							<FundingProgress
 								totalAmount={report.totalCost}
@@ -105,6 +110,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 									title: report.title,
 									hypercertId: report.hypercertId,
 								}}
+								
 							/>
 						</FundingDataWrapper>
 					</div>

@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useFunding } from "@/contexts/funding-context";
 import {
+	type 
+	PaymentType,
 	type TransactionStatuses,
 	useHandleBuyFraction,
 } from "@/hooks/use-buy-fraction";
@@ -32,12 +34,15 @@ import {
 	Loader2,
 	Wallet2,
 } from "lucide-react";
+import { useState } from "react";
 import { sepolia } from "viem/chains";
 import { useAccount, usePublicClient } from "wagmi";
 import TransactionStatus from "./transaction-status";
 
 interface SupportReportFormProps {
 	hypercertId: Partial<Report>["hypercertId"];
+	reportTitle?: string,
+	reportImage?: string,
 }
 
 const transactionStatusContent: Record<
@@ -133,7 +138,7 @@ async function getOrdersForReport(
 	}
 }
 
-const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
+const SupportReportForm = ({ hypercertId,reportImage,reportTitle }: SupportReportFormProps) => {
 	const { address, isConnected, chainId } = useAccount();
 	const provider = useEthersProvider({ chainId });
 	const signer = useEthersSigner({ chainId });
@@ -146,6 +151,7 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 		provider,
 		signer,
 	);
+	const [paymentMethod, setPaymentMethod] = useState<PaymentType | null>(null);
 
 	const { handleBuyFraction, transactionStatus, transactionHash } =
 		useHandleBuyFraction(publicClient, HCExchangeClient);
@@ -158,6 +164,31 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 		queryKey: ["ordersFromHypercert"],
 		queryFn: () => getOrdersForReport(HCExchangeClient, hypercertId, chainId),
 	});
+
+	const {address:addr} = useAccount()
+	console.log("addressss",addr) 
+	const handleSubmit = (event: React.FormEvent) => {
+		if(reportImage){
+			form.setValue('images', [reportImage]);
+		}
+		event.preventDefault();
+		if(!paymentMethod) return;
+		form.setValue("paymentType", paymentMethod);
+		if (paymentMethod === "crypto") {
+
+			form.handleSubmit(onSubmit)();
+		} else if (paymentMethod === "fiat-with-login") {
+			form.setValue("paymentType", "fiat-with-login");
+			form.setValue("name", reportTitle);
+			
+			form.handleSubmit(onSubmit)();
+			// Handle fiat payment submission
+			// Add your fiat payment logic here
+		}
+		else if (paymentMethod === "fiat-without-login") {
+			
+		}
+	};
 
 	const { form, onSubmit, isProcessing } = useSupportForm(
 		Number(dollarAmountNeeded),
@@ -184,27 +215,26 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 		);
 	}
 
-	if (!isConnected && !address) {
-		return (
-			<div className="flex flex-col gap-4 p-3">
-				<div className="flex flex-col gap-4 justify-center items-center">
-					<h4 className="font-bold text-center">
-						Connect your wallet to support this report
-					</h4>
-					<ConnectButton />
-				</div>
-			</div>
-		);
-	}
+	
+
+	// if (!isConnected && !address) {
+	// 	return (
+	// 		<div className="flex flex-col gap-4 p-3">
+	// 			<div className="flex flex-col gap-4 justify-center items-center">
+	// 				<h4 className="font-bold text-center">
+	// 					Connect your wallet to support this report
+	// 				</h4>
+	// 				<ConnectButton />
+	// 			</div>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<section>
 			{!isProcessing && (
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="flex flex-col gap-4"
-					>
+					<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 						<FormField
 							control={form.control}
 							name="fractionPayment"
@@ -306,14 +336,24 @@ const SupportReportForm = ({ hypercertId }: SupportReportFormProps) => {
 								</FormItem>
 							)}
 						/> */}
-							<Button
-								className="w-full py-6 flex gap-2 rounded-md"
-								type="submit"
-							>
-								<Wallet2 />
-								Send from wallet
-							</Button>
 
+						<Button
+							className="w-full py-6 flex gap-2 rounded-md"
+							type="submit"
+							onClick={() => setPaymentMethod("crypto")}
+						>
+							<Wallet2 />
+							Send from wallet
+						</Button>
+
+						<Button
+							className="w-full py-6 flex gap-2 rounded-md"
+							type="submit"
+							onClick={() => setPaymentMethod("fiat-with-login")}
+						>
+							<Wallet2 />
+							Pay with fiat
+						</Button>
 					</form>
 				</Form>
 			)}
