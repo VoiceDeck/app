@@ -49,8 +49,9 @@ const useHandleBuyFraction = (
       params: {
         header: {
           "x-api-key":process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY ?? "",
-          
-        }
+          "Access-Control-Allow-Origin":"*"
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        } as any
       },
       body:{
         customId:customId,
