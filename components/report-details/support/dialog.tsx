@@ -172,7 +172,7 @@ const SupportReport = ({
 				destinationChain: "optimism",
 				destinationAddress: "0x8a4c14d50c43363a28647188534db7004112091c",
 				splitsAddress: "0xD8813c65a4A21772C360f32B2C7960040fa84a8B",
-				hypercertFractionId: "18669251778750367859454584462136531153321984",
+				hypercertFractionId: hypercertId?.split("-")[2],
 				poolId: 0,
 			}}
 			buttonClassName="rounded-3xl bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700 dark:bg-vd-beige-100 dark:text-vd-blue-900 dark:hover:bg-vd-beige-100/90 active:outline-none active:scale-95 active:ring-2 active:ring-vd-blue-400 active:ring-offset-2"
