@@ -1,3 +1,5 @@
+"use client";
+
 import { ConnectButton } from "@/components/global/connect-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -11,6 +13,7 @@ import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import type { SupportReportInfo } from "@/types";
+import { DooglyDonateButton } from "@doogly/doogly-donate-component";
 import Image from "next/image";
 import { useState } from "react";
 import { useAccount } from "wagmi";
@@ -140,25 +143,45 @@ const SupportReport = ({
 		setOpen,
 	};
 
-	if (isDesktop) {
-		return (
-			<ReportSupportUI
-				{...props}
-				UIComponent={Dialog}
-				ContentComponent={DialogContent}
-				HeaderComponent={DialogHeader}
-			/>
-		);
-	}
+	// if (isDesktop) {
+	// 	return (
+	// 		<ReportSupportUI
+	// 			{...props}
+	// 			UIComponent={Dialog}
+	// 			ContentComponent={DialogContent}
+	// 			HeaderComponent={DialogHeader}
+	// 		/>
+	// 	);
+	// }
 
+	// return (
+	// 	<ReportSupportUI
+	// 		{...props}
+	// 		UIComponent={Drawer}
+	// 		ContentComponent={(props) => (
+	// 			<DrawerContent {...props} className="bg-vd-beige-100 p-3" />
+	// 		)}
+	// 		HeaderComponent={DrawerHeader}
+	// 	/>
+	// );
 	return (
-		<ReportSupportUI
-			{...props}
-			UIComponent={Drawer}
-			ContentComponent={(props) => (
-				<DrawerContent {...props} className="bg-vd-beige-100 p-3" />
-			)}
-			HeaderComponent={DrawerHeader}
+		<DooglyDonateButton
+			buttonText="Support this report"
+			modalTitle="Support this report"
+			config={{
+				destinationChain: "optimism",
+				destinationAddress: "0x8a4c14d50c43363a28647188534db7004112091c",
+				splitsAddress: "0xD8813c65a4A21772C360f32B2C7960040fa84a8B",
+				hypercertFractionId: "18669251778750367859454584462136531153321984",
+				poolId: 0,
+			}}
+			buttonClassName="rounded-3xl bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700 dark:bg-vd-beige-100 dark:text-vd-blue-900 dark:hover:bg-vd-beige-100/90 active:outline-none active:scale-95 active:ring-2 active:ring-vd-blue-400 active:ring-offset-2"
+			modalStyles={{
+				backgroundColor: "#FAF7F5",
+				headingColor: "#252E56",
+				textColor: "#252E56",
+				buttonColor: "#252F55",
+			}}
 		/>
 	);
 };
