@@ -3,14 +3,14 @@
 import { ConnectButton } from "@/components/global/connect-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
+import { DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import {
+	ALLO_POOLID,
+	DONATION_RECEIVER,
+	DOOGLY_CONTRACT,
+	RECEIVING_TOKEN,
+} from "@/config/constants";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import type { SupportReportInfo } from "@/types";
 import { DooglyDonateButton } from "@doogly/doogly-donate-component";
@@ -143,37 +143,17 @@ const SupportReport = ({
 		setOpen,
 	};
 
-	// if (isDesktop) {
-	// 	return (
-	// 		<ReportSupportUI
-	// 			{...props}
-	// 			UIComponent={Dialog}
-	// 			ContentComponent={DialogContent}
-	// 			HeaderComponent={DialogHeader}
-	// 		/>
-	// 	);
-	// }
-
-	// return (
-	// 	<ReportSupportUI
-	// 		{...props}
-	// 		UIComponent={Drawer}
-	// 		ContentComponent={(props) => (
-	// 			<DrawerContent {...props} className="bg-vd-beige-100 p-3" />
-	// 		)}
-	// 		HeaderComponent={DrawerHeader}
-	// 	/>
-	// );
 	return (
 		<DooglyDonateButton
 			buttonText="Support this report"
 			modalTitle="Support this report"
 			config={{
 				destinationChain: "optimism",
-				destinationAddress: "0x8a4c14d50c43363a28647188534db7004112091c",
-				splitsAddress: "0xD8813c65a4A21772C360f32B2C7960040fa84a8B",
+				destinationAddress: DOOGLY_CONTRACT,
+				splitsAddress: DONATION_RECEIVER,
 				hypercertFractionId: hypercertId?.split("-")[2],
-				poolId: 0,
+				poolId: ALLO_POOLID as number,
+				destinationOutputTokenAddress: RECEIVING_TOKEN,
 			}}
 			buttonClassName="rounded-3xl bg-vd-blue-900 text-vd-beige-100 hover:bg-vd-blue-700 dark:bg-vd-beige-100 dark:text-vd-blue-900 dark:hover:bg-vd-beige-100/90 active:outline-none active:scale-95 active:ring-2 active:ring-vd-blue-400 active:ring-offset-2"
 			modalStyles={{
