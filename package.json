@@ -14,7 +14,7 @@
   "dependencies": {
     "@anon-aadhaar/react": "^2.4.0",
     "@directus/sdk": "^15.0.2",
-    "@doogly/doogly-donate-component": "^1.0.5",
+    "@doogly/doogly-donate-component": "^1.0.6",
     "@ethersproject/providers": "^5.7.2",
     "@fontsource-variable/plus-jakarta-sans": "^5.0.20",
     "@hookform/resolvers": "^3.3.4",
