@@ -22,7 +22,7 @@ const metadata = {
 export const config = createConfig({
   chains: [optimism], // Pass your required chains as an array
   transports: {
-    [optimism.id]: http(),
+    [optimism.id]: http(process.env.INFURA_MAINNET_RPC_URL),
     
     // For each of your required chains, add an entry to `transports` with
     // a key of the chain's `id` and a value of `http()`

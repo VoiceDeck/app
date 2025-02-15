@@ -15,8 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useFunding } from "@/contexts/funding-context";
 import {
-	type 
-	PaymentType,
+	type PaymentType,
 	type TransactionStatuses,
 	useHandleBuyFraction,
 } from "@/hooks/use-buy-fraction";
@@ -26,6 +25,7 @@ import useSupportForm from "@/hooks/use-support-form";
 import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
+import { useWallets } from "@privy-io/react-auth";
 import { useQuery } from "@tanstack/react-query";
 import {
 	AlertTriangle,
@@ -41,8 +41,8 @@ import TransactionStatus from "./transaction-status";
 
 interface SupportReportFormProps {
 	hypercertId: Partial<Report>["hypercertId"];
-	reportTitle?: string,
-	reportImage?: string,
+	reportTitle?: string;
+	reportImage?: string;
 }
 
 const transactionStatusContent: Record<
@@ -138,8 +138,14 @@ async function getOrdersForReport(
 	}
 }
 
-const SupportReportForm = ({ hypercertId,reportImage,reportTitle }: SupportReportFormProps) => {
+const SupportReportForm = ({
+	hypercertId,
+	reportImage,
+	reportTitle,
+}: SupportReportFormProps) => {
 	const { address, isConnected, chainId } = useAccount();
+	const { wallets, ready } = useWallets();
+	const wallet = wallets[0];
 	const provider = useEthersProvider({ chainId });
 	const signer = useEthersSigner({ chainId });
 	const publicClient = usePublicClient({ chainId });
@@ -151,6 +157,8 @@ const SupportReportForm = ({ hypercertId,reportImage,reportTitle }: SupportRepor
 		provider,
 		signer,
 	);
+
+	console.log({ HCExchangeClient });
 	const [paymentMethod, setPaymentMethod] = useState<PaymentType | null>(null);
 
 	const { handleBuyFraction, transactionStatus, transactionHash } =
@@ -164,29 +172,27 @@ const SupportReportForm = ({ hypercertId,reportImage,reportTitle }: SupportRepor
 		queryKey: ["ordersFromHypercert"],
 		queryFn: () => getOrdersForReport(HCExchangeClient, hypercertId, chainId),
 	});
+	console.log("orders", orders);
 
-	const {address:addr} = useAccount()
-	console.log("addressss",addr) 
+	const { address: addr } = useAccount();
+	console.log("addressss", addr);
 	const handleSubmit = (event: React.FormEvent) => {
-		if(reportImage){
-			form.setValue('images', [reportImage]);
+		if (reportImage) {
+			form.setValue("images", [reportImage]);
 		}
 		event.preventDefault();
-		if(!paymentMethod) return;
+		if (!paymentMethod) return;
 		form.setValue("paymentType", paymentMethod);
 		if (paymentMethod === "crypto") {
-
 			form.handleSubmit(onSubmit)();
 		} else if (paymentMethod === "fiat-with-login") {
 			form.setValue("paymentType", "fiat-with-login");
 			form.setValue("name", reportTitle);
-			
+
 			form.handleSubmit(onSubmit)();
 			// Handle fiat payment submission
 			// Add your fiat payment logic here
-		}
-		else if (paymentMethod === "fiat-without-login") {
-			
+		} else if (paymentMethod === "fiat-without-login") {
 		}
 	};
 
@@ -214,8 +220,9 @@ const SupportReportForm = ({ hypercertId,reportImage,reportTitle }: SupportRepor
 			</div>
 		);
 	}
-
-	
+	if (!ready || isOrdersPending) {
+		return <h1>Loading...</h1>;
+	}
 
 	// if (!isConnected && !address) {
 	// 	return (

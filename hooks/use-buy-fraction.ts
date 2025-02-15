@@ -66,7 +66,7 @@ const useHandleBuyFraction = (
         customerEmail: email,
         name: name ? name : "Donation",
         blockChainName:DEFAULT_BLOCKCHAIN_NAME,
-        images:images,
+        // images:images,
         success_url: `${window.location.origin}/checkout/success?transactionId=${customId}`,
 
         metadata:{
