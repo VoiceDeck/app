@@ -169,6 +169,9 @@ export const getCMSReports = async (): Promise<CMSContent[]> => {
           filter: {
             status: {
               _eq: 'published',
+            },
+            Minted: {
+              _eq: true,
             }
           },
         })
@@ -177,6 +180,38 @@ export const getCMSReports = async (): Promise<CMSContent[]> => {
       console.log("[Directus] fetched CMS contents: ", CMSReports.length);
     }
 
+    return CMSReports;
+  } catch (error) {
+    console.error(`[Directus] Failed to fetch CMS contents: ${error}`);
+    throw new Error(`[Directus] Failed to fetch CMS contents: ${error}`);
+  }
+};
+
+/**
+ * Update the latest contents of the CMS `reports` collection.
+ * @returns A promise that resolves to an array of CMS contents.
+ * @throws Will throw an error if the CMS contents cannot be fetched.
+ */
+export const updateCMSReports = async (): Promise<CMSContent[]> => {
+  const client = getDirectusClient();
+
+  try {
+    console.log("[Directus] Fetching CMS contents from remote");
+    const response = await client.request(
+      readItems('reports', {
+        filter: {
+          status: {
+            _eq: 'published',
+          },
+          Minted: {
+            _eq: true,
+          }
+        },
+      })
+    );
+    CMSReports = response as CMSContent[];
+    console.log("[Directus] fetched CMS contents: ", CMSReports.length);
+    
     return CMSReports;
   } catch (error) {
     console.error(`[Directus] Failed to fetch CMS contents: ${error}`);
