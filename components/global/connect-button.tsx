@@ -3,8 +3,10 @@ import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 import { Button } from "@/components/ui/button";
 import { DEFAULT_CHAIN_ID } from "@/config/constants";
+import { config } from "@/config/wagmi";
 import { useLogin, useLogout, useWallets } from "@privy-io/react-auth";
 import { useSetActiveWallet } from "@privy-io/wagmi";
+import { disconnect } from "@wagmi/core";
 import { UserPlus } from "lucide-react";
 import { useState } from "react";
 
@@ -24,7 +26,7 @@ const ConnectButton = () => {
 	const { login } = useLogin({
 		onComplete: async (user) => {
 			console.log("user logged in...", user);
-			const wallet = user.linkedAccounts.filter(a=>a.type === "wallet")[0]
+			const wallet = user.linkedAccounts.filter((a) => a.type === "wallet")[0];
 			console.log("wallet", wallet);
 			if (wallet.address) {
 				console.log("wallets", wallets);
@@ -34,7 +36,7 @@ const ConnectButton = () => {
 				if (newActiveWallet) {
 					console.log("newActiveWallet", newActiveWallet);
 					console.log("chainId", newActiveWallet.chainId);
-					
+
 					await setActiveWallet(newActiveWallet);
 					const chainId = newActiveWallet.chainId;
 					if (chainId !== DEFAULT_CHAIN_ID.toString()) {
@@ -44,9 +46,10 @@ const ConnectButton = () => {
 			}
 			setIsLogin(true);
 		},
-	
-		onError: (error) => {
+
+		onError: async (error) => {
 			console.log("error while logging in...", error);
+			await disconnect(config);
 			setIsLogin(false);
 		},
 	});
