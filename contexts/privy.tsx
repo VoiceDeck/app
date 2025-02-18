@@ -15,7 +15,8 @@ export function PrivyContextProvider({ children }: { children: ReactNode }) {
             config={{
                 loginMethods: ["email","wallet"],
                 supportedChains:[optimism],
-                    
+                
+
                 defaultChain:optimism,
                 appearance:{
                     showWalletLoginFirst:true,
