@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import FundingDataWrapper from "@/components/report-details/funding-data-wrapper";
 import FundingProgress from "@/components/report-details/funding-progress";
 import ReportSidebar from "@/components/report-details/report-sidebar";

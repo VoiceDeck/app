@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 
 import hero from "@/assets/hero_img.webp";
