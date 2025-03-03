@@ -71,7 +71,7 @@ const useHandleBuyFraction = (
       const myAmount = BigInt(order.price) * amount;
       const tx = await call({ value: myAmount });
 
-      fetch("/api/contributions", {
+      await fetch("/api/contributions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
