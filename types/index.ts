@@ -155,6 +155,7 @@ export type SupportReportInfo = {
   image: Partial<Report>["image"];
   title: Partial<Report>["title"];
   hypercertId: Partial<Report>["hypercertId"];
+  defaultOpenModal?: boolean;
 };
 
 export interface ISortingOption {

@@ -8,11 +8,13 @@ interface FundingProgressProps {
 	totalAmount: number;
 	fundedAmount: number;
 	reportInfo: SupportReportInfo;
+	defaultOpenModal?: boolean;
 }
 
 const FundingProgress: React.FC<FundingProgressProps> = ({
 	totalAmount,
 	reportInfo,
+	defaultOpenModal = false,
 }) => {
 	const { percentProgress, dollarAmountNeeded } = useFunding();
 	const isFullyFunded = percentProgress >= 100;

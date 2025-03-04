@@ -12,6 +12,10 @@ export interface SupportFormInputs {
   comment: string;
   hideName: boolean;
   hideAmount: boolean;
+  paymentType: "crypto" | "fiat-with-login" | "fiat-without-login";
+  name?: string;
+  email?: string;
+  images?: string[];
 }
 
 const useSupportForm = (
@@ -32,6 +36,10 @@ const useSupportForm = (
     comment: z.string(),
     hideName: z.boolean(),
     hideAmount: z.boolean(),
+    paymentType: z.enum(["crypto", "fiat-with-login", "fiat-without-login"]).default("crypto"), 
+    name: z.string().optional(),
+    email: z.string().optional(),
+    images: z.array(z.string()).optional(),
   });
 
   const form = useForm<SupportFormInputs>({
@@ -41,6 +49,10 @@ const useSupportForm = (
       comment: "",
       hideName: false,
       hideAmount: false,
+      paymentType:"crypto",
+      name: "",
+      email: "",
+      images: [],  
     },
   });
 
@@ -62,6 +74,10 @@ const useSupportForm = (
       hypercertId,
       values.comment,
       values.fractionPayment,
+      values.paymentType,
+      values.email,
+      values.name,
+      values.images
     );
   };
 

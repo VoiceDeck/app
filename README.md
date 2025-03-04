@@ -13,6 +13,10 @@ VoiceDeck is a platform that allows users to contribute retroactive funding for 
 - Contribute funds with embedded crypto wallet
 - Track personal contribution activity and metrics
 
+## Data Flow
+
+This diagram provide a high level overview of data flow:
+<img width="1632" alt="VD-sequential diagram_20240229" src="https://github.com/VoiceDeck/app/assets/1610146/53bdf97e-da9d-449f-b178-bbe2be67a1f0">
 
 ## Tech Stack
 
