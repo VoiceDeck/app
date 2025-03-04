@@ -3,6 +3,9 @@ const nextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
+	
+	staticPageGenerationTimeout: 300, 
+
 	webpack: (config) => {
 		config.externals.push("pino-pretty", "lokijs", "encoding");
 		return config;
