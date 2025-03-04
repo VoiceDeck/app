@@ -5,7 +5,10 @@ import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
-import { getContributionsByHCId, processNewCryptoContribution } from "@/lib/directus";
+import {
+	getContributionsByHCId,
+	processNewCryptoContribution,
+} from "@/lib/directus";
 import { fetchReportBySlug } from "@/lib/impact-reports";
 import { normieTechClient } from "@/lib/normie-tech";
 import type { Report } from "@/types";
@@ -36,6 +39,7 @@ const getContributionsByHypercertId = async (
 	if (!hypercertId) return null;
 	try {
 		const contributionsData = await getContributionsByHCId(hypercertId);
+
 		return contributionsData || [];
 	} catch (error) {
 		throw new Error(
@@ -60,13 +64,17 @@ export async function generateMetadata({
 	return metadata;
 }
 
-export default async function ReportPage({ params,searchParams }: ReportPageProps) {
+export default async function ReportPage({
+	params,
+	searchParams,
+}: ReportPageProps) {
 	const { slug } = params;
 	const report = await getReportData(slug);
 	const contributions = await getContributionsByHypercertId(report.hypercertId);
 	const htmlParsedStory = report.story ? parse(report.story) : null;
 	console.log({ searchParams });
-	
+	console.log({ hypercertId: report.hypercertId }, "hypercertId", report.title);
+
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">
 			{/* 192px is added to account for the funding progress on mobile */}
@@ -100,7 +108,6 @@ export default async function ReportPage({ params,searchParams }: ReportPageProp
 							hypercertId={report.hypercertId}
 							totalAmount={report.totalCost}
 							fundedAmount={report.fundedSoFar}
-
 						>
 							<FundingProgress
 								totalAmount={report.totalCost}
@@ -110,7 +117,6 @@ export default async function ReportPage({ params,searchParams }: ReportPageProp
 									title: report.title,
 									hypercertId: report.hypercertId,
 								}}
-								
 							/>
 						</FundingDataWrapper>
 					</div>

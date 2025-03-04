@@ -207,6 +207,22 @@ const SupportReportForm = ({
 		address,
 		hypercertId,
 	);
+	if (!ready || isOrdersPending) {
+		return <h1>Loading...</h1>;
+	}
+
+	if (!isConnected && !address) {
+		return (
+			<div className="flex flex-col gap-4 p-3">
+				<div className="flex flex-col gap-4 justify-center items-center">
+					<h4 className="font-bold text-center">
+						Connect your wallet to support this report
+					</h4>
+					<ConnectButton />
+				</div>
+			</div>
+		);
+	}
 
 	if (orderError || orders?.length === 0) {
 		return (
@@ -220,22 +236,6 @@ const SupportReportForm = ({
 			</div>
 		);
 	}
-	if (!ready || isOrdersPending) {
-		return <h1>Loading...</h1>;
-	}
-
-	// if (!isConnected && !address) {
-	// 	return (
-	// 		<div className="flex flex-col gap-4 p-3">
-	// 			<div className="flex flex-col gap-4 justify-center items-center">
-	// 				<h4 className="font-bold text-center">
-	// 					Connect your wallet to support this report
-	// 				</h4>
-	// 				<ConnectButton />
-	// 			</div>
-	// 		</div>
-	// 	);
-	// }
 
 	return (
 		<section>
