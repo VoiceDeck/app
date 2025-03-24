@@ -25,26 +25,30 @@ const SupportContent = ({
 	address,
 	isConnected,
 	hypercertId,
+	reportTitle,
+	reportImage,
 }: {
 	address: `0x${string}` | undefined;
 	isConnected: boolean;
+	reportTitle?: string,
+	reportImage?: string,
 	hypercertId: SupportReportInfo["hypercertId"];
 }) => {
-	if (!isConnected && !address) {
-		return (
-			<div className="flex flex-col gap-4 p-3">
-				<div className="flex flex-col gap-4 justify-center items-center">
-					<h4 className="font-bold text-center">
-						Connect your wallet to support this report
-					</h4>
-					<ConnectButton />
-				</div>
-			</div>
-		);
-	}
+	// if (!isConnected && !address) {
+	// 	return (
+	// 		<div className="flex flex-col gap-4 p-3">
+	// 			<div className="flex flex-col gap-4 justify-center items-center">
+	// 				<h4 className="font-bold text-center">
+	// 					Connect your wallet to support this report
+	// 				</h4>
+	// 				<ConnectButton />
+	// 			</div>
+	// 		</div>
+	// 	);
+	// }
 	// TODO: remove this when we don't need dummy order
 	if (process.env.NEXT_PUBLIC_DEPLOY_ENV === "production") {
-		return <SupportReportForm hypercertId={hypercertId} />;
+		return <SupportReportForm hypercertId={hypercertId} reportImage={reportImage} reportTitle={reportTitle} />;
 	}
 	return (
 		<SupportReportForm
@@ -104,6 +108,8 @@ const ReportSupportUI = ({
 				<Separator />
 				<SupportContent
 					address={address}
+					reportTitle={reportTitle}
+					reportImage={reportImage}
 					isConnected={isConnected}
 					hypercertId={hypercertId}
 				/>
@@ -128,9 +134,11 @@ const SupportReport = ({
 	image: reportImage,
 	title: reportTitle,
 	hypercertId,
+	defaultOpenModal = false,
 }: SupportReportInfo) => {
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(defaultOpenModal);
 	const isDesktop = useMediaQuery("(min-width: 768px)");
+	
 
 	const props = {
 		image: reportImage,
@@ -138,6 +146,7 @@ const SupportReport = ({
 		hypercertId,
 		open,
 		setOpen,
+		
 	};
 
 	if (isDesktop) {

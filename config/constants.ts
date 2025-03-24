@@ -2,6 +2,9 @@ import { optimism, sepolia } from "viem/chains";
 import { Chain } from "viem";
 import { Environment } from "@hypercerts-org/sdk";
 
+
+export const DEFAULT_CHAIN_ID = 10;
+export const DEFAULT_BLOCKCHAIN_NAME = "optimism";
 export const WC_PROJECT_ID = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
 export const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT as Environment;
 
