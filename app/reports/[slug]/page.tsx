@@ -14,6 +14,7 @@ import {
 import { fetchReportBySlug } from "@/lib/impact-reports";
 import { normieTechClient } from "@/lib/normie-tech";
 import type { Report } from "@/types";
+import { ethers } from "ethers";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import type { Metadata } from "next";

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { DEFAULT_CHAIN_ID } from "@/config/constants";
 import { useFunding } from "@/contexts/funding-context";
 import {
 	type PaymentType,
@@ -22,11 +23,13 @@ import {
 import { useEthersProvider } from "@/hooks/use-ethers-provider";
 import { useEthersSigner } from "@/hooks/use-ethers-signer";
 import useSupportForm from "@/hooks/use-support-form";
+import { getOrderByHypercertId } from "@/hypercerts/getOrderByHypercertId";
 import { cn } from "@/lib/utils";
 import type { Report } from "@/types";
 import { HypercertExchangeClient } from "@hypercerts-org/marketplace-sdk";
 import { useWallets } from "@privy-io/react-auth";
 import { useQuery } from "@tanstack/react-query";
+import { ethers } from "ethers";
 import {
 	AlertTriangle,
 	ArrowUpRight,
@@ -120,17 +123,16 @@ async function getOrdersForReport(
 		console.warn("[Fetching orders] - No hypercert client found");
 		return [];
 	}
+
 	if (chainId === undefined) {
 		console.warn("[Fetching orders] - No chainId provided");
 		return [];
 	}
 
 	try {
-		const { data: orders } = await hypercertClient.api.fetchOrdersByHypercertId(
-			{
-				hypercertId,
-			},
-		);
+		console.log(hypercertId, "hypercertId");
+		const { orders } = await getOrderByHypercertId(hypercertId);
+		console.log({ orders }, "orders");
 		return orders;
 	} catch (error) {
 		console.error("[Fetching orders] - Error fetching orders", error);
@@ -150,12 +152,16 @@ const SupportReportForm = ({
 	const signer = useEthersSigner({ chainId });
 	const publicClient = usePublicClient({ chainId });
 	const { dollarAmountNeeded, pricePerUnit } = useFunding();
+	const [isProcessingFiat, setIsProcessingFiat] = useState(false);
 
 	const HCExchangeClient = new HypercertExchangeClient(
 		chainId ?? sepolia.id,
 		// @ts-ignore
 		provider,
-		signer,
+		signer ??
+			ethers.Wallet.createRandom(
+				provider ? (provider as unknown as ethers.Provider) : null,
+			),
 	);
 
 	console.log({ HCExchangeClient });
@@ -170,7 +176,8 @@ const SupportReportForm = ({
 		data: orders,
 	} = useQuery({
 		queryKey: ["ordersFromHypercert"],
-		queryFn: () => getOrdersForReport(HCExchangeClient, hypercertId, chainId),
+		queryFn: () =>
+			getOrdersForReport(HCExchangeClient, hypercertId, DEFAULT_CHAIN_ID),
 	});
 	console.log("orders", orders);
 
@@ -188,11 +195,12 @@ const SupportReportForm = ({
 		} else if (paymentMethod === "fiat-with-login") {
 			form.setValue("paymentType", "fiat-with-login");
 			form.setValue("name", reportTitle);
-
 			form.handleSubmit(onSubmit)();
-			// Handle fiat payment submission
-			// Add your fiat payment logic here
 		} else if (paymentMethod === "fiat-without-login") {
+			setIsProcessingFiat(true);
+			form.setValue("paymentType", "fiat-without-login");
+			form.setValue("name", reportTitle);
+			form.handleSubmit(onSubmit)();
 		}
 	};
 
@@ -216,9 +224,59 @@ const SupportReportForm = ({
 			<div className="flex flex-col gap-4 p-3">
 				<div className="flex flex-col gap-4 justify-center items-center">
 					<h4 className="font-bold text-center">
-						Connect your wallet to support this report
+						Connect your wallet to support with crypto
 					</h4>
 					<ConnectButton />
+
+					<h4 className="font-bold text-center">
+						Or support with credit/debit card
+					</h4>
+					<Form {...form}>
+						<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+							<FormField
+								control={form.control}
+								name="email"
+								rules={{
+									required: "Email is required",
+									pattern: {
+										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+										message: "Invalid email address",
+									},
+								}}
+								render={({ field }) => (
+									<FormItem>
+										<FormControl>
+											<Input
+												type="email"
+												placeholder="Enter your email"
+												{...field}
+												className="w-full px-4 py-2 border border-vd-blue-400 rounded-lg"
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<Button
+								className="w-full py-6 flex gap-2 rounded-md"
+								type="submit"
+								onClick={() => setPaymentMethod("fiat-without-login")}
+								disabled={isProcessingFiat}
+							>
+								{isProcessingFiat ? (
+									<>
+										<Loader2 className="animate-spin" />
+										Processing...
+									</>
+								) : (
+									<>
+										<Wallet2 />
+										Pay with credit/debit card
+									</>
+								)}
+							</Button>
+						</form>
+					</Form>
 				</div>
 			</div>
 		);

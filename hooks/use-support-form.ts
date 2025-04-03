@@ -62,9 +62,8 @@ const useSupportForm = (
     console.log("values", values);
     console.log("pricePerUnit", pricePerUnit);
     const unitsToBuy = values.fractionPayment / pricePerUnit;
-    if (!address) {
-      throw new Error("No address found");
-    }
+    
+    
 
     console.log("amount to buy: ", BigInt(Math.trunc(unitsToBuy)));
     await handleBuyFraction(

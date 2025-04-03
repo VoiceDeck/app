@@ -7,6 +7,7 @@ import type { Address } from "viem";
 import { waitForTransactionReceipt } from "viem/actions";
 import type { UsePublicClientReturnType } from "wagmi";
 import { nanoid } from "nanoid";
+import { User } from "@privy-io/server-auth";
 
 
 export enum TransactionStatuses {
@@ -188,7 +189,7 @@ const useHandleBuyFraction = (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     order: any,
     amount: bigint,
-    address: Address,
+    address: Address | undefined,
     hypercertId: string | undefined,
     comment: string | undefined,
     amountInDollars: number,
@@ -199,6 +200,9 @@ const useHandleBuyFraction = (
   ) => {
     switch (paymentType) {
       case "crypto":
+        if(!address){
+          throw new Error("No address found");
+        }
         return handleCryptoBuyFraction(
           order,
           amount,
@@ -209,6 +213,9 @@ const useHandleBuyFraction = (
         );
 
       case "fiat-with-login":
+        if(!address){
+          throw new Error("No address found");
+        }
         return handleFiatBuyFraction(
           order,
           amount,
@@ -220,36 +227,35 @@ const useHandleBuyFraction = (
           name,
           images
         );
-      // case "fiat-without-login": {
-      //   if (!email) {
-      //     throw new Error("Email is required for fiat-without-login");
-      //   }
-      //   const wallet : {wallet:User} = await fetch("/api/wallet-generate", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       address: email,
-      //     }),
-      //   }).then((res) => res.json());
-      //   if(!wallet.wallet.wallet?.address){
-      //     setTransactionStatus("Failed");
-
-      //     return
-      //   }
-      //   return handleFiatBuyFraction(
-      //     order,
-      //     amount,
-      //     wallet.wallet.wallet.address as Address,
-      //     hypercertId,
-      //     comment,
-      //     amountInDollars,
-      //     email,
-      //     name,
-      //     images
-      //   );
-      // }
+      case "fiat-without-login": {
+        if (!email) {
+          throw new Error("Email is required for fiat-without-login");
+        }
+        const wallet : User = await fetch("/api/wallet-generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        }).then((res) => res.json());
+        if(!wallet.wallet?.address){
+          setTransactionStatus("Failed");
+          return
+        }
+        return handleFiatBuyFraction(
+          order,
+          amount,
+          wallet.wallet.address as Address,
+          hypercertId,
+          comment,
+          amountInDollars,
+          email,
+          name,
+          images
+        );
+      }
       
 
     }
