@@ -221,15 +221,11 @@ const SupportReportForm = ({
 
 	if (!isConnected && !address) {
 		return (
-			<div className="flex flex-col gap-4 p-3">
-				<div className="flex flex-col gap-4 justify-center items-center">
-					<h4 className="font-bold text-center">
-						Connect your wallet to support with crypto
-					</h4>
-					<ConnectButton />
-
-					<h4 className="font-bold text-center">
-						Or support with credit/debit card
+			<div className="flex flex-col gap-6 p-4">
+				{/* Primary Option: Direct Donation */}
+				<div className="space-y-4">
+					<h4 className="font-bold text-lg text-center text-vd-blue-900">
+						Support with Email & Card
 					</h4>
 					<Form {...form}>
 						<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -245,12 +241,39 @@ const SupportReportForm = ({
 								}}
 								render={({ field }) => (
 									<FormItem>
+										<div className="flex items-center gap-2 mb-2">
+											<svg
+												width="18"
+												height="18"
+												viewBox="0 0 24 24"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+												role="img"
+												aria-label="Email icon"
+											>
+												<path
+													d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+													stroke="currentColor"
+													strokeWidth="2"
+													fill="none"
+												/>
+												<polyline
+													points="22,6 12,13 2,6"
+													stroke="currentColor"
+													strokeWidth="2"
+													fill="none"
+												/>
+											</svg>
+											<span className="font-medium text-vd-blue-700">
+												Email Address
+											</span>
+										</div>
 										<FormControl>
 											<Input
 												type="email"
-												placeholder="Enter your email"
+												placeholder="your.email@example.com"
 												{...field}
-												className="w-full px-4 py-2 border border-vd-blue-400 rounded-lg"
+												className="w-full h-12 px-4 py-2 text-lg border-2 border-vd-blue-400 rounded-lg focus:border-vd-blue-600"
 											/>
 										</FormControl>
 										<FormMessage />
@@ -258,25 +281,92 @@ const SupportReportForm = ({
 								)}
 							/>
 							<Button
-								className="w-full py-6 flex gap-2 rounded-md"
+								className="w-full h-14 flex gap-3 rounded-lg text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600"
 								type="submit"
 								onClick={() => setPaymentMethod("fiat-without-login")}
 								disabled={isProcessingFiat}
 							>
 								{isProcessingFiat ? (
 									<>
-										<Loader2 className="animate-spin" />
+										<Loader2 className="animate-spin" size={20} />
 										Processing...
 									</>
 								) : (
 									<>
-										<Wallet2 />
-										Pay with credit/debit card
+										<svg
+											width="20"
+											height="20"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+											role="img"
+											aria-label="Credit card icon"
+										>
+											<rect
+												x="1"
+												y="4"
+												width="22"
+												height="16"
+												rx="2"
+												ry="2"
+												stroke="currentColor"
+												strokeWidth="2"
+												fill="none"
+											/>
+											<line
+												x1="1"
+												y1="10"
+												x2="23"
+												y2="10"
+												stroke="currentColor"
+												strokeWidth="2"
+											/>
+										</svg>
+										Donate with Credit/Debit Card
 									</>
 								)}
 							</Button>
 						</form>
 					</Form>
+				</div>
+
+				{/* Divider */}
+				<div className="relative">
+					<div className="absolute inset-0 flex items-center">
+						<div className="w-full border-t border-gray-300" />
+					</div>
+					<div className="relative flex justify-center text-sm">
+						<span className="px-4 bg-white text-gray-500 font-medium">or</span>
+					</div>
+				</div>
+
+				{/* Secondary Option: Crypto */}
+				<div className="space-y-3">
+					<h4 className="font-medium text-center text-gray-700">
+						Support with Cryptocurrency
+					</h4>
+					<ConnectButton />
+				</div>
+
+				{/* Security Note */}
+				<div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						role="img"
+						aria-label="Security shield icon"
+					>
+						<path
+							d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+							stroke="currentColor"
+							strokeWidth="2"
+							fill="none"
+						/>
+					</svg>
+					<span>Your payment information is secure and encrypted</span>
 				</div>
 			</div>
 		);
@@ -340,8 +430,8 @@ const SupportReportForm = ({
 											className="w-full px-4 py-2 border border-vd-blue-400 rounded-lg"
 										/>
 									</FormControl>
-									<FormDescription>
-										Donation amount in $USD | Max ${dollarAmountNeeded}
+									<FormDescription className="text-center">
+										Choose your donation amount • Max ${dollarAmountNeeded}
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
@@ -352,13 +442,31 @@ const SupportReportForm = ({
 							name="comment"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Message (optional)</FormLabel>
+									<FormLabel className="flex items-center gap-2">
+										<svg
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+											role="img"
+											aria-label="Message icon"
+										>
+											<path
+												d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+												stroke="currentColor"
+												strokeWidth="2"
+												fill="none"
+											/>
+										</svg>
+										Message (optional)
+									</FormLabel>
 									<FormControl>
 										<Textarea
 											rows={3}
-											placeholder="Leave a message with your donation"
+											placeholder="Leave a message with your donation..."
 											{...field}
-											className="w-full px-4 py-2 border rounded-lg resize-none bg-stone-100"
+											className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg resize-none bg-gray-50 focus:border-vd-blue-600 focus:bg-white"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -403,21 +511,50 @@ const SupportReportForm = ({
 						/> */}
 
 						<Button
-							className="w-full py-6 flex gap-2 rounded-md"
+							className="w-full py-6 flex gap-3 rounded-lg text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600"
+							type="submit"
+							onClick={() => setPaymentMethod("fiat-with-login")}
+						>
+							<svg
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								role="img"
+								aria-label="Credit card icon"
+							>
+								<rect
+									x="1"
+									y="4"
+									width="22"
+									height="16"
+									rx="2"
+									ry="2"
+									stroke="currentColor"
+									strokeWidth="2"
+									fill="none"
+								/>
+								<line
+									x1="1"
+									y1="10"
+									x2="23"
+									y2="10"
+									stroke="currentColor"
+									strokeWidth="2"
+								/>
+							</svg>
+							Donate with Card
+						</Button>
+
+						<Button
+							variant="outline"
+							className="w-full py-6 flex gap-2 rounded-lg border-2 border-vd-blue-400 hover:bg-vd-blue-50"
 							type="submit"
 							onClick={() => setPaymentMethod("crypto")}
 						>
 							<Wallet2 />
-							Send from wallet
-						</Button>
-
-						<Button
-							className="w-full py-6 flex gap-2 rounded-md"
-							type="submit"
-							onClick={() => setPaymentMethod("fiat-with-login")}
-						>
-							<Wallet2 />
-							Pay with fiat
+							Send from crypto wallet
 						</Button>
 					</form>
 				</Form>

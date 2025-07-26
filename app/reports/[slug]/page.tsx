@@ -72,8 +72,6 @@ export default async function ReportPage({
 	const report = await getReportData(slug);
 	const contributions = await getContributionsByHypercertId(report.hypercertId);
 	const htmlParsedStory = report.story ? parse(report.story) : null;
-	console.log({ searchParams });
-	console.log({ hypercertId: report.hypercertId }, "hypercertId", report.title);
 
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">

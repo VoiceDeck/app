@@ -11,9 +11,16 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "warn"
+      }
     },
-    "ignore": ["node_modules", ".next", ".vercel"]
+    "ignore": [
+      "node_modules",
+      ".next",
+      ".vercel"
+    ]
   },
   "files": {
     "include": [
