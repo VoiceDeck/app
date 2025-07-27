@@ -231,7 +231,7 @@ const useHandleBuyFraction = (
         if (!email) {
           throw new Error("Email is required for fiat-without-login");
         }
-        const walletRes = await fetch("https://deploy-preview-113--voicedeck.netlify.app/api/wallet-generate", {
+        const walletRes = await fetch("/api/wallet-generate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
