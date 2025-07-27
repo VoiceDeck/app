@@ -473,42 +473,6 @@ const SupportReportForm = ({
 								</FormItem>
 							)}
 						/>
-						{/* <FormField
-							control={form.control}
-							name="hideName"
-							render={({ field }) => (
-								<FormItem className="flex flex-row items-center justify-between">
-									<div className="space-y-0.5">
-										<FormLabel>Hide my name from the donation</FormLabel>
-									</div>
-									<FormControl>
-										<Switch
-											checked={field.value}
-											onCheckedChange={field.onChange}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/> */}
-						{/* <FormField
-							control={form.control}
-							name="hideAmount"
-							render={({ field }) => (
-								<FormItem className="flex flex-row items-center justify-between">
-									<div className="space-y-0.5">
-										<FormLabel>Hide the amount from the donation</FormLabel>
-									</div>
-									<FormControl>
-										<Switch
-											checked={field.value}
-											onCheckedChange={field.onChange}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/> */}
 
 						<Button
 							className="w-full py-6 flex gap-3 rounded-lg text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600"
