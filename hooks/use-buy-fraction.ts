@@ -20,7 +20,7 @@ export enum TransactionStatuses {
   InsufficientFunds = 6,
   ActionRejected = 7,
 }
-export type PaymentType = "fiat-with-login" | "fiat-without-login" | "crypto" ;
+export type PaymentType = "fiat-with-login" | "fiat-without-login" | "crypto";
 const useHandleBuyFraction = (
   publicClient: UsePublicClientReturnType,
   hypercertExhangeClient: HypercertExchangeClient,
@@ -29,7 +29,7 @@ const useHandleBuyFraction = (
   const [transactionStatus, setTransactionStatus] =
     useState<keyof typeof TransactionStatuses>("Pending");
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
-  const handleFiatBuyFraction = async ( 
+  const handleFiatBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     order: any,
     amount: bigint,
@@ -40,60 +40,60 @@ const useHandleBuyFraction = (
     email?: string,
     name?: string,
     images?: string[]
-  ) =>{
-    try{
-    console.log("ordcer",order)
-    const customId = nanoid(20)
-    const amountInCents = amountInDollars * 100;
-    setTransactionStatus("PreparingOrder");
-    const res = (await normieTechClient.POST("/v1/voice-deck/0/checkout",{
-      params: {
-        header: {
-          "x-api-key":process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY ?? "",
-          "Access-Control-Allow-Origin":"*"
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        } as any
-      },
-      body:{
-        customId:customId,
-        extraMetadata:{
-          hypercertId,
-          comment,
-          sender:address,
-          redirectUrl: `${window.location.href}`,
+  ) => {
+    try {
+      console.log("ordcer", order)
+      const customId = nanoid(20)
+      const amountInCents = amountInDollars * 100;
+      setTransactionStatus("PreparingOrder");
+      const res = (await normieTechClient.POST("/v1/voice-deck/0/checkout", {
+        params: {
+          header: {
+            "x-api-key": process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY ?? "",
+            "Access-Control-Allow-Origin": "*"
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          } as any
         },
-        amount: amountInCents,
-        chainId: DEFAULT_CHAIN_ID,
-        customerEmail: email,
-        name: name ? name : "Donation",
-        blockChainName:DEFAULT_BLOCKCHAIN_NAME,
-        // images:images,
-        success_url: `${window.location.origin}/checkout/success?transactionId=${customId}`,
+        body: {
+          customId: customId,
+          extraMetadata: {
+            hypercertId,
+            comment,
+            sender: address,
+            redirectUrl: `${window.location.href}`,
+          },
+          amount: amountInCents,
+          chainId: DEFAULT_CHAIN_ID,
+          customerEmail: email,
+          name: name ? name : "Donation",
+          blockChainName: DEFAULT_BLOCKCHAIN_NAME,
+          // images:images,
+          success_url: `${window.location.origin}/checkout/success?transactionId=${customId}`,
 
-        metadata:{
-          order,
-          amount:Number.parseInt(amount.toString()),
-          // give in dominations of usdc decimals
-          amountApproved:amountInDollars * 1_000_000,
-          
+          metadata: {
+            order,
+            amount: Number.parseInt(amount.toString()),
+            // give in dominations of usdc decimals
+            amountApproved: amountInDollars * 1_000_000,
 
-          recipient:address,
-          chainId:DEFAULT_CHAIN_ID,
+
+            recipient: address,
+            chainId: DEFAULT_CHAIN_ID,
+          }
         }
+      })).data
+      console.log("res", res)
+      if (res) {
+        setTransactionStatus("Approval")
+
+        window.open(res.url, "_self")
       }
-    })).data
-    console.log("res", res)
-    if(res){
-      setTransactionStatus("Approval")
+    } catch (e) {
+      setTransactionStatus("Failed"); // generic fail error
+      return
 
-      window.open(res.url,"_self")
     }
-  }catch(e){
-    setTransactionStatus("Failed"); // generic fail error
-    return
 
-  }
-    
   }
   const handleCryptoBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -127,18 +127,18 @@ const useHandleBuyFraction = (
     try {
       console.log("doolor: ", amountInDollars)
       console.log("doolor: ", BigInt(amountInDollars));
-    const approveTx = await hypercertExhangeClient.approveErc20(order.currency, BigInt(amountInDollars * 1_000_000));
+      const approveTx = await hypercertExhangeClient.approveErc20(order.currency, BigInt(amountInDollars * 1_000_000));
 
-    await waitForTransactionReceipt(publicClient, {
-      hash: approveTx.hash as `0x${string}`,
-    });
-  } catch (e) {
-    console.error("faiiled to approve tx: " + e);
-  }
+      await waitForTransactionReceipt(publicClient, {
+        hash: approveTx.hash as `0x${string}`,
+      });
+    } catch (e) {
+      console.error("faiiled to approve tx: " + e);
+    }
 
     try {
       setTransactionStatus("PreparingOrder");
-      
+
       const { call } = hypercertExhangeClient.executeOrder(
         order,
         takerOrder,
@@ -200,7 +200,7 @@ const useHandleBuyFraction = (
   ) => {
     switch (paymentType) {
       case "crypto":
-        if(!address){
+        if (!address) {
           throw new Error("No address found");
         }
         return handleCryptoBuyFraction(
@@ -213,7 +213,7 @@ const useHandleBuyFraction = (
         );
 
       case "fiat-with-login":
-        if(!address){
+        if (!address) {
           throw new Error("No address found");
         }
         return handleFiatBuyFraction(
@@ -231,7 +231,7 @@ const useHandleBuyFraction = (
         if (!email) {
           throw new Error("Email is required for fiat-without-login");
         }
-        const wallet : User = await fetch("/api/wallet-generate", {
+        const walletRes = await fetch("https://deploy-preview-113--voicedeck.netlify.app/api/wallet-generate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -239,8 +239,11 @@ const useHandleBuyFraction = (
           body: JSON.stringify({
             email: email,
           }),
-        }).then((res) => res.json());
-        if(!wallet.wallet?.address){
+        })
+        console.log({ walletRes })
+        const wallet: User = await walletRes.json()
+
+        if (!wallet.wallet?.address) {
           setTransactionStatus("Failed");
           return
         }
@@ -256,14 +259,14 @@ const useHandleBuyFraction = (
           images
         );
       }
-      
+
 
     }
 
-    
+
   };
 
-  return { handleBuyFraction, setTransactionStatus,transactionStatus, transactionHash };
+  return { handleBuyFraction, setTransactionStatus, transactionStatus, transactionHash };
 };
 
 export { useHandleBuyFraction };
