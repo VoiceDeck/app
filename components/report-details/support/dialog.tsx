@@ -121,9 +121,6 @@ const ReportSupportUI = ({
 								<h4 className="font-bold text-base line-clamp-2 text-vd-blue-900">
 									{reportTitle}
 								</h4>
-								<p className="text-sm text-vd-blue-600 mt-1">
-									Women Allowed to Work in Government Program
-								</p>
 							</div>
 						</div>
 					</Card>
