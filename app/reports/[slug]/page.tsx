@@ -7,13 +7,11 @@ import ReportSupportFeed from "@/components/report-details/report-support-feed";
 import { Badge } from "@/components/ui/badge";
 import { DynamicCategoryIcon } from "@/components/ui/dynamic-category-icon";
 import { Separator } from "@/components/ui/separator";
-import {
-	getContributionsByHCId,
-	processNewCryptoContribution,
-} from "@/lib/directus";
+import { getContributionsByHCId } from "@/lib/directus";
 import { fetchReportBySlug } from "@/lib/impact-reports";
 import { normieTechClient } from "@/lib/normie-tech";
 import type { Report } from "@/types";
+import { ethers } from "ethers";
 import parse from "html-react-parser";
 import { ChevronLeft, MapPin } from "lucide-react";
 import type { Metadata } from "next";
@@ -74,8 +72,6 @@ export default async function ReportPage({
 	const report = await getReportData(slug);
 	const contributions = await getContributionsByHypercertId(report.hypercertId);
 	const htmlParsedStory = report.story ? parse(report.story) : null;
-	console.log({ searchParams });
-	console.log({ hypercertId: report.hypercertId }, "hypercertId", report.title);
 
 	return (
 		<main className="flex flex-col justify-between h-svh md:h-fit md:px-12 pt-6">

@@ -56,7 +56,14 @@ const ConnectButton = () => {
 
 	return (
 		<div>
-			<Button onClick={login}>Connect Wallet</Button>
+			<Button
+				onClick={login}
+				variant="outline"
+				className="w-full h-12 flex gap-2 border-2 border-vd-blue-400 hover:bg-vd-blue-50"
+			>
+				<UserPlus size={18} />
+				Login/Sign Up
+			</Button>
 		</div>
 	);
 };

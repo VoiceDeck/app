@@ -7,6 +7,7 @@ import type { Address } from "viem";
 import { waitForTransactionReceipt } from "viem/actions";
 import type { UsePublicClientReturnType } from "wagmi";
 import { nanoid } from "nanoid";
+import { User } from "@privy-io/server-auth";
 
 
 export enum TransactionStatuses {
@@ -19,7 +20,7 @@ export enum TransactionStatuses {
   InsufficientFunds = 6,
   ActionRejected = 7,
 }
-export type PaymentType = "fiat-with-login" | "fiat-without-login" | "crypto" ;
+export type PaymentType = "fiat-with-login" | "fiat-without-login" | "crypto";
 const useHandleBuyFraction = (
   publicClient: UsePublicClientReturnType,
   hypercertExhangeClient: HypercertExchangeClient,
@@ -28,7 +29,7 @@ const useHandleBuyFraction = (
   const [transactionStatus, setTransactionStatus] =
     useState<keyof typeof TransactionStatuses>("Pending");
   const [transactionHash, setTransactionHash] = useState<Address | null>(null);
-  const handleFiatBuyFraction = async ( 
+  const handleFiatBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     order: any,
     amount: bigint,
@@ -39,60 +40,60 @@ const useHandleBuyFraction = (
     email?: string,
     name?: string,
     images?: string[]
-  ) =>{
-    try{
-    console.log("ordcer",order)
-    const customId = nanoid(20)
-    const amountInCents = amountInDollars * 100;
-    setTransactionStatus("PreparingOrder");
-    const res = (await normieTechClient.POST("/v1/voice-deck/0/checkout",{
-      params: {
-        header: {
-          "x-api-key":process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY ?? "",
-          "Access-Control-Allow-Origin":"*"
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        } as any
-      },
-      body:{
-        customId:customId,
-        extraMetadata:{
-          hypercertId,
-          comment,
-          sender:address,
-          redirectUrl: `${window.location.href}`,
+  ) => {
+    try {
+      console.log("ordcer", order)
+      const customId = nanoid(20)
+      const amountInCents = amountInDollars * 100;
+      setTransactionStatus("PreparingOrder");
+      const res = (await normieTechClient.POST("/v1/voice-deck/0/checkout", {
+        params: {
+          header: {
+            "x-api-key": process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY ?? "",
+            "Access-Control-Allow-Origin": "*"
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          } as any
         },
-        amount: amountInCents,
-        chainId: DEFAULT_CHAIN_ID,
-        customerEmail: email,
-        name: name ? name : "Donation",
-        blockChainName:DEFAULT_BLOCKCHAIN_NAME,
-        // images:images,
-        success_url: `${window.location.origin}/checkout/success?transactionId=${customId}`,
+        body: {
+          customId: customId,
+          extraMetadata: {
+            hypercertId,
+            comment,
+            sender: address,
+            redirectUrl: `${window.location.href}`,
+          },
+          amount: amountInCents,
+          chainId: DEFAULT_CHAIN_ID,
+          customerEmail: email,
+          name: name ? name : "Donation",
+          blockChainName: DEFAULT_BLOCKCHAIN_NAME,
+          // images:images,
+          success_url: `${window.location.origin}/checkout/success?transactionId=${customId}`,
 
-        metadata:{
-          order,
-          amount:Number.parseInt(amount.toString()),
-          // give in dominations of usdc decimals
-          amountApproved:amountInDollars * 1_000_000,
-          
+          metadata: {
+            order,
+            amount: Number.parseInt(amount.toString()),
+            // give in dominations of usdc decimals
+            amountApproved: amountInDollars * 1_000_000,
 
-          recipient:address,
-          chainId:DEFAULT_CHAIN_ID,
+
+            recipient: address,
+            chainId: DEFAULT_CHAIN_ID,
+          }
         }
+      })).data
+      console.log("res", res)
+      if (res) {
+        setTransactionStatus("Approval")
+
+        window.open(res.url, "_self")
       }
-    })).data
-    console.log("res", res)
-    if(res){
-      setTransactionStatus("Approval")
+    } catch (e) {
+      setTransactionStatus("Failed"); // generic fail error
+      return
 
-      window.open(res.url,"_self")
     }
-  }catch(e){
-    setTransactionStatus("Failed"); // generic fail error
-    return
 
-  }
-    
   }
   const handleCryptoBuyFraction = async (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -126,18 +127,18 @@ const useHandleBuyFraction = (
     try {
       console.log("doolor: ", amountInDollars)
       console.log("doolor: ", BigInt(amountInDollars));
-    const approveTx = await hypercertExhangeClient.approveErc20(order.currency, BigInt(amountInDollars * 1_000_000));
+      const approveTx = await hypercertExhangeClient.approveErc20(order.currency, BigInt(amountInDollars * 1_000_000));
 
-    await waitForTransactionReceipt(publicClient, {
-      hash: approveTx.hash as `0x${string}`,
-    });
-  } catch (e) {
-    console.error("faiiled to approve tx: " + e);
-  }
+      await waitForTransactionReceipt(publicClient, {
+        hash: approveTx.hash as `0x${string}`,
+      });
+    } catch (e) {
+      console.error("faiiled to approve tx: " + e);
+    }
 
     try {
       setTransactionStatus("PreparingOrder");
-      
+
       const { call } = hypercertExhangeClient.executeOrder(
         order,
         takerOrder,
@@ -188,7 +189,7 @@ const useHandleBuyFraction = (
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     order: any,
     amount: bigint,
-    address: Address,
+    address: Address | undefined,
     hypercertId: string | undefined,
     comment: string | undefined,
     amountInDollars: number,
@@ -199,6 +200,9 @@ const useHandleBuyFraction = (
   ) => {
     switch (paymentType) {
       case "crypto":
+        if (!address) {
+          throw new Error("No address found");
+        }
         return handleCryptoBuyFraction(
           order,
           amount,
@@ -209,6 +213,9 @@ const useHandleBuyFraction = (
         );
 
       case "fiat-with-login":
+        if (!address) {
+          throw new Error("No address found");
+        }
         return handleFiatBuyFraction(
           order,
           amount,
@@ -220,44 +227,46 @@ const useHandleBuyFraction = (
           name,
           images
         );
-      // case "fiat-without-login": {
-      //   if (!email) {
-      //     throw new Error("Email is required for fiat-without-login");
-      //   }
-      //   const wallet : {wallet:User} = await fetch("/api/wallet-generate", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       address: email,
-      //     }),
-      //   }).then((res) => res.json());
-      //   if(!wallet.wallet.wallet?.address){
-      //     setTransactionStatus("Failed");
+      case "fiat-without-login": {
+        if (!email) {
+          throw new Error("Email is required for fiat-without-login");
+        }
+        const walletRes = await fetch("/api/wallet-generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        })
+        console.log({ walletRes })
+        const wallet: User = await walletRes.json()
 
-      //     return
-      //   }
-      //   return handleFiatBuyFraction(
-      //     order,
-      //     amount,
-      //     wallet.wallet.wallet.address as Address,
-      //     hypercertId,
-      //     comment,
-      //     amountInDollars,
-      //     email,
-      //     name,
-      //     images
-      //   );
-      // }
-      
+        if (!wallet.wallet?.address) {
+          setTransactionStatus("Failed");
+          return
+        }
+        return handleFiatBuyFraction(
+          order,
+          amount,
+          wallet.wallet.address as Address,
+          hypercertId,
+          comment,
+          amountInDollars,
+          email,
+          name,
+          images
+        );
+      }
+
 
     }
 
-    
+
   };
 
-  return { handleBuyFraction, setTransactionStatus,transactionStatus, transactionHash };
+  return { handleBuyFraction, setTransactionStatus, transactionStatus, transactionHash };
 };
 
 export { useHandleBuyFraction };
