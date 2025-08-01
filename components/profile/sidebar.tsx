@@ -68,6 +68,7 @@ const AnonAadhaarCard = () => {
 const SideBar = () => {
 	return (
 		<section className="flex flex-col gap-4 md:col-span-1 md:row-span-2">
+			{/* Commented out existing UI
 			<AnonAadhaarProvider _useTestAadhaar={true}>
 				<AnonAadhaarCard />
 			</AnonAadhaarProvider>
@@ -93,6 +94,22 @@ const SideBar = () => {
 					>
 						Explore
 					</Link>
+				</CardContent>
+			</Card>
+			*/}
+
+			{/* Local Advocate Program Coming Soon */}
+			<Card className="bg-vd-beige-100 rounded-3xl shadow-none border-none">
+				<CardHeader>
+					<CardTitle className="text-center text-lg md:text-xl text-vd-blue-900">
+						Local Advocate Program
+					</CardTitle>
+					<CardDescription className="text-center text-base text-vd-blue-700">
+						Coming Soon
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="flex justify-center">
+					<div className="w-12 h-1 bg-vd-orange-500 rounded-full" />
 				</CardContent>
 			</Card>
 		</section>
