@@ -231,6 +231,55 @@ const SupportReportForm = ({
 						<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
 							<FormField
 								control={form.control}
+								name="fractionPayment"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Support amount</FormLabel>
+										<div className="grid grid-cols-5 gap-4">
+											{[5, 10, 20, 50, 100].map((amount) => (
+												<Button
+													key={amount}
+													disabled={amount > Number(dollarAmountNeeded)}
+													type="button"
+													variant={
+														form.watch("fractionPayment") === amount
+															? "default"
+															: "outline"
+													}
+													className={cn(
+														"flex justify-center items-center h-10 rounded-lg font-bold transition-colors duration-200",
+														form.watch("fractionPayment") === amount
+															? "bg-vd-beige-600 text-white hover:bg-vd-beige-700"
+															: "text-primary hover:bg-vd-beige-200 hover:text-primary",
+														amount > Number(dollarAmountNeeded)
+															? "cursor-not-allowed disabled:opacity-15"
+															: "",
+													)}
+													onClick={() =>
+														form.setValue("fractionPayment", amount)
+													}
+												>
+													${amount}
+												</Button>
+											))}
+										</div>
+										<FormControl>
+											<Input
+												type="number"
+												placeholder="Enter amount"
+												{...field}
+												className="w-full px-4 py-2 border border-vd-blue-400 rounded-lg"
+											/>
+										</FormControl>
+										<FormDescription className="text-center">
+											Choose your donation amount • Max ${dollarAmountNeeded}
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
 								name="email"
 								rules={{
 									required: "Email is required",
