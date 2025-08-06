@@ -101,8 +101,7 @@ export async function createContribution(contribution: Contribution) {
     try {
       const response = await client.request(readItem("users", user.address));
       console.log(
-        `[Directus] user ${user.address} exist: ${
-          response.address === user.address ? "true" : "false"
+        `[Directus] user ${user.address} exist: ${response.address === user.address ? "true" : "false"
         }`
       );
     } catch (err) {
@@ -198,20 +197,27 @@ export const updateCMSReports = async (): Promise<CMSContent[]> => {
   try {
     console.log("[Directus] Fetching CMS contents from remote");
     const response = await client.request(
-      readItems('reports', {
-        filter: {
-          status: {
-            _eq: 'published',
-          },
-          Minted: {
-            _eq: true,
-          }
-        },
-      })
+      {
+        // ...readItems('reports', {
+
+        //   filter: {
+        //     status: {
+        //       _eq: 'published',
+        //     },
+        //     Minted: {
+        //       _eq: true,
+        //     }
+        //   },
+
+        // }),
+
+
+
+      }
     );
     CMSReports = response as CMSContent[];
     console.log("[Directus] fetched CMS contents: ", CMSReports.length);
-    
+
     return CMSReports;
   } catch (error) {
     console.error(`[Directus] Failed to fetch CMS contents: ${error}`);
@@ -466,7 +472,7 @@ export const getViemClient = (): PublicClient => {
   if (viemClient) {
     return viemClient;
   }
-  
+
   viemClient = createPublicClient({
     chain: optimism,
     transport: http(process.env.JSON_RPC_ENDPOINT ? process.env.JSON_RPC_ENDPOINT : undefined),
