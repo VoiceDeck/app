@@ -105,7 +105,7 @@ const ReportSupportUI = ({
 		),
 		header: "Support this report",
 		content: (
-			<div className="flex flex-col gap-4 w-full overflow-hidden">
+			<div className="flex flex-col gap-4">
 				{reportImage && reportTitle && (
 					<Card className="bg-gradient-to-r from-gray-50 to-vd-beige-100 border-vd-beige-300">
 						<div className="flex items-center gap-4 p-4">
@@ -187,20 +187,8 @@ const SupportReport = ({
 			ContentComponent={(props) => (
 				<DrawerContent
 					{...props}
-					className="bg-white max-h-[85vh] overflow-hidden"
-				>
-					<div
-						className="overflow-y-auto overflow-x-hidden px-4 pb-4 w-full"
-						style={{
-							WebkitOverflowScrolling: "touch",
-							maxHeight: "calc(85vh - 60px)",
-							wordWrap: "break-word",
-							overflowWrap: "break-word",
-						}}
-					>
-						{props.children}
-					</div>
-				</DrawerContent>
+					className="bg-white p-4 max-h-[90vh] overflow-y-auto"
+				/>
 			)}
 			HeaderComponent={DrawerHeader}
 		/>

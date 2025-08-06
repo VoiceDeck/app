@@ -221,24 +221,21 @@ const SupportReportForm = ({
 
 	if (!isConnected && !address) {
 		return (
-			<div className="flex flex-col gap-6 p-4 w-full overflow-hidden">
+			<div className="flex flex-col gap-6 p-4">
 				{/* Primary Option: Direct Donation */}
 				<div className="space-y-4">
 					<h4 className="font-bold text-lg text-center text-vd-blue-900">
 						Support with Email & Card
 					</h4>
 					<Form {...form}>
-						<form
-							className="flex flex-col gap-4 w-full"
-							onSubmit={handleSubmit}
-						>
+						<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
 							<FormField
 								control={form.control}
 								name="fractionPayment"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Support amount</FormLabel>
-										<div className="grid grid-cols-5 gap-2 sm:gap-4">
+										<div className="grid grid-cols-5 gap-4">
 											{[5, 10, 20, 50, 100].map((amount) => (
 												<Button
 													key={amount}
@@ -250,7 +247,7 @@ const SupportReportForm = ({
 															: "outline"
 													}
 													className={cn(
-														"flex justify-center items-center h-10 sm:h-12 rounded-lg font-bold transition-colors duration-200 touch-manipulation",
+														"flex justify-center items-center h-10 rounded-lg font-bold transition-colors duration-200",
 														form.watch("fractionPayment") === amount
 															? "bg-vd-beige-600 text-white hover:bg-vd-beige-700"
 															: "text-primary hover:bg-vd-beige-200 hover:text-primary",
@@ -258,21 +255,9 @@ const SupportReportForm = ({
 															? "cursor-not-allowed disabled:opacity-15"
 															: "",
 													)}
-													onClick={() => {
-														form.setValue("fractionPayment", amount);
-														// Slight delay to ensure the value is set before potential scroll
-														setTimeout(() => {
-															const emailField = document.querySelector(
-																'input[type="email"]',
-															);
-															if (emailField && window.innerWidth < 768) {
-																emailField.scrollIntoView({
-																	behavior: "smooth",
-																	block: "center",
-																});
-															}
-														}, 100);
-													}}
+													onClick={() =>
+														form.setValue("fractionPayment", amount)
+													}
 												>
 													${amount}
 												</Button>
@@ -283,7 +268,7 @@ const SupportReportForm = ({
 												type="number"
 												placeholder="Enter amount"
 												{...field}
-												className="w-full px-4 py-3 text-base border border-vd-blue-400 rounded-lg touch-manipulation overflow-hidden"
+												className="w-full px-4 py-2 border border-vd-blue-400 rounded-lg"
 											/>
 										</FormControl>
 										<FormDescription className="text-center">
@@ -337,18 +322,7 @@ const SupportReportForm = ({
 												type="email"
 												placeholder="your.email@example.com"
 												{...field}
-												className="w-full h-12 px-4 py-2 text-base sm:text-lg border-2 border-vd-blue-400 rounded-lg focus:border-vd-blue-600 touch-manipulation overflow-hidden"
-												onFocus={(e) => {
-													// Ensure the input is visible on mobile
-													if (window.innerWidth < 768) {
-														setTimeout(() => {
-															e.target.scrollIntoView({
-																behavior: "smooth",
-																block: "center",
-															});
-														}, 300);
-													}
-												}}
+												className="w-full h-12 px-4 py-2 text-lg border-2 border-vd-blue-400 rounded-lg focus:border-vd-blue-600"
 											/>
 										</FormControl>
 										<FormMessage />
@@ -384,18 +358,7 @@ const SupportReportForm = ({
 												rows={3}
 												placeholder="Leave a message with your donation..."
 												{...field}
-												className="w-full px-4 py-3 text-base border-2 border-gray-300 rounded-lg resize-none bg-gray-50 focus:border-vd-blue-600 focus:bg-white touch-manipulation overflow-hidden"
-												onFocus={(e) => {
-													// Ensure the textarea is visible on mobile
-													if (window.innerWidth < 768) {
-														setTimeout(() => {
-															e.target.scrollIntoView({
-																behavior: "smooth",
-																block: "center",
-															});
-														}, 300);
-													}
-												}}
+												className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg resize-none bg-gray-50 focus:border-vd-blue-600 focus:bg-white"
 											/>
 										</FormControl>
 										<FormMessage />
@@ -404,7 +367,7 @@ const SupportReportForm = ({
 							/>
 
 							<Button
-								className="w-full h-14 flex gap-3 rounded-lg text-base sm:text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600 touch-manipulation"
+								className="w-full h-14 flex gap-3 rounded-lg text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600"
 								type="submit"
 								onClick={() => setPaymentMethod("fiat-without-login")}
 								disabled={isProcessingFiat}
@@ -509,17 +472,17 @@ const SupportReportForm = ({
 	}
 
 	return (
-		<section className="w-full overflow-hidden">
+		<section>
 			{!isProcessing && (
 				<Form {...form}>
-					<form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+					<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 						<FormField
 							control={form.control}
 							name="fractionPayment"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Support amount</FormLabel>
-									<div className="grid grid-cols-5 gap-2 sm:gap-4">
+									<div className="grid grid-cols-5 gap-4">
 										{[5, 10, 20, 50, 100].map((amount) => (
 											<Button
 												key={amount}
@@ -531,7 +494,7 @@ const SupportReportForm = ({
 														: "outline"
 												}
 												className={cn(
-													"flex justify-center items-center h-10 sm:h-12 rounded-lg font-bold transition-colors duration-200 touch-manipulation",
+													"flex justify-center items-center h-10 rounded-lg font-bold transition-colors duration-200",
 													form.watch("fractionPayment") === amount
 														? "bg-vd-beige-600 text-white hover:bg-vd-beige-700"
 														: "text-primary hover:bg-vd-beige-200 hover:text-primary",
@@ -539,20 +502,7 @@ const SupportReportForm = ({
 														? "cursor-not-allowed disabled:opacity-15"
 														: "",
 												)}
-												onClick={() => {
-													form.setValue("fractionPayment", amount);
-													// Smooth scroll to message field on mobile after selection
-													setTimeout(() => {
-														const messageField =
-															document.querySelector("textarea");
-														if (messageField && window.innerWidth < 768) {
-															messageField.scrollIntoView({
-																behavior: "smooth",
-																block: "center",
-															});
-														}
-													}, 100);
-												}}
+												onClick={() => form.setValue("fractionPayment", amount)}
 											>
 												${amount}
 											</Button>
@@ -563,7 +513,7 @@ const SupportReportForm = ({
 											type="number"
 											placeholder="Enter amount"
 											{...field}
-											className="w-full px-4 py-3 text-base border border-vd-blue-400 rounded-lg touch-manipulation overflow-hidden"
+											className="w-full px-4 py-2 border border-vd-blue-400 rounded-lg"
 										/>
 									</FormControl>
 									<FormDescription className="text-center">
@@ -602,18 +552,7 @@ const SupportReportForm = ({
 											rows={3}
 											placeholder="Leave a message with your donation..."
 											{...field}
-											className="w-full px-4 py-3 text-base border-2 border-gray-300 rounded-lg resize-none bg-gray-50 focus:border-vd-blue-600 focus:bg-white touch-manipulation overflow-hidden"
-											onFocus={(e) => {
-												// Ensure the textarea is visible on mobile
-												if (window.innerWidth < 768) {
-													setTimeout(() => {
-														e.target.scrollIntoView({
-															behavior: "smooth",
-															block: "center",
-														});
-													}, 300);
-												}
-											}}
+											className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg resize-none bg-gray-50 focus:border-vd-blue-600 focus:bg-white"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -622,7 +561,7 @@ const SupportReportForm = ({
 						/>
 
 						<Button
-							className="w-full py-6 flex gap-3 rounded-lg text-base sm:text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600 touch-manipulation"
+							className="w-full py-6 flex gap-3 rounded-lg text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600"
 							type="submit"
 							onClick={() => setPaymentMethod("fiat-with-login")}
 						>
@@ -660,7 +599,7 @@ const SupportReportForm = ({
 
 						<Button
 							variant="outline"
-							className="w-full py-6 flex gap-2 rounded-lg border-2 border-vd-blue-400 hover:bg-vd-blue-50 touch-manipulation"
+							className="w-full py-6 flex gap-2 rounded-lg border-2 border-vd-blue-400 hover:bg-vd-blue-50"
 							type="submit"
 							onClick={() => setPaymentMethod("crypto")}
 						>
