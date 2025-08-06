@@ -36,6 +36,7 @@ const ReportCard: React.FC<ReportCardProps> = ({
 	totalCost,
 	fundedSoFar,
 }) => {
+	console.log({ fundedSoFar });
 	return (
 		<Link href={`/reports/${slug}`} passHref>
 			<Card

@@ -1,4 +1,5 @@
 import { processNewContribution } from "@/lib/directus";
+import { revalidatePath } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -17,6 +18,7 @@ export async function POST(req: NextRequest) {
 			amount,
 			comment,
 		);
+		revalidatePath("/reports/slug");
 		return NextResponse.json(result);
 	} catch (error) {
 		let errorMessage = "An unknown error occurred";
