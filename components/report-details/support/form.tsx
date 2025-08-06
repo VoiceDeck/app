@@ -329,6 +329,43 @@ const SupportReportForm = ({
 									</FormItem>
 								)}
 							/>
+							<FormField
+								control={form.control}
+								name="comment"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel className="flex items-center gap-2">
+											<svg
+												width="16"
+												height="16"
+												viewBox="0 0 24 24"
+												fill="none"
+												xmlns="http://www.w3.org/2000/svg"
+												role="img"
+												aria-label="Message icon"
+											>
+												<path
+													d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+													stroke="currentColor"
+													strokeWidth="2"
+													fill="none"
+												/>
+											</svg>
+											Message (optional)
+										</FormLabel>
+										<FormControl>
+											<Textarea
+												rows={3}
+												placeholder="Leave a message with your donation..."
+												{...field}
+												className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg resize-none bg-gray-50 focus:border-vd-blue-600 focus:bg-white"
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
 							<Button
 								className="w-full h-14 flex gap-3 rounded-lg text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600"
 								type="submit"
