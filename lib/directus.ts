@@ -69,23 +69,26 @@ export async function processNewContribution(
         },
       })
     );
+    console.log({ response })
 
     const contribution = {
       sender: getAddress(sender),
       hypercert_id: hypercertId.toLowerCase(),
-      amount: amount,
+      amount: Math.trunc(amount),
       txid: txId,
       date_created: new Date().toISOString(),
       comment: comment,
     } as Contribution;
+    console.log({ contribution })
     // create a contribution record in Directus
-    await createContribution(contribution);
+    await createContribution(contribution)
 
     // update the funded amount of the hypercert in server memory
     await updateFundedAmount(hypercertId, amount);
     // add the contribution to the cache
     await updateContribution(hypercertId, contribution);
   } catch (error) {
+
     console.error(`[server] failed to process new contribution: ${error}`);
     throw new Error(`[server] failed to process new contribution: ${error}`);
   }
@@ -101,8 +104,7 @@ export async function createContribution(contribution: Contribution) {
     try {
       const response = await client.request(readItem("users", user.address));
       console.log(
-        `[Directus] user ${user.address} exist: ${
-          response.address === user.address ? "true" : "false"
+        `[Directus] user ${user.address} exist: ${response.address === user.address ? "true" : "false"
         }`
       );
     } catch (err) {
@@ -211,7 +213,7 @@ export const updateCMSReports = async (): Promise<CMSContent[]> => {
     );
     CMSReports = response as CMSContent[];
     console.log("[Directus] fetched CMS contents: ", CMSReports.length);
-    
+
     return CMSReports;
   } catch (error) {
     console.error(`[Directus] Failed to fetch CMS contents: ${error}`);
@@ -466,7 +468,7 @@ export const getViemClient = (): PublicClient => {
   if (viemClient) {
     return viemClient;
   }
-  
+
   viemClient = createPublicClient({
     chain: optimism,
     transport: http(process.env.JSON_RPC_ENDPOINT ? process.env.JSON_RPC_ENDPOINT : undefined),
