@@ -241,7 +241,7 @@ const SupportReportForm = ({
 										<div className="grid grid-cols-5 gap-2 sm:gap-4">
 											{[5, 10, 20, 50, 100].map((amount) => (
 												<Button
-													key={amount}
+													key={Math.trunc(amount)}
 													disabled={amount > Number(dollarAmountNeeded)}
 													type="button"
 													variant={
@@ -281,9 +281,16 @@ const SupportReportForm = ({
 										<FormControl>
 											<Input
 												type="number"
+												step="1"
+												min="1"
 												placeholder="Enter amount"
 												{...field}
 												className="w-full px-4 py-3 text-base border border-vd-blue-400 rounded-lg touch-manipulation overflow-hidden"
+												onInput={(e) => {
+													// Prevent decimal input by removing any decimal points
+													const target = e.target as HTMLInputElement;
+													target.value = target.value.replace(/[.,]/g, "");
+												}}
 											/>
 										</FormControl>
 										<FormDescription className="text-center">
@@ -561,9 +568,16 @@ const SupportReportForm = ({
 									<FormControl>
 										<Input
 											type="number"
+											step="1"
+											min="1"
 											placeholder="Enter amount"
 											{...field}
 											className="w-full px-4 py-3 text-base border border-vd-blue-400 rounded-lg touch-manipulation overflow-hidden"
+											onInput={(e) => {
+												// Prevent decimal input by removing any decimal points
+												const target = e.target as HTMLInputElement;
+												target.value = target.value.replace(/[.,]/g, "");
+											}}
 										/>
 									</FormControl>
 									<FormDescription className="text-center">
