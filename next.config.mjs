@@ -3,6 +3,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  compiler: {
+    removeConsole: true,
+  },
 
   staticPageGenerationTimeout: 300,
 
@@ -15,8 +18,8 @@ const nextConfig = {
       {
         hostname: "directus.voicedeck.org",
         protocol: "https",
-      }
-    ]
+      },
+    ],
   },
   headers() {
     return [
@@ -25,11 +28,11 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "*"
-          }
+            value: "*",
+          },
         ],
-      }
-    ]
+      },
+    ];
   },
   redirects: async () => {
     return [
@@ -46,6 +49,5 @@ const nextConfig = {
     ];
   },
 };
-
 
 export default nextConfig;
