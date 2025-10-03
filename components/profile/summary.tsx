@@ -89,24 +89,23 @@ const Summary = ({
                 </Badge>
               );
             })} */}
-						{Object.entries(iconComponents).map(([icon, Icon]) => {
+						{Object.entries(categoryCounts).map(([category, Icon]) => {
 							// Skip rendering the "Location" icon
-							if (icon === "Location") {
+							if (category === "Location") {
 								return null;
 							}
 
 							// Get the count for the icon, defaulting to 0 if not present in categoryCounts
-							const count = categoryCounts[icon] || 0;
+							const count = categoryCounts[category] || 0;
 
 							return (
 								<Badge
-									key={icon}
+									key={category}
 									variant="secondary"
 									className="rounded-3xl w-full justify-between px-5 py-3"
 								>
 									<div className="flex gap-1 items-center">
-										<Icon className="text-vd-orange-400 stroke-[1.5] size-4" />
-										<p className="font-normal text-vd-blue-900">{icon}</p>
+										<p className="font-normal text-vd-blue-900">{category}</p>
 									</div>
 									<data>{count}</data>
 								</Badge>
