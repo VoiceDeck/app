@@ -46,6 +46,7 @@ interface SupportReportFormProps {
 	hypercertId: Partial<Report>["hypercertId"];
 	reportTitle?: string;
 	reportImage?: string;
+	slug?: string;
 }
 
 const transactionStatusContent: Record<
@@ -144,6 +145,7 @@ const SupportReportForm = ({
 	hypercertId,
 	reportImage,
 	reportTitle,
+	slug,
 }: SupportReportFormProps) => {
 	const { address, isConnected, chainId } = useAccount();
 	const { wallets, ready } = useWallets();
@@ -214,6 +216,7 @@ const SupportReportForm = ({
 		handleBuyFraction,
 		address,
 		hypercertId,
+		slug,
 	);
 	if (!ready || isOrdersPending) {
 		return <h1>Loading...</h1>;
@@ -568,15 +571,15 @@ const SupportReportForm = ({
 									<FormControl>
 										<Input
 											type="number"
-											step="1"
-											min="1"
+											// step="1"
+											// min="1"
 											placeholder="Enter amount"
 											{...field}
 											className="w-full px-4 py-3 text-base border border-vd-blue-400 rounded-lg touch-manipulation overflow-hidden"
 											onInput={(e) => {
 												// Prevent decimal input by removing any decimal points
 												const target = e.target as HTMLInputElement;
-												target.value = target.value.replace(/[.,]/g, "");
+												// target.value = target.value.replace(/[.,]/g, "");
 											}}
 										/>
 									</FormControl>
@@ -587,6 +590,49 @@ const SupportReportForm = ({
 								</FormItem>
 							)}
 						/>
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="flex items-center gap-2">
+										<svg
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+											role="img"
+											aria-label="Email icon"
+										>
+											<path
+												d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+												stroke="currentColor"
+												strokeWidth="2"
+												fill="none"
+											/>
+											<polyline
+												points="22,6 12,13 2,6"
+												stroke="currentColor"
+												strokeWidth="2"
+												fill="none"
+											/>
+										</svg>
+										Enter email for confirmation receipt (optional)
+									</FormLabel>
+									<FormControl>
+										<Input
+											type="email"
+											placeholder="your.email@example.com"
+											{...field}
+											className="w-full px-4 py-3 text-base border-2 border-gray-300 rounded-lg focus:border-vd-blue-600 focus:bg-white touch-manipulation overflow-hidden"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<FormField
 							control={form.control}
 							name="comment"

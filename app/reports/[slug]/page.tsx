@@ -114,7 +114,10 @@ export default async function ReportPage({
 									image: report.image,
 									title: report.title,
 									hypercertId: report.hypercertId,
+
+									slug: report.slug,
 								}}
+								slug={slug}
 							/>
 						</FundingDataWrapper>
 					</div>

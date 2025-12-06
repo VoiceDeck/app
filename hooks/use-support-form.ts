@@ -28,6 +28,7 @@ const useSupportForm = (
   >["handleBuyFraction"],
   address: Address | undefined,
   hypercertId: string | undefined,
+  slug?: string
 ) => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
@@ -36,7 +37,7 @@ const useSupportForm = (
     comment: z.string(),
     hideName: z.boolean(),
     hideAmount: z.boolean(),
-    paymentType: z.enum(["crypto", "fiat-with-login", "fiat-without-login"]).default("crypto"), 
+    paymentType: z.enum(["crypto", "fiat-with-login", "fiat-without-login"]).default("crypto"),
     name: z.string().optional(),
     email: z.string().optional(),
     images: z.array(z.string()).optional(),
@@ -49,10 +50,10 @@ const useSupportForm = (
       comment: "",
       hideName: false,
       hideAmount: false,
-      paymentType:"crypto",
+      paymentType: "crypto",
       name: "",
       email: "",
-      images: [],  
+      images: [],
     },
   });
 
@@ -62,8 +63,8 @@ const useSupportForm = (
     console.log("values", values);
     console.log("pricePerUnit", pricePerUnit);
     const unitsToBuy = values.fractionPayment / pricePerUnit;
-    
-    
+
+
 
     console.log("amount to buy: ", BigInt(Math.trunc(unitsToBuy)));
     await handleBuyFraction(
@@ -76,7 +77,8 @@ const useSupportForm = (
       values.paymentType,
       values.email,
       values.name,
-      values.images
+      values.images,
+      slug
     );
   };
 
