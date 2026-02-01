@@ -1,12 +1,14 @@
 import "server-only";
 
-import {
-  HypercertClient,
-} from "@hypercerts-org/sdk";
+import { HypercertClient } from "@hypercerts-org/sdk";
 import { Mutex } from "async-mutex";
 
 import type { Report } from "@/types";
-import { getCMSReports, getFundedAmountByHCId, updateCMSReports } from "./directus";
+import {
+  getCMSReports,
+  getFundedAmountByHCId,
+  updateCMSReports,
+} from "./directus";
 import { getOrders } from "./marketplace";
 import { delay } from "./utils";
 import { getHypercertsByOwner } from "@/hypercerts/getHypercertsByOwner";
@@ -58,15 +60,18 @@ export const fetchReports = async (): Promise<Report[]> => {
       // step 3: get orders from marketplace
       const orders = await getOrders(_reports);
 
-      const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
+      const orderMap = new Map(
+        orders.map((order) => [order?.hypercertId, order]),
+      );
 
-
-      reports = _reports.map(report => {
+      reports = _reports.map((report) => {
         const order = orderMap.get(report.hypercertId);
         if (order) {
           report.order = order;
         } else if (report.fundedSoFar < report.totalCost) {
-          console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
+          console.warn(
+            `[server] No order found for hypercert ${report.hypercertId}`,
+          );
         }
         return report;
       });
@@ -108,9 +113,9 @@ export const fetchReportByHCId = async (
 ): Promise<Report> => {
   try {
     let reports = await getReports();
-
     const foundReport = reports?.find(
-      (report: Report) => report.hypercertId === hypercertId,
+      (report: Report) =>
+        report.hypercertId.toLowerCase() === hypercertId.toLowerCase(),
     );
     if (!foundReport) {
       throw new Error(
@@ -127,7 +132,7 @@ export const fetchReportByHCId = async (
 };
 
 export const getReports = async (): Promise<Report[]> => {
-  return reports ?  reports ?? [] as Report[] : await fetchReports();
+  return reports ? (reports ?? ([] as Report[])) : await fetchReports();
 };
 
 /**
@@ -212,15 +217,18 @@ export const fetchNewReports = async () => {
 
     const orders = await getOrders(_reports);
 
-    const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
+    const orderMap = new Map(
+      orders.map((order) => [order?.hypercertId, order]),
+    );
 
-
-    reports = _reports.map(report => {
+    reports = _reports.map((report) => {
       const order = orderMap.get(report.hypercertId);
       if (order) {
         report.order = order;
       } else if (report.fundedSoFar < report.totalCost) {
-        console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
+        console.warn(
+          `[server] No order found for hypercert ${report.hypercertId}`,
+        );
       }
       return report;
     });
@@ -239,10 +247,7 @@ const updateReports = async (): Promise<Report[]> => {
   const fromCMS = await updateCMSReports();
 
   const reportsToUpdatePromises = claims
-    .filter(
-      (claim) =>
-        claim.hypercert_id,
-    )
+    .filter((claim) => claim.hypercert_id)
     .map(async (claim, index) => {
       console.log(`[server] Processing claim with ID: ${claim.hypercert_id}.`);
 
@@ -263,9 +268,9 @@ const updateReports = async (): Promise<Report[]> => {
         summary: claim?.metadata?.description,
         image: "https://directus.voicedeck.org/assets/" + cmsReport.image,
         category: claim?.metadata?.work_scope?.[0],
-        workTimeframe: `${(new Date(Number(claim.metadata?.work_timeframe_from) * 1000)).toLocaleDateString()} - ${(new Date(Number(claim.metadata?.work_timeframe_to) * 1000)).toLocaleDateString()}`,
+        workTimeframe: `${new Date(Number(claim.metadata?.work_timeframe_from) * 1000).toLocaleDateString()} - ${new Date(Number(claim.metadata?.work_timeframe_to) * 1000).toLocaleDateString()}`,
         impactScope: claim?.metadata?.impact_scope?.[0],
-        impactTimeframe: `${new Date(Number(claim.metadata?.impact_timeframe_from) * 1000).toLocaleDateString()} - ${(new Date(Number(claim.metadata?.impact_timeframe_to) * 1000).toLocaleDateString())}`,
+        impactTimeframe: `${new Date(Number(claim.metadata?.impact_timeframe_from) * 1000).toLocaleDateString()} - ${new Date(Number(claim.metadata?.impact_timeframe_to) * 1000).toLocaleDateString()}`,
         contributors: claim?.metadata?.contributors?.map(
           (name: string) => name,
         ),
@@ -313,12 +318,12 @@ export const updateFundedAmount = async (
 
   try {
     const currentReports = await getReports();
-    const updatedReports = currentReports.map(report => 
+    const updatedReports = currentReports.map((report) =>
       report.hypercertId === hypercertId
         ? { ...report, fundedSoFar: report.fundedSoFar + amount }
-        : report
+        : report,
     );
-    
+
     reports = updatedReports;
   } finally {
     release();
@@ -330,14 +335,16 @@ export const updateCMSContents = async () => {
 
   const orders = await getOrders(_reports);
 
-  const orderMap = new Map(orders.map(order => [order?.hypercertId, order]));
+  const orderMap = new Map(orders.map((order) => [order?.hypercertId, order]));
 
-  reports = _reports.map(report => {
+  reports = _reports.map((report) => {
     const order = orderMap.get(report.hypercertId);
     if (order) {
       report.order = order;
     } else if (report.fundedSoFar < report.totalCost) {
-      console.warn(`[server] No order found for hypercert ${report.hypercertId}`);
+      console.warn(
+        `[server] No order found for hypercert ${report.hypercertId}`,
+      );
     }
     return report;
   });

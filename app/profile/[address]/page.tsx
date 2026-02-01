@@ -20,9 +20,11 @@ import { buttonVariants } from "@/components/ui/button";
 async function getContributionsHistoryData(address: `0x${string}`) {
 	try {
 		const contributions = await getContributionsByAddress(address);
+		console.log({ contributions }, "contributions");
 		const historyPromises = contributions.map(
 			async (contribution): Promise<HistoryData | null> => {
 				const report = await fetchReportByHCId(contribution.hypercert_id);
+
 				return {
 					id: contribution.txid,
 					date: new Date(contribution.date_created),
@@ -48,6 +50,7 @@ async function getContributionsHistoryData(address: `0x${string}`) {
 			categoryCounts[entry.category] =
 				(categoryCounts[entry.category] || 0) + 1;
 		}
+
 		// Returning history, categoryCounts, and totalAmount directly
 		return { history, categoryCounts, totalAmount, reportCount };
 	} catch (error) {
