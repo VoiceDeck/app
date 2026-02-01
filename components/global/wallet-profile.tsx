@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn, truncateEthereumAddress } from "@/lib/utils";
 import { useLogout, usePrivy } from "@privy-io/react-auth";
+import { useFundWallet } from "@privy-io/react-auth";
 import { Loader2, VenetianMaskIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { mainnet } from "viem/chains";
+import { mainnet, optimism } from "viem/chains";
 import { ConnectButton } from "./connect-button";
 
 const WalletProfile = ({
@@ -46,6 +47,7 @@ const WalletProfile = ({
 		chainId: nameData ? mainnet.id : undefined,
 		name: nameData ? normalize(nameData) : undefined,
 	});
+	const { fundWallet } = useFundWallet();
 
 	// Use useEffect to react to avatarData changes and setEnsAvatar
 	useEffect(() => {
@@ -121,10 +123,23 @@ const WalletProfile = ({
 					onClick={async () => {
 						await disconnectAsync();
 						await logout.logout();
-						
 					}}
 				>
 					Disconnect
+				</DropdownMenuItem>
+				<DropdownMenuItem
+					onClick={async () => {
+						console.log("Fund Account clicked");
+						if (address) {
+							await fundWallet(address, {
+								chain: optimism,
+								asset: "USDC",
+								provider: "moonpay",
+							});
+						}
+					}}
+				>
+					Fund Account
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

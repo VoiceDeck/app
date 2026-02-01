@@ -16,7 +16,7 @@ export async function sendContributionEmail(data: ContributionEmailData): Promis
   console.log("HIIIIII EMAIL", data)
   try {
     await loops.sendTransactionalEmail({
-      transactionalId: "cmiu640j221kt0u0ikma8artf",
+      transactionalId: "cml2clndy018i0i01c4utja08",
       dataVariables: {
         donor_name: data.donorName,
         campaign_title: data.campaignTitle,
