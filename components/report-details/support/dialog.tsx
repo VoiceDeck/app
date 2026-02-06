@@ -27,12 +27,14 @@ const SupportContent = ({
 	hypercertId,
 	reportTitle,
 	reportImage,
+	slug,
 }: {
 	address: `0x${string}` | undefined;
 	isConnected: boolean;
 	reportTitle?: string;
 	reportImage?: string;
 	hypercertId: SupportReportInfo["hypercertId"];
+	slug?: string;
 }) => {
 	// if (!isConnected && !address) {
 	// 	return (
@@ -53,6 +55,7 @@ const SupportContent = ({
 				hypercertId={hypercertId}
 				reportImage={reportImage}
 				reportTitle={reportTitle}
+				slug={slug}
 			/>
 		);
 	}
@@ -74,10 +77,12 @@ const ReportSupportUI = ({
 	UIComponent,
 	ContentComponent,
 	HeaderComponent,
+	slug,
 }: SupportDrawerDialogProps & {
 	UIComponent: React.ElementType;
 	ContentComponent: React.ElementType;
 	HeaderComponent: React.ElementType;
+	slug?: string;
 }) => {
 	const { address, isConnected } = useAccount();
 
@@ -128,6 +133,7 @@ const ReportSupportUI = ({
 				<Separator />
 				<SupportContent
 					address={address}
+					slug={slug}
 					reportTitle={reportTitle}
 					reportImage={reportImage}
 					isConnected={isConnected}
@@ -156,6 +162,7 @@ const SupportReport = ({
 	image: reportImage,
 	title: reportTitle,
 	hypercertId,
+	slug,
 	defaultOpenModal = false,
 }: SupportReportInfo) => {
 	const [open, setOpen] = useState(defaultOpenModal);
@@ -173,6 +180,7 @@ const SupportReport = ({
 		return (
 			<ReportSupportUI
 				{...props}
+				slug={slug}
 				UIComponent={Dialog}
 				ContentComponent={DialogContent}
 				HeaderComponent={DialogHeader}
@@ -183,6 +191,7 @@ const SupportReport = ({
 	return (
 		<ReportSupportUI
 			{...props}
+			slug={slug}
 			UIComponent={Drawer}
 			ContentComponent={(props) => (
 				<DrawerContent

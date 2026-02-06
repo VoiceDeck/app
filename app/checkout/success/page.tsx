@@ -58,7 +58,12 @@ export default async function PaymentSuccessPage({
 	if (!res.data) {
 		return "Error";
 	}
-	const { amountInFiat, blockchainTransactionId, extraMetadataJson } = res.data;
+	const {
+		amountInFiat,
+		blockchainTransactionId,
+		extraMetadataJson,
+		paymentUser,
+	} = res.data;
 	const extraMetadata = JSON.parse(JSON.stringify(extraMetadataJson));
 
 	if (

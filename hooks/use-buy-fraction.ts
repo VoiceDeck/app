@@ -103,6 +103,8 @@ const useHandleBuyFraction = (
     hypercertId: string | undefined,
     comment: string | undefined,
     amountInDollars: number,
+    email?: string,
+    slug?: string
   ) => {
 
 
@@ -161,6 +163,9 @@ const useHandleBuyFraction = (
           hypercertId: hypercertId,
           amount: amountInDollars,
           comment: comment,
+          email,
+          slug,
+
         }),
       });
 
@@ -196,7 +201,8 @@ const useHandleBuyFraction = (
     paymentType = "crypto" as PaymentType,
     email?: string,
     name?: string,
-    images?: string[]
+    images?: string[],
+    slug?: string
   ) => {
     switch (paymentType) {
       case "crypto":
@@ -209,7 +215,10 @@ const useHandleBuyFraction = (
           address,
           hypercertId,
           comment,
-          amountInDollars
+          amountInDollars,
+          email,
+          slug
+
         );
 
       case "fiat-with-login":

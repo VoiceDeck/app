@@ -8,28 +8,33 @@ import { optimism } from "wagmi/chains";
 const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? '';
 
 export function PrivyContextProvider({ children }: { children: ReactNode }) {
-    return (
-        <PrivyProvider
-            appId={appId}
-      
-            config={{
-                loginMethods: ["email","wallet"],
-                supportedChains:[optimism],
-                
+  return (
+    <PrivyProvider
+      appId={appId}
 
-                defaultChain:optimism,
-                appearance:{
-                    showWalletLoginFirst:true,
-                },
-                embeddedWallets:{
-                    createOnLogin:'users-without-wallets'
+      config={{
+        loginMethods: ["email", "wallet"],
+        supportedChains: [optimism],
+        defaultChain: optimism,
+        fundingMethodConfig: {
+          moonpay: {
+            paymentMethod: "credit_debit_card",
 
-                }
-                
-            }}
-            
-        >
-            {children}
-        </PrivyProvider>
-    );
+          },
+
+        },
+
+        appearance: {
+          showWalletLoginFirst: true,
+        },
+        embeddedWallets: {
+          createOnLogin: 'users-without-wallets'
+        },
+
+      }}
+
+    >
+      {children}
+    </PrivyProvider>
+  );
 }

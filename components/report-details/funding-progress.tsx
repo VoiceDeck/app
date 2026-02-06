@@ -9,12 +9,14 @@ interface FundingProgressProps {
 	fundedAmount: number;
 	reportInfo: SupportReportInfo;
 	defaultOpenModal?: boolean;
+	slug?: string;
 }
 
 const FundingProgress: React.FC<FundingProgressProps> = ({
 	totalAmount,
 	reportInfo,
 	defaultOpenModal = false,
+	slug,
 }) => {
 	const { percentProgress, dollarAmountNeeded } = useFunding();
 	const isFullyFunded = percentProgress >= 100;
@@ -50,6 +52,7 @@ const FundingProgress: React.FC<FundingProgressProps> = ({
 					image={reportInfo.image}
 					title={reportInfo.title}
 					hypercertId={reportInfo.hypercertId}
+					slug={slug}
 				/>
 			)}
 		</section>
