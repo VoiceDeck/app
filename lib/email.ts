@@ -22,7 +22,11 @@ export async function sendContributionEmail(data: ContributionEmailData): Promis
         campaign_title: data.campaignTitle,
         campaign_image_url: data.campaignImageUrl,
         amount: data.amount,
-        donation_date: data.donationDate,
+        donation_date: new Date(data.donationDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
         campaign_url: data.campaignUrl,
         currency_symbol: "$"
       },
