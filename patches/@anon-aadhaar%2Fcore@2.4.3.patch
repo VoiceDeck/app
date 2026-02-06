@@ -1,5 +1,8 @@
+diff --git a/node_modules/@anon-aadhaar/core/.bun-tag-2439899609d79519 b/.bun-tag-2439899609d79519
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/src/prover.ts b/src/prover.ts
-index a864d81011bed6d239f5a0275b7c3d707391af6a..98b872a18fbf9b0512a459622e8dbd29ccc3c46f 100644
+index a864d81011bed6d239f5a0275b7c3d707391af6a..95096e25f3068988a19bb4bd142effac317d86ca 100644
 --- a/src/prover.ts
 +++ b/src/prover.ts
 @@ -62,7 +62,7 @@ async function fetchKey(keyURL: string, maxRetries = 3): Promise<ZKArtifact> {
@@ -11,7 +14,7 @@ index a864d81011bed6d239f5a0275b7c3d707391af6a..98b872a18fbf9b0512a459622e8dbd29
      } catch (error) {
        attempts++
        if (attempts >= maxRetries) {
-@@ -140,9 +140,9 @@ export class AnonAadhaarProver implements ProverInferace {
+@@ -140,13 +140,13 @@ export class AnonAadhaarProver implements ProverInferace {
          break
        case ArtifactsOrigin.server:
          if (updateState) updateState(ProverState.FetchingWasm)
@@ -23,3 +26,8 @@ index a864d81011bed6d239f5a0275b7c3d707391af6a..98b872a18fbf9b0512a459622e8dbd29
          break
        case ArtifactsOrigin.chunked:
          if (updateState) updateState(ProverState.FetchingWasm)
+-        wasmBuffer = new Uint8Array((await this.wasm.getKey()) as ArrayBuffer)
++        wasmBuffer = new Uint8Array((await this.wasm.getKey()) as unknown as ArrayBuffer)
+         if (updateState) updateState(ProverState.FetchingZkey)
+         zkeyBuffer = await this.zkey.getKey()
+         break
