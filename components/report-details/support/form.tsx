@@ -226,252 +226,252 @@ const SupportReportForm = ({
 		return (
 			<div className="flex flex-col gap-6 p-4 w-full overflow-hidden">
 				{/* Primary Option: Direct Donation */}
-				<div className="space-y-4">
-					<h4 className="font-bold text-lg text-center text-vd-blue-900">
-						Support with Email & Card
-					</h4>
-					<Form {...form}>
-						<form
-							className="flex flex-col gap-4 w-full"
-							onSubmit={handleSubmit}
-						>
-							<FormField
-								control={form.control}
-								name="fractionPayment"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Support amount</FormLabel>
-										<div className="grid grid-cols-5 gap-2 sm:gap-4">
-											{[5, 10, 20, 50, 100].map((amount) => (
-												<Button
-													key={Math.trunc(amount)}
-													disabled={amount > Number(dollarAmountNeeded)}
-													type="button"
-													variant={
-														form.watch("fractionPayment") === amount
-															? "default"
-															: "outline"
-													}
-													className={cn(
-														"flex justify-center items-center h-10 sm:h-12 rounded-lg font-bold transition-colors duration-200 touch-manipulation",
-														form.watch("fractionPayment") === amount
-															? "bg-vd-beige-600 text-white hover:bg-vd-beige-700"
-															: "text-primary hover:bg-vd-beige-200 hover:text-primary",
-														amount > Number(dollarAmountNeeded)
-															? "cursor-not-allowed disabled:opacity-15"
-															: "",
-													)}
-													onClick={() => {
-														form.setValue("fractionPayment", amount);
-														// Slight delay to ensure the value is set before potential scroll
-														setTimeout(() => {
-															const emailField = document.querySelector(
-																'input[type="email"]',
-															);
-															if (emailField && window.innerWidth < 768) {
-																emailField.scrollIntoView({
-																	behavior: "smooth",
-																	block: "center",
-																});
-															}
-														}, 100);
-													}}
-												>
-													${amount}
-												</Button>
-											))}
-										</div>
-										<FormControl>
-											<Input
-												type="number"
-												step="1"
-												min="1"
-												placeholder="Enter amount"
-												{...field}
-												className="w-full px-4 py-3 text-base border border-vd-blue-400 rounded-lg touch-manipulation overflow-hidden"
-												onInput={(e) => {
-													// Prevent decimal input by removing any decimal points
-													const target = e.target as HTMLInputElement;
-													target.value = target.value.replace(/[.,]/g, "");
-												}}
-											/>
-										</FormControl>
-										<FormDescription className="text-center">
-											Choose your donation amount • Max ${dollarAmountNeeded}
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="email"
-								rules={{
-									required: "Email is required",
-									pattern: {
-										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-										message: "Invalid email address",
-									},
-								}}
-								render={({ field }) => (
-									<FormItem>
-										<div className="flex items-center gap-2 mb-2">
-											<svg
-												width="18"
-												height="18"
-												viewBox="0 0 24 24"
-												fill="none"
-												xmlns="http://www.w3.org/2000/svg"
-												role="img"
-												aria-label="Email icon"
-											>
-												<path
-													d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
-													stroke="currentColor"
-													strokeWidth="2"
-													fill="none"
-												/>
-												<polyline
-													points="22,6 12,13 2,6"
-													stroke="currentColor"
-													strokeWidth="2"
-													fill="none"
-												/>
-											</svg>
-											<span className="font-medium text-vd-blue-700">
-												Email Address
-											</span>
-										</div>
-										<FormControl>
-											<Input
-												type="email"
-												placeholder="your.email@example.com"
-												{...field}
-												className="w-full h-12 px-4 py-2 text-base sm:text-lg border-2 border-vd-blue-400 rounded-lg focus:border-vd-blue-600 touch-manipulation overflow-hidden"
-												onFocus={(e) => {
-													// Ensure the input is visible on mobile
-													if (window.innerWidth < 768) {
-														setTimeout(() => {
-															e.target.scrollIntoView({
-																behavior: "smooth",
-																block: "center",
-															});
-														}, 300);
-													}
-												}}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="comment"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="flex items-center gap-2">
-											<svg
-												width="16"
-												height="16"
-												viewBox="0 0 24 24"
-												fill="none"
-												xmlns="http://www.w3.org/2000/svg"
-												role="img"
-												aria-label="Message icon"
-											>
-												<path
-													d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-													stroke="currentColor"
-													strokeWidth="2"
-													fill="none"
-												/>
-											</svg>
-											Message (optional)
-										</FormLabel>
-										<FormControl>
-											<Textarea
-												rows={3}
-												placeholder="Leave a message with your donation..."
-												{...field}
-												className="w-full px-4 py-3 text-base border-2 border-gray-300 rounded-lg resize-none bg-gray-50 focus:border-vd-blue-600 focus:bg-white touch-manipulation overflow-hidden"
-												onFocus={(e) => {
-													// Ensure the textarea is visible on mobile
-													if (window.innerWidth < 768) {
-														setTimeout(() => {
-															e.target.scrollIntoView({
-																behavior: "smooth",
-																block: "center",
-															});
-														}, 300);
-													}
-												}}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+				{/* <div className="space-y-4">
+      					<h4 className="font-bold text-lg text-center text-vd-blue-900">
+      						Support with Email & Card
+      					</h4>
+      					<Form {...form}>
+      						<form
+      							className="flex flex-col gap-4 w-full"
+      							onSubmit={handleSubmit}
+      						>
+      							<FormField
+      								control={form.control}
+      								name="fractionPayment"
+      								render={({ field }) => (
+      									<FormItem>
+      										<FormLabel>Support amount</FormLabel>
+      										<div className="grid grid-cols-5 gap-2 sm:gap-4">
+      											{[5, 10, 20, 50, 100].map((amount) => (
+      												<Button
+      													key={Math.trunc(amount)}
+      													disabled={amount > Number(dollarAmountNeeded)}
+      													type="button"
+      													variant={
+      														form.watch("fractionPayment") === amount
+      															? "default"
+      															: "outline"
+      													}
+      													className={cn(
+      														"flex justify-center items-center h-10 sm:h-12 rounded-lg font-bold transition-colors duration-200 touch-manipulation",
+      														form.watch("fractionPayment") === amount
+      															? "bg-vd-beige-600 text-white hover:bg-vd-beige-700"
+      															: "text-primary hover:bg-vd-beige-200 hover:text-primary",
+      														amount > Number(dollarAmountNeeded)
+      															? "cursor-not-allowed disabled:opacity-15"
+      															: "",
+      													)}
+      													onClick={() => {
+      														form.setValue("fractionPayment", amount);
+      														// Slight delay to ensure the value is set before potential scroll
+      														setTimeout(() => {
+      															const emailField = document.querySelector(
+      																'input[type="email"]',
+      															);
+      															if (emailField && window.innerWidth < 768) {
+      																emailField.scrollIntoView({
+      																	behavior: "smooth",
+      																	block: "center",
+      																});
+      															}
+      														}, 100);
+      													}}
+      												>
+      													${amount}
+      												</Button>
+      											))}
+      										</div>
+      										<FormControl>
+      											<Input
+      												type="number"
+      												step="1"
+      												min="1"
+      												placeholder="Enter amount"
+      												{...field}
+      												className="w-full px-4 py-3 text-base border border-vd-blue-400 rounded-lg touch-manipulation overflow-hidden"
+      												onInput={(e) => {
+      													// Prevent decimal input by removing any decimal points
+      													const target = e.target as HTMLInputElement;
+      													target.value = target.value.replace(/[.,]/g, "");
+      												}}
+      											/>
+      										</FormControl>
+      										<FormDescription className="text-center">
+      											Choose your donation amount • Max ${dollarAmountNeeded}
+      										</FormDescription>
+      										<FormMessage />
+      									</FormItem>
+      								)}
+      							/>
+      							<FormField
+      								control={form.control}
+      								name="email"
+      								rules={{
+      									required: "Email is required",
+      									pattern: {
+      										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      										message: "Invalid email address",
+      									},
+      								}}
+      								render={({ field }) => (
+      									<FormItem>
+      										<div className="flex items-center gap-2 mb-2">
+      											<svg
+      												width="18"
+      												height="18"
+      												viewBox="0 0 24 24"
+      												fill="none"
+      												xmlns="http://www.w3.org/2000/svg"
+      												role="img"
+      												aria-label="Email icon"
+      											>
+      												<path
+      													d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+      													stroke="currentColor"
+      													strokeWidth="2"
+      													fill="none"
+      												/>
+      												<polyline
+      													points="22,6 12,13 2,6"
+      													stroke="currentColor"
+      													strokeWidth="2"
+      													fill="none"
+      												/>
+      											</svg>
+      											<span className="font-medium text-vd-blue-700">
+      												Email Address
+      											</span>
+      										</div>
+      										<FormControl>
+      											<Input
+      												type="email"
+      												placeholder="your.email@example.com"
+      												{...field}
+      												className="w-full h-12 px-4 py-2 text-base sm:text-lg border-2 border-vd-blue-400 rounded-lg focus:border-vd-blue-600 touch-manipulation overflow-hidden"
+      												onFocus={(e) => {
+      													// Ensure the input is visible on mobile
+      													if (window.innerWidth < 768) {
+      														setTimeout(() => {
+      															e.target.scrollIntoView({
+      																behavior: "smooth",
+      																block: "center",
+      															});
+      														}, 300);
+      													}
+      												}}
+      											/>
+      										</FormControl>
+      										<FormMessage />
+      									</FormItem>
+      								)}
+      							/>
+      							<FormField
+      								control={form.control}
+      								name="comment"
+      								render={({ field }) => (
+      									<FormItem>
+      										<FormLabel className="flex items-center gap-2">
+      											<svg
+      												width="16"
+      												height="16"
+      												viewBox="0 0 24 24"
+      												fill="none"
+      												xmlns="http://www.w3.org/2000/svg"
+      												role="img"
+      												aria-label="Message icon"
+      											>
+      												<path
+      													d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+      													stroke="currentColor"
+      													strokeWidth="2"
+      													fill="none"
+      												/>
+      											</svg>
+      											Message (optional)
+      										</FormLabel>
+      										<FormControl>
+      											<Textarea
+      												rows={3}
+      												placeholder="Leave a message with your donation..."
+      												{...field}
+      												className="w-full px-4 py-3 text-base border-2 border-gray-300 rounded-lg resize-none bg-gray-50 focus:border-vd-blue-600 focus:bg-white touch-manipulation overflow-hidden"
+      												onFocus={(e) => {
+      													// Ensure the textarea is visible on mobile
+      													if (window.innerWidth < 768) {
+      														setTimeout(() => {
+      															e.target.scrollIntoView({
+      																behavior: "smooth",
+      																block: "center",
+      															});
+      														}, 300);
+      													}
+      												}}
+      											/>
+      										</FormControl>
+      										<FormMessage />
+      									</FormItem>
+      								)}
+      							/>
 
-							<Button
-								className="w-full h-14 flex gap-3 rounded-lg text-base sm:text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600 touch-manipulation"
-								type="submit"
-								onClick={() => setPaymentMethod("fiat-without-login")}
-								disabled={isProcessingFiat}
-							>
-								{isProcessingFiat ? (
-									<>
-										<Loader2 className="animate-spin" size={20} />
-										Processing...
-									</>
-								) : (
-									<>
-										<svg
-											width="20"
-											height="20"
-											viewBox="0 0 24 24"
-											fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-											role="img"
-											aria-label="Credit card icon"
-										>
-											<rect
-												x="1"
-												y="4"
-												width="22"
-												height="16"
-												rx="2"
-												ry="2"
-												stroke="currentColor"
-												strokeWidth="2"
-												fill="none"
-											/>
-											<line
-												x1="1"
-												y1="10"
-												x2="23"
-												y2="10"
-												stroke="currentColor"
-												strokeWidth="2"
-											/>
-										</svg>
-										Donate with Credit/Debit Card
-									</>
-								)}
-							</Button>
-						</form>
-					</Form>
-				</div>
+      							<Button
+      								className="w-full h-14 flex gap-3 rounded-lg text-base sm:text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600 touch-manipulation"
+      								type="submit"
+      								onClick={() => setPaymentMethod("fiat-without-login")}
+      								disabled={isProcessingFiat}
+      							>
+      								{isProcessingFiat ? (
+      									<>
+      										<Loader2 className="animate-spin" size={20} />
+      										Processing...
+      									</>
+      								) : (
+      									<>
+      										<svg
+      											width="20"
+      											height="20"
+      											viewBox="0 0 24 24"
+      											fill="none"
+      											xmlns="http://www.w3.org/2000/svg"
+      											role="img"
+      											aria-label="Credit card icon"
+      										>
+      											<rect
+      												x="1"
+      												y="4"
+      												width="22"
+      												height="16"
+      												rx="2"
+      												ry="2"
+      												stroke="currentColor"
+      												strokeWidth="2"
+      												fill="none"
+      											/>
+      											<line
+      												x1="1"
+      												y1="10"
+      												x2="23"
+      												y2="10"
+      												stroke="currentColor"
+      												strokeWidth="2"
+      											/>
+      										</svg>
+      										Donate with Credit/Debit Card
+      									</>
+      								)}
+      							</Button>
+      						</form>
+      					</Form>
+      				</div> */}
 
 				{/* Divider */}
-				<div className="relative">
-					<div className="absolute inset-0 flex items-center">
-						<div className="w-full border-t border-gray-300" />
-					</div>
-					<div className="relative flex justify-center text-sm">
-						<span className="px-4 bg-white text-gray-500 font-medium">or</span>
-					</div>
-				</div>
+				{/* <div className="relative">
+      					<div className="absolute inset-0 flex items-center">
+      						<div className="w-full border-t border-gray-300" />
+      					</div>
+      					<div className="relative flex justify-center text-sm">
+      						<span className="px-4 bg-white text-gray-500 font-medium">or</span>
+      					</div>
+      				</div> */}
 
 				{/* Secondary Option: Crypto */}
 				<div className="space-y-3">
@@ -480,7 +480,6 @@ const SupportReportForm = ({
 					</h4>
 					<ConnectButton />
 				</div>
-
 				{/* Security Note */}
 				<div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
 					<svg
@@ -681,7 +680,7 @@ const SupportReportForm = ({
 							)}
 						/>
 
-						<Button
+						{/* <Button
 							className="w-full py-6 flex gap-3 rounded-lg text-base sm:text-lg font-bold bg-gradient-to-r from-vd-blue-900 to-vd-blue-700 hover:from-vd-blue-700 hover:to-vd-blue-600 touch-manipulation"
 							type="submit"
 							onClick={() => setPaymentMethod("fiat-with-login")}
@@ -716,7 +715,7 @@ const SupportReportForm = ({
 								/>
 							</svg>
 							Donate with Card
-						</Button>
+						</Button> */}
 
 						<Button
 							variant="outline"
